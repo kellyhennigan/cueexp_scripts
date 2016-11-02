@@ -17,86 +17,83 @@
 % for each subject, for each roi, for each event type, get the average time
 % course & save out in text file
 
-% THIS SCRIPT IS DIFFERENT FROM 'SAVEROITIMECOURSES_SCRIPT" IN THAT IT
-% IDENTIFIES OUTLIERS FROM A SUBJECT'S 'MOTION_CENSOR.1D' FILE, RATHER THAN
-% ZSCORING THE TIME COURSES
 
-%
 clear all
 close all
 
+%% subjects from which data set?
 
-p = getCuePaths;
-subjects = getCueSubjects();
-% subjects = {'wr151127'};
-
-% p = getCuePaths_Claudia;
-% subjects = getCueSubjects_Claudia();
-
-
+[p,task,subjects,gi]=whichCueSubjects();
 dataDir = p.data;
 
+saveOut=input('save out roi time courses? 1=yes 0=no ');
 
-% filepath to pre-processed functional data where %s is subject
-funcFilePath = fullfile(dataDir, '%s/func_proc_cue/fpsmtcue1_tlrc.nii');
-% funcFilePath = fullfile(dataDir, '%s/func_proc_cue/fpsmtcue1_afni.nii');
+omitOTs=input('omit trials with outlier TRs? (outlier = zscore > 4) 1=yes 0=no ');
+
+plotSingleTrials=input('plot single trials? Note this GREATLY increases processing time! 1=yes 0=no ');
+
+useAfniVersion=input('use afni xformed version? (1=yes 0=no; no means use ANTS version) ');
+if useAfniVersion
+    afniStr = '_afni';
+else
+    afniStr = '';
+end
+
+% filepath to pre-processed functional data where %s is subject then task
+funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_%s' afniStr '_tlrc.nii.gz']);
+
 
 % file path to file that says which volumes to censor due to head movement
-censorFilePath = fullfile(dataDir, '%s/func_proc_cue/motion_censor.1D');
-
-
-% outDir = fullfile(dataDir,'timecourses_afni');
-outDir = fullfile(dataDir,'timecourses_ants');
+censorFilePath = fullfile(dataDir, ['%s/func_proc/%s_censor.1D']);
 
 
 % directory w/regressor time series (NOT convolved)
-% regs cell array lists all the stim times to plot
 stimDir =  fullfile(dataDir,'%s/regs');
-
-
-% labels of stims to get time series for
-stims =  {'alcohol','drugs','food','neutral',...
-    'strong_dontwant','somewhat_dontwant','somewhat_want','strong_want'};
-% stims =  {'strong_dontwant','somewhat_dontwant','somewhat_want','strong_want'};
-
-% % corresponding file names with stim times
-% stimFiles =  {'cue_strong_dontwant.1D','cue_somewhat_dontwant.1D',...
-%     'cue_somewhat_want.1D','cue_strong_want.1D',};
-
-stimFiles =  {'cue_alcohol.1D','cue_drugs.1D','cue_food.1D','cue_neutral.1D',...
-    'cue_strong_dontwant.1D','cue_somewhat_dontwant.1D',...
-    'cue_somewhat_want.1D','cue_strong_want.1D',};
 
 
 % roi directory
 roiDir = fullfile(dataDir,'ROIs');
 
-% labels of rois to get time series for
-roiNames = {'LC'};
-% roiNames = {'nacc','acing','dlpfc','nacc','caudate','ins'};
+% rois to potentially process 
+allRoiNames = {'nacc','acing','dlpfc','caudate','ins','LC','mpfc','VTA','SN',...
+    'naccL','naccR','insR','insL'};
+
+% allRoiNames = {'amygL','amygR','ifgL','ifgR','mfgL','mfgR','sfgL','sfgR'};
+
+disp(allRoiNames');
+fprintf('\nwhich ROIs to process? \n');
+roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');
+if isempty(roiNames)
+    roiNames = allRoiNames;
+else
+    roiNames = splitstring(roiNames);
+end
 
 
-% % corresponding roi file names (binary mask nifti file)
-roiFiles = cellfun(@(x) [x '_func.nii'], roiNames,'UniformOutput',0);
-
+% name of dir to save to where %s is task
+outDir = fullfile(dataDir,['timecourses_' task afniStr ]);
+if omitOTs
+    outDir = [outDir '_woOutliers'];
+end
 
 nTRs = 12; % # of TRs to extract
-
-saveOut = 1; % save out time courses to file?
-
-TC = cell(numel(roiNames),numel(stims)); % out data cell array
-
-omitOTs = 0; % omit trials with time points that deviate more than 3 SDs?
-plotSingleTrials = 1; % save out plots of outlier trials?
+TR = 2; % 2 sec TR
+t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
 
 %% do it
 
+
+% get stim names and corresponding stim file names depending on task
+[stims,stimFiles]=getCueExpStims(task);
+
+TC = cell(numel(roiNames),numel(stims)); % out data cell array
+
+
+% get roi masks
+roiFiles = cellfun(@(x) [x '_func.nii'], roiNames,'UniformOutput',0);
 rois = cellfun(@(x) niftiRead(fullfile(roiDir,x)), roiFiles,'uniformoutput',0);
 
-if omitOTs
-    outDir = [outDir '_woOutliers'];
-end
 
 i=1; j=1; k=1;
 for i=1:numel(subjects); % subject loop
@@ -106,17 +103,12 @@ for i=1:numel(subjects); % subject loop
     fprintf(['\n\nworking on subject ' subject '...\n\n']);
     
     % load pre-processed data
-    func = niftiRead(sprintf(funcFilePath,subject));
+    func = niftiRead(sprintf(funcFilePath,subject,task));
     
     % load subject's motion_censor.1D file that says which volumes to
     % censor due to motion
-    censorVols = find(dlmread(sprintf(censorFilePath,subject))==0);
+    censorVols = find(dlmread(sprintf(censorFilePath,subject,task))==0);
     
-    % get roi time series
-    roi_tcs = cellfun(@(x) roi_mean_ts(func.data,x.data), rois, 'uniformoutput',0);
-    
-    % zero pad the end of the time series for the case of the last trial
-    roi_tcs = cellfun(@(x) [x;nan(nTRs,1)], roi_tcs, 'uniformoutput',0);
     
     % get stim onset times
     onsetTRs = cellfun(@(x) find(dlmread(fullfile(sprintf(stimDir,subject),x))), stimFiles, 'uniformoutput',0);
@@ -124,7 +116,20 @@ for i=1:numel(subjects); % subject loop
     for j=1:numel(rois)
         
         % this roi time series
-        roi_tc= roi_tcs{j};
+        roi_ts = roi_mean_ts(func.data,rois{j}.data);
+        
+        
+        % nan pad the end in case there aren't enough TRs for the last
+        % trial
+        roi_ts = [roi_ts;nan(nTRs,1)];
+        
+        % set vols with abs(zscore > 4) to nan (assume this is due to
+        % some non-bio noise)
+        if omitOTs
+            % temporarily assign censored vols due to head motion to nan
+            temp = roi_ts; temp(censorVols)=nan;
+            censorVols=[censorVols;find(abs(zscore(temp(~isnan(temp))))>4)];
+        end
         
         
         for k=1:numel(stims)
@@ -142,24 +147,18 @@ for i=1:numel(subjects); % subject loop
                 this_stim_TRs = repmat(onsetTRs{k},1,nTRs)+repmat(0:nTRs-1,numel(onsetTRs{k}),1);
                 
                 % single trial time courses for this stim
-                this_stim_tc=roi_tc(this_stim_TRs);
+                this_stim_tc=roi_ts(this_stim_TRs);
                 
-                % identify & omit trials based on motion censor index
+                % identify & omit trials w/censored TRs
                 [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
                 censor_idx = unique(censor_idx);
                 censored_tc = this_stim_tc(censor_idx,:);
                 this_stim_tc(censor_idx,:) = [];
                 
-                % identify outlier trials
-                [outlier_idx,~]=find(abs(zscore(this_stim_tc))>3);
-                outlier_idx = unique(outlier_idx);
-                outlier_tc = this_stim_tc(outlier_idx,:);
-                if omitOTs
-                    this_stim_tc(outlier_idx,:) = [];
-                end
-                
                 % keep count of the # of censored & outlier trials
-                nBadTrials{j}(i,k) = numel(outlier_idx)+numel(censor_idx);
+                nBadTrials{j}(i,k) = numel(censor_idx);
+                
+                %
                 
                 % plot single trials
                 if plotSingleTrials
@@ -167,12 +166,15 @@ for i=1:numel(subjects); % subject loop
                     set(gcf, 'Visible', 'off');
                     hold on
                     set(gca,'fontName','Arial','fontSize',12)
-                    % plot ok, censored, and outlier single trials
-                    plot(this_stim_tc','linewidth',1.5,'color',[.15 .55 .82])
-                    plot(censored_tc','linewidth',1.5,'color',[1 0 0])
-                    plot(outlier_tc','linewidth',1.5,'color',[.65 0 .12])
-                    xlabel('TR (from cue onset)')
-                    ylabel('% BOLD change')
+                    % plot good and bad (censored) single trials
+                    plot(t,this_stim_tc','linewidth',1.5,'color',[.15 .55 .82])
+                    if ~isempty(censored_tc)
+                        plot(t,censored_tc','linewidth',1.5,'color',[1 0 0])
+                    end
+                    xlim([t(1) t(end)])
+                    set(gca,'XTick',t)
+                    xlabel('time (in seconds) relative to cue onset')
+                    ylabel('%\Delta BOLD')
                     set(gca,'box','off');
                     set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
                     

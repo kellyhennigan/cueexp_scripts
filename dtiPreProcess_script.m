@@ -15,8 +15,8 @@
 % - fits tensor model for each voxel of resampled ACPC?aligned dw data and
 % reoriented vectors.  Default method is least squares, but robust tensor
 % fitting is supposed to be better ; to do this change fitMethod in
-% dwParams from ?ls? to ?rt? (note this takes longer!  Check to see if it
-% actually makes a difference!)
+% dwParams from ?ls? to ?rt? (note this takes way longer!  Check to see if 
+% it actually makes a difference!)
 
 % see here for more info on pre-processing: 
 % http://white.stanford.edu/newlm/index.php/DTI_Preprocessing
@@ -24,9 +24,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % define relevant input 
-% subjects = getCueSubjects();
-subjects = {'aa151010'};
-
+subjects = getCueSubjects();
+subjects = {'as160129','jf160703'};
 
 
 
@@ -87,7 +86,7 @@ wmProb=dtiFindWhiteMatter(dt.dt6,dt.b0,dt.xformToAcpc);  badData(wmProb<0.8)=0;
 nBadWMVox=sum(badData(:));   
 fprintf(['\nthis subject has ' num2str(nBadWMVox) ...
     ' white matter voxels with negative eigenvalues\n'])
-if nBadWMVox>0
+if nBadWMVox>10
   showMontage(double(badData));
   resp=input('clip neg values to zero? (should say yes if # is low) ','s');
   if strcmpi(resp(1),'y')

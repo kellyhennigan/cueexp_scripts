@@ -1,21 +1,26 @@
-function [subjects,group_idx,notes] = getCueSubjects(group)
+function [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % -------------------------------------------------------------------------
+% [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % usage: returns cell array with subject id strings for this experiment.
 % NOTE: this assumes that there is a file named 'subjects' within the exp
 % data folder that has a list of the subject ids and a group index (0 for
-% controls, 1 for patients). 
+% controls, 1 for patients).
 
-% INPUT:
-%   group (optional) - 0,'0', or 'controls', to return only subject ids
-%   for control subjects; 1,'1', or 'patients' to return addict subject ids
-%   to return subject
-%       ids for; as of now, its all subjects or nothing.
+% INPUT: 2 optional inputs:
+%   task - string that must be either 'cue','mid', or 'midi'. Default is
+%   'cue'.
+%   group - number specifying to return only subjects from a single group:
+%         0, for control subs
+%         1 for stimulant dependent patients
+%         2 for alcohol dependent patients (eventually)
+%
 %
 % OUTPUT:
 %   subjects - cell array of subject id strings for this experiment
-%   group_idx(optional) - if desired, this returns a vector of 0s and 1s
+%   gi(optional) - if desired, this returns a vector of 0s and 1s
 %   indicating the group of the corresponding subject
 %   notes - cell array of strings with notes on subjects
+%   exc_subj_notes - cell array showing subjects excluded and notes as to why
 
 % notes:
 %
@@ -25,53 +30,74 @@ function [subjects,group_idx,notes] = getCueSubjects(group)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-% if not provided as input, assume user wants all subjects
-if notDefined('group')
-    group = 'all';
+% return all subjects if task isn't given as input
+if notDefined('task')
+    task = '';
 end
-group = num2str(group); % make sure group is a string
 
+% make group '' by default, which means return all
+if notDefined('group')
+    group = '';
+end
 
-% get base directory address
-baseDir = fullfile(getHomeDir,'cueexp');
+% get subjects_list directory
+subjListDir = fullfile(getHomeDir,'cueexp', 'data','subjects_list');
 
-% filename that contains a list of subjects and a group index number 
-subject_filename = fullfile(baseDir, 'data','subjects');
+% filename that contains a list of subjects and a group index number
+subject_filename = fullfile(subjListDir,'subjects');
 
 fileID = fopen(subject_filename,'r');
-dataArray = textscan(fileID, '%s%s%[^\n\r]', 'Delimiter', ',', 'HeaderLines' ,1, 'ReturnOnError', false);
+d = textscan(fileID, '%s%s\n', 'Delimiter', ',', 'HeaderLines' ,1, 'ReturnOnError', false);
 fclose(fileID);
 
-% excluded commented out lines 
-omit_idx = find(~cellfun(@isempty,strfind(dataArray{1},'#')));
-if omit_idx
-    dataArray{1}(omit_idx) = [];
-    dataArray{2}(omit_idx) = [];
-end
 
 % define subject id cell array & vector of corresponding group indices
-subjects = dataArray{1};
-group_idx=str2num(cellfun(@(x) x(1), dataArray{2}));
-notes = dataArray{2};
+subjects = d{1};
+gi=str2num(cellfun(@(x) x(1), d{2}));
+notes = d{2};
+
+% if task is defined, remove subjects to be excluded based on
+% omit_subs_[task] file and get notes as to why they are being excluded
+if isempty(task)
+    exc_subj_notes = [];
+    
+else
+    omit_subs_filename = fullfile(subjListDir, ['omit_subs_' task]);
+    
+    fileID = fopen(omit_subs_filename,'r');
+    d = textscan(fileID, '%s%s%s\n', 'Delimiter', ',', 'HeaderLines' ,1, 'ReturnOnError', false);
+    fclose(fileID);
+    
+    % get subj ids and notes for subjects to be excluded
+    exc_subs = d{1};
+    exc_subj_notes=[d{1} d{2}];
+    
+    for i=1:numel(exc_subs)
+        gi(strcmp(subjects,exc_subs{i}))=[];
+        notes(strcmp(subjects,exc_subs{i}))=[];
+        subjects(strcmp(subjects,exc_subs{i}))=[];
+    end
+    
+end
 
 
- 
+% now get only subjects from one specific group, if desired
+if ~isempty(group)
     
-% return all subjects
-if strcmpi(group,'all')
-    subjects = subjects;
-   
-% return only controls
-elseif strncmpi(group,'controls',1) || strcmp(group,'0') 
-    subjects = subjects(group_idx==0);
-    group_idx = group_idx(group_idx==0);
+    if group==0
+        subjects = subjects(gi==0);
+        notes = notes(gi==0);
+        gi = gi(gi==0);
+        
+    elseif group==1
+        subjects = subjects(gi==1);
+        notes = notes(gi==1);
+        gi = gi(gi==1);
+        
+    end
     
-% return only patients
-elseif  strncmpi(group,'patients',1) || strcmp(group,'1')
-    subjects = subjects(group_idx==1);
-    group_idx = group_idx(group_idx==1);
-    
+end
+
 end
 
 

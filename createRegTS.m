@@ -7,9 +7,9 @@ function [reg,regc]=createRegTS(eventOnsets,vals,nTRs,convolve,saveFileName)
 %   vals - vector either the same length as eventOnsets indicating the
 %          value to give each event or a single integer of value to give
 %          all events
-%   nTRs - number of TRs to model convolve - 'spm' to convolve reg time
-%   series with spm's hrf, 'waver' to use afni's hrf (NOT YET IMPLEMENTED),
-%   otherwise 0. Default is 0.
+%   nTRs - total number of volumes acquired in the scan 
+%   convolve - 'spm' to convolve reg time series with spm's hrf, 'waver' to 
+%       use afni's hrf, otherwise 0 to not do  convolution. Default is 0.
 %   saveFileName - filepath for saving out regressor; if not given,
 %   then the regressor won't be saved.
 %
@@ -65,9 +65,9 @@ if convolve
         regc = regc(1:nTRs);  % make sure it has the right # of vols
         regc = regc./max(abs(regc)); % scale it to max=1
         if saveOut
-            saveFileName2 = fullfile(outDir,[regName 'c' fs]);
+            saveFileName2 = fullfile(outDir,[regName 'c_spm' fs]);
             dlmwrite(saveFileName2,regc);
-            fprintf(['reg file ' regName 'c' fs ' saved.\n']);
+            fprintf(['reg file ' regName 'c_spm' fs ' saved.\n']);
         end
         
         
@@ -82,11 +82,11 @@ if convolve
             afniDir = '~/abin/';
         end
         
-        saveFileName2 = fullfile(outDir,[regName 'ca' fs]);
+        saveFileName2 = fullfile(outDir,[regName 'c' fs]);
         cmd = [afniDir 'waver -dt ' num2str(TR) ' -GAM -peak 1 -numout ' num2str(nTRs) ...
             ' -input ' saveFileName ' > ' saveFileName2]
         system(cmd)
-        fprintf(['reg file ' regName 'ca' fs ' saved.\n']);
+        fprintf(['reg file ' regName 'c' fs ' saved.\n']);
         regc = dlmread(saveFileName2);
         
     end

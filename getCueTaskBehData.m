@@ -148,10 +148,10 @@ Image_Names = rawCellColumns(2:end, 2);
 %% code want ratings as numeric
 
 Choice_Num = zeros(numel(Choice),1);
-Choice_Num(strcmp('Strongly do not want',Choice))=-2;
+Choice_Num(strcmp('Strongly do not want',Choice))=-3;
 Choice_Num(strcmp('Somewhat do not want',Choice))=-1;
 Choice_Num(strcmp('Somewhat want',Choice))=1;
-Choice_Num(strcmp('Strongly want',Choice))=2;
+Choice_Num(strcmp('Strongly want',Choice))=3;
 
 
 

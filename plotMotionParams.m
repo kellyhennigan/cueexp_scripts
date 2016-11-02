@@ -21,14 +21,14 @@ function figH = plotMotionParams(mp)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-labs = {'roll','pitch','yaw','dZ','dX','dY'}
+labs = {'roll','pitch','yaw','dZ','dX','dY'};
 
 c = solarizedColors;
 
 
 
-figH = figure
-% set(gcf,'Visible','off')
+figH = figure;
+set(gcf,'Visible','off')
 set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
 for i=1:6

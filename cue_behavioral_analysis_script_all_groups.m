@@ -9,13 +9,10 @@ close all
 
 % add scripts path to matlab's search path
 p = getCuePaths;
-path(p.scripts,path)
+path(path,p.scripts)
 
-
-figDir = p.figures;
-
-
-
+saveFigs = 1; % 1 to save out generated figures, otherwise 0
+figDir = fullfile(p.figures,'behavior');
 
 % data directory path
 dataDir = p.data;
@@ -28,8 +25,9 @@ fp2 = fullfile(dataDir2, '%s/behavior/cue_matrix.csv');  %s is a placeholder for
 
 
 % define which subjects to analyze
-[subjects,gi] = getCueSubjects(); % cell array with subject ID strings; gi index is 0 for controls and 1 for patients
-[subjects2,gi2] = getCueSubjects_Claudia(); % cell array with subject ID strings; gi index is 0 for controls and 1 for patients
+[subjects,gi] = getCueSubjects('cue'); % cell array with subject ID strings; gi index is 0 for controls and 1 for patients
+[subjects2,gi2] = getCueSubjects_Claudia('cue'); % cell array with subject ID strings; gi index is 0 for controls and 1 for patients
+
 
 
 %% get data
@@ -50,9 +48,19 @@ n0=numel(find(gi==0)); n1=numel(find(gi==1)); n2=numel(find(gi==2));
     choice_type,choice_rt,iti,drift,image_name]=cellfun(@(x) getCueTaskBehData(x,'short'), fps, 'uniformoutput',0);
 
 
+%% define some useful variables 
+
+condNames = {'alcohol','drugs','food','neutral'};
+groupNames = {'controls','stim patients','alc patients'};
+cols = [.15 .55 .82; .86 .2 .18; 0.83  0.21  0.51]; % group plot colors
+plotSig = [1 1];
+
+
+%% Q1: are there differences in pref ratings across trial types & groups? 
+% Does that vary across groups?
 
 % get matrix of pref & mean pref ratings by trial type w/subjects in rows
-pref = cell2mat(choice_num)';
+pref = cell2mat(choice_num')'; 
 mean_pref = [];
 for i=1:numel(subjects)
     for j=1:4 % # of trial types
@@ -60,61 +68,99 @@ for i=1:numel(subjects)
     end
 end
 
-
-%% Q1: are there differences in preference ratings by trial type? Does that vary across groups?
-
-
-% one-way anova with repeated measures for only controls
-anova_rm(mean_pref(gi==0,:));
-
-% anova w/repeated measures comparing across groups
-anova_rm({mean_pref(gi==0,:) mean_pref(gi==1,:) mean_pref(gi==2,:)})
+% pref ratings 
+dName = 'preference ratings'; % measure to plot
+d = {mean_pref(gi==0,:) mean_pref(gi==1,:) mean_pref(gi==2,:)};
+savePath = fullfile(figDir,'cue_pref_allgroups.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
 
 
-% plot it
-cols = [.15 .55 .82; .86 .2 .18;  0.83  0.21  0.51];
 
-gmean_prefs = [];
-se_prefs = [];
-for i=1:3
-    gmean_prefs(:,i) = mean(mean_pref(gi==i-1,:))';
-    se_prefs(:,i) = (std(mean_pref(gi==i-1,:))./sqrt(numel(gi==0)))';
+%% Q3: differences in RT by trial type between groups? 
+
+for s=1:numel(subjects)
+    
+    for j=1:numel(condNames)
+        
+        % cue rts 
+        these_rt = cue_rt{s}(trial_type{s}==j);
+        mean_cue_rt(s,j) = nanmean(these_rt(these_rt>0));
+        n_cue_noresp(s,j) = numel(find(these_rt<0)); % keep track of # of no response trials
+        
+        % choice rts 
+        these_rt = choice_rt{s}(trial_type{s}==j);
+        mean_choice_rt(s,j) = nanmean(these_rt(these_rt>0));
+        n_choice_noresp(s,j) = numel(find(these_rt<0)); % keep track of # of no response trials
+        
+        
+    end
+    
 end
 
-fig=figure; hold on;
-h = barwitherr(se_prefs,gmean_prefs)
-set(h,'EdgeColor','w')
+% cue rt 
+dName = 'cue rt'; % measure to plot
+d = {mean_cue_rt(gi==0,:) mean_cue_rt(gi==1,:) mean_cue_rt(gi==2,:)};
+savePath = fullfile(figDir,'cue_cueRT_allgroups.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
 
-set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
-set(gca,'fontName','Arial','fontSize',14)
-set(gca,'box','off');
-colormap(cols)
-
-% x axis
-xLabels = {'alcohol','drugs','food','neutral'};
-set(gca,'XTick',1:4)
-set(gca,'XTickLabel',xLabels)
-% set(gca,'XTickLabelRotation',30)
-
-% y axis
-ylabel('preference ratings')
-% ylim([-.2, .45])
-
-% legend
-legend(['controls (n=' num2str(n0) ')'],...
-    ['stim patients (n=' num2str(n1) ')'],...
-    ['alc patients (n=' num2str(n2) ')'],'location','NorthEastOutside')
-legend(gca,'boxoff')
-
-% save figure?
-saveFig = 0;
-figDir = '/Users/Kelly/cueexp/figures';
-if saveFig
-    print(gcf,'-dpng','-r600',fullfile(figDir,'preference_ratings_by_group'))
-end
+% choice rt 
+dName = 'choice rt'; % measure to plot
+d = {mean_choice_rt(gi==0,:) mean_choice_rt(gi==1,:) mean_choice_rt(gi==2,:)};
+savePath = fullfile(figDir,'cue_choiceRT_allgroups.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
 
 
 
+%% do patients have faster RTs for drugs compared to other stim? 
+
+% cue RTs 
+ttype = trial_type{1}; % trial type index 
+cueRT=cell2mat(cue_rt')';
+cueRT(cueRT==-1)=nan;
+% cueRT = log(cueRT); % log transform to be closer to normally distributed 
+cuert0=cueRT(gi==0,:);
+cuert1=cueRT(gi==1,:);
+cuert2=cueRT(gi==2,:);
+fprintf('\npatients average RT to drug cues: %4.2f s\n',...
+    mean(nanmean(cuert1(:,ttype==2),2)))
+fprintf('\npatients average RT to neutral cues: %4.2f s\n',...
+    mean(nanmean(cuert1(:,ttype==4),2)))
+[h,p]=ttest(nanmean(cuert1(:,ttype==2),2),nanmean(cuert1(:,ttype==4),2));
+fprintf(['\nt test for drug vs neutral cue RT differences in patients:\n ' ...
+    'h=%d, p=%4.2f\n'],h,p) 
+
+fprintf('\nALC patients average RT to alcohol cues: %4.2f s\n',...
+    nanmean(nanmean(cuert2(:,ttype==1),2)))
+fprintf('\nALC patients average RT to neutral cues: %4.2f s\n',...
+    nanmean(nanmean(cuert2(:,ttype==4),2)))
+[h,p]=ttest(nanmean(cuert2(:,ttype==1),2),nanmean(cuert2(:,ttype==4),2));
+fprintf(['\nt test for alc vs neutral cue RT differences in ALC patients:\n ' ...
+    'h=%d, p=%4.2f\n'],h,p) 
+
+
+
+% choice RTs
+choiceRT=cell2mat(choice_rt')';
+choiceRT(choiceRT==-1)=nan;
+% choiceRT = log(choiceRT); % log transform to be closer to normally distributed 
+choicert0=choiceRT(gi==0,:);
+choicert1=choiceRT(gi==1,:);
+choicert2=choiceRT(gi==2,:);
+fprintf('\npatients average RT to drug pref ratings: %4.2f s\n',...
+    mean(nanmean(choicert1(:,ttype==2),2)))
+fprintf('\npatients average RT to neutral pref ratings: %4.2f s\n',...
+    mean(nanmean(choicert1(:,ttype==4),2)))
+[h,p]=ttest(nanmean(choicert1(:,ttype==2),2),nanmean(choicert1(:,ttype==4),2));
+fprintf(['\nt test for drug vs neutral pref rating RT differences in patients:\n ' ...
+    'h=%d, p=%4.2f\n'],h,p) 
+
+fprintf('\nALC patients average RT to alcohol pref ratings: %4.2f s\n',...
+    mean(nanmean(choicert2(:,ttype==1),2)))
+fprintf('\nALC patients average RT to neutral pref ratings: %4.2f s\n',...
+    mean(nanmean(choicert2(:,ttype==4),2)))
+[h,p]=ttest(nanmean(choicert2(:,ttype==1),2),nanmean(choicert2(:,ttype==4),2));
+fprintf(['\nt test for alc vs neutral pref rating RT differences in ALC patients:\n ' ...
+    'h=%d, p=%4.2f\n'],h,p) 
 
 

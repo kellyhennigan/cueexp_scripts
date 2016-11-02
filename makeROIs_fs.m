@@ -30,7 +30,7 @@ f_suffix = '.nii.gz';
 
 % subject directories
 subjects = getCueSubjects;
-subjects = subjects(1);
+subjects = {'as160317'};
 
 outDir = 'ROIs'; % out directory relative to subject dir
 

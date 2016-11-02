@@ -169,11 +169,17 @@ if s > 1
 
     p = [pT, pG, pSG, pGT];
 
+    % note: KHM edited this to display p values in same order that p vals
+    % are returned, i.e., subjects is now above interaction in display
+    % table. Note the order that p values are returned (defined just above)
+    % are the same: this just changes the display to match the order shown
+    % above: p = [pT, pG, pSG, pGT].
+    
     table = { 'Source' 'SS' 'df' 'MS' 'F' 'Prob>F'
         'Time'  ssT t-1 msT FT pT
         'Group' ssG s-1 msG FG pG
-        'Ineratcion' ssGT (s-1)*(t-1) msGT FGT pGT
         'Subjects (matching)' ssSG n-s msSG FSG pSG
+        'Interaction' ssGT (s-1)*(t-1) msGT FGT pGT
         'Error' ssR (n-s)*(t-1) msR  [] []
         'Total' [] [] [] [] []
         };

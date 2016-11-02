@@ -1,5 +1,4 @@
-function [d,pa,na,familiarity,image_types]=...
-    getQualtricsData(filepath,subjects)
+function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 % -------------------------------------------------------------------------
 % usage: this function is to import data from the qualtrics survey taken by
 % subjects in the cue fmri task.
@@ -7,7 +6,6 @@ function [d,pa,na,familiarity,image_types]=...
 %
 % INPUT:
 %   filepath - filepath to qualtrics .csv file
-%   filepath2 - filepath to image type list
 %   subjects (optional) - cell array or string of subject ids to return data for
 
 
@@ -32,7 +30,7 @@ function [d,pa,na,familiarity,image_types]=...
 
 
 if notDefined('filepath')
-    filepath = '~/Google Drive/cuefmri/cue/behavioral_data/qualtrics_data/Post_Scan_Survey 6.csv';
+    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey160708.csv';
 end
 
 
@@ -44,26 +42,24 @@ if ischar(subjects)
 end
 
 
-% output variables
-d = struct();
-pa = [];
-na = [];
-familiarity = [];
-image_type = [];
-image_names = [];
+% output variables -
+d = struct(); % structu array w/subjects' demographics info
+pa = [];        % positive arousal ratings
+na = [];        % negative arousal ratings
+famil = [];   % familiarity
+image_types = []; % image types
 
+
+
+%% import data
 
 % internal variables
 delimiter = ',';
 startRow = 3;
 
+formatSpec = [repmat('%*s',1,7) '%s%s%f%s%f%f%s%f%f%f%f%s%f%s%f%s%f%s%f%s%f%s' repmat('%f',1,288) '%*[^\n]'];
 
-%% Format string for each line of text:
-
-formatSpec = [repmat('%*s',1,7) '%s%s%f%s%f%f%s%f%f%f%f%s%f%s%f%s%f%s%f%s' repmat('%f',1,288) '%[^\n\r]'];
-
-%% Open the text file.
-
+% Open the text file
 fileID = fopen(filepath,'r');
 
 % if fileID=-1, this means the file couldn't be opened. Return empty
@@ -72,76 +68,23 @@ if fileID==-1
     return
 end
 
-%% Read columns of data according to format string.
-% This call is based on the structure of the file used to generate this
-% code. If an error occurs for a different file, try regenerating the code
-% from the Import Tool.
+% Read columns of data according to format string.
 dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'HeaderLines' ,startRow-1, 'ReturnOnError', false);
 
-%% Close the text file.
+% Close the text file
 fclose(fileID);
 
 
-%% if cell array of subject get index of subjects to return data for
 
-% flip subject id cell array to be in rows if its in columns
+%% get image ratings as a numeric matrix & convert valence/arousal to pa/na
 
-qsubs = dataArray{:, 4}; % list of subject ids in qualtrics data
-
-% get a subject index for which data to return
-if isempty(subjects)
-    si = 1:numel(qsubs);
-else
-    for i=1:numel(subjects)
-        idx=find(strcmp(subjects{i},qsubs));
-        if ~isempty(idx)
-            si(i)=idx;
-        else
-            si(i) = nan;
-            fprintf(['\n\nwarning: no qualtrics data found for subject: ' subjects{i} '\n\n'])
-        end
-    end
-end
-si(isnan(si)) = [];
-
-
-%% Put subject demographics, etc. data in a structural array
-
-% d is a structural array for subject-specific data
-
-d.subjid = dataArray{4}(si);
-
-d.StartDate = dataArray{1}(si);
-d.EndDate = dataArray{2}(si);
-d.Finished = dataArray{3}(si);
-d.age = dataArray{5}(si);
-d.food_restrictions = dataArray{6}(si);
-d.food_restrictions_text = dataArray{7}(si);
-d.hungry = dataArray{8}(si);
-d.thirsty = dataArray{9}(si);
-d.sex = dataArray{10}(si);
-d.primary_lang = dataArray{11}(si);
-d.primary_lang_text = dataArray{12}(si);
-d.live_in_US = dataArray{13}(si);
-d.live_in_US_text = dataArray{14}(si);
-d.education = dataArray{15}(si);
-d.education2 = dataArray{16}(si);
-d.classify = dataArray{17}(si);
-d.classify2 = dataArray{18}(si);
-d.alc_morals = dataArray{19}(si);
-d.alc_morals2 = dataArray{20}(si);
-
-
-%% get image ratings as a numeric matrix
-
-valence = [dataArray{22:4:308}]; valence = valence(si,:);
-arousal = [dataArray{23:4:308}]; arousal = arousal(si,:);
-familiarity = [dataArray{24:4:308}]; familiarity = familiarity(si,:);
-
+valence = [dataArray{24:4:310}];
+arousal = [dataArray{25:4:310}];
+familQ = [dataArray{26:4:310}];
 
 % make sure valence, arousal, and familiarty rating matrices are the same
 % size
-if ~isequal(size(valence),size(arousal),size(familiarity))
+if ~isequal(size(valence),size(arousal),size(familQ))
     error('size of valence, arousal, and familiarity ratings don''t match! Fix this before continuing.')
 end
 
@@ -150,21 +93,130 @@ if size(valence,2)~=72
     error(['ratings only loaded for ' num2str(size(valence,2)) ' images - look into this!']);
 end
 
-
-%% transform valence & arousal ratings to positive & negative arousal
-
-[pa,na]=va2pana(valence,arousal);
+% transform valence & arousal ratings to positive & negative arousal
+[paQ,naQ]=va2pana(valence,arousal);
 
 
-
-%% get image types
-
+% get image types
 image_types = getQualtricsImageTypes;
 
-[pa,na,familiarity,image_types]=reorderQualtricsData(pa,na,familiarity,image_types);
+% reorder qualtrics data to match cue presentation in fmri task
+[paQ,naQ,familQ,image_types]=reorderQualtricsData(paQ,naQ,familQ,image_types);
 
 
-end % getQualtricsData
+%% now loop through subjects to get ratings & demographics info
+
+qsubs = dataArray{:, 4}; % list of subject ids in qualtrics data
+
+% if no subjects are given as input, return data as listed in qualtrics
+if isempty(subjects)
+    subjects = qsubs;
+end
+
+d.subjid = subjects;
+
+for i=1:numel(subjects)
+    
+    % deal with subject-specific issues here:
+    
+    % subject ja151218's responses are coded with id, 'ja151218_actual'
+    if strcmp(subjects{i},'ja151218')
+        si=find(strcmp('ja151218_actual',qsubs));
+        
+        % subject jn160403 was incorrectly entered as jn160402
+    elseif strcmp(subjects{i},'jn160403')
+        si=find(strcmp('jn160402',qsubs));
+        
+        % subject cs160214 was incorrectly entered as cs160216
+    elseif strcmp(subjects{i},'cs160214')
+        si=find(strcmp('cs160216',qsubs));
+        
+        % subject as160317 was incorrectly entered
+    elseif strcmp(subjects{i},'as160317')
+        si=find(strcmp('as1603167',qsubs));
+  
+        % subject tj160529 was entered twice; 
+    elseif strcmp(subjects{i},'tj160529')
+        si=find(strcmp('tj160529',qsubs));
+        si = si(1);
+    else
+        si=find(strcmp(subjects{i},qsubs));
+    end
+    
+    % if subject's data isn't found, return nan/empty values for that
+    % subject
+    if isempty(si)
+        
+        fprintf(['\n\nwarning: no qualtrics data found for subject: ' subjects{i} '\n\n'])
+        d.StartDate{i} = '';
+        d.EndDate{i,1} = '';
+        d.Finished(i,1) = nan;
+        d.age(i,1) = nan;
+        d.food_restrictions(i,1) = nan;
+        d.food_restrictions_text{i,1} = '';
+        d.hungry(i,1) = nan;
+        d.thirsty(i,1) = nan;
+        d.sex(i,1) = nan;
+        d.primary_lang(i,1) = nan;
+        d.primary_lang_text{i,1} = '';
+        d.live_in_US(i,1) = nan;
+        d.live_in_US_text{i,1} = '';
+        d.education(i,1) = nan;
+        d.education2{i,1} = '';
+        d.classify(i,1) = nan;
+        d.classify2{i,1} = '';
+        d.alc_morals(i,1) = nan;
+        d.alc_morals2{i,1} = '';
+        d.smoke(i,1) = nan;
+        d.smoke_perday{i,1} = '';
+        
+        pa(i,:) = nan(1,72);
+        na(i,:) = nan(1,72);
+        famil(i,:) = nan(1,72);
+        
+    else
+        
+        % fill in data for this subject
+        d.StartDate{i,:} = dataArray{1}{si};
+        d.EndDate{i,:} = dataArray{2}{si};
+        d.Finished(i,1) = dataArray{3}(si);
+        d.age(i,1) = dataArray{5}(si);
+         d.hungry(i,1) = dataArray{8}(si);
+        d.thirsty(i,1) = dataArray{9}(si);
+        d.sex(i,1) = dataArray{10}(si);
+        
+           d.food_restrictions(i,1) = dataArray{6}(si);
+        d.food_restrictions_text{i,:} = dataArray{7}{si};
+    
+             d.primary_lang(i,1) = dataArray{11}(si);
+        d.primary_lang_text{i,:} = dataArray{12}{si};
+        d.live_in_US(i,1) = dataArray{13}(si);
+        d.live_in_US_text{i,:} = dataArray{14}{si};
+        d.education(i,1) = dataArray{15}(si);
+        d.education2{i,:} = dataArray{16}{si};
+        d.classify(i,1) = dataArray{17}(si);
+        d.classify2{i,:} = dataArray{18}{si};
+        d.alc_morals(i,1) = dataArray{19}(si);
+        d.alc_morals2{i,:} = dataArray{20}{si};
+        d.smoke(i,1) = dataArray{21}(si);
+        d.smoke_perday{i,:} = dataArray{22}{si};
+   
+        
+        pa(i,:) = paQ(si,:);
+        na(i,:) = naQ(si,:);
+        famil(i,:) = familQ(si,:);
+        
+    end
+    
+end % subjects loop
+
+%% recode classify with strings 
+% 
+% if qd.classify
+% d.class
+% end
+
+end % function
 
 % returns image types from qualtrics ratings
 % this is also saved in the file:

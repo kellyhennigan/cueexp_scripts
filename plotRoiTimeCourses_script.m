@@ -4,99 +4,152 @@
 % lines. Eg, if stims='food' and groups={'controls','patients'}, separate
 % time courses will be plotted for controls and patients to food trials.
 
-
 clear all
 close all
 
-
-% get paths for cue data & claudia's cue data
-p = getCuePaths_Claudia;
-dataDir2 = p.data;
-
-p = getCuePaths;
+%%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
+[p,task,subjects,gi]=whichCueSubjects();
 dataDir = p.data;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 figDir = p.figures;
 
-tcDir = 'timecourses_ants';
-tcDir2 = 'timecourses';
+% filepath to pre-processed functional data where %s is subject then task
+if isempty(strfind(dataDir,'claudia'))
+    groupStr = '';
+else
+    groupStr = 'alc';
+end
 
-% roiStrs = {'nacc','dlpfc','ins','caudate','acing','mpfc'};
 
-roiStrs = {'LC'};
+% rois to potentially process
+allRoiNames = {'nacc','acing','dlpfc','caudate','ins','LC','mpfc','VTA','SN',...
+    'naccL','naccR','insR','insL'};
+
+% allRoiNames = {'amygL','amygR','ifgL','ifgR','mfgL','mfgR','sfgL','sfgR'};
+
+disp(allRoiNames');
+fprintf('\nwhich ROIs to process? \n');
+roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');
+
+if isempty(roiNames)
+    roiNames = allRoiNames;
+else
+    roiNames = splitstring(roiNames);
+end
 
 
-% specify which groups to plot. 'all' means plot grand average across
-% groups.
-% groups = {'controls','patients'}; % controls, patients, or both
-groups = {'controls'};
-
-% specify specific stim types (e.g., 'food', or 'strong_want', etc.
-% or 'want' for all want rating bins or 'type' for all image types
-stimStr = {'type'};
+% tcDir = ['timecourses_' task ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
 
 nTRs = 10; % # of TRs to plot
 TR = 2; % 2 sec TR
-
-saveFig = 1;
+t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
+xt = t; %  xticks on the plotted x axis
 
 useSpline = 0; % if 1, time series will be upsampled by TR*10
 
-omitSubs = {'as160317'};
+% omitSubs = {'cm160510','zm160627'}; % any subjects to omit?
+omitSubs = {''}; % any subjects to omit?
 
-plotStats = 1;
+plotStats = 1; % 1 to note statistical signficance on figures
 
-%% do it
+saveFig = 1; % 1 to save out figures
+
+numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 
 
-stims = getStimNames(stimStr); % if stimStr = 'type' or 'want', this returns a cell array of relevant stimNames
 
-t = 0:TR:TR.*(nTRs-1); % time points (in seconds) to plot
-xt = t; %  xticks on the plotted x axis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% get task specific conditions/groups to plot
+
+% plotGroups & plotStims should be cell arrays specifying
+% the desired groups and stims to plot in figures. plotStimStrs gives a
+% string that describes the stim in a given plot. Each row of the cell
+% array should have info for a single figure, e.g.:
+
+% % % plotGroups = {'controls';
+% % %     'controls patients'};
+% % %
+% % % plotStims = {'alcohol drugs food neutral';
+% % %     'drugs'};
+
+% would be for making 2 figures: the 1st would plot alc, drugs, etc. for
+% just the controls and the 2nd would plot drugs for controls vs patients.
+
+[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task,groupStr);
+
+% plotGroups = {'relapsers non-relapsers controls'};
+% plotStims = {'drugs-neutral'};
+% plotStimStrs = plotStims;
+
+nFigs = numel(plotStimStrs); % number of figures to be made
+
+%% get ROI time courses
 
 r=1;
-for r = 1:numel(roiStrs)
+for r = 1:numel(roiNames)
     
-    roiStr = roiStrs{r};
+    roiName = roiNames{r};
     
-    tc = {};
-    
-    % get time courses & plot Labels in a cell array where each cell will be a line plot.
-    pLabels = repmat(stims,numel(groups),1); pLabels = strrep(pLabels,'_',' ');
+    inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
     
     
-    for g=1:numel(groups)
+    %% define time courses to plot
+    
+    f=1
+    for f = 1:nFigs
         
-        if strcmpi(groups{g},'alcpatients') || strcmpi(groups{g},'2')
-            inDir = fullfile(dataDir2,tcDir2,roiStr);
-        else
-            inDir = fullfile(dataDir,tcDir,roiStr);
-        end
+        % get the plot name and stims & groups to plot for this figure
+        groups = splitstring(plotGroups{f});
+        stims = splitstring(plotStims{f});
+        stimStr = plotStimStrs{f};
         
-        [tc(g,:),subjects(g,:)]=cellfun(@(x) loadRoiTimeCourses(fullfile(inDir,[x '.csv']),groups{g},nTRs), stims,'uniformoutput',0);
+        tc = {}; % time course cell array
+        subjects = {};
         
-        % omit subjects?
-        if any(ismember(subjects{g,1},omitSubs))
-            omit_idx=find(ismember(subjects{g,1},omitSubs));
-            for i = 1:size(subjects(g,:),2)
-                subjects{g,i}(omit_idx)=[];
-                tc{g,i}(omit_idx,:)=[];
+        g=1;
+        for g=1:numel(groups)
+            
+            for c = 1:numel(stims)
+                
+                % if there's a minus sign, assume desired plot is stim1-stim2
+                if strfind(stims{c},'-')
+                    stim1 = stims{c}(1:strfind(stims{c},'-')-1);
+                    stim2 = stims{c}(strfind(stims{c},'-')+1:end);
+                    [tc1,subjects{g,c}]=loadRoiTimeCourses(fullfile(inDir,[stim1 '.csv']),groups{g},nTRs);
+                    [tc2,~]=loadRoiTimeCourses(fullfile(inDir,[stim2 '.csv']),groups{g},nTRs);
+                    tc{g,c}=tc1-tc2;
+                else
+                    stimFile = fullfile(inDir,[stims{c} '.csv']);
+                    [tc{g,c},subjects{g,c}]=loadRoiTimeCourses(stimFile,groups{g},nTRs);
+                end
+                
+            end % stims
+            
+            
+            % omit subjects?
+            if any(ismember(subjects{g,1},omitSubs))
+                omit_idx=find(ismember(subjects{g,1},omitSubs));
+                for i = 1:size(subjects(g,:),2)
+                    subjects{g,i}(omit_idx)=[];
+                    tc{g,i}(omit_idx,:)=[];
+                end
             end
-        end
-        
-        if numel(groups)>1
-            pLabels(g,:) = cellfun(@(x) [x ' ' groups{g} ' (n=' num2str(size(tc{g,1},1)) ')'], pLabels(g,:), 'uniformoutput',0);
-        end
-        
+            
+            n(g) = size(tc{g,1},1); % n subjects for this group
+            
+        end % groups
+    
+    % make sure all the time courses are loaded
+    if any(cellfun(@isempty, tc))
+        tc
+        error('\hold up - time courses for at least one stim/group weren''t loaded.')
     end
     
-    tc = reshape(tc,[],1);
-    pLabels = reshape(pLabels,[],1);
     
     mean_tc = cellfun(@nanmean, tc,'uniformoutput',0);
     se_tc = cellfun(@(x) nanstd(x,1)./sqrt(size(x,1)), tc,'uniformoutput',0);
-    
     
     if (useSpline) %  upsample time courses
         t_orig = t;
@@ -105,90 +158,94 @@ for r = 1:numel(roiStrs)
         se_tc =  cellfun(@(x) spline(t_orig,x,t), se_tc, 'uniformoutput',0);
     end
     
-    %% plot it
     
-    cols = getCueExpColors(numel(tc),'cell');
+    %% set up all plotting params
     
-    figH = figure;
-    set(figH, 'Visible', 'off');
-    hold on
-    ss = get(0,'Screensize'); % screen size
+    % fig title
+    figtitle = [roiName ' response to ' stimStr ' in ' groups{1} ' (n=' num2str(n(1)) ')'];
+    if numel(groups)>1
+        for g=2:numel(groups)
+            figtitle = [figtitle ', ' groups{g} ' (n=' num2str(n(g)) ')'];
+        end
+    end
     
-    set(figH,'Position',[ss(3)-700 ss(4)-525 700 525]) % make figure 700 x 525 pixels
-    set(gca,'fontName','Arial','fontSize',14)
-    set(gca,'box','off');
-    set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
+    % x and y labels
+    xlab = 'time (in seconds) relative to trial onset';
+    ylab = '%\Delta BOLD';
     
-    cellfun(@(x,y) plot(t,x,'color',y,'linewidth',2), mean_tc,cols)
     
-    % legend
-    legend(pLabels,'Location','Best')
-    legend(gca,'boxoff')
-    % xlim([1 numel(xt)])
-    % set(gca,'XTick',xt)
-    xlabel('time (in seconds) relative to cue onset')
-    ylabel('%\Delta BOLD')
+    % labels for each line plot (goes in the legend)
+    pLabels = cell(numel(groups),numel(stims));
+    if numel(stims)>1
+        pLabels = repmat(stims,numel(groups),1); pLabels = strrep(pLabels,'_',' ');
+    end
+    if numel(groups)>1
+        for g=1:numel(groups)
+            pLabels(g,:) = cellfun(@(x) [x ' ' groups{g} ], pLabels(g,:), 'uniformoutput',0);
+        end
+    end
     
-    % shaded error bar
-    h=cellfun(@(x,y,z) shadedErrorBar(t,x,y,{'color',z},.5), mean_tc, se_tc, cols, 'uniformoutput',0);
-    cellfun(@(x) set(x.edge(1), 'Visible','off'), h)
-    cellfun(@(x) set(x.edge(2), 'Visible','off'), h)
-    hc = get(gca,'Children');
-    set(hc,'Linewidth',2);
     
-    % if plotting stats:
+    % line colors
+    cols = reshape(getCueExpColors(numel(tc),'cell'),size(tc,1),[]);
+    
+    
+    % get stats, if plotting
+    p=[];
     if plotStats
         if numel(groups)>1
-            p = getPVals(tc,0);
+            p = getPValsGroup(tc); % one-way ANOVA
         else
-            p = getPVals(tc,1);
-        end
-        yL = ylim;
-        ystats = mean([max(cell2mat(cellfun(@(x,y) max(x+y), mean_tc, se_tc, 'UniformOutput',0))),yL(2)]);
-        for i=1:numel(p)
-            if p(i)<.001
-                text(xt(i),ystats,'***','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
-            elseif p(i) < .01
-                text(xt(i),ystats,'**','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
-            elseif p(i) < .05
-                text(xt(i),ystats,'*','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
-            end
+            p = getPValsRepMeas(tc); % repeated measures ANOVA
         end
     end
     
-    % group string & plot title
-    if numel(groups)>1
-        groupStr = 'bygroup';
-        title([roiStr ' response to ' stimStr{1} ' ' groupStr]);
-    else
-        groupStr = groups{1};
-        title([groupStr '(n=' num2str(size(tc{1},1)) ') ' roiStr ' response to ' stimStr{1}]);
-    end
     
-    
-    
-    %% save figure?
-    
-    % nomenclature: roiStr_stimStr_groupStr
-    
+    % filename, if saving
+    savePath = [];
     if saveFig
-        
-        outName = [roiStr '_' [stimStr{:}] '_' groupStr];
-        
-        outDir = fullfile(figDir,tcDir,roiStr);
-        
+        % nomenclature: roiName_stimStr_groupStr
+        outDir = fullfile(figDir,tcDir,roiName);
         if ~exist(outDir,'dir')
             mkdir(outDir)
         end
-        
-        print(gcf,'-dpng','-r600',fullfile(outDir,outName));
+        if numel(groups)==1
+            outName = [roiName '_' stimStr '_' groups{1}];
+        else
+            outName = [roiName '_' stimStr '_bygroup'];
+        end
+        if numberFigs==1
+            outName = [num2str(f) ' ' outName];
+        end
+        savePath = fullfile(outDir,outName);
     end
     
     
-end % roiStrs
+    %% finally, plot the thing!
+    
+    fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
+    
+    [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,figtitle,savePath,0);
+    
+    fprintf('done.\n\n')
+    
+    
+end % figures
 
+end %roiNames
 
-
-
+%         fsize = 26;
+%         set(gca,'fontName','Arial','fontSize',fsize)
+%         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
+%         xlabel(xlab,'fontName','Arial','FontSize',fsize)
+%         ylabel(ylab,'fontName','Arial','FontSize',fsize)
+%         
+%      set(leg,'String',{'relapsers (n=8)','non-relapsers (n=12)','controls (n=33)'})
+%         set(gca,'XTick',[0:2:18])
+%         xlim([4 18])
+%         ylim([-.2 .51])
+%         set(leg,'Location','EastOutside')
+%         print(gcf,'-dpng','-r300',savePath);
+%         
 
 
