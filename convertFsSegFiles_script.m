@@ -21,20 +21,25 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear all
+close all
+
+[p,task,subjects,gi]=whichCueSubjects('stim','');
+dataDir = p.data;
+
+
 getCuePaths;
 !source $FREESURFER_HOME/SetUpFreeSurfer.sh
 fshome = getenv('FREESURFER_HOME');
 % setenv('FREESURFER_HOME',fshome);  % this to tell where FS folder is
 
 
-subjects = getCueSubjects;
- 
-
-
 for s=1:numel(subjects)
     
     subject = subjects{s};
     
+    fprintf(['\n\nworking on subject ' subject '...\n\n']);
+   
     
     inDir = ['/home/hennigan/freesurfer/subjects/' subject '/mri']; % freesurfer subject mri dir
     subjDir = ['/home/hennigan/cueexp/data/' subject ];
@@ -123,4 +128,5 @@ for s=1:numel(subjects)
         
     end 
     
+      fprintf(['done with subject ' subject '.\n\n']);
 end

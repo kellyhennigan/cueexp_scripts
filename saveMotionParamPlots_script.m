@@ -5,18 +5,14 @@
 clear all
 close all
 
-% cd /home/hennigan/cueexp/scripts
+cd /home/hennigan/cueexp_claudia/scripts
+
+p = getCuePaths_Claudia
+% subjects = getCueSubjects_Claudia;
+
+subjects ={'290','291','293','294','301'};
 
 
-subjects ={'rf160313'
-    'jw160316'
-    'as160317'
-    'pk160319'
-    'jc160320'
-    'jc160321'};
-
-
-p=getCuePaths;
 dataDir = p.data;
 figDir = fullfile(p.figures,'motion_params')
 if ~exist(figDir,'dir')

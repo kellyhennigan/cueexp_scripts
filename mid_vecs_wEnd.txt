@@ -1,0 +1,167 @@
+### All ###
+
+# anticipation period
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "ant_mid.1D"
+MARK TR = 1,2 WITH 1
+END_VEC
+
+
+#  loss vs no loss anticipation
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "lvn_ant_mid.1D"
+MARK TR = 1,2 AND
+		trialtype = 3 WITH 1
+MARK TR = 1,2 AND
+		trialtype = 1 WITH -1
+END_VEC
+
+
+# gain vs no gain anticipation
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gvn_ant_mid.1D"
+MARK TR = 1,2 AND
+		trialtype = 6 WITH 1
+MARK TR = 1,2 AND
+		trialtype = 4 WITH -1
+END_VEC
+
+
+# outcome period
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "out_mid.1D"
+MARK TR = 4 WITH 1
+END_VEC
+
+
+# gain vs no gain outcome
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gvn_out_mid.1D"
+MARK TR = 4 AND
+		trialtype = 5, 6 AND
+		hit = 1 WITH 1
+MARK TR = 4 AND
+		trialtype = 5, 6 AND
+		hit = 0 WITH -1
+END_VEC
+
+# no loss vs loss outcome
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "nvl_out_mid.1D"
+MARK TR = 4 AND
+		trialtype = 2, 3 AND
+		hit = 1 WITH 1
+MARK TR = 4 AND
+		trialtype = 2, 3 AND
+		hit = 0 WITH -1
+END_VEC
+
+# loss vs no loss outcome
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "lvn_out_mid.1D"
+MARK TR = 4 AND
+		trialtype = 2, 3 AND
+		hit = 0 WITH 1
+MARK TR = 4 AND
+		trialtype = 2, 3 AND
+		hit = 1 WITH -1
+END_VEC
+
+
+##################### for VOI time courses 
+
+# $5 gain trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gain5_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 6 WITH 1
+END_VEC
+
+
+# $1 gain trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gain1_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 5 WITH 1
+END_VEC
+
+
+# $0 gain trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gain0_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 4 WITH 1
+END_VEC
+
+# $5 loss trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "loss5_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 3 WITH 1
+END_VEC
+
+
+# $1 loss trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "loss1_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 2 WITH 1
+END_VEC
+
+
+# $0 loss trial onsets
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "loss0_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 1 WITH 1
+END_VEC
+
+
+# $1 & $5 gain hits
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gainwin_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 5, 6 AND
+		hit = 1 WITH 1
+END_VEC
+
+# $1 & $5 gain miss
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "gainmiss_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 5, 6 AND
+		hit = 0 WITH 1
+END_VEC
+
+# $1 & $5 gain hits
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "losswin_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 2, 3 AND
+		hit = 1 WITH 1
+END_VEC
+
+# $1 & $5 gain miss
+BEGIN_VEC
+INPUT: "mid_matrix_wEnd.csv"
+OUTPUT: "lossmiss_trial_mid.1D"
+MARK TR = 1 AND
+		trialtype = 2, 3 AND
+		hit = 0 WITH 1
+END_VEC

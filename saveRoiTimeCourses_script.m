@@ -40,7 +40,7 @@ else
 end
 
 % filepath to pre-processed functional data where %s is subject then task
-funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_%s' afniStr '_tlrc.nii.gz']);
+funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_%s_tlrc' afniStr '.nii.gz']);
 
 
 % file path to file that says which volumes to censor due to head movement
@@ -54,12 +54,9 @@ stimDir =  fullfile(dataDir,'%s/regs');
 % roi directory
 roiDir = fullfile(dataDir,'ROIs');
 
-% rois to potentially process 
-allRoiNames = {'nacc','acing','dlpfc','caudate','ins','LC','mpfc','VTA','SN',...
-    'naccL','naccR','insR','insL'};
-
-% allRoiNames = {'amygL','amygR','ifgL','ifgR','mfgL','mfgR','sfgL','sfgR'};
-
+% get list of rois to potentially process
+a=dir([roiDir '/*_func.nii']);
+allRoiNames = cellfun(@(x) strrep(x,'_func.nii',''), {a(:).name},'uniformoutput',0);
 disp(allRoiNames');
 fprintf('\nwhich ROIs to process? \n');
 roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');

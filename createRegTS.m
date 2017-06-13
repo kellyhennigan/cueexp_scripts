@@ -22,8 +22,8 @@ function [reg,regc]=createRegTS(eventOnsets,vals,nTRs,convolve,saveFileName)
 %
 % author: Kelly, kelhennigan@gmail.com, 20-Dec-2015
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
 
 if notDefined('convolve')
     convolve = 0;
@@ -31,18 +31,19 @@ end
 
 if notDefined('saveFileName')
     saveOut = 0;
-    if strcmp(convolve,'waver')
-        error('saveFileName must be defined for "waver" convolution');
-    end
+%     if strcmp(convolve,'waver')
+%         error('saveFileName must be defined for "waver" convolution');
+%     end
 else
     saveOut = 1;
 end
 
 
+%% define regressor time series (not convolved)
+
 % define (not convolved) regressor time series
 reg = zeros(nTRs,1);
 reg(eventOnsets)=vals; % set regressor at event onset times to value in vals
-
 
 % save out if desired
 if saveOut
@@ -52,8 +53,10 @@ if saveOut
 end
 
 
-% do convolution if desired
+%% do convolution if desired
+
 regc = [];
+
 if convolve
     
     TR = 2; % repetition time for cue experiment
@@ -82,12 +85,25 @@ if convolve
             afniDir = '~/abin/';
         end
         
-        saveFileName2 = fullfile(outDir,[regName 'c' fs]);
+      
+        % if reg ts wasn't saved out, save it out as a temp file to give to
+        % afni's waver command
+        if ~saveOut
+             saveFileName = tempname; 
+             dlmwrite(saveFileName,reg); % save out reg ts to give as input to waver cmd
+             saveFileName2 = tempname;
+             msg = ['reg ts convolved.\n'];
+        else 
+            saveFileName2 = fullfile(outDir,[regName 'c' fs]);
+            msg = ['reg file ' regName 'c' fs ' saved.\n'];
+        end
+        
         cmd = [afniDir 'waver -dt ' num2str(TR) ' -GAM -peak 1 -numout ' num2str(nTRs) ...
-            ' -input ' saveFileName ' > ' saveFileName2]
+            ' -input ' saveFileName ' > ' saveFileName2];
         system(cmd)
-        fprintf(['reg file ' regName 'c' fs ' saved.\n']);
+        fprintf(msg);
         regc = dlmread(saveFileName2);
+          
         
     end
         

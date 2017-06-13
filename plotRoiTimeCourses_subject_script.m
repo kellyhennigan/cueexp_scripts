@@ -6,20 +6,18 @@ clear all
 close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
-[p,task,subjects,gi]=whichCueSubjects();
+p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-% filepath to pre-processed functional data where %s is subject then task
-if isempty(strfind(dataDir,'claudia'))
-    groupStr = '';
-else
-    groupStr = 'alc';
-end
+
+task = 'cue';
+group = 'patients';
+[subjects,gi]=getCueSubjects(task,group);
 
 
 % roi to process
-roiName = 'nacc';
+roiName = 'nacc_desai';
 
 
 tcDir = ['timecourses_' task '_afni_woOutliers' ];
@@ -32,11 +30,11 @@ xt = t; %  xticks on the plotted x axis
 
 useSpline = 0; % if 1, time series will be upsampled by TR*10
 
-plotStats = 1; % 1 to note statistical signficance on figures
 
 saveFig = 1; % 1 to save out figures
 
-numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
+numberFigs = 0; % 1 to number the figs' outnames (useful for viewing in Preview)
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,12 +72,12 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 if strfind(stim,'-')
     stim1 = stim(1:strfind(stim,'-')-1);
     stim2 = stim(strfind(stim,'-')+1:end);
-    [tc1,subjects]=loadRoiTimeCourses(fullfile(inDir,[stim1 '.csv']),group,nTRs);
-    [tc2,~]=loadRoiTimeCourses(fullfile(inDir,[stim2 '.csv']),group,nTRs);
+    [tc1,subjects]=loadRoiTimeCourses(fullfile(inDir,[stim1 '.csv']),group,1:nTRs);
+    [tc2,~]=loadRoiTimeCourses(fullfile(inDir,[stim2 '.csv']),group,1:nTRs);
     tc=tc1-tc2;
 else
     stimFile = fullfile(inDir,[stim '.csv']);
-    [tc,subjects]=loadRoiTimeCourses(stimFile,group,nTRs);
+    [tc,subjects]=loadRoiTimeCourses(stimFile,group,1:nTRs);
 end
  
 %%%%%%
@@ -108,7 +106,7 @@ end
 %% set up all plotting params
 
 % fig title
-figtitle = [roiName ' response to ' stim ' by subject'];
+figtitle = [strrep(roiName,'_',' ') ' response to ' stim ' by subject'];
 
 % x and y labels
 xlab = 'time (in seconds) relative to cue onset';
@@ -119,18 +117,20 @@ ylab = '%\Delta BOLD';
 pLabels = subjects;
 
 
-% line colors
-cols = solarizedColors(n);
+%%%%%% colors: 
+
+% line colors - Nx3 matrix of rgb vals (1 row/subject)
+% cols = solarizedColors(n);
 
 % to do colors by relapse:  
-% relapse_idx=[ 0 1 1 1 1 0 1 1 0 0 0 1 0 0 0 0 0 nan 1]
-% relapse_idx=getCueRelapseData
-%  cols2 = getCueExpColors(2);
-%  cols(ri==1,:)=repmat(cols2(2,:),numel(ri(ri==1)),1);
-%  cols(ri==0,:)=repmat(cols2(1,:),numel(ri(ri==0)),1);
+[ri,~]=getCueRelapseData(subjects);
+ cols3 = getCueExpColors(3);
+ cols = repmat(cols3(3,:),numel(subjects),1); % nan vals are green 
+ cols(ri==1,:)=repmat(cols3(2,:),numel(ri(ri==1)),1); %relapse vals is red
+ cols(ri==0,:)=repmat(cols3(1,:),numel(ri(ri==0)),1); % non-relapse is blue
+
  
 
-% (stats don't make sense here)
 
 % filename, if saving
 savePath = [];

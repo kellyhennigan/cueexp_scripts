@@ -18,11 +18,8 @@ function p = getCuePaths(subject)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % get base directory address
-if exist('/Volumes/G-DRIVE/cueexp','dir')
-    baseDir = '/Volumes/G-DRIVE/cueexp';
-else
-    baseDir = fullfile(getHomeDir,'cueexp');
-end
+baseDir = getCueBaseDir;
+
 
 % define structural array p for output
 p = struct();

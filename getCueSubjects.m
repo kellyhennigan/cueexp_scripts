@@ -7,12 +7,11 @@ function [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % controls, 1 for patients).
 
 % INPUT: 2 optional inputs:
-%   task - string that must be either 'cue','mid', or 'midi'. Default is
-%   'cue'.
-%   group - number specifying to return only subjects from a single group:
-%         0, for control subs
-%         1 for stimulant dependent patients
-%         2 for alcohol dependent patients (eventually)
+%   task - string that must be either 'cue','mid', 'midi', or 'dti' or '' 
+%         (Default is '').
+%   group - number or string specifying to return only subjects from a single group:
+%         0 or 'controls' for control subs
+%         1 or 'patients' for stimulant-dependent patients
 %
 %
 % OUTPUT:
@@ -84,12 +83,12 @@ end
 % now get only subjects from one specific group, if desired
 if ~isempty(group)
     
-    if group==0
+    if strcmpi(group,'controls') || isequal(group,0)
         subjects = subjects(gi==0);
         notes = notes(gi==0);
         gi = gi(gi==0);
         
-    elseif group==1
+    elseif strcmpi(group,'patients') || isequal(group,1)
         subjects = subjects(gi==1);
         notes = notes(gi==1);
         gi = gi(gi==1);

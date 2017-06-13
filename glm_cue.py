@@ -13,11 +13,12 @@ import os,sys
 data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 afniStr = '_afni' # set this to '' if not using afni coreg version
+#afniStr = '' # set this to '' if not using afni coreg version
 
 
 # pre-processed functional data to analyze
 func_dir = 'func_proc'  	# relative to subject-specific directory
-func_files = 'pp_cue'+afniStr+'_tlrc.nii.gz'
+func_files = 'pp_cue_tlrc'+afniStr+'.nii.gz'
 
 out_dir = os.path.join(data_dir,'results_cue'+afniStr)  	# directory for out files 
 out_str = 'glm'					# string for output files
@@ -60,7 +61,7 @@ for subject in subjects:
 		'-jobs 2 '
 		'-input '+func_dir+'/'+func_files+' '
 		'-censor '+func_dir+'/'+'cue_censor.1D '
-		'-num_stimts 15 '
+		'-num_stimts 16 '
 		'-polort 2 '
 		'-dmbase '						# de-mean baseline regressors
 		'-xjpeg '+os.path.join(out_dir,'Xmat')+' '
@@ -73,12 +74,13 @@ for subject in subjects:
 		'-stim_file 7 '+func_dir+'/cue_csf'+afniStr+'.1D -stim_base 7 -stim_label 7 csf ' 
 		'-stim_file 8 '+func_dir+'/cue_wm'+afniStr+'.1D -stim_base 8 -stim_label 8 wm ' 
 		'-stim_file 9 regs/cue_cuec.1D -stim_label 9 cue '
-		'-stim_file 10 regs/choice_cuec.1D -stim_label 10 choice '
-		'-stim_file 11 regs/choicert_cuec.1D -stim_label 11 choice_rt ' 
-		'-stim_file 12 regs/alcohol_trial_cuec.1D -stim_label 12 alcohol ' 
-		'-stim_file 13 regs/drugs_trial_cuec.1D -stim_label 13 drugs ' 
-		'-stim_file 14 regs/food_trial_cuec.1D -stim_label 14 food ' 
-		'-stim_file 15 regs/neutral_trial_cuec.1D -stim_label 15 neutral ' 
+		'-stim_file 10 regs/img_cuec.1D -stim_label 10 img '
+		'-stim_file 11 regs/choice_cuec.1D -stim_label 11 choice ' 
+		'-stim_file 12 regs/choicert_cuec.1D -stim_label 12 choice_rt ' 
+		'-stim_file 13 regs/alcohol_trial_cuec.1D -stim_label 13 alcohol ' 
+		'-stim_file 14 regs/drugs_trial_cuec.1D -stim_label 14 drugs ' 
+		'-stim_file 15 regs/food_trial_cuec.1D -stim_label 15 food ' 
+		'-stim_file 16 regs/neutral_trial_cuec.1D -stim_label 16 neutral ' 
 		'-num_glt 3 '					 # of contrasts
 		'-glt_label 1 alcohol-neutral -gltsym "SYM: +alcohol -neutral" ' 
 		'-glt_label 2 drugs-neutral -gltsym "SYM: +drugs -neutral" '
@@ -86,7 +88,7 @@ for subject in subjects:
 		'-tout ' 					# output the partial and full model F
  		'-rout ' 					# output the partial and full model R2
  		#'-xout '						# print design matrix to the screen
- 		'-errts errts '						# print design matrix to the screen
+ 		#'-errts errts '						# print design matrix to the screen
  		'-bucket '+os.path.join(out_dir,this_out_str)+' ' 			# save out all info to filename w/prefix
  		'-cbucket '+os.path.join(out_dir,this_out_str+'_B')+' ' 		# save out only regressor coefficients to filename w/prefix
 		)

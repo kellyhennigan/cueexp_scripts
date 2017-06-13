@@ -4,18 +4,22 @@
 clear all
 close all
 
+p = getCuePaths(); % structural array of experiment file paths
 
-%% define filepaths & variables - edit as needed
+dataDir = p.data; % main data directory 
 
-% add scripts path to matlab's search path
-p = getCuePaths;
-path(path,p.scripts)
+% subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
+task = 'cue';
+[subjects,gi] = getCueSubjects(task); 
 
-saveFigs = 1; % 1 to save out generated figures, otherwise 0
-figDir = fullfile(p.figures,'behavior');
+groups = {'controls','patients'}; % group names
 
-% data directory path
-dataDir = p.data;
+
+cols = getCueExpColors(numel(groups));
+
+% # of total subjects, and # of controls and patients
+N=numel(subjects); n0 = numel(gi==0); n1 = numel(gi==1); 
+
 
 % cue task data
 fp1 = fullfile(dataDir, '%s/behavior/cue_matrix.csv');  %s is a placeholder for subj id string
@@ -23,13 +27,27 @@ fp2 = fullfile(dataDir, '%s/behavior/cue_ratings.csv');
 
 
 % qualtrics survey data & list of image types
-fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey161027.csv');
+fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey_170606.csv');
 
+% save out figures? 
+savePlots = 1; 
 
-% define which subjects to analyze
-[subjects,gi] = getCueSubjects('cue'); % cell array with subject ID strings; gi index is 0 for controls and 1 for patients
-N = numel(subjects); % total # of subjects
-n0=numel(find(gi==0)); n1=numel(find(gi==1));
+% directory for saving out figures
+outDir = fullfile(p.figures,[task '_behavior']);
+
+% if saving plots and out dir doesn't exist already, create it
+if savePlots
+    if ~exist(outDir,'dir')
+        mkdir(outDir)
+    end
+end
+
+%% define some useful variables 
+
+condNames = {'alcohol','drugs','food','neutral'};
+groupNames = {'controls','patients'};
+cols = [.15 .55 .82; .86 .2 .18]; % group plot colors
+plotSig = [1 1];
 
 
 %% get data
@@ -44,14 +62,6 @@ fp2s = cellfun(@(x) sprintf(fp2,x), subjects, 'uniformoutput',0);
 % 
 % 
 [qd,pa,na,famil,qimage_type]=getQualtricsData(fp3,subjects);
-
-
-%% define some useful variables 
-
-condNames = {'alcohol','drugs','food','neutral'};
-groupNames = {'controls','patients'};
-cols = [.15 .55 .82; .86 .2 .18]; % group plot colors
-plotSig = [1 1];
 
 
 %% Q1: are there differences in pref ratings across trial types & groups? 
@@ -69,9 +79,11 @@ end
 % pref ratings 
 dName = 'preference ratings'; % measure to plot
 d = {mean_pref(gi==0,:) mean_pref(gi==1,:)};
-savePath = fullfile(figDir,'cue_pref.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue pref.png');
 
+% [fig,leg] = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,titleStr,plotLeg,savePath)
+
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
 
 %% now plot without alc condition
 
@@ -79,9 +91,16 @@ idx = [2 4 3]; % drugs neutral food
 
 d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % pref ratings 
 dName = 'preference ratings'; % measure to plot
-savePath = fullfile(figDir,'cue_pref_no_alc.png');
-fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue pref no alc.png');
+fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
 
+% now by relapse
+groupNames = {'controls','relapsers','nonrelapsers'};
+ri=getCueRelapseData(subjects(gi==1));
+d{3} = d{2}; d{3}(ri==1,:)=[];
+d{2} = d{2}(ri==1,:);
+savePath = fullfile(outDir,'cue pref no alc by relapse.png');
+fig = plotNiceBars(d,dName,condNames(idx),groupNames,getCueExpColors(3),plotSig,'',1,savePath);
 
 
 %% Q2: differences in pos & neg arousal across trial types and groups? 
@@ -97,15 +116,29 @@ end
 % positive arousal ratings
 dName = 'positive arousal'; % measure to plot
 d = {mean_pa(gi==0,:) mean_pa(gi==1,:)};
-savePath = fullfile(figDir,'cue_pa.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue pa.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
+
+
+%%%%% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % no alc
+[~,fstr,~]=fileparts(savePath); savePath = fullfile(outDir,[fstr ' no alc.png']);
+fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
 
 
 % negative arousal ratings
 dName = 'negative arousal'; % measure to plot
 d = {mean_na(gi==0,:) mean_na(gi==1,:)};
-savePath = fullfile(figDir,'cue_na.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue na.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
+
+
+%%%%% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % no alc
+[~,fstr,~]=fileparts(savePath); savePath = fullfile(outDir,[fstr ' no alc.png']);
+fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
 
 
 
@@ -133,15 +166,15 @@ end
 % cue rt 
 dName = 'cue rt'; % measure to plot
 d = {mean_cue_rt(gi==0,:) mean_cue_rt(gi==1,:)};
-savePath = fullfile(figDir,'cue_cue_rt.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue cue rt.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
 
 
 % choice rt 
 dName = 'choice rt'; % measure to plot
 d = {mean_choice_rt(gi==0,:) mean_choice_rt(gi==1,:)};
-savePath = fullfile(figDir,'cue_choice_rt.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath);
+savePath = fullfile(outDir,'cue choice rt.png');
+fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
 
 
 
@@ -170,6 +203,12 @@ fprintf(['\naverage correlation between pref & positive arousal ratings:\n' ...
     'r=%4.2f\n'], nanmean(r))
     
 % yes - pref is correlated with post-experiment positive arousal ratings
+
+% now across all subjects
+vi=find(~isnan(pa) & pref~=0); % vals idx (NOT nan)
+plotCorr([],pref(vi),pa(vi),'pref ratings','PA','rp')
+savePath = fullfile(outDir,'pref PA corr.png');
+print(gcf,'-dpng','-r300',savePath);
 
 
 %% are people's hunger levels related to their food ratings? 

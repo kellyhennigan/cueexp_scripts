@@ -1,0 +1,457 @@
+### All ###
+
+#### midi trial type codes: 
+# 1 - GO gain $0
+# 2 - NOGO gain $0
+# 3 - GO loss $0
+# 4 - NOGO loss $0
+# 5 - GO gain $5
+# 6 - NOGO gain $5
+# 7 - GO loss $5
+# 8 - NOGO loss $5
+
+
+# anticipation period
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "ant_midi.1D"
+MARK TR = 1,2 WITH 1
+END_VEC
+
+
+# outcome period
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "out_midi.1D"
+MARK TR = 4 WITH 1
+END_VEC
+
+
+# target period 
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "target_midi.1D"
+MARK TR = 3 WITH 1
+END_VEC
+
+
+# gain vs no gain anticipation
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvn_ant_midi.1D"
+MARK TR = 1,2 AND
+	trialtype = 5,6 WITH 1
+MARK TR = 1,2 AND
+	trialtype = 1,2 WITH -1
+END_VEC
+
+#  loss vs no loss anticipation
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "lvn_ant_midi.1D"
+MARK TR = 1,2 AND
+		trialtype = 7,8 WITH 1
+MARK TR = 1,2 AND
+		trialtype = 3,4 WITH -1
+END_VEC
+
+
+# gain vs no gain outcome 
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvn_out_midi.1D"
+MARK TR = 4 AND
+	trialtype = 5,6 AND
+	hit/win = 1 WITH 1
+MARK TR = 4 AND
+	trialtype = 5,6 AND
+	hit/win = 0 WITH -1
+END_VEC
+
+
+# no loss vs loss outcome 
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "nvl_out_midi.1D"
+MARK TR = 4 AND
+	trialtype = 7,8 AND
+	hit/win = 1 WITH 1
+MARK TR = 4 AND
+    trialtype = 7,8 AND
+	hit/win = 0 WITH -1
+END_VEC
+
+
+# loss vs no loss outcome 
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "lvn_out_midi.1D"
+MARK TR = 4 AND
+	trialtype = 7,8 AND
+	hit/win = 0 WITH 1
+MARK TR = 4 AND
+    trialtype = 7,8 AND
+	hit/win = 1 WITH -1
+END_VEC
+
+
+# go vs no go target
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvng_tar_midi.1D"
+MARK TR = 3 AND
+    trialtype = 1,3,5,7 WITH 1
+MARK TR = 3 AND
+    trialtype = 2,4,6,8 WITH -1
+END_VEC
+
+
+# go (win vs miss) vs no go (win vs miss)
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvngXwin_out_midi.1D"
+MARK TR = 4 AND
+    hit/win = 1 AND
+    trialtype = 1,3,5,7 WITH 1
+MARK TR = 4 AND
+    hit/win = 0 AND
+    trialtype = 1,3,5,7 WITH -1
+MARK TR = 4 AND
+    hit/win = 1 AND
+    trialtype = 2,4,6,8 WITH -1
+MARK TR = 4 AND
+    hit/win = 0 AND
+    trialtype = 2,4,6,8 WITH 1
+END_VEC
+
+
+# gain vs no gain x go vs no go target 
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvnXgvng_tar_midi.1D"
+MARK TR = 3 AND
+    trialtype = 2,5 WITH 1
+MARK TR = 3 AND
+    trialtype = 1,6 WITH -1
+END_VEC
+
+
+# loss vs no loss x go vs no go target
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "lvnXgvng_tar_midi.1D"
+MARK TR = 3 AND
+    trialtype = 4,7 WITH 1
+MARK TR = 3 AND
+    trialtype = 3,8 WITH -1
+END_VEC
+
+
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gvnXgvngXwin_tar_midi.1D"
+MARK TR = 3 AND
+    hit/win = 1 AND
+    trialtype = 2,5 WITH 1
+MARK TR = 3 AND
+    hit/win = 0 AND
+    trialtype = 2,5 WITH -1
+MARK TR = 3 AND
+    hit/win = 1 AND
+    trialtype = 1,6 WITH -1
+MARK TR = 3 AND
+    hit/win = 0 AND
+    trialtype = 1,6 WITH 1
+END_VEC
+
+
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "lvnXgvngXwin_tar_midi.1D"
+MARK TR = 3 AND
+    hit/win = 1 AND
+    trialtype = 4,7 WITH 1
+MARK TR = 3 AND
+    hit/win = 0 AND
+    trialtype = 4,7 WITH -1
+MARK TR = 3 AND
+    hit/win = 1 AND
+    trialtype = 3,8 WITH -1
+MARK TR = 3 AND
+    hit/win = 0 AND
+    trialtype = 3,8 WITH 1
+END_VEC
+
+
+
+################################################################
+##################### for VOI time courses #####################
+################################################################
+
+
+#### midi trial type codes: 
+# 1 - GO gain $0
+# 2 - NOGO gain $0
+# 3 - GO loss $0
+# 4 - NOGO loss $0
+# 5 - GO gain $5
+# 6 - NOGO gain $5
+# 7 - GO loss $5
+# 8 - NOGO loss $5
+
+
+####### go gain $0 trials 
+
+# go gain$0 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0GO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 1 WITH 1
+END_VEC
+
+
+# go gain$0 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0GOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 1 WITH 1
+END_VEC
+
+
+# go gain$0 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0GOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 1 WITH 1
+END_VEC
+
+
+
+####### nogo gain $0 trials 
+
+# nogo gain$0 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0NOGO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 2 WITH 1
+END_VEC
+
+
+# nogo gain$0 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0NOGOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 2 WITH 1
+END_VEC
+
+
+# nogo gain$0 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain0NOGOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 2 WITH 1
+END_VEC
+
+
+####### go loss $0 trials 
+
+
+# go loss$0 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0GO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 3 WITH 1
+END_VEC
+
+# go loss$0 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0GOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 3 WITH 1
+END_VEC
+
+# go loss$0 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0GOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 3 WITH 1
+END_VEC
+
+
+
+####### nogo loss $0 trials 
+
+# nogo loss$0 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0NOGO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 4 WITH 1
+END_VEC
+
+# nogo loss$0 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0NOGOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 4 WITH 1
+END_VEC
+
+
+# nogo loss$0 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss0NOGOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 4 WITH 1
+END_VEC
+
+
+
+
+####### go gain $5 trials 
+
+# go gain$5 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5GO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 5 WITH 1
+END_VEC
+
+# go gain$5 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5GOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 5 WITH 1
+END_VEC
+
+# go gain$5 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5GOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 5 WITH 1
+END_VEC
+
+
+
+####### nogo gain $5 trials 
+
+
+# nogo gain$5 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5NOGO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 6 WITH 1
+END_VEC
+
+# nogo gain$5 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5NOGOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 6 WITH 1
+END_VEC
+
+# nogo gain$5 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "gain5NOGOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 6 WITH 1
+END_VEC
+
+
+
+####### go loss $5 trials 
+
+
+# go loss$5 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5GO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 7 WITH 1
+END_VEC
+
+# go loss$5 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5GOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 7 WITH 1
+END_VEC
+
+# go loss$5 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5GOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 7 WITH 1
+END_VEC
+
+
+
+####### nogo loss $5 trials 
+
+
+# nogo loss$5 trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5NOGO_trial_midi.1D"
+MARK TR = 1 AND
+	trialtype = 8 WITH 1
+END_VEC
+
+# nogo loss$5 win trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5NOGOwin_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 1 AND
+	trialtype = 8 WITH 1
+END_VEC
+
+# nogo loss$5 miss trials
+BEGIN_VEC
+INPUT: "midi_matrix_wEnd.csv"
+OUTPUT: "loss5NOGOmiss_trial_midi.1D"
+MARK TR = 1 AND
+	hit/win = 0 AND
+	trialtype = 8 WITH 1
+END_VEC
+
+
+
+
+
+
+
+
+

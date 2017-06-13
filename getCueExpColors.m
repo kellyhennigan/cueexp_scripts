@@ -21,11 +21,48 @@ if notDefined('format')
     format = [];
 end
 
+
+colors3 = [
+    219 79 106      % pink
+    253 158 33      % orange
+    42 160 120      % green
+    2 117 180       % blue
+    ]./255;
+
+
+colors2 = [
+    246 97 165      % pink
+    253 158 33      % orange
+    29 186 154      % green
+    2 117 180       % blue
+    ]./255;
+
+colors1 = [
+    253 44 20      % fire-y red
+    253 158 33      % orange
+    29 186 154      % green
+    2 117 180       % blue
+    ]./255;
+
+colors4 = [
+    253 44 20      % fire-y red
+    253 158 33      % orange
+    29 186 154      % green
+    71 33 233       % blue
+    ]./255;
+
+colors2 = [
+    253 44 20      % fire-y red
+    253 158 33      % orange
+    29 186 154      % green
+    37 180 250       % blue
+    ]./255;
+
 colors = [
     250 32 161      % pink
     253 158 33      % orange
     29 186 154      % green
-    33 105 208      % blue
+    33 105 208
     ]./255;
 
 
@@ -35,8 +72,6 @@ if n==1
     colors = colors(4,:);
 elseif n==2
     colors = [colors(4,:);colors(1,:)];
-%        colors = [.15 .55 .82; .86 .2 .18];
-
 elseif n==3
     colors = [colors(4,:);colors(1,:);colors(3,:)];
 elseif n>4
@@ -47,40 +82,3 @@ end
 if strcmp(format,'cell')
     colors = mat2cell(colors,[ones(1,size(colors,1))],[3]);
 end
-
-% 
-% colors3 = [
-%     219 79 106      % pink
-%     253 158 33      % orange
-%     42 160 120      % green
-%     2 117 180       % blue
-%     ]./255;
-% 
-% 
-% colors2 = [
-%     246 97 165      % pink
-%     253 158 33      % orange
-%     29 186 154      % green
-%     2 117 180       % blue
-%     ]./255;
-% 
-% colors1 = [
-%     253 44 20      % fire-y red
-%     253 158 33      % orange
-%     29 186 154      % green
-%     2 117 180       % blue
-%     ]./255;
-% 
-% colors4 = [
-%     253 44 20      % fire-y red
-%     253 158 33      % orange
-%     29 186 154      % green
-%     71 33 233       % blue
-%     ]./255;
-% 
-% colors2 = [
-%     253 44 20      % fire-y red
-%     253 158 33      % orange
-%     29 186 154      % green
-%     37 180 250       % blue
-%     ]./255;

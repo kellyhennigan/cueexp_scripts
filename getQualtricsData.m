@@ -30,7 +30,7 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 
 
 if notDefined('filepath')
-    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey160708.csv';
+    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_170505.csv';
 end
 
 
@@ -135,10 +135,19 @@ for i=1:numel(subjects)
     elseif strcmp(subjects{i},'as160317')
         si=find(strcmp('as1603167',qsubs));
   
-        % subject tj160529 was entered twice; 
-    elseif strcmp(subjects{i},'tj160529')
-        si=find(strcmp('tj160529',qsubs));
+         % subject ld160918 was incorrectly entered as ld160914
+    elseif strcmp(subjects{i},'ld160918')
+        si=find(strcmp('ld160914',qsubs));
+ 
+        % subject tj160529 and jw170330 were entered twice; 
+    elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330')
+        si=find(strcmp(subjects{i},qsubs));
         si = si(1);
+ 
+        % subject al170316 was incorrectly entered as al160317
+    elseif strcmp(subjects{i},'al170316')
+        si=find(strcmp('al160317',qsubs));
+  
     else
         si=find(strcmp(subjects{i},qsubs));
     end
@@ -245,3 +254,62 @@ familiarity = familiarity(:,reorder_idx);
 image_types = image_types(reorder_idx);
 
 end
+
+
+%% 
+% age bins: 
+
+% 18 - 20
+% 21 - 25
+% 26 - 30
+% 31 - 40
+% 41 - 50
+% 50 - 60
+% 60 +
+
+
+% hungry/thirsty: 
+% 1=not hungry at all
+% 4= somewhat hungry
+% 7=very hungry
+% 
+
+% sex: 
+% Male
+% Female
+% Decline to state
+
+% primary language:
+% English
+% Other (fill-in)
+
+
+% live in US: 
+% Yes, my entire life
+% Yes, for 5+ years (but not entire life)
+% Yes, for 2-5 years
+% Yes, for 1-2 years
+% Yes, for less than 1 year
+% No, I live in: (fill in)
+
+
+% education: 
+%     1= Grammar school
+%     2= High school or equivalent
+%     3= Some college
+%     4= Bachelor's degree
+%     5= Master's degree
+%     6= Doctoral degree
+%     7= Professional degree
+% 
+% 
+% classify: 
+%     1= Arab
+%     2= Asian/Pacific Islander
+%     3= Black
+%     4= Caucasian/White
+%     5= Hispanic
+%     6= Indigenous or Aboriginal
+%     7= Latino
+%     8= Multiracial
+%     9= Would rather not say

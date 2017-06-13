@@ -1,4 +1,4 @@
-function [tc,subjects]=loadRoiTimeCourses(filepath,subjects,nTRs)
+function [tc,subjects]=loadRoiTimeCourses(filepath,subjects,TRs)
 % usage: import time course data for cuefmri experiment
 %
 % INPUT:
@@ -7,8 +7,8 @@ function [tc,subjects]=loadRoiTimeCourses(filepath,subjects,nTRs)
 %              to return data for, or a string indicating which group to
 %              return data for (i.e., 'controls' or 'patients'). If not
 %              defined, all subjects will be returned.
-%   nTRs (optional) - integer specifying the # of TRs in the text file.
-%                     Default is 12.
+%   TRs (optional) - integer specifying which TRs to return (e.g., [1:4]
+%   will return TRs 1,2,3, and 4. Default is all TRs from each row (12).
 
 % OUTPUT:
 %   tc - roi time course data
@@ -29,6 +29,11 @@ if notDefined('subjects')
     subjects = 'all';
 end
 
+% if TRs isn't given, return all the TRs per row by default
+if notDefined('TRs')
+    TRs = [1:12];
+end
+    
 
 % if subjects is a string, assume its a group name
 if isnumeric(subjects)
@@ -48,15 +53,10 @@ if ischar(subjects)
     elseif strncmpi(subjects,'non-relapsers',3)
         subjects = getCueSubjects('',1);
         ri = getCueRelapseData(subjects);
-        ri(isnan(ri))=0;
+       ri(isnan(ri))=0;
         subjects = subjects(ri==0);
         
     end
-end
-
-% assume there are 12 TRs in time series
-if notDefined('nTRs')
-    nTRs = 12;
 end
 
 
@@ -65,13 +65,14 @@ tc = [];  % time series
 % subjects = []; % subjects
 % gi = []; % group index
 
-%% Format specification
 
-formatSpec = ['%s' repmat('%f',1,nTRs) '%[^\n\r]'];
+%% load the timecourses
+
+% format spec
+formatSpec = ['%s' repmat('%f',1,TRs(end)) '%[^\n\r]'];
 
 
-%% Open file, read data, then close it
-
+% Open file, read data, then close it
 fileID = fopen(filepath,'r');
 
 % if fileID=-1, this means the file couldn't be opened. Return empty
@@ -92,6 +93,7 @@ fclose(fileID);
 
 % timecourse data
 tc = [dataArray{2:end-1}];
+tc = tc(:,TRs); % return only desired TRs
 tc_subs = dataArray{1}; % subject ids from timecourse file
 
 if strcmp(subjects,'all')

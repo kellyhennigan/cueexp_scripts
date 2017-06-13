@@ -293,3 +293,4 @@ for cur in beginVec[1:]:
 	ParseVector(oneVec)
 	count = count + 1
 	print "\n"
+
