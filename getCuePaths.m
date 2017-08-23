@@ -32,6 +32,7 @@ p.scripts = fullfile(p.baseDir, 'scripts');
 % place scripts directory at the top of the search path
 path(p.scripts,path)
 
+
 % subject directories
 if ~notDefined('subject')
     p.subj = fullfile(p.data, subject);  % subject directory
@@ -45,6 +46,8 @@ if ~notDefined('subject')
     %     p.results        = fullfile(p.subj, 'results');
     p.t1          = fullfile(p.subj, 't1');
 end
+
+
 
 end % function
 

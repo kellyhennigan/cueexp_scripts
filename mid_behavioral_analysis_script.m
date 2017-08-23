@@ -70,7 +70,7 @@ for i=1:N
         
     for j=1:numel(unique(trialtype))
         
-        mean_rt(i,j) = mean(rt(trialtype==j & rt>0));
+        mean_rt(i,j) = mean(rt(trialtype==j & rt>0)); % mean rt for win trials 
         p_win(i,j) = sum(trialtype==j & win==1)./numel(find(trialtype==j));
         p_miss1(i,j) = sum(trialtype==j & rt==-1)./numel(find(trialtype==j));
         p_miss2(i,j) = sum(trialtype==j & rt==-2)./numel(find(trialtype==j));
@@ -111,7 +111,7 @@ for g=1:numel(groups)
     else
         savePath = [];
     end
-    fig = plotNiceBars(d{g},dName,ttypeNames,groups(g),cols(g,:),[1 1],titleStr,0,savePath);
+    fig = plotNiceBars(d{g},dName,ttypeNames,groups(g),cols(g,:),[1 1],titleStr,1,savePath);
 end
 titleStr = sprintf('%s and %s RTs by trial type',groups{:});
 if savePlots
@@ -207,79 +207,140 @@ end
 fig = plotNiceBars(d,dName,ttypeNames,groups,cols,[1 1],titleStr,1,savePath);
 
 
+
 %% 5) figure: correlation between RT(loss/gain0-loss/gain5) and cue ratings 
 
-lossrt = mean_rt(:,1)-mean_rt(:,3);
-gainrt = mean_rt(:,4)-mean_rt(:,6);
+%%%%%%%%%%% GAINS 
 
-% remove subjects w/no cue ratings
-[ri,~]=find(~isnan(cuena)); ri=unique(ri);
+% cue positive arousal 
+x=cuepa(:,6);
+xlab = 'PA cue ratings (gain5)'; % x label
 
-% figH = subplotCorr(figH,x,y,xlab,ylab,titleStr,col)
+% x=cuepa(:,6)-cuepa(:,4);
+% xlab = '\DeltaPA cue ratings (gain5-gain0)'; % x label
+
+% gain RT
+y=mean_rt(:,4)-mean_rt(:,6);
+ylab = '\DeltaRT(gain0-gain5)'; % x label
+
+% y=mean_rt(:,6);
+% ylab = 'gain5 RTs'; % x label
+
+
 figH=setupFig; axH=gca;
 hold on
 for g=1:numel(groups)
-    [axH,rpStr] = plotCorr(axH,[cuena(ri(gi(ri)==g-1),3)-cuena(ri(gi(ri)==g-1),1)],lossrt(ri(gi(ri)==g-1)),'NA cue ratings','\DeltaRT(loss0-loss5)','',cols(g,:));
+    [axH,rpStr] = plotCorr(axH,x(gi==g-1),y(gi==g-1),xlab,ylab,'',cols(g,:));
     tStr{g} = ['\fontsize{14}{\color[rgb]{' num2str(cols(g,:)) '}' groups{g} ' ' rpStr '} ']; % title strings
 end
 % to write corr coefficients side by side:
 title(axH,[tStr{:}])
 hold off
 if savePlots
-    print(gcf,'-dpng','-r300',fullfile(outDir,['NAcueratings_RT_corr_bygroup']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,'cuePA_gainRT_corr_bygroup'));
 end
 
-% remove subjects w/no cue ratings
-[ri,~]=find(~isnan(cuepa)); ri=unique(ri);
+%%%%%%%%%%% LOSSES
 
-% figH = subplotCorr(figH,x,y,xlab,ylab,titleStr,col)
+% cue negative arousal 
+x=cuena(:,3);
+xlab = 'NA cue ratings (loss5)'; % x label
+
+% x=cuena(:,6)-cuena(:,4);
+% xlab = '\DeltaNA cue ratings (loss5-loss0)'; % x label
+
+% loss RT
+y=mean_rt(:,1)-mean_rt(:,3);
+ylab = '\DeltaRT(loss0-loss5)'; % x label
+
+% y=mean_rt(:,3);
+% ylab = 'loss5 RTs'; % x label
+
+
 figH=setupFig; axH=gca;
 hold on
 for g=1:numel(groups)
-    [axH,rpStr] = plotCorr(axH,[cuepa(ri(gi(ri)==g-1),6)-cuepa(ri(gi(ri)==g-1),4)],gainrt(ri(gi(ri)==g-1)),'\DeltaPA cue ratings (gain0-gain5)','\DeltaRT(gain0-gain5)','',cols(g,:));
+    [axH,rpStr] = plotCorr(axH,x(gi==g-1),y(gi==g-1),xlab,ylab,'',cols(g,:));
     tStr{g} = ['\fontsize{14}{\color[rgb]{' num2str(cols(g,:)) '}' groups{g} ' ' rpStr '} ']; % title strings
 end
 % to write corr coefficients side by side:
 title(axH,[tStr{:}])
 hold off
 if savePlots
-    print(gcf,'-dpng','-r300',fullfile(outDir,['cuePAratings_RT_corr_bygroup']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,'cueNA_lossRT_corr_bygroup'));
 end
 
 
 
 
-%% 6) correlation between cue ratings and NAcc anticipation
+%% 6) correlation between cue ratings and NAcc anticipation for gains
 
-% remove subjects w/no cue ratings
-[ri,~]=find(~isnan(cuepa)); ri=unique(ri);
+% cue positive arousal 
+x=cuepa(:,6);
+xlab = 'PA cue ratings (gain5)'; % x label
 
-% load nacc roi betas
-b = loadRoiTimeCourses(fullfile(p.data,'results_mid_afni','roi_betas','nacc_desai','gvnant.csv'),subjects,1);
+% x=cuepa(:,6)-cuepa(:,4);
+% xlab = '\DeltaPA cue ratings (gain5-gain0)'; % x label
+
+
+% nacc activity 
+% y = loadRoiTimeCourses(fullfile(p.data,'results_mid_afni','roi_betas','nacc_desai','gvnant.csv'),subjects,1);
+% ylab = '\Delta NAcc BOLD(gain5-gain0)'; % y label
+
+TRs = 3:5;
+y = mean(loadRoiTimeCourses(fullfile(p.data,'timecourses_mid_afni','nacc_desai','gain5.csv'),subjects,TRs),2);
+ylab = ['NAcc mean(TRs' num2str(TRs(1)) '-' num2str(TRs(end)) ')']; % y label
+
 
 figH=setupFig; axH=gca;
 hold on
 for g=1:numel(groups)
-    
-    %      x=cuepa(ri(gi(ri)==g-1),6);  % cue PA ratings
-    %    xlab = '\PA cue ratings (gain5)'; % x label
-    
-    x= cuepa(ri(gi(ri)==g-1),6)-cuepa(ri(gi(ri)==g-1),4); % cue ratings
-    xlab = '\DeltaPA cue ratings (gain5-gain0)'; % x label
-    y = b(ri(gi(ri)==g-1)); % nacc roi betas for this group
-    ylab = '\Delta NAcc BOLD(gain5-gain0)';
-    
-    [axH,rpStr] = plotCorr(axH,x,y,xlab,ylab,'',cols(g,:));
+    [axH,rpStr] = plotCorr(axH,x(gi==g-1),y(gi==g-1),xlab,ylab,'',cols(g,:));
     tStr{g} = ['\fontsize{14}{\color[rgb]{' num2str(cols(g,:)) '}' groups{g} ' ' rpStr '} ']; % title strings
 end
 % to write corr coefficients side by side:
 title(axH,[tStr{:}])
 hold off
 if savePlots
-    print(gcf,'-dpng','-r300',fullfile(outDir,[groups{:} 'cuePAratings_nacc_corr_bygroup']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,'cuePA_nacc_corr_bygroup'));
 end
 
 
+
+%% 7) correlation between RT and NAcc anticipation for gains
+
+% note: Brian isn't into this analysis - he doesn't think RT is a good
+% proxy for motivation, but rather is motor-related, so predicts that it
+% shouldnt be correlated with NAcc activity...
+
+% gain RTs
+x=mean_rt(:,4)-mean_rt(:,6);
+xlab = '\DeltaRT(gain0-gain5)'; % x label
+
+% x=mean_rt(:,6);
+% xlab = 'gain5 RTs'; % x label
+
+% nacc activity 
+% y = loadRoiTimeCourses(fullfile(p.data,'results_mid_afni','roi_betas','nacc_desai','gvnant.csv'),subjects,1);
+% ylab = '\Delta NAcc BOLD(gain5-gain0)'; % y label
+
+TRs = 3:6;
+y = mean(loadRoiTimeCourses(fullfile(p.data,'timecourses_mid_afni','nacc_desai','gain5.csv'),subjects,TRs),2);
+ylab = ['NAcc mean(TRs' num2str(TRs(1)) '-' num2str(TRs(end)) ')']; % y label
+
+
+figH=setupFig; axH=gca;
+hold on
+for g=1:numel(groups)
+    [axH,rpStr] = plotCorr(axH,x(gi==g-1),y(gi==g-1),xlab,ylab,'',cols(g,:));
+    tStr{g} = ['\fontsize{14}{\color[rgb]{' num2str(cols(g,:)) '}' groups{g} ' ' rpStr '} ']; % title strings
+end
+% to write corr coefficients side by side:
+title(axH,[tStr{:}])
+hold off
+if savePlots
+    print(gcf,'-dpng','-r300',fullfile(outDir,'gainRT_nacc_corr_bygroup'));
+end
 
 
 

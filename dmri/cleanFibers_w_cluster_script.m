@@ -19,6 +19,8 @@ close all
 
 % get experiment-specific paths and cd to main data directory
 [p,~,subjects]=whichCueSubjects('stim','dti');
+subjects = {'rf170610','dd170610','mr170621','ds170728','as170730','rc170730'};
+
 dataDir = p.data;
 
 
@@ -30,13 +32,17 @@ LorR = ['L','R'];
 
 doPlot = 1; % 1 to plot & save out figs, otherwise 0
 
-% method = 'conTrack';
-method = 'mrtrix_fa';
 
-lmax = 'lmax8_ma1000';
+method = 'conTrack';
+lmax = '';
+
+% method = 'mrtrix_fa';
+% lmax = 'lmax8_ma1000';
+
 
 % out file name for pruned fibers
-outFgStr = [seed '%s_' target '%s_' lmax '_autoclean']; %s: LorR, LorR # NOTE: '_cl1' or 2 will be appended to end
+% outFgStr = [seed '%s_' target '%s_' lmax '_autoclean']; %s: LorR, LorR # NOTE: '_cl1' or 2 will be appended to end
+outFgStr = [seed '%s_' target '%s_autoclean']; %s: LorR, LorR # NOTE: '_cl1' or 2 will be appended to end
 
 
 %% get pruning params based on tractography method

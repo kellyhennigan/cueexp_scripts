@@ -113,9 +113,10 @@ fontName = 'Helvetica';
 fontSize = 12;
 % fontSize = 18;
 
-fig=figure;
-if ~plotToScreen
-    set(fig, 'Visible', 'off');
+if plotToScreen
+    fig=figure;
+else
+    fig = figure('Visible','off');
 end
 
 %hold on
@@ -158,9 +159,6 @@ ylabel(dName)
 % ylim([ -2 3])
 
 
-% title
-title(titleStr)
-
 
 % legend
 leg = [];
@@ -189,6 +187,7 @@ if numel(groupNames)==1
     
     % plot asterisks over sig group differences?
     if plotSig(1)==1
+        
         y_ast = max(mean_d(:)+se_d(:))+max(se_d(:)); % y-level for asterisks
         
         p = anova_rm(d{1},'off');
@@ -197,7 +196,15 @@ if numel(groupNames)==1
         elseif p<.05, a = '*';
         else a = '';
         end
+       
         text(.5+size(d{1},2)./2,y_ast,a,'FontName','Times','FontSize',20,'HorizontalAlignment','center','color','k')
+        
+        % move up the upper y-axis limit for asterisks, if needed
+        yl = ylim;
+        if yl(2) < y_ast+mean(se_d(:))
+            ylim([yl(1) y_ast+mean(se_d(:))])
+        end
+        
     end
     
     if plotSig(2)==1
@@ -222,7 +229,10 @@ else
     
     % plot asterisks over sig group differences?
     if plotSig(1)==1
-        y_ast = max(mean_d(:)+se_d(:))+max(se_d(:)); % y-level for asterisks
+        
+%         y_ast = max(mean_d(:)+se_d(:))+max(se_d(:)); % y-level for asterisks
+        y_ast = max(mean_d(:)+(2.*se_d(:))); % y-level for asterisks
+      
         for ci=1:nConds
             p = anova_rm(cellfun(@(x) x(:,ci), d,'uniformoutput',0),'off');
             p = p(~isnan(p)); % p-val for this comparison
@@ -232,6 +242,11 @@ else
             else a = '';
             end
             text(ci,y_ast,a,'FontName','Times','FontSize',20,'HorizontalAlignment','center','color','k')
+        end
+        % move up the upper y-axis limit for asterisks, if needed
+        yl = ylim;
+        if yl(2) < y_ast+mean(se_d(:))
+            ylim([yl(1) y_ast+mean(se_d(:))])
         end
     end
     
@@ -262,67 +277,9 @@ else
     
 end % # of groups
 
+% title
+title(titleStr)
 
-%
-% % plot asterisks over sig group differences?
-% if plotSig(1)==1
-%     y_ast = max(mean_d(:)+se_d(:))+mean(se_d(:))./2; % y-level for asterisks
-%     for ci=1:nConds
-%         p = anova_rm(cellfun(@(x) x(:,ci), d,'uniformoutput',0),'off');
-%         p = p(~isnan(p)); % p-val for this comparison
-%         if p<.001, a = '***';
-%         elseif p<.01, a = '**';
-%         elseif p<.05, a = '*';
-%         else a = '';
-%         end
-%         text(ci,y_ast,a,'FontName','Times','FontSize',20,'HorizontalAlignment','center','color','k')
-%     end
-% end
-%
-%
-% % write out ANOVA results?
-% if plotSig(2)==1
-%
-%       [p,tab]=anova_rm(d,'off');  % [p(cond) p(group) p(subjs) p(group*cond)]
-%
-%     if numel(groupNames)==1
-%
-%         % get F stats
-%         Fc=tab{strcmp(tab(:,1),'Time'),strcmp(tab(1,:),'F')}; % time is within subjects measure (e.g., time or condition)
-%
-%         % corresponding degrees of freedom
-%         df_c = tab{strcmp(tab(:,1),'Time'),strcmp(tab(1,:),'df')};
-%         df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
-%
-%         anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f; p = %.3f\n\n',1,1),...
-%             'condition',df_c,df_e,Fc,p(1));
-%
-%         text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',fontSize,'FontName',fontName,'VerticalAlignment','top')
-%
-%     else
-%         [p,tab]=anova_rm(d,'off');  % [p(cond) p(group) p(subjs) p(group*cond)]
-%
-%         % get F stats
-%         Fc=tab{strcmp(tab(:,1),'Time'),strcmp(tab(1,:),'F')}; % time is within subjects measure (e.g., time or condition)
-%         Fg=tab{strcmp(tab(:,1),'Group'),strcmp(tab(1,:),'F')}; % group
-%         Fi=tab{strcmp(tab(:,1),'Interaction'),strcmp(tab(1,:),'F')}; % cond x group interaction
-%
-%         % corresponding degrees of freedom
-%         df_c = tab{strcmp(tab(:,1),'Time'),strcmp(tab(1,:),'df')};
-%         df_g = tab{strcmp(tab(:,1),'Group'),strcmp(tab(1,:),'df')}; % group
-%         df_i=tab{strcmp(tab(:,1),'Interaction'),strcmp(tab(1,:),'df')}; % cond x group interaction
-%
-%         df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
-%
-%         anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f; p = %.3f\n\n',1,3),...
-%             'condition',df_c,df_e,Fc,p(1),...
-%             'group',df_g,df_e,Fg,p(2),...
-%             'group x cond interaction',df_i,df_e,Fi,p(4));
-%
-%         text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',fontSize,'FontName',fontName,'VerticalAlignment','top')
-%     end
-%
-% end
 
 %% save out fig?
 

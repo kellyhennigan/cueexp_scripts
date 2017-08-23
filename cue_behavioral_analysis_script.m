@@ -12,13 +12,28 @@ dataDir = p.data; % main data directory
 task = 'cue';
 [subjects,gi] = getCueSubjects(task); 
 
-groups = {'controls','patients'}; % group names
 
+conds = {'alcohol','drugs','food','neutral'};
+
+
+%%%%%%%%%%%%%%% define groups to plot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+groups = {'controls','patients'};
+groupStr = '';
+
+% % % uncomment to use plot relapse and nonrelapse groups: 
+% groups = {'controls','relapsers','nonrelapsers'};
+% groupStr = ' by relapse'; 
+% ri=getCueRelapseData(subjects(gi==1));
+% ri(ri==0)=2; % re-code non-relapsers to gi=2
+% % ri(isnan(ri))=2; % re-code patients with nan relapse data to gi=2
+% gi(gi==1)=ri; 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 cols = getCueExpColors(numel(groups));
 
+
 % # of total subjects, and # of controls and patients
-N=numel(subjects); n0 = numel(gi==0); n1 = numel(gi==1); 
+N=numel(subjects);
 
 
 % cue task data
@@ -27,13 +42,13 @@ fp2 = fullfile(dataDir, '%s/behavior/cue_ratings.csv');
 
 
 % qualtrics survey data & list of image types
-fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey_170606.csv');
+fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey_170818.csv');
 
 % save out figures? 
 savePlots = 1; 
 
 % directory for saving out figures
-outDir = fullfile(p.figures,[task '_behavior']);
+outDir = fullfile(p.figures,'behavior',task);
 
 % if saving plots and out dir doesn't exist already, create it
 if savePlots
@@ -42,151 +57,247 @@ if savePlots
     end
 end
 
-%% define some useful variables 
-
-condNames = {'alcohol','drugs','food','neutral'};
-groupNames = {'controls','patients'};
-cols = [.15 .55 .82; .86 .2 .18]; % group plot colors
-plotSig = [1 1];
 
 
 %% get data
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%% load task stim files %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fp1s = cellfun(@(x) sprintf(fp1,x), subjects, 'uniformoutput',0);
 [trial,tr,starttime,clock,trial_onset,trial_type,cue_rt,choice,choice_num,...
     choice_type,choice_rt,iti,drift,image_name]=cellfun(@(x) getCueTaskBehData(x,'short'), fp1s, 'uniformoutput',0);
 
+ci = trial_type{1}; % condition trial index (should be the same for every subject)
+
+
+%%%%%%%%%%%%%%%%%%%%%%% load PA/NA cue ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fp2s = cellfun(@(x) sprintf(fp2,x), subjects, 'uniformoutput',0);
-[cue_type,arousal,valence] = cellfun(@(x) getCueVARatings(x), fp2s, 'uniformoutput',0);
-% 
-% 
+[cue_type,cue_pa,cue_na] = cellfun(@(x) getCueVARatings(x), fp2s, 'uniformoutput',0);
+ 
+
+%%%%%%%%%%%%%%%%%%%%% load qualtrics survey data %%%%%%%%%%%%%%%%%%%%%%%%%%
 [qd,pa,na,famil,qimage_type]=getQualtricsData(fp3,subjects);
 
 
-%% Q1: are there differences in pref ratings across trial types & groups? 
-% Does that vary across groups?
 
-% get matrix of pref & mean pref ratings by trial type w/subjects in rows
-pref = cell2mat(choice_num')'; 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% pref ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get mean pref ratings by condition w/subjects in rows
+pref = cell2mat(choice_num')'; % subjects x items pref ratings
 mean_pref = [];
-for i=1:numel(subjects)
-    for j=1:4 % # of trial types
-        mean_pref(i,j) = nanmean(choice_num{i}(trial_type{i}==j));
-    end
+for j=1:numel(conds) % # of conds
+    mean_pref(:,j) = nanmean(pref(:,ci==j),2);
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% PA/NA image ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get mean pa and na ratings by condition w/subjects in rows
+mean_pa = []; mean_na = [];
+for j=1:numel(conds) % # of trial types
+    mean_pa(:,j) = nanmean(pa(:,qimage_type==j),2);
+    mean_na(:,j) = nanmean(na(:,qimage_type==j),2);
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% PA/NA cue ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% re-arrange cue PA & NA ratings into matrix w/subjects in rows
+cue_pa = cell2mat(cue_pa); 
+cue_na = cell2mat(cue_na); 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RTs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get mean cue/choice RTs & # of no responses by condition w/subjs in rows
+cue_rt = cell2mat(cue_rt')'; % subjects x items cue RT
+choice_rt=cell2mat(choice_rt')'; % subjects x items choice RT
+
+% re-code no responses from -1 to NaN
+cue_rt(cue_rt<0)=nan;  choice_rt(choice_rt<0)=nan;
+
+mean_cueRT = []; n_cueNoresp = []; mean_choiceRT = []; n_choiceNoresp = [];
+for j=1:numel(conds)
+    
+    % cue rts
+    mean_cueRT(:,j) = nanmean(cue_rt(:,ci==j),2);
+    n_cueNoresp(:,j) = sum(isnan(cue_rt(:,ci==j)),2);
+    
+    % choice rts
+    mean_choiceRT(:,j) = nanmean(choice_rt(:,ci==j),2);
+    n_choiceNoresp(:,j) = sum(isnan(choice_rt(:,ci==j)),2);
+    
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PLOTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Q: differences in preference across trial types & groups? 
 
 % pref ratings 
-dName = 'preference ratings'; % measure to plot
-d = {mean_pref(gi==0,:) mean_pref(gi==1,:)};
-savePath = fullfile(outDir,'cue pref.png');
+dName = 'preference ratings'; % name of measure to plot
+saveStr = 'pref'; % string for fig out name
+d = mean_pref; % data w/subjects in rows, conds in columns
 
-% [fig,leg] = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,titleStr,plotLeg,savePath)
+plotSig = [1 1];
+titleStr = 'preference ratings by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
 
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
-
-%% now plot without alc condition
-
-idx = [2 4 3]; % drugs neutral food
-
-d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % pref ratings 
-dName = 'preference ratings'; % measure to plot
-savePath = fullfile(outDir,'cue pref no alc.png');
-fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
-
-% now by relapse
-groupNames = {'controls','relapsers','nonrelapsers'};
-ri=getCueRelapseData(subjects(gi==1));
-d{3} = d{2}; d{3}(ri==1,:)=[];
-d{2} = d{2}(ri==1,:);
-savePath = fullfile(outDir,'cue pref no alc by relapse.png');
-fig = plotNiceBars(d,dName,condNames(idx),groupNames,getCueExpColors(3),plotSig,'',1,savePath);
-
-
-%% Q2: differences in pos & neg arousal across trial types and groups? 
-
-mean_pa = []; mean_na = [];
-for i=1:numel(subjects)
-    for j=1:4 % # of trial types
-        mean_pa(i,j) = nanmean(pa(i,qimage_type==j));
-        mean_na(i,j) = nanmean(na(i,qimage_type==j));
-    end
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
 end
-
-% positive arousal ratings
-dName = 'positive arousal'; % measure to plot
-d = {mean_pa(gi==0,:) mean_pa(gi==1,:)};
-savePath = fullfile(outDir,'cue pa.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
 
 
-%%%%% now plot without alc condition
+% now plot without alc condition
 idx = [2 4 3]; % drugs neutral food
-d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % no alc
-[~,fstr,~]=fileparts(savePath); savePath = fullfile(outDir,[fstr ' no alc.png']);
-fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
-
-
-% negative arousal ratings
-dName = 'negative arousal'; % measure to plot
-d = {mean_na(gi==0,:) mean_na(gi==1,:)};
-savePath = fullfile(outDir,'cue na.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
-
-
-%%%%% now plot without alc condition
-idx = [2 4 3]; % drugs neutral food
-d{1} = d{1}(:,idx); d{2} = d{2}(:,idx); % no alc
-[~,fstr,~]=fileparts(savePath); savePath = fullfile(outDir,[fstr ' no alc.png']);
-fig = plotNiceBars(d,dName,condNames(idx),groupNames,cols,plotSig,'',1,savePath);
+dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
+savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
+fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
 
 
 
-%% Q3: differences in RT by trial type between groups? 
+%% Q: differences in pos arousal across trial types and groups? 
 
-for s=1:numel(subjects)
-    
-    for j=1:numel(condNames)
-        
-        % cue rts 
-        these_rt = cue_rt{s}(trial_type{s}==j);
-        mean_cue_rt(s,j) = nanmean(these_rt(these_rt>0));
-        n_cue_noresp(s,j) = numel(find(these_rt<0)); % keep track of # of no response trials
-        
-        % choice rts 
-        these_rt = choice_rt{s}(trial_type{s}==j);
-        mean_choice_rt(s,j) = nanmean(these_rt(these_rt>0));
-        n_choice_noresp(s,j) = numel(find(these_rt<0)); % keep track of # of no response trials
-        
-        
-    end
-    
+% PA
+dName = 'image positive arousal'; % name of measure to plot
+saveStr = 'imagePA'; % string for fig out name
+d = mean_pa; % data w/subjects in rows, conds in columns
+
+plotSig = [1 1];
+titleStr = 'PA ratings by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
 end
-
-% cue rt 
-dName = 'cue rt'; % measure to plot
-d = {mean_cue_rt(gi==0,:) mean_cue_rt(gi==1,:)};
-savePath = fullfile(outDir,'cue cue rt.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
 
 
-% choice rt 
-dName = 'choice rt'; % measure to plot
-d = {mean_choice_rt(gi==0,:) mean_choice_rt(gi==1,:)};
-savePath = fullfile(outDir,'cue choice rt.png');
-fig = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,'',1,savePath);
+% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
+savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
+fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+
+
+
+%% Q: difference in negative arousal across trial types and groups?
+
+dName = 'image negative arousal'; % name of measure to plot
+saveStr = 'imageNA'; % string for fig out name
+d = mean_na; % data w/subjects in rows, conds in columns
+
+plotSig = [1 1];
+titleStr = 'NA ratings by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
+
+% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
+savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
+fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+
+
+
+%% Q: differences in cue RT or # of no responses by trial type between groups? 
+
+
+dName = 'cue RT'; % name of measure to plot
+saveStr = 'cueRT'; % string for fig out name
+d = mean_cueRT; % data w/subjects in rows, conds in columns
+
+plotSig = [1 1];
+titleStr = 'cue RT by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
+
+% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
+savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
+fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+
+
+dName = 'cue no responses'; % name of measure to plot
+saveStr = 'cueNoresp'; % string for fig out name
+d = n_cueNoresp; % data w/subjects in rows, conds in columns
+
+groupStr = '';
+plotSig = [1 1];
+titleStr = 'omitted cue responses';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
+
+
+
+%% Q: differences in choice RT or # of no responses by trial type between groups? 
+
+
+dName = 'choice RT'; % name of measure to plot
+saveStr = 'choiceRT'; % string for fig out name
+d = mean_choiceRT; % data w/subjects in rows, conds in columns
+
+groupStr = '';
+plotSig = [1 1];
+titleStr = 'choice RT by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
+
+dName = 'choice no responses'; % name of measure to plot
+saveStr = 'choiceNoresp'; % string for fig out name
+d = n_choiceNoresp; % data w/subjects in rows, conds in columns
+
+groupStr = '';
+plotSig = [1 1];
+titleStr = 'omitted choice responses';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
 
 
 
 %% Q: is there a relationship between RT and preference ratings?
 
-rt = cell2mat(choice_rt'); choice = cell2mat(choice_num');
-rt(isnan(choice))=[]; choice(isnan(choice))=[];
 
 figure
-plot(choice,rt,'.','markersize',10,'color',[.2 .2 .2])
-xlabel('choice')
-ylabel('RT')
+plot(pref,choice_rt,'.','markersize',10,'color',[.2 .2 .2])
+xlabel('pref rating')
+ylabel('choice RT')
 
 % looks slightly quadratic - shorter RTs for strong prefs & slightly longer
 % rts for weaker prefs 
@@ -194,10 +305,8 @@ ylabel('RT')
 
 %% do post-experiment positive arousal ratings match preference ratings?
 
-% correlation between PA and pref (averaged across subjects)
-for i=1:numel(subjects)
-    r(i) = corr(pref(i,:)',pa(i,:)');
-end
+% correlation between PA and pref for each subject
+r = diag(corr(pref',pa')); 
 nanmean(r)
 fprintf(['\naverage correlation between pref & positive arousal ratings:\n' ...
     'r=%4.2f\n'], nanmean(r))
@@ -219,45 +328,58 @@ fprintf(['\ncorrelation between hunger & food preference ratings:\n' ...
 
 
 r = corr(qd.hungry(~isnan(qd.hungry)),mean_pa(~isnan(qd.hungry),3));
-fprintf(['\ncorrelation between hunger & food preference ratings:\n' ...
+fprintf(['\ncorrelation between hunger & food PA ratings:\n' ...
     'r=%4.2f\n'], r);
 
-% hunger seems to be more correlated with PA ratings than pref ratings -
-% this makes sense because hunger levels are assessed after the scan at the
-% same time as pa ratings are assessed
+% nope...
 
 
-%% do patients have faster RTs for drugs compared to other stim? 
+%% correlation btwn pref and PA ratings....
 
-% cue RTs 
-ttype = trial_type{1}; % trial type index 
-cueRT=cell2mat(cue_rt')';
-cueRT(cueRT==-1)=nan;
-% cueRT = log(cueRT); % log transform to be closer to normally distributed 
-cuert0=cueRT(gi==0,:);
-cuert1=cueRT(gi==1,:);
-fprintf('\npatients average RT to drug cues: %4.2f s\n',...
-    mean(nanmean(cuert1(:,ttype==2),2)))
-fprintf('\npatients average RT to neutral cues: %4.2f s\n',...
-    mean(nanmean(cuert1(:,ttype==4),2)))
-[h,p]=ttest(nanmean(cuert1(:,ttype==2),2),nanmean(cuert1(:,ttype==4),2));
-fprintf(['\nt test for drug vs neutral cue RT differences in patients:\n ' ...
-    'h=%d, p=%4.2f\n'],h,p) 
+% fig=setupFig
+% j=1;
+% cols = getCueExpColors(4)
+% for j=1:4
+%     subplot(2,2,j)
+%     [axH,rpStr]=plotCorr(gca,reshape(want(:,ci==j),[],1),reshape(pa(:,ci==j),[],1),...
+%         'want','PA','',cols(j,:))
+%     title(gca,[conds{j} ' ' rpStr])
+% end
+% 
+% print(gcf,'-dpng','-r300',fullfile(figDir,'PA-want correlation by image type'))
+% 
+    
+
+%% check item-wise pref and PA ratings for drug images in patients- any outliers? 
+    
+% pref ratings
+fig=setupFig
+drug_pref = pref(gi==1,ci==2);
+drug_pref(drug_pref==0)=nan;
+boxplot(drug_pref,'PlotStyle','compact')
+ylabel([groups{2} ' pref ratings'])
+xlabel('drug images')
+title([groups{2} ' (n=' num2str(size(drug_pref,1)) ') pref ratings for drug images'])
+print(gcf,'-dpng','-r300',fullfile(outDir,'patient drug pref ratings boxplot'))
+
+zscore(nanmean(drug_pref))
+fprintf('\nnumber of drug images with outlier pref scores in patients: %d\n',numel(find(abs(zscore(nanmean(drug_pref)))>3==1)))
 
 
-% choice RTs
-choiceRT=cell2mat(choice_rt')';
-choiceRT(choiceRT==-1)=nan;
-% choiceRT = log(choiceRT); % log transform to be closer to normally distributed 
-choicert0=choiceRT(gi==0,:);
-choicert1=choiceRT(gi==1,:);
-fprintf('\npatients average RT to drug pref ratings: %4.2f s\n',...
-    mean(nanmean(choicert1(:,ttype==2),2)))
-fprintf('\npatients average RT to neutral pref ratings: %4.2f s\n',...
-    mean(nanmean(choicert1(:,ttype==4),2)))
-[h,p]=ttest(nanmean(choicert1(:,ttype==2),2),nanmean(choicert1(:,ttype==4),2));
-fprintf(['\nt test for drug vs neutral pref rating RT differences in patients:\n ' ...
-    'h=%d, p=%4.2f\n'],h,p) 
+% PA ratings
+fig=setupFig
+drug_pa = pa(gi==1,ci==2);
+drug_pa(drug_pa==0)=nan;
+boxplot(drug_pref,'PlotStyle','compact')
+ylabel([groups{2} ' PA ratings'])
+xlabel('drug images')
+title([groups{2} ' (n=' num2str(size(drug_pref,1)) ') PA ratings for drug images'])
+print(gcf,'-dpng','-r300',fullfile(outDir,'patient drug PA ratings boxplot'))
+
+zscore(nanmean(drug_pa))
+fprintf('\nnumber of drug images with outlier pref scores in patients: %d\n',numel(find(abs(zscore(nanmean(drug_pref)))>3==1)))
+
+
 
 
 

@@ -22,20 +22,26 @@ end
 
 data = [];
 
+measure = lower(measure); % make sure measure string is all lower case
 
 %% various measures to return:
 
-switch lower(measure)
+switch measure
     
     
     case 'age'
         
         data = getAge(subjects);
         
-  
+        
     case 'gender'
         
         data = getGender(subjects);
+        
+  
+    case 'bdi'
+        
+        data = getBDIScores(subjects);
         
         
     case {'bis','bis_attn','bis_motor','bis_nonplan'}
@@ -43,16 +49,164 @@ switch lower(measure)
         data = getBISScores(subjects,measure);
         
         
+    case {'race','ethnicity'}
+        
+        data = getRace(subjects);
+        
+        
+    case 'smoke'
+        
+        data = getSmokers(subjects);
+        data = data{1}; % 1 for yes, 0 for no
+        
+        
+    case 'smokeperday'
+        
+        data = getSmokers(subjects);
+        data = data{2}; % cell array of strings describing how much smoking per day
+     
+        
+    case 'education'
+        
+        data = getEducation(subjects);
+        data = data{1}; % just return the quantitative var 
+        
+        
     case 'relapse'
         
-        [ri,time2relapse]=getCueRelapseData(subjects);
+        [ri,relapseDate,notes]=getCueRelapseData(subjects);
+        data = ri;
         
-        data = [ri,time2relapse];
         
+    case 'relapsedate'
+        
+        [ri,relapseDate,notes]=getCueRelapseData(subjects);
+        data = relapseDate;
+        
+        
+    case 'days2relapse'
+       
+        data = [];
+       
+        [ri,relapseDate]=getCueRelapseData(subjects);
+       
+        % use DOP or date of discharge as starting date
+        day0=getCueData(subjects,'dop'); % date of participation
+        % day0=getCueData(subjects,'for_discharge_date'); % discharge date
+        
+        % get the # of days to relapse for subjects that relapsed
+        for i=1:numel(subjects)
+            if ~isnan(datenum(relapseDate{i}))
+                data(i,1) = datenum(relapseDate{i})-datenum(day0{i});
+            else
+                data(i,1) = nan;
+            end
+        end
+        
+ 
+    case {'dop','for_admit_date','for_discharge_date',...
+            'first_use_date','most_recent_use_date','primary_stim',...
+            'alc_dep','other_drug_dep',...
+            'depression_diag','ptsd_diag','other_diag',...
+            'meds','dop_drugtest',...
+            'days_sober','days_in_rehab','years_of_use'}
+        
+        data = getPatientData(subjects,measure);
+    
+
+    case 'poly_drug_dep'
+        
+          % if dependent on a substance other than stim, (alc or
+          % otherwise), classify as polydrug dep
+          alc = getPatientData(subjects,'alc_dep');
+          
+          other_drug = getPatientData(subjects,'other_drug_dep');
+          other_drug = cell2mat(cellfun(@(x) str2double(x), other_drug,'uniformoutput',0)); % 0=no other drug, nan=dep on another drug
+          other_drug(isnan(other_drug))=1;
+          
+          % data returns 1 if dependent on alc and/or drug in addition to
+          % stim; otherwise 0
+          data = alc; 
+          data(other_drug==1)=1;
+          
+            
+    case 'craving'
+        
+        qStr = 'q8';
+        data = getBAMData(subjects,qStr);
+        
+        
+    case {'pref_stim','pref_alc','pref_drug','pref_food','pref_neut'}
+        
+        % define path to subject stim file(s)
+        p = getCuePaths();
+        stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/cue_matrix.csv'),x), subjects, 'uniformoutput',0);
+      
+        % load pref ratings
+        [~,~,~,~,~,trial_type,~,~,choice_num]=cellfun(@(x) getCueTaskBehData(x,'short'),...
+            stimfilepath, 'uniformoutput',0);
+
+        % get matrix of pref & mean pref ratings by trial type w/subjects in rows
+        pref = cell2mat(choice_num')';  % pref ratings for each item
+        pref_stim = [];
+        for i=1:numel(subjects)
+            for j=1:4 % # of trial types
+                pref_stim(i,j) = nanmean(choice_num{i}(trial_type{i}==j));
+            end
+        end
+        
+        % return mean pref ratings for all stim or a specific condition
+        switch measure
+            
+            case 'pref_alc'
+                data = pref_stim(:,1); % alcohol is 1st col
+            case 'pref_drug'
+                data = pref_stim(:,2); % drugs are 2nd col
+            case 'pref_food'
+                data = pref_stim(:,3); % food is 3rd col
+            case 'pref_neut'
+                data = pref_stim(:,4); % neutral is 4th col
+            otherwise
+                data = pref_stim; % return mean pref for all stim types
+        end
+        
+        
+    case {'pa_cue','na_cue'}
+     
+        % define path to stim file(s)
+         p = getCuePaths();
+         stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/cue_ratings.csv'),x), subjects, 'uniformoutput',0);
+         
+         % load cue pa and na ratings
+         [cue_type,pa,na] = cellfun(@(x) getCueVARatings(x), stimfilepath,'uniformoutput',0);
+         pa = cell2mat(pa); na = cell2mat(na);
+
+         % return mean pref ratings for all stim or a specific condition
+         switch measure
+             case 'pa_cue'
+                 data = pa;
+             case 'na_cue'
+                 data = na;
+         end
+    
+         
+    case {'pa_stim','na_stim'}
+        
+        [pa,na] = getStimPANA(subjects);
+        
+        if strcmp(measure,'pa_stim')
+            data = pa;
+        elseif strcmp(measure,'na_stim')
+            data = na;
+        end
+    
+         
     otherwise
         
         fprintf(['\ncurrently no function exists to get ' measure ' variable.\n' ...
             'add functionality or ask for something else.\n\n'])
+        
+        
         
 end
 
@@ -60,6 +214,8 @@ end
 end % getCueData
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% internal functions to get the measures:
 
 
@@ -97,6 +253,7 @@ for i=1:numel(subjects)
 end
 
 end % getAge()
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
@@ -139,7 +296,40 @@ gender(gChar=='M')=1;
 end % getGender()
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BDI scores
+function scores = getBDIScores(subjects)
+
+% reference: ??
+
+docid = '1MMYSVW6Grd4sEiw4g2Q1lFFob6Pc3m4k8_vbMU5142U'; % doc id for google sheet w/relapse data
+
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array 
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using offline values that may not be the most updated...'])
+    d={}; % ADD OFFLINE VALS HERE...
+end
+
+% if data is loaded, compute scores
+if isempty(d) 
+    scores = [];
+else
+    for i=1:numel(subjects)
+        idx=find(strncmp(d(:,1),subjects{i},8));
+        if isempty(idx)
+            scores(i,1) = nan;
+        else
+            scores(i,1) = str2double(d{idx,end}); % last column of bdi has total bdi score
+        end
+    end % subjects 
+end
+        
+end % getBDIScores
+    
+  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores
 function scores = getBISScores(subjects,measure)
 
 % reference: Factor structure of the Barratt impulsiveness scale. Patton JH, Stanford MS, and Barratt ES (1995)
@@ -208,7 +398,7 @@ else
         
     end
     
-    switch lower(measure)
+    switch measure
         
         case 'bis'
             
@@ -231,6 +421,176 @@ else
 end
 
 end % getBISScores()
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject race/ethnicity
+function racecat = getRace(subjects)
+
+p = getCuePaths();
+a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
+fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
+
+d=getQualtricsData(fp,subjects);
+
+racecat = getNIHRaceCategories(d.classify);
+
+% NIH categories:
+%     1= American indian/alaska native
+%     2= Asian
+%     3= Black
+%     4= Hispanic/Latino
+%     5= Native Hawaiian or Pacific Islander
+%     6= White
+%     7= Multiracial
+%     8= Would rather not say
+
+end % getRace()
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject smoking data
+function smoke = getSmokers(subjects)
+
+p = getCuePaths();
+a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
+fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
+
+d=getQualtricsData(fp,subjects);
+
+smoke{1} = d.smoke;
+
+smoke{2} = d.smoke_perday;
+
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data
+function education = getEducation(subjects)
+
+p = getCuePaths();
+a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
+fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
+
+d=getQualtricsData(fp,subjects);
+
+education{1} = d.education;
+education{2} = d.education2;
+
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data
+function [stim_pa,stim_na] = getStimPANA(subjects)
+
+    
+     % define path to stim file(s)
+       p = getCuePaths();
+       a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
+       fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
+
+       [~,pa,na,~,qimage_type]=getQualtricsData(fp,subjects);
+    
+      stim_pa = []; stim_na = [];
+      for j=1:4 % # of trial types
+          stim_pa(:,j) = nanmean(pa(:,qimage_type==j),2);
+          stim_na(:,j) = nanmean(na(:,qimage_type==j),2);
+      end
+
+
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get more patient data
+function data = getPatientData(subjects,measure)
+
+if ischar(subjects)
+    subjects = splitstring(subjects);
+end
+
+
+data = [];
+
+
+docid = '1VdKlBKezHcz4VL93ouglqD1bpr7aTo2RGtEXUsyHNGI'; % doc id for google sheet w/relapse data
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+    
+    
+    % if the google sheet couldn't be accessed, use these values (update as
+    % often as possible):
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using hard coded values that may not be the most updated...'])
+    
+    return
+    
+end
+
+% assuming spreadsheet is loaded, column index (cj) for desired data
+switch measure
+    
+    case 'dop'
+        cj = find(strncmp(d(1,:),'DOP',3));
+    case 'for_admit_date'
+        cj = find(strncmp(d(1,:),'date of FOR admit',17));
+    case 'for_discharge_date'
+        cj = find(strncmp(d(1,:),'date of FOR discharge',21));
+    case 'first_use_date'
+        cj = find(strncmp(d(1,:),'date of first stim',18));
+    case 'most_recent_use_date'
+        cj = find(strncmp(d(1,:),'most recent stim',16));
+    case 'primary_stim'
+        cj = find(strncmp(d(1,:),'primary stim',12));
+    case 'alc_dep'
+        cj = find(strncmp(d(1,:),'alcohol',7));
+    case 'other_drug_dep'
+        cj = find(strncmp(d(1,:),'other drug',10));
+    case 'depression_diag'
+        cj = find(strncmp(d(1,:),'depression diag',15));
+    case 'ptsd_diag'
+        cj = find(strncmp(d(1,:),'PTSD diag',9));
+    case 'other_diag'
+        cj = find(strncmp(d(1,:),'other diag',10));
+    case 'meds'
+        cj = find(strncmp(d(1,:),'med',3));
+    case 'dop_drugtest'
+        cj = find(strncmp(d(1,:),'results',7));
+    case 'days_sober'
+        cj = find(strncmp(d(1,:),'days sober prior to DOP',23));
+    case 'days_in_rehab'
+        cj = find(strncmp(d(1,:),'days in rehab prior to DOP',26));
+    case 'years_of_use'
+        cj = find(strncmp(d(1,:),'years of use',12)); % column with desired data
+end
+
+
+for i=1:numel(subjects)
+    
+    ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
+    
+    if isempty(ri)
+        data{i,1} = nan;
+    else
+        thisd = d{ri,cj};
+        if isempty(thisd)
+            data{i,1} = nan;
+        else
+            data{i,1} = d{ri,cj};
+        end
+    end
+    
+end
+
+% convert from cell array of strings to numeric vector for numeric vars
+if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use'}))
+    data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
+end  
+
+end % getPatientData
 
 
 

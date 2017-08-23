@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 1 # 1 to just print, 0 to print and execute
+justPrint = 0 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -25,26 +25,12 @@ subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
  
-    
-### to do age matched control group: 
-#subjsB.remove('zl150930')
-#subjsB.remove('ps151001')
-#subjsB.remove('aa151010')
-#subjsB.remove('al151016')
-## subjsB.remove('jv151030')
-#subjsB.remove('kl160122')
-#subjsB.remove('ss160205')
-#subjsB.remove('bp160213')
-#subjsB.remove('cs160214')
-#subjsB.remove('yl160507')
-#subjsB.remove('li160927')
-#subjsB.remove('gm161101')
 
 print(subjsA)
 print(subjsB)
 
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
-res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_cue_afni_Choi_caudate2')  # directory containing glm stat files
 
 in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
@@ -52,51 +38,20 @@ out_str = ''
 #out_str = '_age_match'  # suffix to add to the end of enach out file
 
 # labels of sub-bricks to test
-sub_labels = ['cue#0',
-'img#0',
-'choice#0',
-'choice_rt#0',
-'alcohol#0',
-'drugs#0',
-'food#0',
-'neutral#0'] 
-
-# labels for out files 
-out_labels =  ['Zcue'+out_str,
-'Zimg'+out_str,
-'Zchoice'+out_str,
-'Zchoice_rt'+out_str,
-'Zalcohol'+out_str,
-'Zdrugs'+out_str,
-'Zfood'+out_str,
-'Zneutral'+out_str]
-
-# glt contrasts, arent in coeff bucket so get them from glm bucket: 
-in_str2 = '_glm+tlrc'
-
-sub_labels2 = ['Full_R^2',
-'Full_Fstat',
-'alcohol-neutral_GLT#0_Coef',
-'drugs-neutral_GLT#0_Coef',
-'food-neutral_GLT#0_Coef',
-'drugs-food_GLT#0_Coef']
+sub_labels = ['csf#0',
+'wm#0',
+'ventralcaud#0']
 
 
 # labels for out files 
-out_labels2 =  ['ZFull_R^2'+out_str,
-'ZFull_Fstat'+out_str,
-'Zalc-neutral'+out_str,
-'Zdrug-neutral'+out_str,
-'Zfood-neutral'+out_str,
-'Zdrug-food'+out_str]
+out_labels =  ['Zcsf'+out_str,
+'Zwm'+out_str,
+'Zventralcaud'+out_str]
+
 
 # concatenate lists 
-in_str = np.append(np.tile(in_str,len(sub_labels)),np.tile(in_str2,len(sub_labels2)))
-sub_labels = sub_labels+sub_labels2
-out_labels = out_labels+out_labels2
-print('\n\n\nIN STR:\n\n\n')
-print(in_str)
-print('\n\n\n\n\n\n')
+in_str = np.tile(in_str,len(sub_labels))
+
 
 # define mask file if masking is desired; otherwise leave blank
 mask_file = os.path.join(data_dir,'templates','bmask.nii')  # directory containing glm stat files

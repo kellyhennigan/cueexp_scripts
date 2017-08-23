@@ -12,7 +12,8 @@ function [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 %   group - number or string specifying to return only subjects from a single group:
 %         0 or 'controls' for control subs
 %         1 or 'patients' for stimulant-dependent patients
-%
+%         'relapsers' for patient relapsers  
+%         'nonrelapsers' for patient nonrelapsers
 %
 % OUTPUT:
 %   subjects - cell array of subject id strings for this experiment
@@ -83,21 +84,38 @@ end
 % now get only subjects from one specific group, if desired
 if ~isempty(group)
     
+    % return controls
     if strcmpi(group,'controls') || isequal(group,0)
         subjects = subjects(gi==0);
         notes = notes(gi==0);
         gi = gi(gi==0);
         
+        % return patients
     elseif strcmpi(group,'patients') || isequal(group,1)
         subjects = subjects(gi==1);
         notes = notes(gi==1);
         gi = gi(gi==1);
         
+        % return relapsers
+    elseif strcmpi(group,'relapsers')
+        ri=getCueRelapseData(subjects);
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return nonrelapsers
+    elseif strcmpi(group,'non-relapsers')
+        ri=getCueRelapseData(subjects);
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+        
     end
     
-end
+end % if ~isempty(group)
 
-end
+end % function
 
 
 

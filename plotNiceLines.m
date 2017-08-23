@@ -58,10 +58,11 @@ end
 
 %%
 
-fig = figure;
 
-if ~plotToScreen
-    set(fig, 'Visible', 'off');
+if plotToScreen
+    fig=figure;
+else
+    fig = figure('Visible','off');
 end
 
 hold on
@@ -97,20 +98,41 @@ title(figtitle)
 
 %% if plotting stats:
 
+% 
+% if ~isempty(pvals)
+%     yL = ylim;
+%     y_ast = mean([max(cell2mat(cellfun(@(a,b) max(a+b), y, se, 'UniformOutput',0))),yL(2)]); % y level for * stats
+%     for i=1:numel(pvals)
+%         if pvals(i)<.001
+%             text(x(i),y_ast,'***','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+%         elseif pvals(i) < .01
+%             text(x(i),y_ast,'**','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+%         elseif pvals(i) < .05
+%             text(x(i),y_ast,'*','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+%         end
+%     end
+%     
+% end
+
+
 if ~isempty(pvals)
-    yL = ylim;
-    ys = mean([max(cell2mat(cellfun(@(a,b) max(a+b), y, se, 'UniformOutput',0))),yL(2)]); % y level for * stats
+    y_ast = max([y{:}]+1.5.*[se{:}]); % y-level for plotting sig asterisks
     for i=1:numel(pvals)
         if pvals(i)<.001
-            text(x(i),ys,'***','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+            text(x(i),y_ast,'***','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
         elseif pvals(i) < .01
-            text(x(i),ys,'**','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+            text(x(i),y_ast,'**','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
         elseif pvals(i) < .05
-            text(x(i),ys,'*','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
+            text(x(i),y_ast,'*','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
         end
     end
+    
+    % move up the upper y-axis limit for asterisks, if needed
+    yL = ylim;
+    if yL(2) < y_ast+max([se{:}])./2
+        ylim([yL(1) y_ast+max([se{:}])./2])
+    end
 end
-
 
 %% save figure?
 

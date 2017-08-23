@@ -18,22 +18,22 @@ task = 'cue';
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)
 stims = {'drugs','food','neutral'};
 
-seedRoiName = 'nacc_desai';
+seedRoiName = 'Choi_rostralcaudateL';
 
 % roiNames = {'LC','acing','csf','caudate','amyg','mpfc','ins_desai','dlpfc','PVT','wm','VTA'};
 % roiNames = {'acing','caudate','clust_caudR','csf','dlpfc','mpfc','ins_desai','dlpfc','VTA','wm'};
-roiNames = {'PVT'};
+roiNames = {'dlpfc','vlpfc'};
 
 % name of dir to save to where %s is task
 inFile = fullfile(dataDir,'%s','single_trial_cue_timecourses','%s','%s'); 
 
-TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
-% TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
+% TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
+TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
 TR = 2; % 2 sec TR
 ti = (TRi-1).*TR; % time at the indexed TR
 
 % figure to save out plots to 
-saveDir = fullfile(p.figures,'func_conn',[seedRoiName '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
+saveDir = fullfile(p.figures,'func_conn',seedRoiName);
 if ~exist(saveDir,'dir')
     mkdir(saveDir)
 end
@@ -86,7 +86,7 @@ for j=1:numel(roiNames)
    
     titleStr = [strrep(seedRoiName,'_','') '-' roiNames{j} ' func connectivity; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
     
-    savePath = fullfile(saveDir,roiNames{j}); 
+    savePath = fullfile(saveDir,[roiNames{j} '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]); 
     
     [fig,leg] = plotNiceBars(d,dName,stims,groupNames,cols,plotSig,titleStr,1,savePath,0);
     

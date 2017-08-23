@@ -10,11 +10,11 @@ close all
 %subjects = getSA2Subjects('dti');
 
 
-% [p,task,subjects,gi]=whichCueSubjects('stim','');
+[p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p = getCuePaths;
 task = 'dti';
-subjects = {'aa151010','ag151024','jh160702'};
-gi = [0 1 0];
+% subjects = {'aa151010','ag151024','jh160702'};
+% gi = [0 1 0];
 
 dataDir = p.data;
 
@@ -36,15 +36,15 @@ fgMLabels = {'FA','MD','RD','AD'};
 
 seed = 'DA';  % define seed roi
 
-targets = {'nacc'};
-% targets = {'nacc','caudate','putamen'};
+% targets = {'nacc'};
+targets = {'nacc','caudate','putamen'};
 
 LorR = ['L','R'];
 
 
 
 % string to identify fiber group files?
-versionStr = '_autoclean_cl1'; % string specifiying version fg version
+versionStr = '_autoclean'; % string specifiying version fg version
 
 
 outDir = fullfile(dataDir, 'fgMeasures',method);

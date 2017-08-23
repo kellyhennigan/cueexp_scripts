@@ -50,6 +50,13 @@ end
 
 %% do it
 
+% remove NaN values 
+[nan_idx,~]=find(isnan([x,y]));
+if numel(nan_idx)>0
+    fprintf('\nremoving %d data points due to NaN values...\n',numel(unique(nan_idx)));
+    x(nan_idx) = []; y(nan_idx) = [];
+end
+
 hold on
 
 % plot data points as dots

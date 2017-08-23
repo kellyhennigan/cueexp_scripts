@@ -5,9 +5,13 @@ clear all
 close all
 
 [p,task,subjects,gi]=whichCueSubjects('stim');
-subjects=getCueSubjects('');
 dataDir = p.data;
 
+figDir = fullfile(p.figures,'QA',task);
+
+savePlots = 1; % 1 to save plots, otherwise 0
+
+%%
 
 % define file with task motion params based on task
 switch task
@@ -38,11 +42,6 @@ switch task
         roits_file = [dataDir '/%s/func_proc/' task '_' roi_str '.1D']; % roi time series file to plot where %s is task
         
 end
-
-
-savePlots = input('plot & save out QA plots? (1=yes 0=no) ');
-
-figDir = fullfile(p.figures,'QA',task);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -83,17 +82,17 @@ for s = 1:numel(subjects)
                 mp = dlmread(sprintf(mp_file,subject));
                 mp = mp(:,[6 7 5 2:4]); % rearrange to be in order dx,dy,dz,roll,pitch,yaw
             catch
-                 warning(['couldnt get motion params for subject ' subject ', so skipping...'])
+                warning(['couldnt get motion params for subject ' subject ', so skipping...'])
             end
     end
     
     if isempty(mp)
-        max_en(s)=nan; max_TR(s)=nan; nBad(s)=nan; omit_idx(s)=nan;
+        max_en(s,1)=nan; max_TR(s,1)=nan; nBad(s,1)=nan; omit_idx(s,1)=nan;
     else
         
-        % plot motion params, if desired
+        % plot motion params & save if desired
+        fig = plotMotionParams(mp);
         if savePlots
-            fig = plotMotionParams(mp);
             outName = [subject '_mp'];
             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
         end
@@ -104,65 +103,49 @@ for s = 1:numel(subjects)
         
         
         % determine this subject's max movement
-        [max_en(s),max_TR(s)]=max(en);
+        [max_en(s,1),max_TR(s,1)]=max(en);
         
         
         % calculate # of bad images based on en_thresh
-        nBad(s) = numel(find(en>en_thresh));
+        nBad(s,1) = numel(find(en>en_thresh));
         fprintf('\n%s has %d bad image, which is %.2f percent of %s vols\n\n',...
-            subject,nBad(s),100.*nBad(s)/numel(en),task);
+            subject,nBad(s),100.*nBad(s,1)/numel(en),task);
         
         
         % determine whether to omit subject or not, based on percent_bad_thresh
         if 100.*nBad(s)/numel(en)>percent_bad_thresh
-            omit_idx(s) = 1;
+            omit_idx(s,1) = 1;
         else
-            omit_idx(s) = 0;
+            omit_idx(s,1) = 0;
         end
         
         
         % plot, if desired
+        if ~isempty(roits_file)
+            ts = dlmread(sprintf(roits_file,subject));
+        else
+            ts = ''; roi_str = '';
+        end
+        
+        fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
+        
+        % if a time series is plotted for diffusion data, ignore the b0 volumes
+        % (it messes up the plot scale)
+        if strcmp(task,'dti')
+            subplot(2,1,2)
+            ylim([min(ts)-1 max(ts(10:end))+1])
+        end
+        
         if savePlots
-            
-            if ~isempty(roits_file)
-                ts = dlmread(sprintf(roits_file,subject));
-            else
-                ts = ''; roi_str = '';
-            end
-            
-            fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
-            
-            % if a time series is plotted for diffusion data, ignore the b0 volumes
-            % (it messes up the plot scale)
-            if strcmp(task,'dti')
-                subplot(2,1,2)
-                ylim([min(ts)-1 max(ts(10:end))+1])
-            end
-            
             outName = [subject '_mp2'];
-            
             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
-            
-            
-        end % savePlots
+        end
         
     end % isempty(mp)
     
 end % subjects
 
 
-%% plot histogram of bad volume count
-
-
-hist(nBad,numel(subjects));
-
-xlabel(['# of TRs with head movement > euc dist of ' num2str(en_thresh)])
-ylabel('# of subjects')
-title(['head movement during ' task ' task'])
-
-if savePlots
-    print(gcf,'-dpng','-r300',fullfile(figDir,['subj hist of head movement during ' task ' task']));
-end
 
 %% calculate tSNR
 

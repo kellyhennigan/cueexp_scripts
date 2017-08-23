@@ -218,8 +218,11 @@ for r = 1:numel(roiNames)
 
          % grayed out rectangles
          gxs = [5 13]; % x-axis limits for graying out
-        yl = ylim;
         
+         % ylimit
+%          ylim([-.12 .12])
+         yl = ylim;
+%         
         % vertices
         v = [t(1) yl(1);
             t(1) yl(2);
@@ -235,7 +238,11 @@ for r = 1:numel(roiNames)
         % legend off
         legend(gca,'off')
         
+        % ylim
+        ylim([yl(1) yl(2)])
+       
         % xlim and xtick
+        xlim([t(1) t(end)])
         set(gca,'xtick',t)
         
         % change font size
@@ -248,8 +255,7 @@ for r = 1:numel(roiNames)
        
         % re-save fig with changed formatting
         print(gcf,'-dpng','-r300',savePath);
-%
-        
+
         
         fprintf('done.\n\n')
         

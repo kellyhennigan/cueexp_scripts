@@ -37,9 +37,9 @@ doTrackWBFibers = False
 # do whole-brain fiber density? for more info: https://github.com/jdtournier/mrtrix3/wiki/tckmap
 doWBFiberDensity = False
 
-print 'execute commands?'
-xc = bool(input('enter 1 for yes, or 0 to only print: '))
-
+# print 'execute commands?'
+# xc = bool(input('enter 1 for yes, or 0 to only print: '))
+xc = bool(1)
 
 #############
 
@@ -270,8 +270,10 @@ def wbFiberDensity():
 ######### main deal 
 if __name__ == '__main__':
 
-	
-	subjects = whichSubs()
+	subject = sys.argv[1]
+	subjects = [subject]
+
+	#subjects = whichSubs()
 
 
 	# now loop through subjects	

@@ -45,8 +45,7 @@ end
 %% which task to process? 
 
 if ~exist('task','var')
-    fprintf('\n');
-    task = input('cue, mid, midi, or dti (or just hit return for no task)? ','s');
+    task = whichCueTask();
 end
 
 
