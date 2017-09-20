@@ -16,7 +16,7 @@ dataDir = p.data;
 
 
 % ROIs
-roiNames = {'ins_desai'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai'};
 roiStrPath = fullfile(dataDir,'ROIs','%s_func.nii'); %s is roiStrs
 
 % directory that contains glm results of interest
