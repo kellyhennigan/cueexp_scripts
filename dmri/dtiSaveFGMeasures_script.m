@@ -30,21 +30,22 @@ method = 'conTrack';
 % method = 'mrtrix';
 
 
-nNodes = 20; % number of nodes for fiber tract
+% nNodes = 20; % number of nodes for fiber tract
+nNodes = 100; % number of nodes for fiber tract
 
 fgMLabels = {'FA','MD','RD','AD'};
 
 seed = 'DA';  % define seed roi
 
-% targets = {'nacc'};
-targets = {'nacc','caudate','putamen'};
+targets = {'nacc'};
+% targets = {'nacc','caudate','putamen'};
 
 LorR = ['L','R'];
 
 
 
 % string to identify fiber group files?
-versionStr = '_autoclean'; % string specifiying version fg version
+versionStr = '_autoclean_cl2'; % string specifiying version fg version
 
 
 outDir = fullfile(dataDir, 'fgMeasures',method);

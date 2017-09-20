@@ -12,13 +12,14 @@ dataDir = p.data;
 
 % directory & filename of fg measures
 method = 'conTrack';
-fgMatStr = 'DAL_naccL_autoclean_cl1'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_autoclean_cl1'; %'.mat' will be added to end
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS';
 
 % plot both groups
 group = {'controls','patients'};
+% group = {'nonrelapsers','relapsers'};
 
 cols=getCueExpColors(numel(group)); % plotting colors for groups
 
@@ -31,9 +32,14 @@ if saveFigs
 end
 
 omit_subs = {
-    'gm160909'
-    'jb161004'
-    };
+	'jr160507'
+% 	'gm160909'
+ 	'ld160918'
+	'gm161101'
+%     'cg160715'
+% 	'jn160403'
+% 	'sr151031'
+	};
     
 
 
@@ -48,9 +54,9 @@ fgMLabels=fgMLabels{1};
 %% fig 1: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
-node = 'best'; % an integer specifying which node to plot, or 'best'
-bestWhat = 'MD'; % which fg measure(s) to test for best
-% node = 11;
+% node = 'best'; % an integer specifying which node to plot, or 'best'
+% bestWhat = 'MD'; % which fg measure(s) to test for best
+ node = 11;
 
 fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
@@ -103,7 +109,7 @@ end
 
 % legend
 lh=get(axH,'Children')
-legend(axH,[lh(1) lh(3)],group,'Location','EastOutside','FontSize',12)
+legend(axH,[lh(3) lh(1)],group,'Location','EastOutside','FontSize',12)
 legend('boxoff')
 if saveFigs
     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr '_w_legend']))

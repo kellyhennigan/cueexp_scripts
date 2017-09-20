@@ -117,6 +117,7 @@ title(figtitle)
 
 if ~isempty(pvals)
     y_ast = max([y{:}]+1.5.*[se{:}]); % y-level for plotting sig asterisks
+% y_ast = .08
     for i=1:numel(pvals)
         if pvals(i)<.001
             text(x(i),y_ast,'***','FontName','Times','FontSize',24,'HorizontalAlignment','center','color','k')
@@ -133,6 +134,9 @@ if ~isempty(pvals)
         ylim([yL(1) y_ast+max([se{:}])./2])
     end
 end
+
+% set xlim?
+xlim([x(1) x(end)])
 
 %% save figure?
 

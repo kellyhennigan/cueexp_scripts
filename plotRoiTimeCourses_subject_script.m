@@ -28,11 +28,13 @@ stimStr = stim; % stim name
 
 roiName = 'nacc_desai'; % roi to process
 
-% tcDir = ['timecourses_' task '_afni' ];
-tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
-colorScheme = 'rand'; 
+% colorScheme = 'rand'; 
+colorScheme = 'relapse'; 
+
 
 omitSubs = {''}; % any subjects to omit?
 

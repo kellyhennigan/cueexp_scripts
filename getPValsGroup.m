@@ -5,7 +5,7 @@ function p = getPValsGroup(tc)
 % course data.
 
 % INPUT:
-%   tc - timecourse data
+%   tc - timecourse data with groups in cells
 
 %
 % OUTPUT:
@@ -21,15 +21,18 @@ function p = getPValsGroup(tc)
 
 %% for group comparisons:
 
+% if cell array is horizontal, transpose it
+if size(tc,1)==1 && size(tc,2)>1
+    tc=tc';
+end
 
-    gi = []; % group index
-    for g = 1:numel(tc)
-        gi = [gi; repmat(g, size(tc{g},1),1)];
-    end
-    tc = cell2mat(tc);
-    
-    for i=1:size(tc,2)
-        p(i) = anova1(tc(:,i),gi,'off');
-    end
-    
-    
+gi = []; % group index
+for g = 1:numel(tc)
+    gi = [gi; repmat(g, size(tc{g},1),1)];
+end
+tc = cell2mat(tc);
+
+for i=1:size(tc,2)
+    p(i) = anova1(tc(:,i),gi,'off');
+end
+

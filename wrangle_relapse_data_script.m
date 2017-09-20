@@ -7,7 +7,9 @@ close all
 
 p = getCuePaths(); dataDir = p.data; % cue exp paths
 
-subjects = getCueSubjects('cue',1); % stim patients
+task = 'cue';
+
+subjects = getCueSubjects(task,1); % stim patients
 
 
 % filepath for saving out table of variables
@@ -20,7 +22,12 @@ outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd')
 relapse = getCueData(subjects,'relapse');
 days2relapse = getCueData(subjects,'days2relapse');
 
-Trelapse = table(relapse,days2relapse);
+% set nan relapse vals to zero...
+% relapse(isnan(relapse))=0;
+
+[obstime,censored,notes]=getCueRelapseSurvival(subjects);
+
+Trelapse = table(relapse,days2relapse,obstime,censored);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,14 +38,21 @@ demVars = {'years_of_use',...
     'poly_drug_dep',...
     'smoke',...
     'depression_diag',...
+    'bdi',...
     'ptsd_diag',...
-    'education'};
+    'education',...
+    'age'};
+
 
 Tdem = table(); % table of demographic data
 for i=1:numel(demVars)
     Tdem=[Tdem array2table(getCueData(subjects,demVars{i}),'VariableNames',demVars(i))];
 end
 
+% make ptsd and depression diagnosis vars binary 
+Tdem.ptsd_diag=strcmp(Tdem.ptsd_diag,'yes')
+Tdem.depression_diag=strcmp(Tdem.depression_diag,'yes')
+Tdem.clinical_diag = (Tdem.ptsd_diag | Tdem.depression_diag); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% behavioral data
@@ -65,17 +79,17 @@ craving = getCueData(subjects,'craving');
 
 % BAM q3 ("In the past 30 days, how many days have you felt depressed,
 % anxious, angry or very upset throughout most of the day?") 
-bamq3 = getBAMData(subjects,'q3');
+bam_upset = getBAMData(subjects,'q3');
 
 
 % recent stim use
 a1 = getBAMData(subjects,'q7c');
 a2 = getBAMData(subjects,'q7d');
-bamstimuse = a1+a2;
+bam_stimuse = a1+a2;
 
 
 % risky situations 
-bamq11 = getBAMData(subjects,'q11');
+bam_riskysituations = getBAMData(subjects,'q11');
 
 
 % BIS data
@@ -86,24 +100,41 @@ bis = getCueData(subjects,'bis');
 Tbeh = table(pref_drug,pref_food,pref_neut,...
     pa_drug,pa_food,pa_neut,...
     pa_drugcue,pa_foodcue,pa_neutcue,...
-    craving,bamq3,bamstimuse,bamq11,bis);
+    craving,bam_upset,bam_stimuse,bam_riskysituations,bis);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
-roiNames = {'nacc','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust'};
-roiVarNames = {'nacc','mpfc','vta','VTA_clust','vsL_clust','vsR_clust'};
+
+% roiNames = {'nacc','mpfc','VTA'};
+% roiVarNames = {'nacc','mpfc','vta'};
+% 
+% stims = {'drugs','food','neutral'};
+% 
+% tcPath = fullfile(dataDir,'timecourses_cue_afni','%s','%s.csv'); %s is roiNames, stims
+% 
+% TRs = [5];
+% aveTRs = []; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
+
+
+% roiNames = {'nacc_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai'};
+% roiVarNames = {'nacc','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains'};
+roiNames = {'naccL_desai','naccR_desai','nacc_desai'};
+roiVarNames = {'naccL','naccR','nacc'};
+
 
 stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
 
-tcPath = fullfile(dataDir,'timecourses_cue_afni','%s','%s.csv'); %s is roiNames, stims
+tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
 
-TRs = [5:7];
+TRs = [3:7];
+aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
 
 tcNames = {}; tc = [];
 for j=1:numel(roiNames)
     for k = 1:numel(stims)
+        
         % if there's a minus sign, assume desired output is stim1-stim2
         if strfind(stims{k},'-')
             stim1 = stims{k}(1:strfind(stims{k},'-')-1);
@@ -111,16 +142,41 @@ for j=1:numel(roiNames)
             thistc1=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim1),subjects,TRs);
             thistc2=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim2),subjects,TRs);
             thistc=thistc1-thistc2;
+        
+        % otherwise just load stim timecourses
         else
             thistc=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stims{k}),subjects,TRs);
         end
-        tc = [tc thistc mean(thistc,2)];
+        tc = [tc thistc];
+        
+        % update var names
         for ti = 1:numel(TRs)
             tcNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' num2str(TRs(ti))];
         end
-        tcNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TRmean'];
-    end
-end
+        
+        % if averaging over TRs is desired, include it
+        if ~isempty(aveTRs)
+            tc = [tc mean(thistc(:,aveTRs),2)];
+            tcNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' strrep(num2str(TRs(aveTRs)),' ','') 'mean'];
+        end
+            
+    end % stims
+    
+    
+    % if ROI betas are saved out in a csv file that's accessible, include them
+    % as predictors as well 
+      for k = 1:numel(stims)
+          
+          bfile = fullfile(dataDir,['results_' task '_afni'],'roi_betas',roiNames{j},[stims{k} '.csv']);
+          if exist(bfile,'file')
+              B = loadRoiTimeCourses(bfile,subjects);
+              tc = [tc B];
+              tcNames = [tcNames [roiVarNames{j} '_' strrep(stims{k},'-','') '_beta']];
+          end
+            
+      end % stims
+
+end % rois
 
 
 % brain data

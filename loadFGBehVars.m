@@ -1,4 +1,4 @@
-function [fgMeasures,fgMLabels,scores,subjects,gi] = ...
+function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
     loadFGBehVars(fgMFile,scale,group,omit_subs)
 
 % [fgMeasures,fgMLabels,scores,subjects,gi] = loadFGBehVars(fullfile(fgMDir,[fgMatStr '.mat']),scale,group,omit_subs);
@@ -25,28 +25,75 @@ if notDefined('omit_subs')
     omit_subs = {};
 end
 
+% no scale is default
+if notDefined('scale')
+    scale = '';
+end
+
+% give all subjects (all groups) as default
+if notDefined('group')
+    group = '';
+end
+
 
 % load fiber group measures
-load(fgMFile);
+load(fgMFile); 
+% this loads vars: 
+    % eigvals
+    % err_subs (list of subjects w/problems)
+    % fgMeasures
+    % fgMLabels
+    % fgName
+    % gi
+    % lr
+    % nNodes
+    % seed
+    % subjecrts
+    % SuperFibers
+    % target
 
 
-% get index of desired subjects to return data for based on desired
-% group(s)
+%% define a "keep index" of desired subjects to return data for
+keep_idx = ones(numel(subjects),1);
+
 if strcmpi(group,'controls') || isequal(group,0)
     keep_idx=gi==0;
 elseif strcmpi(group,'patients') || isequal(group,1)
     keep_idx=gi==1;
+elseif strcmpi(group,'relapsers') 
+    rel = getCueData(subjects,'relapse');
+    keep_idx=rel==1;
+elseif strcmpi(group,'nonrelapsers') 
+    rel = getCueData(subjects,'relapse');
+    keep_idx=rel==0;
 end
+    
+% remove any subjects from keep index that arent returned in
+% getCueSubjects('dti')
+keep_idx(ismember(subjects,getCueSubjects('dti'))==0)=0;
+
 
 % remove omit_subs from keep index
 keep_idx=logical(keep_idx.*~ismember(subjects,omit_subs));
 
 
-% get fg data for just the desired subjects
+%%  get fg data for just the desired subjects
 subjects = subjects(keep_idx);
 gi = gi(keep_idx);
 fgMeasures = cellfun(@(x) x(keep_idx,:), fgMeasures,'uniformoutput',0);
 
+if iscell(eigVals) % means l and r are saved separately
+    eigVals{1}=eigVals{1}(keep_idx,:,:);
+    eigVals{2}=eigVals{2}(keep_idx,:,:);
+else
+eigVals=eigVals(keep_idx,:,:);
+end
+
+if size(SuperFibers,2)==2 % means l and r are saved separately
+    SuperFibers=SuperFibers(keep_idx,:);
+else
+    SuperFibers=SuperFibers(keep_idx);
+end
 
 % get scores 
 scores = getCueData(subjects,scale);

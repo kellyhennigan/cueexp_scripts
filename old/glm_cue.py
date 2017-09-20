@@ -12,8 +12,8 @@ import os,sys
 
 data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
-#afniStr = '_afni' # set this to '' if not using afni coreg version
-afniStr = '' # set this to '' if not using afni coreg version
+afniStr = '_afni' # set this to '' if not using afni coreg version
+#afniStr = '' # set this to '' if not using afni coreg version
 
 
 # pre-processed functional data to analyze
@@ -81,12 +81,10 @@ for subject in subjects:
 		'-stim_file 14 regs/drugs_trial_cuec.1D -stim_label 14 drugs ' 
 		'-stim_file 15 regs/food_trial_cuec.1D -stim_label 15 food ' 
 		'-stim_file 16 regs/neutral_trial_cuec.1D -stim_label 16 neutral ' 
-		'-num_glt 5 '					 # of contrasts
+		'-num_glt 3 '					 # of contrasts
 		'-glt_label 1 alcohol-neutral -gltsym "SYM: +alcohol -neutral" ' 
 		'-glt_label 2 drugs-neutral -gltsym "SYM: +drugs -neutral" '
 		'-glt_label 3 food-neutral -gltsym "SYM: +food -neutral" '
-		'-glt_label 4 drugs-food -gltsym "SYM: +drugs -food" '
-		'-glt_label 5 drugs-foodneutral -gltsym "SYM: 2*drugs -food -neutral" '
 		'-tout ' 					# output the partial and full model F
  		'-rout ' 					# output the partial and full model R2
  		#'-xout '						# print design matrix to the screen

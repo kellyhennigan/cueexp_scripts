@@ -13,16 +13,26 @@ function data = getCueData(subjects,measure)
 %
 % author: Kelly, kelhennigan@gmail.com, 20-Apr-2017
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% check inputs 
+if notDefined('subjects')
+    subjects = {};
+end
+
+if notDefined('measure')
+    measure = 'null';
+end
 
 % make sure input var subjects is a cell array
 if ischar(subjects)
     subjects = splitstring(subjects);
 end
 
-data = [];
-
 measure = lower(measure); % make sure measure string is all lower case
+
+data = [];
 
 %% various measures to return:
 
@@ -78,30 +88,10 @@ switch measure
         data = ri;
         
         
-    case 'relapsedate'
-        
-        [ri,relapseDate,notes]=getCueRelapseData(subjects);
-        data = relapseDate;
-        
-        
     case 'days2relapse'
-       
-        data = [];
-       
-        [ri,relapseDate]=getCueRelapseData(subjects);
-       
-        % use DOP or date of discharge as starting date
-        day0=getCueData(subjects,'dop'); % date of participation
-        % day0=getCueData(subjects,'for_discharge_date'); % discharge date
         
-        % get the # of days to relapse for subjects that relapsed
-        for i=1:numel(subjects)
-            if ~isnan(datenum(relapseDate{i}))
-                data(i,1) = datenum(relapseDate{i})-datenum(day0{i});
-            else
-                data(i,1) = nan;
-            end
-        end
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        data = days2relapse;
         
  
     case {'dop','for_admit_date','for_discharge_date',...
@@ -202,13 +192,24 @@ switch measure
     
          
     otherwise
-        
-        fprintf(['\ncurrently no function exists to get ' measure ' variable.\n' ...
-            'add functionality or ask for something else.\n\n'])
-        
-        
-        
-end
+    
+        % print out a list of all possible measure options
+        C = getCases; % == {'1' '2' '3'}
+        C=C'; C=strrep(C,'{','');C=strrep(C,'}','');
+        mlist = []; % measure options list
+        for i=1:numel(C)
+            thisC=C(i);
+            if strfind(thisC{1},',')
+                thisC=splitstring(thisC{1},',');
+            end
+            for ii=1:numel(thisC)
+                mlist = [mlist sprintf('%s\n',thisC{ii})];
+            end
+        end
+        disp(sprintf('current measure options are:\n%s\n',mlist));
+        data=nan(numel(subjects),1);
+
+end % switch measure
 
 
 end % getCueData
@@ -381,7 +382,12 @@ else
             item_scores = str2double(d(idx,2:end));
             item_scores(reverseArr) = 5-item_scores(reverseArr); % reverse score for certain items
             
-            % compute subject scores for bis & subscales
+            % occasionally, a subject will leave 1 question blank. If
+            % that's the case, fill in that response with the median response from all the other questions
+            if ~isempty(find(isnan(item_scores)))
+                item_scores(isnan(item_scores))=nanmedian(item_scores);
+            end
+            
             bis_score(i,1) = sum(item_scores);
             attn_score(i,1) = sum(item_scores(attnArr));
             motor_score(i,1) = sum(item_scores(motorArr));
@@ -504,93 +510,93 @@ end
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get more patient data
-function data = getPatientData(subjects,measure)
-
-if ischar(subjects)
-    subjects = splitstring(subjects);
-end
-
-
-data = [];
-
-
-docid = '1VdKlBKezHcz4VL93ouglqD1bpr7aTo2RGtEXUsyHNGI'; % doc id for google sheet w/relapse data
-try
-    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-    
-    
-    % if the google sheet couldn't be accessed, use these values (update as
-    % often as possible):
-catch
-    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
-        'Using hard coded values that may not be the most updated...'])
-    
-    return
-    
-end
-
-% assuming spreadsheet is loaded, column index (cj) for desired data
-switch measure
-    
-    case 'dop'
-        cj = find(strncmp(d(1,:),'DOP',3));
-    case 'for_admit_date'
-        cj = find(strncmp(d(1,:),'date of FOR admit',17));
-    case 'for_discharge_date'
-        cj = find(strncmp(d(1,:),'date of FOR discharge',21));
-    case 'first_use_date'
-        cj = find(strncmp(d(1,:),'date of first stim',18));
-    case 'most_recent_use_date'
-        cj = find(strncmp(d(1,:),'most recent stim',16));
-    case 'primary_stim'
-        cj = find(strncmp(d(1,:),'primary stim',12));
-    case 'alc_dep'
-        cj = find(strncmp(d(1,:),'alcohol',7));
-    case 'other_drug_dep'
-        cj = find(strncmp(d(1,:),'other drug',10));
-    case 'depression_diag'
-        cj = find(strncmp(d(1,:),'depression diag',15));
-    case 'ptsd_diag'
-        cj = find(strncmp(d(1,:),'PTSD diag',9));
-    case 'other_diag'
-        cj = find(strncmp(d(1,:),'other diag',10));
-    case 'meds'
-        cj = find(strncmp(d(1,:),'med',3));
-    case 'dop_drugtest'
-        cj = find(strncmp(d(1,:),'results',7));
-    case 'days_sober'
-        cj = find(strncmp(d(1,:),'days sober prior to DOP',23));
-    case 'days_in_rehab'
-        cj = find(strncmp(d(1,:),'days in rehab prior to DOP',26));
-    case 'years_of_use'
-        cj = find(strncmp(d(1,:),'years of use',12)); % column with desired data
-end
-
-
-for i=1:numel(subjects)
-    
-    ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
-    
-    if isempty(ri)
-        data{i,1} = nan;
-    else
-        thisd = d{ri,cj};
-        if isempty(thisd)
-            data{i,1} = nan;
-        else
-            data{i,1} = d{ri,cj};
-        end
-    end
-    
-end
-
-% convert from cell array of strings to numeric vector for numeric vars
-if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use'}))
-    data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
-end  
-
-end % getPatientData
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get more patient data
+% function data = getPatientData(subjects,measure)
+% 
+% if ischar(subjects)
+%     subjects = splitstring(subjects);
+% end
+% 
+% 
+% data = [];
+% 
+% 
+% docid = '1VdKlBKezHcz4VL93ouglqD1bpr7aTo2RGtEXUsyHNGI'; % doc id for google sheet w/relapse data
+% try
+%     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+%     
+%     
+%     % if the google sheet couldn't be accessed, use these values (update as
+%     % often as possible):
+% catch
+%     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+%         'Using hard coded values that may not be the most updated...'])
+%     
+%     return
+%     
+% end
+% 
+% % assuming spreadsheet is loaded, column index (cj) for desired data
+% switch measure
+%     
+%     case 'dop'
+%         cj = find(strncmp(d(1,:),'DOP',3));
+%     case 'for_admit_date'
+%         cj = find(strncmp(d(1,:),'date of FOR admit',17));
+%     case 'for_discharge_date'
+%         cj = find(strncmp(d(1,:),'date of FOR discharge',21));
+%     case 'first_use_date'
+%         cj = find(strncmp(d(1,:),'date of first stim',18));
+%     case 'most_recent_use_date'
+%         cj = find(strncmp(d(1,:),'most recent stim',16));
+%     case 'primary_stim'
+%         cj = find(strncmp(d(1,:),'primary stim',12));
+%     case 'alc_dep'
+%         cj = find(strncmp(d(1,:),'alcohol',7));
+%     case 'other_drug_dep'
+%         cj = find(strncmp(d(1,:),'other drug',10));
+%     case 'depression_diag'
+%         cj = find(strncmp(d(1,:),'depression diag',15));
+%     case 'ptsd_diag'
+%         cj = find(strncmp(d(1,:),'PTSD diag',9));
+%     case 'other_diag'
+%         cj = find(strncmp(d(1,:),'other diag',10));
+%     case 'meds'
+%         cj = find(strncmp(d(1,:),'med',3));
+%     case 'dop_drugtest'
+%         cj = find(strncmp(d(1,:),'results',7));
+%     case 'days_sober'
+%         cj = find(strncmp(d(1,:),'days sober prior to DOP',23));
+%     case 'days_in_rehab'
+%         cj = find(strncmp(d(1,:),'days in rehab prior to DOP',26));
+%     case 'years_of_use'
+%         cj = find(strncmp(d(1,:),'years of use',12)); % column with desired data
+% end
+% 
+% 
+% for i=1:numel(subjects)
+%     
+%     ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
+%     
+%     if isempty(ri)
+%         data{i,1} = nan;
+%     else
+%         thisd = d{ri,cj};
+%         if isempty(thisd)
+%             data{i,1} = nan;
+%         else
+%             data{i,1} = d{ri,cj};
+%         end
+%     end
+%     
+% end
+% 
+% % convert from cell array of strings to numeric vector for numeric vars
+% if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use'}))
+%     data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
+% end  
+% 
+% end % getPatientData
 
 
 

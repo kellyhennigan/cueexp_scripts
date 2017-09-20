@@ -9,7 +9,7 @@ p = getCuePaths();
 dataDir = p.data;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170822.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_170911.csv');
 
 %% do it
 
@@ -17,80 +17,81 @@ dataPath = fullfile(dataDir,'relapse_data','relapse_data_170822.csv');
 T = readtable(dataPath); 
 
 nanidx=find(isnan(T.relapse));
-% T.relapse(nanidx)=1;
+T.relapse(nanidx)=0;
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% check everything by itself
 
 % get all variable names
 vars = T.Properties.VariableNames; 
 
+a={};
+tB=[];
 
-%% check everything by itself
-
-for i=1:res.Coefficients.pValue
-
-    res.Coefficients.pValue
+for i=6:numel(vars)
     
+    modelspec = ['relapse ~ ' vars{i}];
+    res=fitglm(T,modelspec,'Distribution','binomial');
+    if res.Coefficients.pValue(2)<.10
+        a=[a vars{i}];
+        tB = [tB res.Coefficients.tStat(2)];
+    end
+end
+
+[tB,ti]=sort(tB'); tB
+a = a(ti)'; a
+
+
 %% model : demographic predictors
 
-
-modelspec = 'relapse ~ years_of_use';
+modelspec = 'relapse ~ years_of_use + poly_drug_dep + clinical_diag';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ days_sober';
-res=fitglm(T,modelspec,'Distribution','binomial')
+res.Rsquared.Ordinary
+res.ModelCriterion.AIC
 
-modelspec = 'relapse ~ poly_drug_dep';
-res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ smoke';
-res=fitglm(T,modelspec,'Distribution','binomial')
+%% model : self-report predictors
 
-modelspec = 'relapse ~ depression_diag';
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = 'relapse ~ ptsd_diag';
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = 'relapse ~ education';
+modelspec = 'relapse ~ pref_drug + craving + bamq3';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 
+% bam q3 seems predictive
+res.Rsquared.Ordinary
+res.ModelCriterion.AIC
 
+%% model : brain predictors
 
-
-%% model : behavior predictors
-
-modelspec = 'relapse ~ pref_drug';
+modelspec = 'relapse ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ pa_drug';
+res.Rsquared.Ordinary
+res.ModelCriterion.AIC
+
+% bam q3 seems predictive
+
+
+%% model: demographics + behavior + brain 
+
+modelspec = ['relapse ~ years_of_use + bamq3 + nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ pa_drugcue';
-res=fitglm(T,modelspec,'Distribution','binomial')
+res.Rsquared.Ordinary
+res.ModelCriterion.AIC
 
-modelspec = 'relapse ~ craving';
-res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ bamq3';
-res=fitglm(T,modelspec,'Distribution','binomial')
+% years of use seems to matter
 
-modelspec = 'relapse ~ bamstimuse';
-res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ bamq11';
-res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = 'relapse ~ bis';
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-% between drug pa, drug cue pa, drug pref, and craving, drug pa best
-% predicts relapse
 
 
 %% brain data
 
-roiName = 'mpfc';
+roiName = 'nacc';
 
 % drugs
 % modelspec = ['relapse ~ ' roiName '_drugs_TR3 + ' roiName '_drugs_TR4 + ' roiName '_drugs_TR5 + ' roiName '_drugs_TR6 + ' roiName '_drugs_TR7'];
@@ -99,7 +100,7 @@ roiName = 'mpfc';
 modelspec = ['relapse ~ ' roiName '_drugs_TR5 + ' roiName '_drugs_TR6 + ' roiName '_drugs_TR7'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-modelspec = ['relapse ~ ' roiName '_drugs_TRmean'];
+modelspec = ['relapse ~ ' roiName '_drugs_TR567mean'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 
@@ -154,7 +155,7 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 
 %% model: demographics + behavior + brain 
 
-modelspec = ['relapse ~ years_of_use + drug_pa + ' roiName '_drugs_TRmean'];
+modelspec = ['relapse ~ years_of_use + bamq3 + mpfc_drugs_TR567mean + vsR_clust_drugs_TR3'];
 res=fitglm(T,modelspec,'Distribution','binomial');
 
 

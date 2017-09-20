@@ -8,7 +8,7 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-roiName = 'ins_desai';
+roiName = 'PVT';
 roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);
 
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');

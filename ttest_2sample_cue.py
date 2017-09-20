@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 1 # 1 to just print, 0 to print and execute
+justPrint = 0 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -25,7 +25,11 @@ subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
  
-    
+# subjsB.remove('ss160205')
+# subjsB.remove('cs160214')
+# subjsB.remove('al151016')
+   
+   
 ### to do age matched control group: 
 #subjsB.remove('zl150930')
 #subjsB.remove('ps151001')
@@ -43,13 +47,13 @@ subjsB,_ = getsubs('cue',0) # controls
 print(subjsA)
 print(subjsB)
 
-#res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
-res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
+#res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
 
 in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
 out_str = ''
-#out_str = '_age_match'  # suffix to add to the end of enach out file
+#out_str = '_n35'  # suffix to add to the end of enach out file
 
 # labels of sub-bricks to test
 sub_labels = ['cue#0',
@@ -79,7 +83,8 @@ sub_labels2 = ['Full_R^2',
 'alcohol-neutral_GLT#0_Coef',
 'drugs-neutral_GLT#0_Coef',
 'food-neutral_GLT#0_Coef',
-'drugs-food_GLT#0_Coef']
+'drugs-food_GLT#0_Coef',
+'drugs-foodneutral_GLT#0_Coef']
 
 
 # labels for out files 
@@ -88,7 +93,8 @@ out_labels2 =  ['ZFull_R^2'+out_str,
 'Zalc-neutral'+out_str,
 'Zdrug-neutral'+out_str,
 'Zfood-neutral'+out_str,
-'Zdrug-food'+out_str]
+'Zdrug-food'+out_str,
+'Zdrug-foodneutral'+out_str]
 
 # concatenate lists 
 in_str = np.append(np.tile(in_str,len(sub_labels)),np.tile(in_str2,len(sub_labels2)))

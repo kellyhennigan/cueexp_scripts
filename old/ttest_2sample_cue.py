@@ -11,6 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
+justPrint = 1 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -19,36 +20,36 @@ else:
 	data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 
-
-
 from getCueSubjects import getsubs
+subjsA,_ = getsubs('cue',1)	# patients
+subjsB,_ = getsubs('cue',0) # controls
 
-# relapsers
-subjsA = ['si151120','tf151127','wr151127','ja151218','nb160221','tj160529','gm160909','lm160914','rc161007','jd170330','jw170330','rc170730']
+ 
+    
+### to do age matched control group: 
+#subjsB.remove('zl150930')
+#subjsB.remove('ps151001')
+#subjsB.remove('aa151010')
+#subjsB.remove('al151016')
+## subjsB.remove('jv151030')
+#subjsB.remove('kl160122')
+#subjsB.remove('ss160205')
+#subjsB.remove('bp160213')
+#subjsB.remove('cs160214')
+#subjsB.remove('yl160507')
+#subjsB.remove('li160927')
+#subjsB.remove('gm161101')
 
+print(subjsA)
+print(subjsB)
 
-# non-relapsers (INCLUDING NAN)
-#subjsB = ['ag151024','wh160130','rv160413','ja160416','cm160510','at160601','zm160627','jf160703','rs160730','nc160905','lm160914','jb161004','se161021','mr161024','al170316','jd170330','jw170330','tg170423','jc170501','hp170601','rl170603']
-
-
-# non-relapsers (NOT INCLUDING NAN)
-subjsB = ['ag151024','wh160130','rv160413','ja160416','cm160510','at160601','zm160627','jf160703','rs160730','nc160905','jb161004','se161021','mr161024','al170316','jc170501','rl170603','rf170610','mr170621','ds170728','as170730']
-
-
-
-
-
-
-
-print subjsA
-print subjsB
-
+#res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
 res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
-#res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
 
 in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
-out_str = '_REL'  # suffix to add to the end of enach out file
+out_str = ''
+#out_str = '_age_match'  # suffix to add to the end of enach out file
 
 # labels of sub-bricks to test
 sub_labels = ['cue#0',
@@ -77,9 +78,7 @@ sub_labels2 = ['Full_R^2',
 'Full_Fstat',
 'alcohol-neutral_GLT#0_Coef',
 'drugs-neutral_GLT#0_Coef',
-'food-neutral_GLT#0_Coef',
-'drugs-food_GLT#0_Coef',
-'drugs-foodneutral_GLT#0_Coef']
+'food-neutral_GLT#0_Coef']
 
 
 # labels for out files 
@@ -87,15 +86,15 @@ out_labels2 =  ['ZFull_R^2'+out_str,
 'ZFull_Fstat'+out_str,
 'Zalc-neutral'+out_str,
 'Zdrug-neutral'+out_str,
-'Zfood-neutral'+out_str,
-'Zdrug-food'+out_str,
-'Zdrug-foodneutral'+out_str]
-
+'Zfood-neutral'+out_str]
 
 # concatenate lists 
 in_str = np.append(np.tile(in_str,len(sub_labels)),np.tile(in_str2,len(sub_labels2)))
 sub_labels = sub_labels+sub_labels2
 out_labels = out_labels+out_labels2
+print('\n\n\nIN STR:\n\n\n')
+print(in_str)
+print('\n\n\n\n\n\n')
 
 # define mask file if masking is desired; otherwise leave blank
 mask_file = os.path.join(data_dir,'templates','bmask.nii')  # directory containing glm stat files
@@ -106,11 +105,11 @@ mask_file = os.path.join(data_dir,'templates','bmask.nii')  # directory containi
 	
 
 os.chdir(res_dir) 		 			# cd to results dir 
-print res_dir
+print(res_dir)
 
 
 for i, sub_label in enumerate(sub_labels): 
-	print i, sub_label
+	#print i, sub_label
 	
 	# get part of command for subjects in setA
 	subjA_cmd = ' '
@@ -120,7 +119,7 @@ for i, sub_label in enumerate(sub_labels):
 			cmd = "3dinfo -label2index '"+sub_label+"' "+subj+in_str[i]
 			vol_idx=int(os.popen(cmd).read())
 			subjA_cmd+="'"+subj+in_str[i]+'['+str(vol_idx)+']'+"' " 
-			print subjA_cmd
+			print(subjA_cmd)
 
 
 	# get part of command for subjects in setB
@@ -139,9 +138,11 @@ for i, sub_label in enumerate(sub_labels):
 	else:
 		mask_cmd = ''
 
+
 	cmd = '3dttest++ -prefix '+out_labels[i]+mask_cmd+' -toz '+subjA_cmd+subjB_cmd
-	print cmd
-	os.system(cmd)
+	print(cmd+'\n')
+	if not justPrint:
+		os.system(cmd)
 
 	# 3dttest++ -prefix '+z_cue -toz -setA 'aa151010_glm+tlrc[2]' 'nd150921_glm+tlrc[2]' -setB 'ag151024_glm+tlrc[2]' 'si151120_glm+tlrc[2]' 
 
