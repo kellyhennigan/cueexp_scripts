@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which rois to process?
-roiNames = whichRois(tcPath,'_func.nii');
+roiNames = whichRois(tcPath);
 
 
 nTRs = 10; % # of TRs to plot

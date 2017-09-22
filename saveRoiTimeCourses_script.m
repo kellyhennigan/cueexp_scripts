@@ -55,16 +55,7 @@ stimDir =  fullfile(dataDir,'%s/regs');
 roiDir = fullfile(dataDir,'ROIs');
 
 % get list of rois to potentially process
-a=dir([roiDir '/*_func.nii']);
-allRoiNames = cellfun(@(x) strrep(x,'_func.nii',''), {a(:).name},'uniformoutput',0);
-disp(allRoiNames');
-fprintf('\nwhich ROIs to process? \n');
-roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');
-if isempty(roiNames)
-    roiNames = allRoiNames;
-else
-    roiNames = splitstring(roiNames);
-end
+roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 
 % name of dir to save to where %s is task

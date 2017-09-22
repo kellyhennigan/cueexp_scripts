@@ -12,8 +12,8 @@ dataDir = pa.data; figDir = pa.figures;
 % which group(s) to plot?
 % group = {'controls'};
 % group = {'nonrelapsers'};
-group = {'all'};
-%  group = {'patients'};
+% group = {'all'};
+ group = {'patients'};
 
 % directory & filename of fg measures
 method = 'conTrack';
@@ -21,7 +21,7 @@ fgMatStr = 'DALR_naccLR_autoclean_cl1'; %'.mat' will be added to end
 
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS'
+scale = 'age'
 % scale = 'years_of_use';
 
 
@@ -100,7 +100,7 @@ n = numel(subjects);
 % measures
 
 %%%%%%%%%%%%%%% params for figure 1
-fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+fgMCorr = 'FA'; % fg measure to correlate with behavior & plot as color map
 fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 

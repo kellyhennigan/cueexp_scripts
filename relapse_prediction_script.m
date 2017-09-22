@@ -9,15 +9,19 @@ p = getCuePaths();
 dataDir = p.data;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170911.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_170921.csv');
 
 %% do it
 
 % load data
 T = readtable(dataPath); 
+T.relapse(15)=nan;
+T.relapse(19)=nan;
 
 nanidx=find(isnan(T.relapse));
-T.relapse(nanidx)=0;
+
+% T.relapse(nanidx)=0;
+% T.relapse(nanidx)=1;
 
 
 
@@ -34,7 +38,7 @@ for i=6:numel(vars)
     
     modelspec = ['relapse ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
-    if res.Coefficients.pValue(2)<.10
+    if res.Coefficients.pValue(2)<.05
         a=[a vars{i}];
         tB = [tB res.Coefficients.tStat(2)];
     end

@@ -14,6 +14,7 @@ subjects = getCueSubjects(task,1); % stim patients
 
 % filepath for saving out table of variables
 outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '.csv']);
+% outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '_nacc.csv']);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -118,13 +119,15 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 % aveTRs = []; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
 
 
-% roiNames = {'nacc_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai'};
-% roiVarNames = {'nacc','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains'};
-roiNames = {'naccL_desai','naccR_desai','nacc_desai'};
-roiVarNames = {'naccL','naccR','nacc'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai','dlpfc'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains','dlpfc'};
+
+% roiNames = {'naccL_desai','naccR_desai'};
+% roiVarNames = {'naccL','naccR'};
 
 
 stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
+% stims = {'drugs','food','neutral'};
 
 tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
 

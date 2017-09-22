@@ -16,8 +16,10 @@ dataDir = p.data;
 
 
 % ROIs
-roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
-roiStrPath = fullfile(dataDir,'ROIs','%s_func.nii'); %s is roiStrs
+% roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
+roiDir = fullfile(dataDir,'ROIs');
+roiNames = whichRois(roiDir,'_func.nii','_func.nii');
+
 
 % directory that contains glm results of interest
 resultsDir = fullfile(dataDir,['results_' task '_afni']);
@@ -35,7 +37,7 @@ outStrPath = fullfile(resultsDir,'roi_betas','%s','%s.csv'); %s is roiNames and 
 
 for j = 1:numel(roiNames)
     
-    roiFilePath = sprintf(roiStrPath,roiNames{j});
+    roiFilePath = fullfile(roiDir,[roiNames{j} '_func.nii']);
     
     for k = 1:numel(bNames)
         
