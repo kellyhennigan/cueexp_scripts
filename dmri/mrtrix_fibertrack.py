@@ -37,7 +37,7 @@ LR = ['L','R'] # 'L' for left and/or 'R' for right
 
 # fiber tracking options; leave blank or comment out to use defaults:
 number = '1000'						# number of tracks to produce
-maxnum = str(int(number)*1000)		# max number of candidate fibers to generate (default is number x 1000)
+maxnum = str(int(number)*100000)	# max number of candidate fibers to generate (default is number x 1000)
 #maxattempts = '1'					# max # of times the tracking alg should attempt to find an appropriate tracking dir from a given seed
 maxlength = '50'					# max length (in mm) of the tracks
 stop = True							# stop track once it has traversed all include ROIs
