@@ -39,7 +39,7 @@ for s=1:numel(subjects)
     subject = subjects{s};
     
     fprintf(['\n\nworking on subject ' subject '...\n\n']);
-   
+    
     
     inDir = ['/home/hennigan/freesurfer/subjects/' subject '/mri']; % freesurfer subject mri dir
     subjDir = ['/home/hennigan/cueexp/data/' subject ];
@@ -49,16 +49,16 @@ for s=1:numel(subjects)
     %% do it
     
     if ~exist(inDir,'dir')
-          fprintf(['\nskipping subject ' subject ' because no freesurfer file found...\n\n']);
-          
+        fprintf(['\nskipping subject ' subject ' because no freesurfer file found...\n\n']);
+        
     else
         
-    
-    if ~exist(outDir, 'dir')
-        mkdir(outDir)
-    end
-    
-    % Convert fs t1 to nifti
+        
+        if ~exist(outDir, 'dir')
+            mkdir(outDir)
+        end
+        
+        % Convert fs t1 to nifti
         
         cmd = [fshome '/bin/mri_convert --out_orientation RAS -i ' inDir '/T1.mgz -o ' outDir '/t1_fs.nii.gz'];
         unix_wrapper(cmd);
@@ -129,17 +129,17 @@ for s=1:numel(subjects)
         
         % also save out a wm mask
         fprintf('\n\nsaving out a white matter mask....\n\n');
-     
+        
         wmmask = zeros(size(ni.data));
-        wmask(ni.data==3)=1;  wmask(ni.data==4)=1;
-       
-        wmNi =ni; 
+        wmmask(ni.data==3)=1;  wmmask(ni.data==4)=1;
+        
+        wmNi =ni;
         wmNi.fname = fullfile(outDir,'wm_mask.nii.gz');
-        wmNi.data = wmmask; 
+        wmNi.data = wmmask;
         writeFileNifti(wmNi);
         
         fprintf('\n\ndone.\n');
-    end 
+    end
     
-      fprintf(['done with subject ' subject '.\n\n']);
+    fprintf(['done with subject ' subject '.\n\n']);
 end
