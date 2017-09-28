@@ -12,8 +12,8 @@ import os,sys
 
 data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
-#afniStr = '_afni' # set this to '' if not using afni coreg version
-afniStr = '' # set this to '' if not using afni coreg version
+afniStr = '_afni' # set this to '' if not using afni coreg version
+#afniStr = '' # set this to '' if not using afni coreg version
 
 
 # pre-processed functional data to analyze
