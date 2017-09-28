@@ -124,8 +124,21 @@ for s=1:numel(subjects)
         writeFileNifti(ni)
         
         % done.
+        fprintf('\n\ndone.\n');
         
         
+        % also save out a wm mask
+        fprintf('\n\nsaving out a white matter mask....\n\n');
+     
+        wmmask = zeros(size(ni.data));
+        wmask(ni.data==3)=1;  wmask(ni.data==4)=1;
+       
+        wmNi =ni; 
+        wmNi.fname = fullfile(outDir,'wm_mask.nii.gz');
+        wmNi.data = wmmask; 
+        writeFileNifti(wmNi);
+        
+        fprintf('\n\ndone.\n');
     end 
     
       fprintf(['done with subject ' subject '.\n\n']);
