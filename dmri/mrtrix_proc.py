@@ -37,6 +37,9 @@ doTrackWBFibers = False
 # do whole-brain fiber density? for more info: https://github.com/jdtournier/mrtrix3/wiki/tckmap
 doWBFiberDensity = False
 
+# make dilated white matter mask to use for fiber tracking? 
+doWMMask = True
+
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
 
@@ -330,6 +333,12 @@ if __name__ == '__main__':
 		if doWBFiberDensity:
 			wbFiberDensity()
 			
+
+		# make dilated white matter mask to use for fiber tracking 
+		if doWMMask:
+			cmd = 'maskfilter -npass 2 t1/wm_mask.nii.gz dilate '+mrt_dir+'/wm_mask_dil2.nii.gz'
+			doCommand(cmd)
+
 
 		print 'FINISHED SUBJECT '+subject
 			
