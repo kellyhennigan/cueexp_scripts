@@ -45,7 +45,7 @@ LorR = ['L','R'];
 
 
 % string to identify fiber group files?
-versionStr = '_autoclean_cl2'; % string specifiying version fg version
+versionStr = '_autoclean_cl1'; % string specifiying version fg version
 
 
 outDir = fullfile(dataDir, 'fgMeasures',method);

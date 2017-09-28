@@ -19,7 +19,6 @@ close all
 
 % get experiment-specific paths and cd to main data directory
 [p,~,subjects]=whichCueSubjects('stim','dti');
-subjects = {'rf170610','dd170610','mr170621','ds170728','as170730','rc170730'};
 
 dataDir = p.data;
 
