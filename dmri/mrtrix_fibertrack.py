@@ -22,8 +22,8 @@ inDir = 'dti96trilin/'+method	# directory w/in diffusion data and b-gradient fil
 infile = 'CSD8.mif'					# tensor or CSD file 
 alg = 'iFOD2'						# will do iFOD2 by default
 gradfile = 'b_file' 				# b-gradient encoding file in mrtrix format
-maskfile = 'brainMask.nii.gz' 		# this should be included
-#maskfile = 'wmMask_fs.nii.gz' 		# this should be included
+#maskfile = 'brainMask.nii.gz' 		# this should be included
+maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
@@ -37,7 +37,7 @@ LR = ['L','R'] # 'L' for left and/or 'R' for right
 
 # fiber tracking options; leave blank or comment out to use defaults:
 number = '1000'						# number of tracks to produce
-maxnum = str(int(number)*100000)	# max number of candidate fibers to generate (default is number x 1000)
+maxnum = str(int(number)*10000)	# max number of candidate fibers to generate (default is number x 1000)
 #maxattempts = '1'					# max # of times the tracking alg should attempt to find an appropriate tracking dir from a given seed
 maxlength = '50'					# max length (in mm) of the tracks
 stop = True							# stop track once it has traversed all include ROIs
