@@ -30,7 +30,7 @@ switch task
         
         roi_str = 'wmMask';
         roits_file = [dataDir '/%s/dti96trilin/' roi_str '_ts'];
-        
+      
     otherwise % for fmri tasks
         
         mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task

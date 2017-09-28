@@ -47,8 +47,8 @@ subjsB,_ = getsubs('cue',0) # controls
 print(subjsA)
 print(subjsB)
 
-res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
-#res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
+#res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
 
 in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
