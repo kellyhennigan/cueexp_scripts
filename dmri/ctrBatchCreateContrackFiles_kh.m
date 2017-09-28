@@ -73,7 +73,9 @@
 projectName = '';                                        
 logName     = '';      
                             
-p = getCuePaths;
+
+task = 'dti';
+[p,~,subjects,~]=whichCueSubjects('stim',task);
 baseDir = p.data;
 
 dtDir   = 'dti96trilin';          
@@ -87,8 +89,7 @@ dtDir   = 'dti96trilin';
 %% II. Set Subjects and ROIs
 
 % Subject directories
-% subs = getCueSubjects();
-subs = {'al170316','jd170330','jw170330','tg170423','ms170424','jc170501'};
+subs = subjects;
 
 % ROI1 = {'DAL','DAL','naccL'};
 ROI1 = {'DAL','DAL','DAL','DAR','DAR','DAR','naccL','naccR'};
