@@ -208,68 +208,14 @@ for r = 1:numel(roiNames)
         
         fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
         
-%         [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,figtitle,savePath,0);
-%           fprintf('done.\n\n')
-        
-        
-%% extra formatting options: 
-       
-         [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,'','',1);
+        [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,figtitle,savePath,0);
 
-         % grayed out rectangles
-         gxs = [5 13]; % x-axis limits for graying out
-        yl = ylim;
+        fprintf('done.\n\n');
         
-        % vertices
-        v = [t(1) yl(1);
-            t(1) yl(2);
-            gxs(1) yl(2);
-            gxs(1) yl(1);
-            gxs(2) yl(1);
-            gxs(2) yl(2);
-            t(end) yl(2);
-            t(end) yl(1)];
-       
-        patch('Faces',[1:4;5:8],'Vertices',v,'FaceColor',[.5 .5 .5],'EdgeColor','none','FaceAlpha',.5)
-       
-        % legend off
-        legend(gca,'off')
-        
-        % xlim and xtick
-        set(gca,'xtick',t)
-        
-        % change font size
-        fsize = 26;
-        set(gca,'fontName','Arial','fontSize',fsize)
-%         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
-        xlabel(xlab,'fontName','Arial','FontSize',fsize)
-        ylabel(ylab,'fontName','Arial','FontSize',fsize)
-
-       
-        % re-save fig with changed formatting
-        print(gcf,'-dpng','-r300',savePath);
-%
-        
-        
-        fprintf('done.\n\n')
         
         
     end % figures
     
 end %roiNames
-
-%         fsize = 26;
-%         set(gca,'fontName','Arial','fontSize',fsize)
-%         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
-%         xlabel(xlab,'fontName','Arial','FontSize',fsize)
-%         ylabel(ylab,'fontName','Arial','FontSize',fsize)
-%
-%      set(leg,'String',{'relapsers (n=8)','non-relapsers (n=12)','controls (n=33)'})
-%         set(gca,'XTick',[0:2:18])
-%         xlim([4 18])
-%         ylim([-.2 .51])
-%         set(leg,'Location','EastOutside')
-%         print(gcf,'-dpng','-r300',savePath);
-%
 
 

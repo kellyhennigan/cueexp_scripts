@@ -34,9 +34,6 @@ xt = t; %  xticks on the plotted x axis
 
 useSpline = 0; % if 1, time series will be upsampled by TR*10
 
-% omitSubs = {'zl150930','ps151001','aa151010','al151016','jv151030',...
-%     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
-%     'gm161101'};
 omitSubs = {''}; % any subjects to omit?
 
 plotStats = 1; % 1 to note statistical signficance on figures

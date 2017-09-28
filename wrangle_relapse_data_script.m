@@ -126,8 +126,8 @@ roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_
 % roiVarNames = {'naccL','naccR'};
 
 
-stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
-% stims = {'drugs','food','neutral'};
+% stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
+stims = {'drugs','food','neutral'};
 
 tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
 

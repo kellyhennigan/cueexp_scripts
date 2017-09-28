@@ -19,8 +19,8 @@ task = 'cue';
 group = 'patients';
 
 [subjects,gi]=getCueSubjects(task,group);
-% subjects(1:20)=[];
-% gi(1:20)=[];
+subjects(1:20)=[];
+gi(1:20)=[];
 
 stim = 'drugs'; % stim to plot
 
@@ -32,8 +32,8 @@ tcDir = ['timecourses_' task '_afni' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
-% colorScheme = 'rand'; 
-colorScheme = 'relapse'; 
+colorScheme = 'rand'; 
+% colorScheme = 'relapse'; 
 
 
 omitSubs = {''}; % any subjects to omit?

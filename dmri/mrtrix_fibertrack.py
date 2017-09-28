@@ -19,7 +19,7 @@ dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')	# experiment mai
 # define input directory and files relative to subject's directory 
 method = 'mrtrix_fa'
 inDir = 'dti96trilin/'+method	# directory w/in diffusion data and b-gradient file and mask
-infile = 'CSD12.mif'					# tensor or CSD file 
+infile = 'CSD8.mif'					# tensor or CSD file 
 alg = 'iFOD2'						# will do iFOD2 by default
 gradfile = 'b_file' 				# b-gradient encoding file in mrtrix format
 maskfile = 'brainMask.nii.gz' 		# this should be included
@@ -38,21 +38,22 @@ LR = ['L','R'] # 'L' for left and/or 'R' for right
 # fiber tracking options; leave blank or comment out to use defaults:
 number = '1000'						# number of tracks to produce
 maxnum = str(int(number)*1000)		# max number of candidate fibers to generate (default is number x 1000)
-maxattempts = '1'					# max # of times the tracking alg should attempt to find an appropriate tracking dir from a given seed
+#maxattempts = '1'					# max # of times the tracking alg should attempt to find an appropriate tracking dir from a given seed
 maxlength = '50'					# max length (in mm) of the tracks
 stop = True							# stop track once it has traversed all include ROIs
 step_size = ''						# define step size for tracking alg (in mm); default is .1* voxel size
-cutoff = '.075'						# determine FA cutoff value for terminating tracks (default is .1)
-#init_cutoff = ''					# FA cutoff for initializing tracks 
-init_cutoff = '.05'					# FA cutoff for initializing tracks 
-initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
-#initdir = ''			
+#cutoff = '.075'					# determine FA cutoff value for terminating tracks (default is .1)
+cutoff = ''					
+#init_cutoff = '.05'				# FA cutoff for initializing tracks 
+init_cutoff = ''				
+#initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
+initdir = ''			
 nthreads = 16						# of threads to use for tractography
 
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-outFileStr = '_lmax12'  # out file name suffix? Leave blank if not desired
+outFileStr = '_lmax8'  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))

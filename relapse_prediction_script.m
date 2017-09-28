@@ -9,7 +9,7 @@ p = getCuePaths();
 dataDir = p.data;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170921.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_170925.csv');
 
 %% do it
 
@@ -17,6 +17,7 @@ dataPath = fullfile(dataDir,'relapse_data','relapse_data_170921.csv');
 T = readtable(dataPath); 
 T.relapse(15)=nan;
 T.relapse(19)=nan;
+T.relapse(27)=nan;
 
 nanidx=find(isnan(T.relapse));
 
