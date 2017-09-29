@@ -37,15 +37,15 @@ fgMLabels = {'FA','MD','RD','AD'};
 
 seed = 'DA';  % define seed roi
 
-targets = {'nacc'};
-% targets = {'nacc','caudate','putamen'};
+% targets = {'nacc'};
+targets = {'nacc','caudate','putamen'};
 
 LorR = ['L','R'];
 
 
 
 % string to identify fiber group files?
-versionStr = '_autoclean_cl2'; % string specifiying version fg version
+versionStr = '_autoclean'; % string specifiying version fg version
 
 
 outDir = fullfile(dataDir, 'fgMeasures',method);
