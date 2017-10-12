@@ -17,7 +17,8 @@ subjects = getCueSubjects('cue',1); % stim patients
 % get relapse data
 % [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170911.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171011.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
 
 %% do it
 
@@ -25,7 +26,7 @@ dataPath = fullfile(dataDir,'relapse_data','relapse_data_170911.csv');
 T = readtable(dataPath); 
 
 nanidx=find(isnan(T.relapse));
-T.relapse(nanidx)=0;
+% T.relapse(nanidx)=0;
 
 
 % get all variable names
@@ -53,13 +54,13 @@ censored = T.censored;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Cox regression on relapse 
 
-X = [T.years_of_use T.nacc_drugs_beta T.bamq3 ];
+X = [T.nacc_drugs_beta];
 y = obstime;
 yr = T.relapse;
 
 [b,logl,H,stats] = coxphfit(X,obstime,'Censoring',censored)
 
-% res=fitglm(X,yr,'Distribution','binomial')
+res=fitglm(X,yr,'Distribution','binomial')
 
 
 

@@ -21,14 +21,14 @@ fgMatStr = 'DALR_naccLR_autoclean_cl1'; %'.mat' will be added to end
 
 
 % which scale to correlate with fiber group measures?
-scale = 'age'
+scale = 'BIS'
 % scale = 'years_of_use';
 
 
 % include control variables? 
 % covars = {'age','gender'};
-% covars = {'age'};
-covars = {};
+covars = {'age'};
+% covars = {};
 
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
@@ -100,7 +100,7 @@ n = numel(subjects);
 % measures
 
 %%%%%%%%%%%%%%% params for figure 1
-fgMCorr = 'FA'; % fg measure to correlate with behavior & plot as color map
+fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
 fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 
@@ -120,8 +120,8 @@ end
 
 %%%%%%%%%%%%%%% params for figure 1
 node = 'best'; % an integer specifying which node to plot, or 'best'
-bestWhat = 'FA'; % which fg measure(s) to test for best
-% node = 54;
+bestWhat = 'MD'; % which fg measure(s) to test for best
+node = [50:59];
 
 fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%

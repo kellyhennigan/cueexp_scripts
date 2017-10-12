@@ -31,9 +31,6 @@ out_dir = os.path.join(data_dir,'%s','func_proc')
 t1_template = os.path.join(data_dir,'templates','TT_N27.nii') # %s is data_dir
 func_template = os.path.join(data_dir,'templates','TT_N27_func_dim.nii') # %s is data_dir
 
-# functional volumes to coreister with t1 in native space using affine xform
-tasks = ['cue']
-
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
@@ -68,6 +65,25 @@ def whichBaseDir():
 
 	return base_dirs[i]
 	
+
+
+#########  get task 
+def whichTask():
+	
+	all_tasks = ['cue','mid','midi']
+	
+	print('process which task?\n')
+	print('\t1) '+all_tasks[0])
+	print('\t2) '+all_tasks[1])
+	print('\t3) '+all_tasks[2]+'\n')
+	ti = raw_input('enter 1,2, or 3, or hit enter to process all: ') # task index
+
+	if ti:
+		tasks = [all_tasks[int(ti)-1]]
+	else:
+		tasks = all_tasks
+
+	return tasks
 
 
 #########  get main data directory and subjects to process	
@@ -125,6 +141,9 @@ if __name__ == '__main__':
 	base_dir = 'cueexp'
 	subjects = whichSubs(base_dir)
 	
+	tasks = whichTask()  # task(s)
+
+
 	for subject in subjects:
 
 		

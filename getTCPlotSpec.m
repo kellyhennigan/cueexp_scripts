@@ -147,25 +147,31 @@ switch task
         
         % corresponding groups:
         groups =  {'controls';
-            'patients'
-            'controls relapsers non-relapsers';
+            'controls';
+            'patients';
+            'patients';
+            'controls patients';
             'controls relapsers non-relapsers';};
         
         
         
         % corresponding stims:
         stims =  {'gain5GO gain0GO gain5NOGO gain0NOGO';
-            'gain5GO gain0GO gain5NOGO gain0NOGO';
-            'gain0GO gain0NOGO';
-            'gain5GO gain5NOGO'};
+            'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+           'gain5GO gain0GO gain5NOGO gain0NOGO';
+            'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+            'gain5NOGO';
+            'gain5NOGO'};
         
         
         
         % corresponding stim strings to use in figure and file name
-        stimStrs =  {'Incentivized GO vs NOGO';
+        stimStrs =  {'gain trials';
             'Incentivized GO vs NOGO';
-            'GO vs NOGO control';
-            'GO vs NOGO gains'
+            'gain trials';
+            'Incentivized GO vs NOGO';
+            'high incentive NOGO trials';
+            'high incentive NOGO trials';
             };
         
         

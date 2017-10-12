@@ -9,15 +9,17 @@ p = getCuePaths();
 dataDir = p.data;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170925.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171011.csv');
 
 %% do it
 
 % load data
 T = readtable(dataPath); 
-T.relapse(15)=nan;
-T.relapse(19)=nan;
-T.relapse(27)=nan;
+
+% T.relapse(15)=nan; % cg160715
+% T.relapse(19)=nan; % lm60914
+% T.relapse(27)=nan; % tg170423
 
 nanidx=find(isnan(T.relapse));
 
@@ -88,92 +90,11 @@ res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
 
-% years of use seems to matter
-
-
-
-
-
-%% brain data
-
-roiName = 'nacc';
-
-% drugs
-% modelspec = ['relapse ~ ' roiName '_drugs_TR3 + ' roiName '_drugs_TR4 + ' roiName '_drugs_TR5 + ' roiName '_drugs_TR6 + ' roiName '_drugs_TR7'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugs_TR5 + ' roiName '_drugs_TR6 + ' roiName '_drugs_TR7'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugs_TR567mean'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-
-% food
-% modelspec = ['relapse ~ ' roiName '_food_TR3 + ' roiName '_food_TR4 + ' roiName '_food_TR5 + ' roiName '_food_TR6 + ' roiName '_food_TR7'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_food_TR5 + ' roiName '_food_TR6 + ' roiName '_food_TR7'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_food_TRmean'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-% neutral
-% modelspec = ['relapse ~ ' roiName '_neutral_TR3 + ' roiName '_neutral_TR4 + ' roiName '_neutral_TR5 + ' roiName '_neutral_TR6 + ' roiName '_neutral_TR7'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_neutral_TR5 + ' roiName '_neutral_TR6 + ' roiName '_neutral_TR7'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_neutral_TRmean'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-
-% drugs-neutral
-% modelspec = ['relapse ~ ' roiName '_drugsneutral_TR3 + ' roiName '_drugsneutral_TR4 + ' roiName '_drugsneutral_TR5 + ' roiName '_drugsneutral_TR6 + ' roiName '_drugsneutral_TR7'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugsneutral_TR5 + ' roiName '_drugsneutral_TR6 + ' roiName '_drugsneutral_TR7'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugsneutral_TRmean'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-% drugs-food
-% modelspec = ['relapse ~ ' roiName '_drugsfood_TR3 + ' roiName '_drugsfood_TR4 + ' roiName '_drugsfood_TR5 + ' roiName '_drugsfood_TR6 + ' roiName '_drugsfood_TR7'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugsfood_TR5 + ' roiName '_drugsfood_TR6 + ' roiName '_drugsfood_TR7'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-modelspec = ['relapse ~ ' roiName '_drugsfood_TRmean'];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-
-tr = 6;
-modelspec = ['relapse ~ ' roiName '_drugs_TR' num2str(tr)];
-res=fitglm(T,modelspec,'Distribution','binomial')
-
-% mpfc seems related to relapse
-
-
-%% model: demographics + behavior + brain 
-
-modelspec = ['relapse ~ years_of_use + bamq3 + mpfc_drugs_TR567mean + vsR_clust_drugs_TR3'];
-res=fitglm(T,modelspec,'Distribution','binomial');
-
-
 %% 
 
-% model ideas based on TRs differentiating patients and controls drug
-% activation: 
+modelspec = ['relapse ~ bam_upset + nacc_drugs_beta + pa_drug'];
+res=fitglm(T,modelspec,'Distribution','binomial')
 
-% VTA - 5,6,7
-% VTA_func - 5,6,7
-% nacc - 6 and 7
-% vsL - 6 and 7
-% vsR - 5 and 6
-% mpfc - 6* and 7
-
+res.Rsquared.Ordinary
+res.ModelCriterion.AIC
 
