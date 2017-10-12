@@ -12,18 +12,18 @@ nims_exp_dir = '/nimsfs/knutson/cuefmri/'	# experiment main dir on nims
 data_dir = '/home/hennigan/cueexp/data/'	# main data dir 
 
 
-subject = 'jw170330'				# subject id (string)
-exam_no = '14717'				# cni exam number (string)
+subject = 'er171009'				# subject id (string)
+exam_no = '16178'				# cni exam number (string)
 
 
 # define the scan numbers associated with each scan (or set to 0 to not do anything): 
 t1 = 3
-func_cue = 8
-func_mid1 = 9
-func_mid2 = 10
-func_midi1 = 11
-func_midi2 = 12
-dti=14
+func_cue = 6
+func_mid1 = 7
+func_mid2 = 8
+func_midi1 = 9
+func_midi2 = 10
+dti=15
 
 
 ####################################################
