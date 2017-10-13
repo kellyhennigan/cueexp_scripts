@@ -124,7 +124,7 @@ for s = 1:numel(subjects)
         if ~isempty(roits_file) && exist(roits_file,'file')
             ts = dlmread(sprintf(roits_file,subject));
         else
-            ts = ''; roi_str = '';
+            ts = zeros(numel(en),1); roi_str = '';
         end
         
         fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
