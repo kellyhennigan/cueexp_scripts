@@ -121,7 +121,7 @@ for s = 1:numel(subjects)
         
         
         % plot, if desired
-        if ~isempty(roits_file)
+        if ~isempty(roits_file) && exist(roits_file,'file')
             ts = dlmread(sprintf(roits_file,subject));
         else
             ts = ''; roi_str = '';
