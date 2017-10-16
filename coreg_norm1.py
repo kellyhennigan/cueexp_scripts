@@ -82,8 +82,7 @@ def whichTask():
 		tasks = [all_tasks[int(ti)-1]]
 	else:
 		tasks = all_tasks
-
-	print tasks
+	
 	return tasks
 
 

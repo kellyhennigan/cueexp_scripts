@@ -9,8 +9,8 @@ dataDir = p.data;
 
 % eliminate 3 youngest subjects from control group to make equal # of
 % controls vs patients:
-age= getCueData(subjects,'age');
-subjects(age<20)=[]; gi(age<20)=[]; age(age<20)=[];
+% age= getCueData(subjects,'age');
+% subjects(age<20)=[]; gi(age<20)=[]; age(age<20)=[];
 
 atype = 5; % 5   A,B fixed; C random;  AxB,BxC,C(A), meaning C is nested in A
 
@@ -30,7 +30,7 @@ b_vols = [16,17,18]; % vol indices of condition betas in subj glm results niftis
 
 
 % FACTOR C: subjects as random effects
-clevels = 35; % subjects
+clevels = numel(subs{1}); % # of subjects in patient group (also must be the same number of subjects in the control group)
 
 
 %% ANOVA COMMAND:
@@ -116,4 +116,5 @@ end
 anova_cmd = [anova_cmd cmd cmd2];
 anova_cmd2= [afniDir anova_cmd];
 
+disp(anova_cmd2)
 % system(anova_cmd2)
