@@ -150,7 +150,7 @@ for j=1:numel(targets) % target rois loop
             mkdir(outDir)
         end
         
-        outName = sprintf(outStr,seed,lr,target,lr);
+        outName = sprintf(outStr,seed,lr,target,lr,versionStr);
         outPath = fullfile(outDir,outName);
         
         if exist('gi','var')
