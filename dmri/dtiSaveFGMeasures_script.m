@@ -35,35 +35,53 @@ nNodes = 100; % number of nodes for fiber tract
 
 fgMLabels = {'FA','MD','RD','AD'};
 
-seed = 'DA';  % define seed roi
 
-% targets = {'nacc'};
-targets = {'nacc','caudate','putamen'};
-
+% left and/or right hemisphere?
 LorR = ['L','R'];
 
+combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 
-% string to identify fiber group files?
-versionStr = '_autoclean'; % string specifiying version fg version
+%%%%%%%%%%%%%%%%%%%%%%
+% define seed, target, & version string to ID each fiber group to loop over
+seeds = {'DA';
+    'DA';
+    'DA';
+    'DA';
+    'DA';
+    'nacc'};
 
+targets = {'nacc';
+    'caudate';
+    'putamen';
+    'nacc';
+    'nacc';
+    'PVT'};
+
+versionStrs = {'_autoclean';
+    '_autoclean';
+    '_autoclean';
+    '_autoclean_cl1';
+    '_autoclean_cl2';
+    '_autoclean'};
 
 outDir = fullfile(dataDir, 'fgMeasures',method);
 
 
 %% do it
 
-
-
-for lr=LorR  % L/R loop
+for j=1:numel(targets) % target rois loop
+    
+    % get seed, target, and version string for this fg
+    seed = seeds{j}; 
+    target = targets{j};
+    versionStr = versionStrs{j};
     
     
-    for j=1:numel(targets) % target rois loop
-        
-        target = targets{j};
+    for lr=LorR  % L/R loop
         
         fgName = [seed lr '_' target lr versionStr]; % defines fg file name & outfile name
-       
+        
         err_subs = {}; % keep track of which subjects throw an error on dtiCompute... function
         
         for i = 1:numel(subjects)
@@ -104,11 +122,11 @@ for lr=LorR  % L/R loop
                 % is leaving no pathways; if this happens, dont pass ROIs,
                 % which means the pathways won't be clipped.
             catch ME
-%                 if strcmp(ME.message,'Index exceeds matrix dimensions.')
-                    err_subs=[err_subs {subject}];
-                    [fa, md, rd, ad, cl, SuperFibers(i),fgClipped,~,~,fgResampled,subjEigVals]=...
-                        dtiComputeDiffusionPropertiesAlongFG_with_eigs(fg,dt,[],[],nNodes,[]);
-%                 end
+                %                 if strcmp(ME.message,'Index exceeds matrix dimensions.')
+                err_subs=[err_subs {subject}];
+                [fa, md, rd, ad, cl, SuperFibers(i),fgClipped,~,~,fgResampled,subjEigVals]=...
+                    dtiComputeDiffusionPropertiesAlongFG_with_eigs(fg,dt,[],[],nNodes,[]);
+                %                 end
             end
             %         [fa, md, rd, ad, cl, fgvol{i}, TractProfiles(i)] = AFQ_ComputeTractProperties(fg, dt,nNodes, 0);
             
@@ -132,21 +150,38 @@ for lr=LorR  % L/R loop
         end
         
         outName = [fgName '.mat']; % name of saved out .mat file
-        
+        outPath = fullfile(outDir,outName);
         
         if exist('gi','var')
-            save(fullfile(outDir,outName),'subjects','gi','seed','target','lr',...
+            save(outPath,'subjects','gi','seed','target','lr',...
                 'fgName','nNodes','fgMeasures','fgMLabels','SuperFibers','eigVals','err_subs');
         else
-            save(fullfile(outDir,outName),'subjects','seed','target','lr',...
+            save(outPath,'subjects','seed','target','lr',...
                 'fgName','nNodes','fgMeasures','fgMLabels','SuperFibers','eigVals','err_subs');
         end
         
         fprintf(['\nsaved out file ' outName '\n\n']);
         
-            
-       clear fgMeasures SuperFibers eigVals
-       
-    end % targets 
+        clear fgMeasures SuperFibers eigVals
+        
+        % get names of L and R out files 
+        clear outPathL outPathR
+        if strcmp(lr,'L')
+            outPathL = outPath;
+        elseif strcmp(lr,'R')
+            outPathR = outPath;
+        end
+        
+    end % L/R
     
-end % L/R 
+    if combineLR
+        idxL=strfind(outPathL,'L');
+        idxR=strfind(outPathR,'R');
+        if isequal(idxL,idxR)
+            outPath=outPathL;
+            outPath(idxL)=[];
+        end
+        combineLRFgMeasures(outPathL,outPathR,outPath);
+    end
+    
+end % targets
