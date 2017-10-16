@@ -58,12 +58,12 @@ targets = {'nacc';
     'nacc';
     'PVT'};
 
-versionStrs = {'_autoclean';
-    '_autoclean';
-    '_autoclean';
-    '_autoclean_cl1';
-    '_autoclean_cl2';
-    '_autoclean'};
+versionStrs = {'autoclean';
+    'autoclean';
+    'autoclean';
+    'autoclean_cl1';
+    'autoclean_cl2';
+    'autoclean'};
 
 
 % fiber group file string
