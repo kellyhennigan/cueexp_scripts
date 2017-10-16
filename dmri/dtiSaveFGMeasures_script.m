@@ -5,16 +5,10 @@
 clear all
 close all
 
-%p = getSA2Paths;
-%dataDir = p.data;
-%subjects = getSA2Subjects('dti');
-
-
-[p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p = getCuePaths;
 task = 'dti';
-% subjects = {'aa151010','ag151024','jh160702'};
-% gi = [0 1 0];
+[subjects,gi] = getCueSubjects('dti');
+
 
 dataDir = p.data;
 
