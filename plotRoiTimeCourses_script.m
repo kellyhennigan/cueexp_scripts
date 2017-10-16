@@ -87,8 +87,8 @@ for r = 1:numel(roiNames)
     
     %% define time courses to plot
     
-%     for f=10:nFigs
-    for f = 1:nFigs
+    for f=1:10
+%     for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f});

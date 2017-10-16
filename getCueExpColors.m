@@ -62,7 +62,7 @@ colors = [
     250 32 161      % pink
     253 158 33      % orange
     29 186 154      % green
-    33 105 208
+    33 105 208      % blue
     ]./255;
 
 
@@ -71,7 +71,8 @@ colors = [
 if n==1
     colors = colors(4,:);
 elseif n==2
-    colors = [colors(4,:);colors(1,:)];
+%     colors = [colors(4,:);colors(1,:)];
+    colors = [colors(4,:);[ 253 44 20 ]./255];
 elseif n==3
     colors = [colors(4,:);colors(1,:);colors(3,:)];
 elseif n>4

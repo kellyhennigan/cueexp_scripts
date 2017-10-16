@@ -21,10 +21,11 @@ close all
 
 dataDir = p.data;
 
-seed = 'DA';  % define seed roi
+% seed = 'DA';  % define seed roi
+seed = 'nacc';
 
-targets = {'nacc','caudate','putamen'}; % string for roi 
-% targets = {'nacc'};
+% targets = {'nacc','caudate','putamen'}; % string for roi 
+targets = {'PVT'};
 
 LorR = ['L','R'];
 

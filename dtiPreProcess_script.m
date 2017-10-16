@@ -116,6 +116,9 @@ out=createNewNii(nii,'ad','axial diffusivity',ad); writeFileNifti(out);
 
 %% Add more QA checks here
 
+% add this line: 
+3dmaskave -mask bin/wmMask.nii.gz -quiet -mrange 1 2 dwi_aligned_trilin.nii.gz > wmMask_ts
+
 
 end % subjects loop
 

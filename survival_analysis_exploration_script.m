@@ -17,8 +17,8 @@ subjects = getCueSubjects('cue',1); % stim patients
 % get relapse data
 % [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171011.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171011.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
 
 %% do it
 
@@ -33,7 +33,7 @@ nanidx=find(isnan(T.relapse));
 vars = T.Properties.VariableNames; 
 
 obstime = T.obstime;
-obstime(obstime>400) = 240;
+% obstime(obstime>400) = 240;
 
 censored = T.censored;
 

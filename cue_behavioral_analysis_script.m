@@ -42,7 +42,7 @@ fp2 = fullfile(dataDir, '%s/behavior/cue_ratings.csv');
 
 
 % qualtrics survey data & list of image types
-fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey_170818.csv');
+fp3 = fullfile(dataDir, 'qualtrics_data/Post_Scan_Survey_171015.csv');
 
 % save out figures? 
 savePlots = 1; 

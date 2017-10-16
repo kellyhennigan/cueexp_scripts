@@ -83,6 +83,7 @@ def whichTask():
 	else:
 		tasks = all_tasks
 
+	print tasks
 	return tasks
 
 
