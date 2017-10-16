@@ -65,6 +65,13 @@ versionStrs = {'_autoclean';
     '_autoclean_cl2';
     '_autoclean'};
 
+
+% fiber group file string
+fgStr = '%s%s_%s%s_%s.pdb'; %s: seed,lr,target,lr,versionStr
+
+% out file name string
+outStr = '%s%s_%s%s_%s.mat'; %s: seed,lr,target,lr,versionStr
+
 outDir = fullfile(dataDir, 'fgMeasures',method);
 
 
@@ -73,14 +80,14 @@ outDir = fullfile(dataDir, 'fgMeasures',method);
 for j=1:numel(targets) % target rois loop
     
     % get seed, target, and version string for this fg
-    seed = seeds{j}; 
+    seed = seeds{j};
     target = targets{j};
     versionStr = versionStrs{j};
     
     
     for lr=LorR  % L/R loop
         
-        fgName = [seed lr '_' target lr versionStr]; % defines fg file name & outfile name
+        fgName = sprintf(fgStr,seed,lr,target,lr,versionStr); %  fg file name
         
         err_subs = {}; % keep track of which subjects throw an error on dtiCompute... function
         
@@ -105,7 +112,7 @@ for j=1:numel(targets) % target rois loop
             
             
             % load fibers
-            fg = mtrImportFibers(fullfile('fibers',method,[fgName '.pdb']));
+            fg = mtrImportFibers(fullfile('fibers',method,fgName));
             
             
             % reorient to start in DA ROI and clip to DA and target ROIs
@@ -149,7 +156,7 @@ for j=1:numel(targets) % target rois loop
             mkdir(outDir)
         end
         
-        outName = [fgName '.mat']; % name of saved out .mat file
+        outName = sprintf(outStr,seed,lr,target,lr);
         outPath = fullfile(outDir,outName);
         
         if exist('gi','var')
@@ -164,24 +171,29 @@ for j=1:numel(targets) % target rois loop
         
         clear fgMeasures SuperFibers eigVals
         
-        % get names of L and R out files 
-        clear outPathL outPathR
-        if strcmp(lr,'L')
-            outPathL = outPath;
-        elseif strcmp(lr,'R')
-            outPathR = outPath;
-        end
-        
     end % L/R
     
-    if combineLR
-        idxL=strfind(outPathL,'L');
-        idxR=strfind(outPathR,'R');
-        if isequal(idxL,idxR)
-            outPath=outPathL;
-            outPath(idxL)=[];
-        end
-        combineLRFgMeasures(outPathL,outPathR,outPath);
+end % targets
+
+
+%% combine L and R
+
+if combineLR
+    
+    for j=1:numel(targets) % target rois loop
+        
+        % get seed, target, and version string for this fg
+        seed = seeds{j};
+        target = targets{j};
+        versionStr = versionStrs{j};
+        
+        outNameL = sprintf(outStr,seed,'L',target,'L');
+        outNameR = sprintf(outStr,seed,'R',target,'R');
+        outNameLR = sprintf(outStr,seed,'LR',target,'LR');
+        
+        combineLRFgMeasures(fullfile(outDir,outNameL),fullfile(outDir,outNameR),...
+            fullfile(outDir,outNameLR));
+        
     end
     
-end % targets
+end
