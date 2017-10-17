@@ -1,4 +1,8 @@
 
+% script to make afni 3dANOVA3 command for cue data 
+% see here for more info:
+% http://brainimaging.waisman.wisc.edu/~tjohnstone/AFNI_fundamental.html#_10._Group_analysis
+
 clear all
 close all
 

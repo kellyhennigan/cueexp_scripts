@@ -28,6 +28,8 @@ T = readtable(dataPath);
 nanidx=find(isnan(T.relapse));
 % T.relapse(nanidx)=0;
 
+% remove subjects with nan values
+T(nanidx,:)=[];
 
 % get all variable names
 vars = T.Properties.VariableNames; 
@@ -35,46 +37,72 @@ vars = T.Properties.VariableNames;
 obstime = T.obstime;
 % obstime(obstime>400) = 240;
 
-censored = T.censored;
-
-
-%% sort and format 
-
-% obstime(obstime>400) = 236;
-
-% maxT = 236; % max observed duration
-
-% [obstime,si]=sort(obstime);
-% censored = censored(si);
-% subjects = subjects(si);
-% 
-% failed = obstime(censored==0); nfailed = length(failed);
-% survived = obstime(censored==1); nsurvived = length(survived);
+censored = T.censored; % 0 of relapse occurred, 1 if relapse did not occur within the observed time
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Cox regression on relapse 
 
 X = [T.nacc_drugs_beta];
 y = obstime;
-yr = T.relapse;
 
-[b,logl,H,stats] = coxphfit(X,obstime,'Censoring',censored)
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
 
-res=fitglm(X,yr,'Distribution','binomial')
+res=fitglm(X,T.relapse,'Distribution','binomial')
 
 
+
+%%  check all predictors on their own
+
+% get all variable names
+vars = T.Properties.VariableNames; 
+
+y = T.obstime;
+
+censored = T.censored; % 0 of relapse occurred, 1 if relapse did not occur within the observed time
+
+sigVarNames={};
+zB=[];
+
+for i=6:numel(vars)
+    
+   X=table2array(T(:,i));
+   [b,logl,H,stats] = coxphfit(X,y,'Censoring',censored);
+
+    if stats.p<.05
+        sigVarNames=[sigVarNames vars{i}];
+        zB = [zB stats.z];
+    end
+end
+
+[zB,zi]=sort(zB'); zB
+sigVarNames = sigVarNames(zi)'; sigVarNames
 
 
 %% empirical distribution of relapse 
 % 
+
+% sort and format 
+
+[obstime,si]=sort(obstime);
+censored = censored(si);
+subjects = subjects(si);
+% 
+failed = obstime(censored==0); nfailed = length(failed);
+survived = obstime(censored==1); nsurvived = length(survived);
+
+col = getCueExpColors(1); 
+
 figure=setupFig;
 subplot(1,1,1);
 [empF,x,empFlo,empFup] = ecdf(obstime,'censoring',censored);
-stairs(x,empF,'Linewidth',2);
+stairs(x,empF,'Linewidth',2,'color',col);
 hold on;
-stairs(x,empFlo,':','Linewidth',2); stairs(x,empFup,':','Linewidth',2);
+stairs(x,empFlo,':','Linewidth',2,'color',col); 
+stairs(x,empFup,':','Linewidth',2,'color',col);
 hold off
 xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
+
+xlim([0 200])
 
 savePath = fullfile(figDir,'relapse_prediction','empiricalCDF.png');
 print(gcf,'-dpng','-r300',savePath);

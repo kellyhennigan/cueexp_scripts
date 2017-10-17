@@ -181,9 +181,9 @@ if combineLR
         target = targets{j};
         versionStr = versionStrs{j};
         
-        outNameL = sprintf(outStr,seed,'L',target,'L');
-        outNameR = sprintf(outStr,seed,'R',target,'R');
-        outNameLR = sprintf(outStr,seed,'LR',target,'LR');
+        outNameL = sprintf(outStr,seed,'L',target,'L',versionStr);
+        outNameR = sprintf(outStr,seed,'R',target,'R',versionStr);
+        outNameLR = sprintf(outStr,seed,'LR',target,'LR',versionStr);
         
         combineLRFgMeasures(fullfile(outDir,outNameL),fullfile(outDir,outNameR),...
             fullfile(outDir,outNameLR));
