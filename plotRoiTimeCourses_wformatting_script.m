@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'ins_desai';
+roiName = 'mpfc';
 
 
 nTRs = 10; % # of TRs to plot
@@ -45,6 +45,32 @@ numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 % outDir_suffix = '_age_match';
 % outDir_suffix = '_nr16';
 outDir_suffix = '';
+
+
+%% y axis depends on ROI
+
+% if strcmp(roiName,'nacc_desai')
+%     YL = [-.12 .08]
+%     YT = [-.1:.05:.1];
+% end
+
+% if strcmp(roiName,'VTA')
+%     YL = [-.15 .15];
+%     YT = [-.15:.05:.15];
+% end
+% 
+% if strcmp(roiName,'mpfc')
+%     YL = [-.22 .15];
+%     YT = [-.2:.05:.15];
+% end
+% 
+% if strcmp(roiName,'ins_desai')
+%     YL = [-.1 .13];
+%     YT = [-.1:.05:.15];
+% end
+% 
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -193,6 +219,10 @@ for f = 1:nFigs
         if numberFigs==1
             outName = [num2str(f) ' ' outName];
         end
+        
+        % add formatting string
+        outName = [outName '_posterformat'];
+        
         savePath = fullfile(outDir,outName);
     end
     
@@ -201,11 +231,6 @@ for f = 1:nFigs
     
     fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
     
-    %         [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,figtitle,savePath,0);
-    %           fprintf('done.\n\n')
-    
-    
-    %% plot it:
     
     [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,'','',1);
     
@@ -218,43 +243,19 @@ for f = 1:nFigs
     
 
     %% change y-axis params:
-    
-%     % for nacc_desai:
-%     if numel(groups)==1
-%             ylim([-.12 .08])
-%     end
-%     yt=[-.1:.05:.1]
-   
-    
-    % for VTA:
-%     if numel(groups)==1
-%         ylim([-.15 .15])
-%     end
-%     yt=[-.15:.05:.15]
-%  
-
-%   % for mpfc
-%     if numel(groups)==1
-%             ylim([-.22 .15])
-%     end
-%     yt=[-.2:.05:.15]
-%   
-%     
-
- % for ins_desai
-    if numel(groups)==1
-            ylim([-.1 .13])
-    end
-    yt=[-.1:.05:.15]
-  
  
-
-    set(gca,'YTick',yt)
+    if ~notDefined('YT')
+        set(gca,'YTick',YT)
+    end
+    
+    if ~notDefined('YL')
+        ylim([YL(1) YL(2)])
+    end
     
     
     %%  grayed out rectangles
     
-    yl = ylim;
+    yl = ylim; 
     
     gxs = [5 13]; % x-axis limits for graying out
     
@@ -284,8 +285,14 @@ for f = 1:nFigs
     fsize = 32;
     set(gca,'fontName','Arial','fontSize',fsize)
     %         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
-    xlabel(xlab,'fontName','Arial','FontSize',fsize)
-    ylabel(ylab,'fontName','Arial','FontSize',fsize)
+  
+    % xlabel
+%     xlabel(xlab,'fontName','Arial','FontSize',fsize)
+      xlabel([],'fontName','Arial','FontSize',fsize)
+       xticklabels('')  
+    
+    % y label
+    ylabel([],'fontName','Arial','FontSize',fsize)
     
     
     

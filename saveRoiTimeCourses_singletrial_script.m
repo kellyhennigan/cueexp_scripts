@@ -29,12 +29,14 @@ dataDir = p.data;
 task = 'cue';
 
 [subjects,gi]=getCueSubjects('cue');
+subjects={'jh160702'};
 
-% afniStr = '_afni';
-afniStr = ''; % to use ants version
+ afniStr = '_afni';
+% afniStr = ''; % to use ants version
 
 % filepath to pre-processed functional data where %s is subject then task
-funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_' task afniStr '_tlrc.nii.gz']);
+funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_' task '_tlrc' afniStr '.nii.gz']);
+
 
 
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)

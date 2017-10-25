@@ -98,18 +98,35 @@ if ~isempty(group)
         
         % return relapsers
     elseif strcmpi(group,'relapsers')
-        ri=getCueRelapseData(subjects);
+        ri=getCueData(subjects,'relapse');
         subjects = subjects(ri==1);
         notes = notes(ri==1);
         gi = gi(ri==1);
         
         
         % return nonrelapsers
-    elseif strcmpi(group,'non-relapsers')
-        ri=getCueRelapseData(subjects);
+    elseif strcmpi(group,'nonrelapsers')
+        ri=getCueData(subjects,'relapse');
         subjects = subjects(ri==0);
         notes = notes(ri==0);
         gi = gi(ri==0);
+       
+        % return those who relapsed within 6 mos
+    elseif strcmpi(group,'relapsers_6months')
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return those who did not relapse within 6 mos
+    elseif strcmpi(group,'nonrelapsers_6months')
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+ 
+        
         
     end
     

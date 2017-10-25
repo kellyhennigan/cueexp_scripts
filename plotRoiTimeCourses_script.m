@@ -77,7 +77,7 @@ nFigs = numel(plotStimStrs); % number of figures to be made
 
 %% get ROI time courses
 
-r=1;
+% r=1;
 for r = 1:numel(roiNames)
     
     roiName = roiNames{r};
@@ -87,8 +87,8 @@ for r = 1:numel(roiNames)
     
     %% define time courses to plot
     
-    for f=1:10
-%     for f = 1:nFigs
+%     f=12;
+    for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f});
@@ -144,10 +144,10 @@ for r = 1:numel(roiNames)
         %% set up all plotting params
         
         % fig title
-        figtitle = [strrep(roiName,'_',' ') ' response to ' stimStr ' in ' groups{1} ' (n=' num2str(n(1)) ')'];
+        figtitle = [strrep(roiName,'_',' ') ' response to ' stimStr ' in ' strrep(groups{1},'_',' ') ' (n=' num2str(n(1)) ')'];
         if numel(groups)>1
             for g=2:numel(groups)
-                figtitle = [figtitle ', ' groups{g} ' (n=' num2str(n(g)) ')'];
+                figtitle = [figtitle ', ' strrep(groups{g},'_',' ') ' (n=' num2str(n(g)) ')'];
             end
         end
         
@@ -164,7 +164,7 @@ for r = 1:numel(roiNames)
         end
         if numel(groups)>1
             for g=1:numel(groups)
-                pLabels(g,:) = cellfun(@(x) [x ' ' groups{g} ], pLabels(g,:), 'uniformoutput',0);
+                pLabels(g,:) = cellfun(@(x) [x ' ' strrep(groups{g},'_',' ') ], pLabels(g,:), 'uniformoutput',0);
             end
         end
         

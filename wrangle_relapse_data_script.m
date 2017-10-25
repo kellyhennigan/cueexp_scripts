@@ -23,12 +23,14 @@ outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd')
 relapse = getCueData(subjects,'relapse');
 days2relapse = getCueData(subjects,'days2relapse');
 
+relIn6Mos = days2relapse<180; 
+
 % set nan relapse vals to zero...
 % relapse(isnan(relapse))=0;
 
 [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-Trelapse = table(relapse,days2relapse,obstime,censored);
+Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,23 +109,11 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
+% roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai','dlpfc'};
+% roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains','dlpfc'};
 
-% roiNames = {'nacc','mpfc','VTA'};
-% roiVarNames = {'nacc','mpfc','vta'};
-% 
-% stims = {'drugs','food','neutral'};
-% 
-% tcPath = fullfile(dataDir,'timecourses_cue_afni','%s','%s.csv'); %s is roiNames, stims
-% 
-% TRs = [5];
-% aveTRs = []; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
-
-
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai','dlpfc'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains','dlpfc'};
-
-% roiNames = {'naccL_desai','naccR_desai'};
-% roiVarNames = {'naccL','naccR'};
+roiNames = {'nacc_desai','mpfc','VTA','acing','ins_desai'};
+roiVarNames = {'nacc','mpfc','vta','acing','ains'};
 
 
 % stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
@@ -135,8 +125,15 @@ tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is ro
 TRs = [3:7];
 aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
 
+
 tcNames = {}; tc = [];
+
 for j=1:numel(roiNames)
+    
+    
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % TRs 
+     
     for k = 1:numel(stims)
         
         % if there's a minus sign, assume desired output is stim1-stim2
@@ -167,6 +164,9 @@ for j=1:numel(roiNames)
     end % stims
     
     
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %% ROI BETAS 
+     
     % if ROI betas are saved out in a csv file that's accessible, include them
     % as predictors as well 
       for k = 1:numel(stims)

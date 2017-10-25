@@ -84,9 +84,16 @@ switch measure
         
     case 'relapse'
         
-        [ri,relapseDate,notes]=getCueRelapseData(subjects);
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
         data = ri;
+     
         
+     case 'relapse_6months'
+        
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        ri(days2relapse>200) = 0; % set relapse to 0 if it occurred >200 days after participation
+        data = ri;
+            
         
     case 'days2relapse'
         

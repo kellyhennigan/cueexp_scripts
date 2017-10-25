@@ -1,4 +1,4 @@
-% relapse prediction
+% relIn6Mos prediction
 
 
 clear all
@@ -9,23 +9,20 @@ p = getCuePaths();
 dataDir = p.data;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171011.csv');
-
-%% do it
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171018.csv');
 
 % load data
 T = readtable(dataPath); 
 
-% T.relapse(15)=nan; % cg160715
-% T.relapse(19)=nan; % lm60914
-% T.relapse(27)=nan; % tg170423
+%% omit subjects that have no followup data
 
+% subjects with no followup data
 nanidx=find(isnan(T.relapse));
 
-% T.relapse(nanidx)=0;
-% T.relapse(nanidx)=1;
 
+% remove data for subjects with no followup data
+T(nanidx,:)=[];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,11 +34,12 @@ vars = T.Properties.VariableNames;
 a={};
 tB=[];
 
-for i=6:numel(vars)
+for i=7:numel(vars)
     
-    modelspec = ['relapse ~ ' vars{i}];
+%     modelspec = ['relapse ~ ' vars{i}];
+    modelspec = ['relIn6Mos ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
-    if res.Coefficients.pValue(2)<.05
+    if res.Coefficients.pValue(2)<.1
         a=[a vars{i}];
         tB = [tB res.Coefficients.tStat(2)];
     end
@@ -53,7 +51,8 @@ a = a(ti)'; a
 
 %% model : demographic predictors
 
-modelspec = 'relapse ~ years_of_use + poly_drug_dep + clinical_diag';
+modelspec = 'relIn6Mos ~ years_of_use + poly_drug_dep + clinical_diag';
+
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 res.Rsquared.Ordinary
@@ -62,39 +61,91 @@ res.ModelCriterion.AIC
 
 %% model : self-report predictors
 
-modelspec = 'relapse ~ pref_drug + craving + bamq3';
+modelspec = 'relIn6Mos ~ pref_drug + craving + bam_upset';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 
-% bam q3 seems predictive
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
 %% model : brain predictors
 
-modelspec = 'relapse ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
+modelspec = 'relIn6Mos ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
-% bam q3 seems predictive
+
 
 
 %% model: demographics + behavior + brain 
 
-modelspec = ['relapse ~ years_of_use + bamq3 + nacc_drugs_beta'];
+modelspec = ['relIn6Mos ~ years_of_use + bam_upset + nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
 
-%% 
 
-modelspec = ['relapse ~ bam_upset + nacc_drugs_beta + pa_drug'];
-res=fitglm(T,modelspec,'Distribution','binomial')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Cox regression on relapse 
 
-res.Rsquared.Ordinary
-res.ModelCriterion.AIC
+X = [T.nacc_drugs_beta];
+y = T.obstime;
+censored = T.censored;
+
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+
+%% plot empirical distribution of relapse based on NAcc activity 
+% 
+
+% sort 
+[obstime,si]=sort(T.obstime);
+censored = T.censored(si);
+subjects = T.subjid(si);
+nacc = T.nacc_drugs_beta(si);
+
+hi = find(nacc>median(nacc));
+lo = find(nacc<median(nacc));
+
+col=[    0.1294    0.4118    0.8157
+    0.9804    0.1255    0.6314];
+
+figure=setupFig;
+hold on;
+
+% lo
+[empF1,x1,empFlo1,empFup1] = ecdf(obstime(lo),'censoring',censored(lo));
+stairs(x1,empF1,'Linewidth',2,'color',col(1,:));
+
+
+% hi
+[empF2,x2,empFlo2,empFup2] = ecdf(obstime(hi),'censoring',censored(hi));
+stairs(x2,empF2,'Linewidth',2,'color',col(2,:));
+
+legend('low reactivity','high reactivity','Location','EastOutside')
+legend('boxoff')
+
+% confidence intervals
+stairs(x1,empFlo1,':','Linewidth',2,'color',col(1,:)); 
+stairs(x1,empFup1,':','Linewidth',2,'color',col(1,:));
+
+stairs(x2,empFlo2,':','Linewidth',2,'color',col(2,:)); 
+stairs(x2,empFup2,':','Linewidth',2,'color',col(2,:));
+
+fsize = 32;
+set(gca,'fontName','Arial','fontSize',fsize)  
+xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
+
+% xlim([0 200])
+
+hold off
+
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_lohi.png');
+print(gcf,'-dpng','-r300',savePath);
+
 

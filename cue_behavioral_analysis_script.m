@@ -30,7 +30,10 @@ groupStr = '';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 cols = getCueExpColors(numel(groups));
-
+if numel(groups)==2
+    cols=[   0.1294    0.4118    0.8157
+    0.9922    0.1725    0.0784];
+end
 
 % # of total subjects, and # of controls and patients
 N=numel(subjects);

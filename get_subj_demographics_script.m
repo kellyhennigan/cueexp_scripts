@@ -8,10 +8,14 @@ dataDir = p.data;
 
 task = 'cue'; 
 
-group = 'relapsers';  % can be controls, patients, relapsers, or nonrelapsers
+group = 'relapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+% group = 'controls';
 
 [subjects,gi,notes] = getCueSubjects(task,group);
 
+idx=find(strcmp(subjects,'tf151127'));
+subjects(idx)=[];
+gi(idx)=[];
 
 %% do it 
 
@@ -24,18 +28,19 @@ N = numel(subjects);
 s{end+1}=sprintf('\n\n\n%s: n=%d',group,N);
 
 
+%% age
+
+age = getCueData(subjects,'age');
+
+s{end+1}=sprintf('\nage (mean/sd): %.1f/%.1f',nanmean(age),nanstd(age));
+
+
 %% gender 
 
 gender = getCueData(subjects,'gender');
 
 s{end+1} = sprintf('\npercent male: %.2f',numel(find(gender==1))./numel(gender(~isnan(gender))));
 
-
-%% age
-
-age = getCueData(subjects,'age');
-
-s{end+1}=sprintf('\nage (mean/sd): %.1f/%.1f',nanmean(age),nanstd(age));
 
 
 %% race/ethnicity
@@ -128,8 +133,16 @@ if ~strcmp(group,'controls')
     
     % days sober
     d=getCueData(subjects,'days_sober');
-    s{end+1}=sprintf('\days sober (mean/sd): %.1f/%.1f',nanmean(d),nanstd(d));
     
+%      temporary: 
+    d(d>1000)=nan;
+    s{end+1}=sprintf('\ndays sober (mean/sd): %.1f/%.1f',nanmean(d),nanstd(d));
+    
+      % anxiety diagnosis
+%     d=getCueData(subjects,'anxiety_diag');
+%     nAnx = sum(cellfun(@(x) ~isempty(strfind(x,'yes')), d));
+%     s{end+1}=sprintf('\npercent anxiety diagnosis: %.2f',nAnx./N);
+%  
     % ptsd diagnosis
     d=getCueData(subjects,'ptsd_diag');
     nPTSD = sum(cellfun(@(x) ~isempty(strfind(x,'yes')), d));
@@ -139,6 +152,10 @@ if ~strcmp(group,'controls')
     craving=getCueData(subjects,'craving');
     s{end+1}=sprintf('\ncraving measure (mean/sd): %.1f/%.1f',nanmean(craving),nanstd(craving));
 
+
+    % years of use
+    yearsofuse=getCueData(subjects,'years_of_use');
+    s{end+1}=sprintf('\nyears of use (mean/sd): %.1f/%.1f',nanmean(yearsofuse),nanstd(yearsofuse));
 
       % days in rehab
     rehab_days=getCueData(subjects,'days_in_rehab');

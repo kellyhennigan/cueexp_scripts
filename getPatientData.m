@@ -63,6 +63,8 @@ switch measure
         cj = find(strncmp(d(1,:),'other drug',10));
     case 'depression_diag'
         cj = find(strncmp(d(1,:),'depression diag',15));
+    case 'anxiety_diag'
+        cj = find(strncmp(d(1,:),'anxiety diag',12));
     case 'ptsd_diag'
         cj = find(strncmp(d(1,:),'PTSD diag',9));
     case 'other_diag'

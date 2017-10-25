@@ -31,8 +31,8 @@ switch task
     
     case 'cue'  % cue fmri task
         
-
-   % corresponding groups:
+        
+        % corresponding groups:
         groups =  {'controls';
             'controls';
             'patients';
@@ -42,14 +42,26 @@ switch task
             'controls patients';
             'controls patients';
             'controls patients';
-            'controls patients';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers'
-           };
+            'controls relapsers_6months nonrelapsers_6months';
+            'controls relapsers_6months nonrelapsers_6months';
+            'controls relapsers_6months nonrelapsers_6months';
+            'controls relapsers_6months nonrelapsers_6months';
+            'controls relapsers_6months nonrelapsers_6months'
+            };
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers nonrelapsers';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_6months nonrelapsers_6months';
+        %            };
+        
         
         % corresponding stims:
         stims =  {'neutral drugs food';
@@ -61,13 +73,12 @@ switch task
             'food';
             'neutral';
             'drugs-neutral';
-            'drugs-food'
             'alcohol';
             'drugs';
             'food';
             'neutral';
             'drugs-neutral';
-            'drugs-food'};
+            };
         
         % corresponding stim strings to use in figure and file name
         stimStrs =  {'type';
@@ -77,19 +88,17 @@ switch task
             'alcohol';
             'drugs';
             'food';
-            'neutral'; 
+            'neutral';
             'drugs-neutral';
-            'drugs-food'
             'alcohol';
             'drugs';
             'food';
-            'neutral'; 
+            'neutral';
             'drugs-neutral';
-            'drugs-food'
             };
-     
-
-
+        
+        
+        
         
     case 'mid'  % midi fmri task
         
@@ -104,28 +113,28 @@ switch task
             'controls patients';
             'controls patients';
             'controls patients';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers';
-            'controls relapsers non-relapsers'};
+            'controls relapsers nonrelapsers';
+            'controls relapsers nonrelapsers';
+            'controls relapsers nonrelapsers';
+            'controls relapsers nonrelapsers'};
         
-         % corresponding stims:
-         stims =  {'gain0 gain5 loss0 loss5';
-             'gainwin gainmiss';
-             'losswin lossmiss';
-             'gain0 gain5 loss0 loss5';
-             'gainwin gainmiss';
-             'losswin lossmiss';
-             'gain5-gain0';
-             'loss5-loss0'
-             'gainwin-gainmiss';
-             'losswin-lossmiss';
-             'gain5-gain0';
-             'loss5-loss0'
-             'gainwin-gainmiss';
-             'losswin-lossmiss'};
-         
-         
+        % corresponding stims:
+        stims =  {'gain0 gain5 loss0 loss5';
+            'gainwin gainmiss';
+            'losswin lossmiss';
+            'gain0 gain5 loss0 loss5';
+            'gainwin gainmiss';
+            'losswin lossmiss';
+            'gain5-gain0';
+            'loss5-loss0'
+            'gainwin-gainmiss';
+            'losswin-lossmiss';
+            'gain5-gain0';
+            'loss5-loss0'
+            'gainwin-gainmiss';
+            'losswin-lossmiss'};
+        
+        
         % corresponding stim strings to use in figure and file name
         stimStrs =  {'trial type';
             'gain trial outcome';
@@ -151,14 +160,14 @@ switch task
             'patients';
             'patients';
             'controls patients';
-            'controls relapsers non-relapsers';};
+            'controls relapsers nonrelapsers';};
         
         
         
         % corresponding stims:
         stims =  {'gain5GO gain0GO gain5NOGO gain0NOGO';
             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
-           'gain5GO gain0GO gain5NOGO gain0NOGO';
+            'gain5GO gain0GO gain5NOGO gain0NOGO';
             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
             'gain5NOGO';
             'gain5NOGO'};

@@ -24,25 +24,6 @@ from getCueSubjects import getsubs
 subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
- 
-# subjsB.remove('ss160205')
-# subjsB.remove('cs160214')
-# subjsB.remove('al151016')
-   
-   
-### to do age matched control group: 
-#subjsB.remove('zl150930')
-#subjsB.remove('ps151001')
-#subjsB.remove('aa151010')
-#subjsB.remove('al151016')
-## subjsB.remove('jv151030')
-#subjsB.remove('kl160122')
-#subjsB.remove('ss160205')
-#subjsB.remove('bp160213')
-#subjsB.remove('cs160214')
-#subjsB.remove('yl160507')
-#subjsB.remove('li160927')
-#subjsB.remove('gm161101')
 
 print(subjsA)
 print(subjsB)
@@ -50,10 +31,17 @@ print(subjsB)
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
 res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
 
-in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
-
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
+
+
+# file containing covariate data 
+cv_file = os.path.join(res_dir,'subj_age.txt')  
+out_str = out_str+'_CVage'
+#cv_file = ''
+
+
+in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
 # labels of sub-bricks to test
 sub_labels = ['cue#0',
@@ -105,7 +93,7 @@ print(in_str)
 print('\n\n\n\n\n\n')
 
 # define mask file if masking is desired; otherwise leave blank
-mask_file = os.path.join(data_dir,'templates','bmask.nii')  # directory containing glm stat files
+mask_file = os.path.join(data_dir,'templates','bmask.nii')  
 #mask_file = ''
 
 ##########################################################################################
@@ -147,7 +135,14 @@ for i, sub_label in enumerate(sub_labels):
 		mask_cmd = ''
 
 
-	cmd = '3dttest++ -prefix '+out_labels[i]+mask_cmd+' -toz '+subjA_cmd+subjB_cmd
+	# covariate command, if desired
+	if cv_file:
+		cv_cmd = ' -covariates '+cv_file
+	else:
+		cv_cmd = ''
+
+
+	cmd = '3dttest++ -prefix '+out_labels[i]+mask_cmd+' -toz '+subjA_cmd+subjB_cmd+cv_cmd
 	print(cmd+'\n')
 	if not justPrint:
 		os.system(cmd)

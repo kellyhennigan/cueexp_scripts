@@ -71,8 +71,7 @@ colors = [
 if n==1
     colors = colors(4,:);
 elseif n==2
-%     colors = [colors(4,:);colors(1,:)];
-    colors = [colors(4,:);[ 253 44 20 ]./255];
+    colors = [colors(4,:);colors(1,:)];
 elseif n==3
     colors = [colors(4,:);colors(1,:);colors(3,:)];
 elseif n>4
