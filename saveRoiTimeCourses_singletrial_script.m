@@ -29,7 +29,7 @@ dataDir = p.data;
 task = 'cue';
 
 [subjects,gi]=getCueSubjects('cue');
-subjects={'jh160702'};
+
 
  afniStr = '_afni';
 % afniStr = ''; % to use ants version
@@ -47,16 +47,7 @@ stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
 roiDir = fullfile(dataDir,'ROIs');
 
 % get list of rois to potentially process
-a=dir([roiDir '/*_func.nii']);
-allRoiNames = cellfun(@(x) strrep(x,'_func.nii',''), {a(:).name},'uniformoutput',0);
-disp(allRoiNames');
-fprintf('\nwhich ROIs to process? \n');
-roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');
-if isempty(roiNames)
-    roiNames = allRoiNames;
-else
-    roiNames = splitstring(roiNames);
-end
+roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 % name of dir to save to;  %s is task and then roiName
 outDir = fullfile(dataDir,'%s/single_trial_cue_timecourses/%s');
@@ -66,15 +57,28 @@ TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
 
+% save out a large .csv file with trials in rows
+saveBigFile = 1; %1 for yes, 0 for no
+
 %% do it
 
 % get roi masks
 roiFiles = cellfun(@(x) [x '_func.nii'], roiNames,'UniformOutput',0);
 rois = cellfun(@(x) niftiRead(fullfile(roiDir,x)), roiFiles,'uniformoutput',0);
 
+if saveBigFile
+    subjid = {}; % column of subject ids
+    group_idx = []; % group index where 0=control, 1=patient nonrelapser (within 6 months), 2=patient relapser (within 6 months)
+    relapse_6months = [];
+    trial_cond = {}; % trial condition
+    trial_onsetTR = []; % TR at the start of the trial
+    d=cell(1,numel(roiFiles)); % data array
+    colNames = {}; % column names for ROI TR data
+end
+
 
 i=1;
-for i=1:numel(subjects); % subject loop
+for i=1:numel(subjects) % subject loop
     
     
     subject = subjects{i};
@@ -109,24 +113,46 @@ for i=1:numel(subjects); % subject loop
             % get stim onset times
             onsetTRs = find(dlmread(sprintf(stimFilePath,subject,stims{k})));
             
+            % # of trials for this condition
+            nTrials = numel(onsetTRs); 
+            
             % get array of indices of which TRs to get data for
-            this_stim_TRs = repmat(onsetTRs,1,nTRs)+repmat(0:nTRs-1,numel(onsetTRs),1);
+            this_stim_TRs = repmat(onsetTRs,1,nTRs)+repmat(0:nTRs-1,nTrials,1);
             
             % single trial time courses for this stim
             this_stim_tc=roi_ts(this_stim_TRs);
             
             dlmwrite(fullfile(thisOutDir,stims{k}),this_stim_tc)
             
+            if saveBigFile 
+                if j==1
+                    subjid = [subjid; repmat(subjects(i),nTrials,1)];
+                    group_idx = [group_idx;repmat(gi(i),nTrials,1)];
+                    relapse_6months = [relapse_6months;repmat(getCueData(subject,'relapse_6months'),nTrials,1)];
+                    trial_cond = [trial_cond; repmat(stims(k),nTrials,1)];
+                    trial_onsetTR = [trial_onsetTR;onsetTRs];
+                end
+                 d{j} = [d{j};this_stim_tc];
+              
+            end
+                
         end % stims
+    
+        if i==1
+            colNames = [colNames splitstring(sprintf([strrep(roiNames{j},'_','') '_TR%d\n'],1:nTRs))];
+        end
         
     end % rois
     
 end % subjects
 
-    %      system(sprintf('3dbucket -prefix %s -fbuc %s',outNameStr,[outNameStr,'.nii.gz']));
-    %     system(sprintf('3drefit -view ''tlrc'' %s+orig.',outNameStr));
-    %     system(sprintf('3drefit -sublabel 0 %s -sublabel 1 %s -substatpar 1 fitt %d %s+tlrc.',...
-    %         ['mean_',outNameStr],['Tstat_',outNameStr],N-1,outNameStr));
 
+%% % save out big csv file if desired
 
+if saveBigFile
+    %     T = array2table(cell2mat(d),'VariableNames',colNames);
+    T = [table(subjid,group_idx,relapse_6months,trial_cond,trial_onsetTR) array2table(cell2mat(d),'VariableNames',colNames)];
+    outPath = fullfile(dataDir,'relapse_data',['singletrialdata_' datestr(now,'yymmdd') '.csv']);
+    writetable(T,outPath);
+end
 
