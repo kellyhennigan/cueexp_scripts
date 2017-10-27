@@ -21,7 +21,7 @@ func_dir = 'func_proc'  	# relative to subject-specific directory
 func_files = 'pp_cue_tlrc'+afniStr+'.nii.gz'
 
 #out_dir = os.path.join(data_dir,'results_cue'+afniStr)  	# directory for out files 
-out_dir = os.path.join(data_dir,'results_cue'+afniStr+'_choiceperiod')  	# directory for out files 
+out_dir = os.path.join(data_dir,'results_cue'+afniStr+'_choice2period')  	# directory for out files 
 
 out_str = 'glm'					# string for output files
 
@@ -79,10 +79,10 @@ for subject in subjects:
 		'-stim_file 10 regs/img_cuec.1D -stim_label 10 img '
 		#'-stim_file 10 regs/choice_cuec.1D -stim_label 10 choice ' 
 		'-stim_file 11 regs/choicert_cuec.1D -stim_label 11 choice_rt ' 
-		'-stim_file 12 regs/alcohol_choice_cuec.1D -stim_label 12 alcohol ' 
-		'-stim_file 13 regs/drugs_choice_cuec.1D -stim_label 13 drugs ' 
-		'-stim_file 14 regs/food_choice_cuec.1D -stim_label 14 food ' 
-		'-stim_file 15 regs/neutral_choice_cuec.1D -stim_label 15 neutral ' 
+		'-stim_file 12 regs/alcohol_choice2_cuec.1D -stim_label 12 alcohol ' 
+		'-stim_file 13 regs/drugs_choice2_cuec.1D -stim_label 13 drugs ' 
+		'-stim_file 14 regs/food_choice2_cuec.1D -stim_label 14 food ' 
+		'-stim_file 15 regs/neutral_choice2_cuec.1D -stim_label 15 neutral ' 
 		'-num_glt 5 '					 # of contrasts
 		'-glt_label 1 alcohol-neutral -gltsym "SYM: +alcohol -neutral" ' 
 		'-glt_label 2 drugs-neutral -gltsym "SYM: +drugs -neutral" '
