@@ -1,0 +1,53 @@
+---
+title: "coxregress"
+author: "Kelly (based on josiah's cox script)"
+date: "10/17/2017"
+output: html_document
+---
+
+```{r setup, collapse=TRUE, warning=FALSE}
+library(survival)
+library(survminer)
+#load data
+d1 = read.csv('/Users/Kelly/cueexp/data/relapse_data/relapse_data_171017.csv')
+#remove subjects without relapse data
+d1 = d1[is.na(d1$relapse) == FALSE,]
+#make relapse a factor
+d1$relapse = as.factor(d1$relapse)
+colnames(d1)[1] = 'subject'
+
+#create survival variable
+d1$survival <- with(d1, Surv(obstime, censored == 0))
+d1$survival
+
+```
+
+#cox regressions
+
+nacc response to drugs has significant hazard ratio for relapse. </br>
+(stronger response predicts sooner relapse) </br>
+holds after controlling for age.
+
+```{r ainsvlpfc, collapse=TRUE}
+cox1 <- coxph(survival ~ nacc_drugs_beta, data =  d1)
+summary(cox1)
+ggsurvplot(survfit(cox1), palette = "#2E9FDF",ggtheme = theme_minimal())
+```
+
+positive arousal drug ratings does not have a significant hazard ratio for relapse.
+
+```{r PA ratings, collapse=TRUE}
+cox2 <- coxph(survival ~ pa_drug, data =  d1)
+summary(cox2)
+```
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(d1, data.frame(relapse, obstime, age, pa_drug, nacc_drugs_beta))
+pairs.panels(dp)
+```
+
+
+

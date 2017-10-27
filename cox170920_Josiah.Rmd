@@ -1,0 +1,75 @@
+---
+title: "coxregress"
+author: "josiah"
+date: "9/20/2017"
+output: html_document
+---
+
+```{r setup, collapse=TRUE, warning=FALSE}
+library(survival)
+library(survminer)
+#load data
+d0 = read.csv('/Users/josiah/Box Sync/projects/cuedti/data/ainsnaccvlpfc_meanmetric_tpincr_wide_170919.csv')
+d1 = read.csv('/Users/josiah/Box Sync/projects/cuedti/data/relapse_data_170920_nacc.csv')
+#remove subjects without relapse data
+d1 = d1[is.na(d1$relapse) == FALSE,]
+#make relapse a factor
+d1$relapse = as.factor(d1$relapse)
+colnames(d1)[1] = 'subject'
+
+#create survival variable
+d1$survival <- with(d1, Surv(obstime, censored == 0))
+d1$survival
+
+#merge relapse data and tract data
+df = merge.data.frame(d1, d0, by = 'subject')
+```
+
+#cox regressions
+
+ains-vlpfc tract MD has significant hazard ratio for relapse. </br>
+(weaker tract predicts relapse) </br>
+holds after controlling for age.
+
+```{r ainsvlpfc, collapse=TRUE}
+cox1 <- coxph(survival ~ vlpfcains_r_md_meantp50 + age, data =  df)
+summary(cox1)
+ggsurvplot(survfit(cox1), palette = "#2E9FDF",ggtheme = theme_minimal())
+```
+
+ains-nacc tract FA does not itself have a significant hazard ratio for relapse.
+
+```{r ainsnacc, collapse=TRUE}
+cox2 <- coxph(survival ~ ainsnacc_r_fa_meanincr10 + age, data =  df)
+summary(cox2)
+```
+
+both tracts in same model have significant or trending hazard ratio for relapse, and in the right directions.
+
+```{r both, collapse=TRUE}
+cox3 <- coxph(survival ~ vlpfcains_r_md_meantp50 + ainsnacc_r_fa_meanincr10, data =  df)
+summary(cox3)
+```
+
+controlling for age, only ains-nacc tract MD is significant.
+
+```{r both age, collapse=TRUE}
+cox4 <- coxph(survival ~ vlpfcains_r_md_meantp50 + ainsnacc_r_fa_meanincr10 + age, data =  df)
+summary(cox4)
+```
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(df, data.frame(relapse, obstime, age, vlpfcains_r_md_meantp50, ainsnacc_r_fa_meanincr10))
+pairs.panels(dp)
+```
+
+Weird distributions for age and ains-nacc FA. </br>
+One subject's ains-nacc tract has leverage. </br>
+One subject's time-to-relapse has laverage. </br>
+
+Next: look at the high leverage subjects, and recover subjects who couldn't find track in first pass.
+
+
