@@ -9,7 +9,9 @@ close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 task = whichCueTask();
+
 p = getCuePaths();
+
 dataDir = p.data;
 figDir = p.figures;
 
