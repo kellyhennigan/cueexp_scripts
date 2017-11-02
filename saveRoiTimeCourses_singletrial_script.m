@@ -40,7 +40,7 @@ funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_' task '_tlrc' afniStr '.nii.
 
 
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)
-stims = {'drugs','food','neutral'};
+stims = {'drugs','food','neutral','alcohol'};
 stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
 
 % roi directory

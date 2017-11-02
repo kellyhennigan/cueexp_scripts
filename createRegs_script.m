@@ -36,6 +36,9 @@ pref_labels = {'strongdontwant','somewhatdontwant',...
     'somewhatwant','strongwant'};
 
 
+% file path to post-scan qualtrics ratings
+qualtricsfilepath = [dataDir '/qualtrics_data/Post_Scan_Survey_171015.csv'];
+
 hrf = 'waver'; % choices are spm or 'waver'
 
 % subject stim file will have a TR column where TR indexes the following
@@ -60,6 +63,9 @@ hrf = 'waver'; % choices are spm or 'waver'
 
 %%
 
+[qd,pa,na,famil,qimage_type]=getQualtricsData(qualtricsfilepath,subjects);
+
+
 for s=1:numel(subjects)
     
     subject = subjects{s};
@@ -80,62 +86,62 @@ for s=1:numel(subjects)
         choice_type,choice_rt,iti,drift,image_name]=getCueTaskBehData(sprintf(stimfilepath,subject),'long');
     
     
-    % if nTRs is zero, then behavioral data for this subject wasn't loaded
-    if nTRs==0
+    % if numel(tr) is zero, then behavioral data for this subject wasn't loaded
+    if numel(tr)==0
         fprintf(['\n behavioral data not loaded for subject ' subject ', so skipping...\n'])
     else
         
         
         %% make reg time series
         
+%         
+%         %%%%%%%%%%%%%%%%%%% cue onset period: tr=1
+%         [reg,regc]=createRegTS(find(tr==1),1,nTRs,hrf,[regDir '/cue_cue.1D']);
+%         
+%         
+%         
+%         %%%%%%%%%%%%%%%%%%% img onset period: tr=2
+%         [reg,regc]=createRegTS(find(tr==2),1,nTRs,hrf,[regDir '/img_cue.1D']);
+%         
+%         
+%         %%%%%%%%%%%%%%%%%%% choice onset period: tr=3
+%         [reg,regc]=createRegTS(find(tr==3),1,nTRs,hrf,[regDir '/choice_cue.1D']);
+%         
+%         
+%         %%%%%%%%%%%%%%%%%%% choice period: tr=3 & tr=4
+%         [reg,regc]=createRegTS(find(tr==3 | tr==4),1,nTRs,hrf,[regDir '/choice2_cue.1D']);
+%         
+%         
+%         %%%%%%%%%%%%%%%%%%% cue onset by trial type
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(tr==1 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_cue_cue.1D']);
+%         end
         
-        %%%%%%%%%%%%%%%%%%% cue onset period: tr=1
-        [reg,regc]=createRegTS(find(tr==1),1,nTRs,hrf,[regDir '/cue_cue.1D']);
+%         
+%         %%%%%%%%%%%%%%%%%%% image onset by trial type
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(tr==2 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_img_cue.1D']);
+%         end
+%         
+%         
+%         %%%%%%%%%%%%%%%%%%% cue & image by trial type
+%         for i=1:4            
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2)),1,nTRs,hrf,[regDir '/' conds{i} '_cueimg_cue.1D']);
+%         end
+%       
+%         
+%         %%%%%%%%%%%%%%%%%%% choice onset by trial type
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(tr==3 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_choice_cue.1D']);
+%         end
         
-        
-        
-        %%%%%%%%%%%%%%%%%%% img onset period: tr=2
-        [reg,regc]=createRegTS(find(tr==2),1,nTRs,hrf,[regDir '/img_cue.1D']);
-        
-        
-        %%%%%%%%%%%%%%%%%%% choice onset period: tr=3
-        [reg,regc]=createRegTS(find(tr==3),1,nTRs,hrf,[regDir '/choice_cue.1D']);
-        
-        
-        %%%%%%%%%%%%%%%%%%% choice period: tr=3 & tr=4
-        [reg,regc]=createRegTS(find(tr==3 | tr==4),1,nTRs,hrf,[regDir '/choice2_cue.1D']);
-        
-        
-        %%%%%%%%%%%%%%%%%%% cue onset by trial type
-        for i=1:4
-            [reg,regc]=createRegTS(find(tr==1 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_cue_cue.1D']);
-        end
-        
-        
-        %%%%%%%%%%%%%%%%%%% image onset by trial type
-        for i=1:4
-            [reg,regc]=createRegTS(find(tr==2 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_img_cue.1D']);
-        end
-        
-        
-        %%%%%%%%%%%%%%%%%%% cue & image by trial type
-        for i=1:4            
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2)),1,nTRs,hrf,[regDir '/' conds{i} '_cueimg_cue.1D']);
-        end
-      
-        
-        %%%%%%%%%%%%%%%%%%% choice onset by trial type
-        for i=1:4
-            [reg,regc]=createRegTS(find(tr==3 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_choice_cue.1D']);
-        end
-        
-        
-        %%%%%%%%%%%%%%%%%%% choice period by trial type
-        for i=1:4
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_choice2_cue.1D']);
-        end
-        
-        
+%         
+%         %%%%%%%%%%%%%%%%%%% choice period by trial type
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_choice2_cue.1D']);
+%         end
+%         
+%         
         %%%%%%%%%%%%%%%%%%% model whole trial by type
         for i=1:4
             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_trial_cue.1D']);
