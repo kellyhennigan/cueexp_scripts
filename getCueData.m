@@ -61,8 +61,8 @@ switch measure
     case 'discount_rate'
         
         % which method for fitting k? Either MLE or Kirby
-%         fitk_method = 'Kirby';
- fitk_method = 'MLE';
+        fitk_method = 'Kirby';
+        %  fitk_method = 'MLE';
         
         data = getDiscountingK(subjects,fitk_method); % returns discounting param, k
         
@@ -109,14 +109,29 @@ switch measure
         data = days2relapse;
         
         
+    case 'observedtime'
+        
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        data = obstime;
+        
+        
     case {'dop','for_admit_date','for_discharge_date',...
             'first_use_date','most_recent_use_date','primary_stim',...
             'alc_dep','other_drug_dep',...
-            'depression_diag','ptsd_diag','other_diag',...
+            'depression_diag','anxiety_diag','ptsd_diag','other_diag',...
             'meds','dop_drugtest',...
             'days_sober','days_in_rehab','years_of_use'}
         
         data = getPatientData(subjects,measure);
+        
+    
+    case 'first_use_age'
+        
+        fud=getCueData(subjects,'first_use_date');
+        dop=getCueData(subjects,'dop');
+        age=getCueData(subjects,'age');
+        
+        data = age-cell2mat(cellfun(@(x,y) (datenum(x)-datenum(y))./365, dop,fud,'uniformoutput',0));
         
         
     case 'poly_drug_dep'
@@ -465,7 +480,6 @@ if isempty(d)
     choice = [];
 else
     for i=1:numel(subjects)
-        subjects{i}
         idx=find(strncmp(d(:,1),subjects{i},8));
         if isempty(idx)
             data(i,1) = nan;

@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'mpfc';
+roiName = 'nacc_desai';
 
 
 nTRs = 10; % # of TRs to plot
@@ -106,8 +106,8 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
-%     for f=10:nFigs
-for f = 1:nFigs
+    for f=15:nFigs
+% for f = 1:nFigs
     
     % get the plot name and stims & groups to plot for this figure
     groups = splitstring(plotGroups{f});
@@ -282,14 +282,14 @@ for f = 1:nFigs
     set(gca,'xtick',t)
     
     % change font size
-    fsize = 32;
+    fsize = 26;
     set(gca,'fontName','Arial','fontSize',fsize)
     %         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
   
     % xlabel
-%     xlabel(xlab,'fontName','Arial','FontSize',fsize)
-      xlabel([],'fontName','Arial','FontSize',fsize)
-       xticklabels('')  
+    xlabel(xlab,'fontName','Arial','FontSize',fsize)
+%       xlabel([],'fontName','Arial','FontSize',fsize)
+%        xticklabels('')  
     
     % y label
     ylabel([],'fontName','Arial','FontSize',fsize)

@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 0 # 1 to just print, 0 to print and execute
+justPrint = 1 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -24,6 +24,7 @@ from getCueSubjects import getsubs
 subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
+#subjsA.remove('tf151127')
 
 print(subjsA)
 print(subjsB)
@@ -115,7 +116,7 @@ for i, sub_label in enumerate(sub_labels):
 			cmd = "3dinfo -label2index '"+sub_label+"' "+subj+in_str[i]
 			vol_idx=int(os.popen(cmd).read())
 			subjA_cmd+="'"+subj+in_str[i]+'['+str(vol_idx)+']'+"' " 
-			print(subjA_cmd)
+			#print(subjA_cmd)
 
 
 	# get part of command for subjects in setB

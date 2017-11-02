@@ -8,12 +8,13 @@ dataDir = p.data;
 
 task = 'cue'; 
 
-group = 'relapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
-% group = 'controls';
+group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+% group = 'patients';
 
 [subjects,gi,notes] = getCueSubjects(task,group);
 
-idx=find(strcmp(subjects,'tf151127'));
+% idx=find(strcmp(subjects,'tf151127'));
+idx = []
 subjects(idx)=[];
 gi(idx)=[];
 

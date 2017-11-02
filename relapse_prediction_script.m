@@ -10,7 +10,7 @@ dataDir = p.data;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171018.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -71,6 +71,8 @@ res.ModelCriterion.AIC
 %% model : brain predictors
 
 modelspec = 'relIn6Mos ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
+% modelspec = 'relIn6Mos ~ mpfc_drugs_beta + ains_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
+
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 res.Rsquared.Ordinary
@@ -93,10 +95,17 @@ res.ModelCriterion.AIC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Cox regression on relapse 
 
+
 X = [T.nacc_drugs_beta];
 y = T.obstime;
 censored = T.censored;
 
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% only look at the first 6 months
+idx=find(T.obstime>200 & T.relapse==1);
+censored(idx)=1;
+y(y>200) = 200;
 [b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
 
 

@@ -13,8 +13,9 @@ T_2tail=tinv(1-(p./2),df); % corresponding T stats for two-tailed test
 
 %%%%%%%%%%%%%%%% p to Z scores %%%%%%%%%%%%%%%
 Z_1tail = norminv(1-p); % corresponding Z stats for one-tailed test
+Z_2tail = norminv(1-(p./2)); % corresponding Z stats for one-tailed test
 
-w%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 

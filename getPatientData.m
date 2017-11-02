@@ -61,16 +61,36 @@ switch measure
         cj = find(strncmp(d(1,:),'alcohol',7));
     case 'other_drug_dep'
         cj = find(strncmp(d(1,:),'other drug',10));
+  
+    
+        %%%%%%%%% to get depression, anxiety, PTSD, other diag, and medications
+        %%%%%%%%% from screening form:
+%     case 'depression_diag'
+%         cj = find(strncmp(d(1,:),'depression (from screening form)',32));
+%     case 'anxiety_diag'
+%         cj = find(strncmp(d(1,:),'anxiety (from screening form)',29));
+%     case 'ptsd_diag'
+%         cj = find(strncmp(d(1,:),'PTSD (from screening form)',26));
+%     case 'other_diag'
+%         cj = find(strncmp(d(1,:),'other diag (from screening form)',32));
+%     case 'meds'
+%         cj = find(strncmp(d(1,:),'meds (from screening form)',26));
+%         
+        
+%         %%%%%%%%% to get depression, anxiety, PTSD, other diag, and
+%         %%%%%%%%% medications from VA records:
     case 'depression_diag'
-        cj = find(strncmp(d(1,:),'depression diag',15));
+        cj = find(strncmp(d(1,:),'depression (VA records)',23));
     case 'anxiety_diag'
-        cj = find(strncmp(d(1,:),'anxiety diag',12));
+        cj = find(strncmp(d(1,:),'anxiety (VA records)',20));
     case 'ptsd_diag'
-        cj = find(strncmp(d(1,:),'PTSD diag',9));
+        cj = find(strncmp(d(1,:),'PTSD (VA records)',17));
     case 'other_diag'
-        cj = find(strncmp(d(1,:),'other diag',10));
+        cj = find(strncmp(d(1,:),'other diag (VA records)',23));
     case 'meds'
-        cj = find(strncmp(d(1,:),'med',3));
+        cj = find(strncmp(d(1,:),'meds (VA records)',17));
+
+        
     case 'dop_drugtest'
         cj = find(strncmp(d(1,:),'results',7));
     case 'days_sober'

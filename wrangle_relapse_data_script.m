@@ -37,6 +37,7 @@ Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
 %% demographic & clinical vars
 
 demVars = {'years_of_use',...
+    'first_use_age',...
     'days_sober',...
     'days_in_rehab',...
     'alc_dep',...
@@ -44,6 +45,7 @@ demVars = {'years_of_use',...
     'smoke',...
     'depression_diag',...
     'bdi',...
+    'anxiety_diag',...
     'ptsd_diag',...
     'education',...
     'age'};
@@ -101,11 +103,15 @@ bam_riskysituations = getBAMData(subjects,'q11');
 bis = getCueData(subjects,'bis');
 
 
+% Kirby discounting 
+Kirbyk = getCueData(subjects,'discount_rate');
+
+
 % define table of behavioral predictors
 Tbeh = table(pref_drug,pref_food,pref_neut,...
     pa_drug,pa_food,pa_neut,...
     pa_drugcue,pa_foodcue,pa_neutcue,...
-    craving,bam_upset,bam_stimuse,bam_riskysituations,bis);
+    craving,bam_upset,bam_stimuse,bam_riskysituations,bis,Kirbyk);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,12 +120,18 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai','dlpfc'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains','dlpfc'};
 
-roiNames = {'nacc_desai','mpfc','VTA','acing','ins_desai'};
-roiVarNames = {'nacc','mpfc','vta','acing','ains'};
-
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains'};
 
 % stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
 stims = {'drugs','food','neutral'};
+
+
+bd = [];  % array of brain data values
+bdNames = {};  % brain data predictor names
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
 % tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
@@ -127,15 +139,8 @@ tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is ro
 TRs = [3:7];
 aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
 
-
-tcNames = {}; tc = [];
-
 for j=1:numel(roiNames)
-    
-    
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % TRs 
-     
+         
     for k = 1:numel(stims)
         
         % if there's a minus sign, assume desired output is stim1-stim2
@@ -150,43 +155,45 @@ for j=1:numel(roiNames)
         else
             thistc=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stims{k}),subjects,TRs);
         end
-        tc = [tc thistc];
+        bd = [bd thistc];
         
         % update var names
         for ti = 1:numel(TRs)
-            tcNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' num2str(TRs(ti))];
+            bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' num2str(TRs(ti))];
         end
         
         % if averaging over TRs is desired, include it
         if ~isempty(aveTRs)
-            tc = [tc mean(thistc(:,aveTRs),2)];
-            tcNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' strrep(num2str(TRs(aveTRs)),' ','') 'mean'];
+            bd = [bd mean(thistc(:,aveTRs),2)];
+            bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' strrep(num2str(TRs(aveTRs)),' ','') 'mean'];
         end
             
     end % stims
-    
-    
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %% ROI BETAS 
-     
-    % if ROI betas are saved out in a csv file that's accessible, include them
-    % as predictors as well 
-      for k = 1:numel(stims)
-          
-          bfile = fullfile(dataDir,['results_' task '_afni'],'roi_betas',roiNames{j},[stims{k} '.csv']);
-          if exist(bfile,'file')
-              B = loadRoiTimeCourses(bfile,subjects);
-              tc = [tc B];
-              tcNames = [tcNames [roiVarNames{j} '_' strrep(stims{k},'-','') '_beta']];
-          end
-            
-      end % stims
-
+   
 end % rois
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI BETAS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ 
+betaPath = fullfile(dataDir,['results_' task '_afni'],'roi_betas','%s','%s.csv'); %s is roiName, stim
+
+for j=1:numel(roiNames)
+
+      for k = 1:numel(stims)
+          
+          this_bfile = sprintf(betaPath,roiNames{j},stims{k}); % this beta file path
+          if exist(this_bfile,'file')
+              B = loadRoiTimeCourses(this_bfile,subjects);
+              bd = [bd B];
+              bdNames = [bdNames [roiVarNames{j} '_' strrep(stims{k},'-','') '_beta']];
+          end
+            
+      end % stims
+      
+end % roiNames
+
 % brain data
-Tbrain = array2table(tc,'VariableNames',tcNames);
+Tbrain = array2table(bd,'VariableNames',bdNames);
 
 
 

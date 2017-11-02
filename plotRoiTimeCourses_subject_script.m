@@ -16,13 +16,13 @@ figDir = p.figures;
 %%%%%%%%%%%%%%%%%%%%%%%%%% EDIT AS DESIRED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 task = 'cue';
 
-group = 'controls';
+group = 'patients';
 
 [subjects,gi]=getCueSubjects(task,group);
-% subjects(1:20)=[];
-% gi(1:20)=[];
+subjects(10:end)=[];
+gi(10:end)=[];
 
-stim = 'food'; % stim to plot
+stim = 'drugs'; % stim to plot
 
 stimStr = stim; % stim name 
 

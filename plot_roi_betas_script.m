@@ -46,9 +46,13 @@ end
     
 
 
-% also plot as points 
-b0= B{1}(:,1)-B{1}(:,2); % drugs-neutral
-b1= B{2}(:,1)-B{2}(:,2); % drugs-neutral
+% % also plot as points 
+% b0= B{1}(:,1)-B{1}(:,2); % drugs-neutral
+% b1= B{2}(:,1)-B{2}(:,2); % drugs-neutral
+b0= B{1}(:,1); % drugs
+b1= B{2}(:,1); % drugs
+
+
 
 fig2=setupFig
 hold on
