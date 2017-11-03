@@ -58,7 +58,7 @@ t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
 
 % save out a large .csv file with trials in rows
-saveBigFile = 1; %1 for yes, 0 for no
+saveBigFile = 0; %1 for yes, 0 for no
 
 %% do it
 

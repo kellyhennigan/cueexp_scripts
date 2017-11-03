@@ -20,15 +20,19 @@ function data = getCueData(subjects,measure)
 if notDefined('subjects')
     subjects = {};
 end
+% make sure input var subjects is an Nx1 cell array  
+if ischar(subjects)
+    subjects = splitstring(subjects);
+end
+if size(subjects,2)~=1
+    subjects = subjects';
+end
+
 
 if notDefined('measure')
     measure = 'null';
 end
 
-% make sure input var subjects is a cell array
-if ischar(subjects)
-    subjects = splitstring(subjects);
-end
 
 measure = lower(measure); % make sure measure string is all lower case
 
@@ -156,7 +160,8 @@ switch measure
         data = getBAMData(subjects,qStr);
         
         
-    case {'pref_stim','pref_alc','pref_drug','pref_food','pref_neut'}
+    case {'pref_stim','pref_alc','pref_drug','pref_food','pref_neut',...
+            'pref_stim_trials','pref_alc_trials','pref_drug_trials','pref_food_trials','pref_neut_trials'}
         
         % define path to subject stim file(s)
         p = getCuePaths();
@@ -164,32 +169,45 @@ switch measure
         
         % load pref ratings
         [~,~,~,~,~,trial_type,~,~,choice_num]=cellfun(@(x) getCueTaskBehData(x,'short'),...
-            stimfilepath, 'uniformoutput',0);
+            stimfilepath, 'uniformoutput',0); 
+        ci=trial_type{1}; % index of each trial's condition (alc=1, drug=2, food=3, neutral=4)
         
-        % get matrix of pref & mean pref ratings by trial type w/subjects in rows
+        % get matrix of pref ratings by trial type w/subjects in rows
         pref = cell2mat(choice_num')';  % pref ratings for each item
-        pref_stim = [];
+        
+        % get matrix of mean pref ratings w/subjects in rows
+        mean_pref = [];
         for i=1:numel(subjects)
             for j=1:4 % # of trial types
-                pref_stim(i,j) = nanmean(choice_num{i}(trial_type{i}==j));
+                mean_pref(i,j) = nanmean(choice_num{i}(ci==j));
             end
         end
         
-        % return mean pref ratings for all stim or a specific condition
+        % return desired output
         switch measure
-            
+           
+            case 'pref_stim'
+                data = mean_pref;   % return mean pref ratings for all stim
             case 'pref_alc'
-                data = pref_stim(:,1); % alcohol is 1st col
+                data = mean_pref(:,1); % alcohol is 1st col
             case 'pref_drug'
-                data = pref_stim(:,2); % drugs are 2nd col
+                data = mean_pref(:,2); % drugs are 2nd col
             case 'pref_food'
-                data = pref_stim(:,3); % food is 3rd col
+                data = mean_pref(:,3); % food is 3rd col
             case 'pref_neut'
-                data = pref_stim(:,4); % neutral is 4th col
-            otherwise
-                data = pref_stim; % return mean pref for all stim types
+                data = mean_pref(:,4); % neutral is 4th col
+            case 'pref_stim_trials'
+                data = pref;   % return pref ratings for all stim/all trials
+            case 'pref_alc_trials'
+                data = pref(:,ci==1); % alcohol is 1st col
+            case 'pref_drug_trials'
+                data = pref(:,ci==2); % drugs are 2nd col
+            case 'pref_food_trials'
+                data = pref(:,ci==3);  % food is 3rd col
+            case 'pref_neut_trials'
+                data = pref(:,ci==4);  % neutral is 4th col
         end
-        
+     
         
     case {'pa_cue','na_cue'}
         
@@ -209,18 +227,16 @@ switch measure
                 data = na;
         end
         
+ 
+     
+  case {'pa_stim','pa_alc','pa_drug','pa_food','pa_neut','pa_stim_trials',...
+          'pa_alc_trials','pa_drug_trials','pa_food_trials','pa_neut_trials',...
+          'na_stim','na_alc','na_drug','na_food','na_neut','na_stim_trials',...
+          'na_alc_trials','na_drug_trials','na_food_trials','na_neut_trials'}
         
-    case {'pa_stim','na_stim'}
-        
-        [pa,na] = getStimPANA(subjects);
-        
-        if strcmp(measure,'pa_stim')
-            data = pa;
-        elseif strcmp(measure,'na_stim')
-            data = na;
-        end
-        
-        
+              data = getStimPANA(subjects,measure);
+
+      
     otherwise
         
         % print out a list of all possible measure options
@@ -575,7 +591,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data
-function [stim_pa,stim_na] = getStimPANA(subjects)
+function data = getStimPANA(subjects,measure)
 
 
 % define path to stim file(s)
@@ -583,107 +599,65 @@ p = getCuePaths();
 a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
 fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
 
-[~,pa,na,~,qimage_type]=getQualtricsData(fp,subjects);
+[~,pa,na,~,ci]=getQualtricsData(fp,subjects);
 
-stim_pa = []; stim_na = [];
+mean_pa = []; mean_na = [];
 for j=1:4 % # of trial types
-    stim_pa(:,j) = nanmean(pa(:,qimage_type==j),2);
-    stim_na(:,j) = nanmean(na(:,qimage_type==j),2);
+    mean_pa(:,j) = nanmean(pa(:,ci==j),2);
+    mean_na(:,j) = nanmean(na(:,ci==j),2);
 end
+       
+        % return desired output
+        switch measure
+           
+            case 'pa_stim'
+                data = mean_pa;   % return mean pa ratings for all stim
+            case 'pa_alc'
+                data = mean_pa(:,1); % alcohol is 1st col
+            case 'pa_drug'
+                data = mean_pa(:,2); % drugs are 2nd col
+            case 'pa_food'
+                data = mean_pa(:,3); % food is 3rd col
+            case 'pa_neut'
+                data = mean_pa(:,4); % neutral is 4th col
+            case 'pa_stim_trials'
+                data = pa;   % return pa ratings for all stim/all trials
+            case 'pa_alc_trials'
+                data = pa(:,ci==1); % alcohol is 1st col
+            case 'pa_drug_trials'
+                data = pa(:,ci==2); % drugs are 2nd col
+            case 'pa_food_trials'
+                data = pa(:,ci==3);  % food is 3rd col
+            case 'pa_neut_trials'
+                data = pa(:,ci==4);  % neutral is 4th col
+                
+            case 'na_stim'
+                data = mean_na;   % return mean na ratings for all stim
+            case 'na_alc'
+                data = mean_na(:,1); % alcohol is 1st col
+            case 'na_drug'
+                data = mean_na(:,2); % drugs are 2nd col
+            case 'na_food'
+                data = mean_na(:,3); % food is 3rd col
+            case 'na_neut'
+                data = mean_na(:,4); % neutral is 4th col
+            case 'na_stim_trials'
+                data = na;   % return na ratings for all stim/all trials
+            case 'na_alc_trials'
+                data = na(:,ci==1); % alcohol is 1st col
+            case 'na_drug_trials'
+                data = na(:,ci==2); % drugs are 2nd col
+            case 'na_food_trials'
+                data = na(:,ci==3);  % food is 3rd col
+            case 'na_neut_trials'
+                data = na(:,ci==4);  % neutral is 4th col
+                
+        end
+   
+
+
 
 
 end
-
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get more patient data
-% function data = getPatientData(subjects,measure)
-%
-% if ischar(subjects)
-%     subjects = splitstring(subjects);
-% end
-%
-%
-% data = [];
-%
-%
-% docid = '1VdKlBKezHcz4VL93ouglqD1bpr7aTo2RGtEXUsyHNGI'; % doc id for google sheet w/relapse data
-% try
-%     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-%
-%
-%     % if the google sheet couldn't be accessed, use these values (update as
-%     % often as possible):
-% catch
-%     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
-%         'Using hard coded values that may not be the most updated...'])
-%
-%     return
-%
-% end
-%
-% % assuming spreadsheet is loaded, column index (cj) for desired data
-% switch measure
-%
-%     case 'dop'
-%         cj = find(strncmp(d(1,:),'DOP',3));
-%     case 'for_admit_date'
-%         cj = find(strncmp(d(1,:),'date of FOR admit',17));
-%     case 'for_discharge_date'
-%         cj = find(strncmp(d(1,:),'date of FOR discharge',21));
-%     case 'first_use_date'
-%         cj = find(strncmp(d(1,:),'date of first stim',18));
-%     case 'most_recent_use_date'
-%         cj = find(strncmp(d(1,:),'most recent stim',16));
-%     case 'primary_stim'
-%         cj = find(strncmp(d(1,:),'primary stim',12));
-%     case 'alc_dep'
-%         cj = find(strncmp(d(1,:),'alcohol',7));
-%     case 'other_drug_dep'
-%         cj = find(strncmp(d(1,:),'other drug',10));
-%     case 'depression_diag'
-%         cj = find(strncmp(d(1,:),'depression diag',15));
-%     case 'ptsd_diag'
-%         cj = find(strncmp(d(1,:),'PTSD diag',9));
-%     case 'other_diag'
-%         cj = find(strncmp(d(1,:),'other diag',10));
-%     case 'meds'
-%         cj = find(strncmp(d(1,:),'med',3));
-%     case 'dop_drugtest'
-%         cj = find(strncmp(d(1,:),'results',7));
-%     case 'days_sober'
-%         cj = find(strncmp(d(1,:),'days sober prior to DOP',23));
-%     case 'days_in_rehab'
-%         cj = find(strncmp(d(1,:),'days in rehab prior to DOP',26));
-%     case 'years_of_use'
-%         cj = find(strncmp(d(1,:),'years of use',12)); % column with desired data
-% end
-%
-%
-% for i=1:numel(subjects)
-%
-%     ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
-%
-%     if isempty(ri)
-%         data{i,1} = nan;
-%     else
-%         thisd = d{ri,cj};
-%         if isempty(thisd)
-%             data{i,1} = nan;
-%         else
-%             data{i,1} = d{ri,cj};
-%         end
-%     end
-%
-% end
-%
-% % convert from cell array of strings to numeric vector for numeric vars
-% if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use'}))
-%     data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
-% end
-%
-% end % getPatientData
-
-
 
 

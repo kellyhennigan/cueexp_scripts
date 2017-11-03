@@ -16,24 +16,25 @@ task = 'cue';
 [subjects,gi]=getCueSubjects(task);
 
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)
-stims = {'drugs','food','neutral'};
+stims = {'food'};
 
-seedRoiName = 'Choi_rostralcaudateL';
+seedRoiName = 'nacc_desai';
 
 % roiNames = {'LC','acing','csf','caudate','amyg','mpfc','ins_desai','dlpfc','PVT','wm','VTA'};
 % roiNames = {'acing','caudate','clust_caudR','csf','dlpfc','mpfc','ins_desai','dlpfc','VTA','wm'};
 roiNames = {'dlpfc','vlpfc'};
 
-% name of dir to save to where %s is task
-inFile = fullfile(dataDir,'%s','single_trial_cue_timecourses','%s','%s'); 
+% name of dir to save to where %s is: subject, roi, stim
+inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s'); 
 
 % TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
-TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
+TRi = 4; % index of which TR to extract (TR1 is at trial onset, etc.)
 TR = 2; % 2 sec TR
 ti = (TRi-1).*TR; % time at the indexed TR
 
 % figure to save out plots to 
-saveDir = fullfile(p.figures,'func_conn',seedRoiName);
+saveDir = fullfile(p.figures,'selfreport_brain_corr',seedRoiName);
+% saveDir = fullfile(p.figures,'func_conn',seedRoiName);
 if ~exist(saveDir,'dir')
     mkdir(saveDir)
 end
