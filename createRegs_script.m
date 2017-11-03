@@ -146,7 +146,7 @@ for s=1:numel(subjects)
 %         for i=1:4
 %             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_trial_cue.1D']);
 %         end
-        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),1,nTRs,hrf,[regDir '/trial_cue.1D']);
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),1,nTRs,hrf,[regDir '/trial_cue.1D']);
         
 %         %%%%%%%%%%%%%%%%%%% cue onset by pref ratings (for VOIs)
 %         for i=1:4
@@ -174,23 +174,27 @@ for s=1:numel(subjects)
 %         
         
         %%%%%%%%%% whole-trial parametric regressor modulated by pref ratings
-       pref=choice_num(find(tr==1 | tr==2 | tr==3 | tr==4));
-       pref=pref-mean(pref);
-        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pref,nTRs,hrf,[regDir '/pref_trial_cue.1D']);
+%        pref=choice_num(find(tr==1 | tr==2 | tr==3 | tr==4));
+%        pref=pref-mean(pref);
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pref,nTRs,hrf,[regDir '/pref_trial_cue.1D']);
       
         
 %         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
-%         pa=getCueData(subjects{s},'pa_stim_trials');
-%         pa=pa-mean(pa);
-%         pa=reshape(repmat(pa,4,1),[],1);
-%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
+        pa=getCueData(subjects{s},'pa_stim_trials');
+        if all(isnan(pa))
+            pa=choice_num(find(tr==1))';
+        end
+        pa=pa-mean(pa);
+        pa=reshape(repmat(pa,4,1),[],1);
+        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
 %         
 %            %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
-%         na=getCueData(subjects{s},'na_stim_trials');
-%         na=na-mean(na);
-%         na=reshape(repmat(na,4,1),[],1);
-%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),na,nTRs,hrf,[regDir '/na_trial_cue.1D']);
-%      
+        na=getCueData(subjects{s},'na_stim_trials');
+        na=na-mean(na);
+        na=reshape(repmat(na,4,1),[],1);
+        if ~all(isnan(na))
+            [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),na,nTRs,hrf,[regDir '/na_trial_cue.1D']);
+        end
         fprintf(['\n\ndone with subject ' subject '.\n']);
         
     end
