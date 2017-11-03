@@ -84,8 +84,8 @@ end
 %     end % stims
 
 % Fisher  transform the correlation coefficients
-Z = cellfun(@(x) .5.*log((1+x)./(1-x)),r,'uniformoutput',0);
-
+% Z = cellfun(@(x) .5.*log((1+x)./(1-x)),r,'uniformoutput',0);
+Z = .5.*log((1+r)./(1-r));
 
 %% rearrange by group and plot
 
