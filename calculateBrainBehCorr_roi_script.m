@@ -94,20 +94,16 @@ plotSig = [1 1];
 cols=getCueExpColors(numel(groupNames));
 
 
-j=1;
-for j=1:numel(roiNames)
+d{1}=Z(gi==0,:); % Z scores for controls correlations
+d{2}=Z(gi==1,:); % " " for patients
+
+dName=['Z-transformed corr coefficients'];
+
+titleStr = [strrep(seedRoiName,'_','') '-' sprintf(behDataLabel,stims{k}) ' correlation; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
+
+savePath = fullfile(saveDir,[sprintf(behDataLabel,stims{k}) '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
+
+[fig,leg] = plotNiceBars(d,dName,stims,groupNames,cols,plotSig,titleStr,1,savePath,0);
+
     
-    d{1}=Z{j}(gi==0,:); % Z scores for controls correlations
-    d{2}=Z{j}(gi==1,:); % " " for patients
-    
-    dName=['Z-transformed corr coefficients'];
-    
-    titleStr = [strrep(seedRoiName,'_','') '-' roiNames{j} ' func connectivity; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
-    
-    savePath = fullfile(saveDir,[roiNames{j} '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
-    
-    [fig,leg] = plotNiceBars(d,dName,stims,groupNames,cols,plotSig,titleStr,1,savePath,0);
-    
-    
-end
 
