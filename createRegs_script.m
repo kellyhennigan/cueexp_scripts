@@ -143,35 +143,54 @@ for s=1:numel(subjects)
 %         
 %         
         %%%%%%%%%%%%%%%%%%% model whole trial by type
-        for i=1:4
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_trial_cue.1D']);
-        end
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} '_trial_cue.1D']);
+%         end
+        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),1,nTRs,hrf,[regDir '/trial_cue.1D']);
         
-        %%%%%%%%%%%%%%%%%%% cue onset by pref ratings (for VOIs)
-        for i=1:4
-            [reg,~]=createRegTS(find(tr==1 & choice_num==pref_idx(i)),1,nTRs,0, [regDir '/' pref_labels{i} '_cue_cue.1D']);
-        end
+%         %%%%%%%%%%%%%%%%%%% cue onset by pref ratings (for VOIs)
+%         for i=1:4
+%             [reg,~]=createRegTS(find(tr==1 & choice_num==pref_idx(i)),1,nTRs,0, [regDir '/' pref_labels{i} '_cue_cue.1D']);
+%         end
+%         
         
-        
-        %%%%%%%%%%%%%%%%%%% image onset by pref ratings
-        for i=1:4
-            [reg,regc]=createRegTS(find(tr==2 & choice_num==pref_idx(i)),1,nTRs,hrf, [regDir '/' pref_labels{i} '_img_cue.1D']);
-        end
-        
-        %%%%%%%%%%%%%%%%%%% choice onset by pref ratings
-        for i=1:4   
-            [reg,regc]=createRegTS(find(tr==3 & choice_num==pref_idx(i)),1,nTRs,hrf, [regDir '/' pref_labels{i} '_choice_cue.1D']);
-        end
-        
-        
-        %%%%%%%%%% cue rt - model stick function w/RT as height at cue onset (tr=1)
-        [reg,regc]=createRegTS(find(tr==1),cue_rt(tr==1),nTRs,hrf,[regDir '/cuert_cue.1D']);
-        
-        
-        %%%%%%%%%% choice rt - model stick function w/RT as height at choice onset (tr=1)
-        [reg,regc]=createRegTS(find(tr==3),choice_rt(tr==1),nTRs,hrf,[regDir '/choicert_cue.1D']);
+%         %%%%%%%%%%%%%%%%%%% image onset by pref ratings
+%         for i=1:4
+%             [reg,regc]=createRegTS(find(tr==2 & choice_num==pref_idx(i)),1,nTRs,hrf, [regDir '/' pref_labels{i} '_img_cue.1D']);
+%         end
+%         
+%         %%%%%%%%%%%%%%%%%%% choice onset by pref ratings
+%         for i=1:4   
+%             [reg,regc]=createRegTS(find(tr==3 & choice_num==pref_idx(i)),1,nTRs,hrf, [regDir '/' pref_labels{i} '_choice_cue.1D']);
+%         end
+%         
+%         
+%         %%%%%%%%%% cue rt - model stick function w/RT as height at cue onset (tr=1)
+%         [reg,regc]=createRegTS(find(tr==1),cue_rt(tr==1),nTRs,hrf,[regDir '/cuert_cue.1D']);
         
         
+%         %%%%%%%%%% choice rt - model stick function w/RT as height at choice onset (tr=1)
+%         [reg,regc]=createRegTS(find(tr==3),choice_rt(tr==1),nTRs,hrf,[regDir '/choicert_cue.1D']);
+%         
+        
+        %%%%%%%%%% whole-trial parametric regressor modulated by pref ratings
+       pref=choice_num(find(tr==1 | tr==2 | tr==3 | tr==4));
+       pref=pref-mean(pref);
+        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pref,nTRs,hrf,[regDir '/pref_trial_cue.1D']);
+      
+        
+%         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
+%         pa=getCueData(subjects{s},'pa_stim_trials');
+%         pa=pa-mean(pa);
+%         pa=reshape(repmat(pa,4,1),[],1);
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
+%         
+%            %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
+%         na=getCueData(subjects{s},'na_stim_trials');
+%         na=na-mean(na);
+%         na=reshape(repmat(na,4,1),[],1);
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),na,nTRs,hrf,[regDir '/na_trial_cue.1D']);
+%      
         fprintf(['\n\ndone with subject ' subject '.\n']);
         
     end
