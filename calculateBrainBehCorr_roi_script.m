@@ -28,7 +28,7 @@ behDataLabel = ['pa_%s']; % name for output
 seedRoiName = 'nacc_desai';
 
 % name of dir to save to where %s is: subject, roi, stim
-inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s'); 
+inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s');
 
 % TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
 TRi = 4; % index of which TR to extract (TR1 is at trial onset, etc.)
@@ -37,7 +37,7 @@ ti = (TRi-1).*TR; % time at the indexed TR
 
 
 
-% figure to save out plots to 
+% figure to save out plots to
 saveDir = fullfile(p.figures,'brain_sr_corr',seedRoiName);
 % saveDir = fullfile(p.figures,'func_conn',seedRoiName);
 if ~exist(saveDir,'dir')
@@ -46,46 +46,54 @@ end
 
 %% do it
 
-% stims
- k=1;
+
+% for k=1:numel(stims)
+k=1;
 
 % behavior/self-report measure
 behData = getCueData(subjects,sprintf(behDataName,stims{k}));
-        
+
+% remove subjects without behavior/self-report data
+if k==1
+    [ri,~]=find(isnan(behData));
+    subjects(unique(ri))=[]; gi(unique(ri))=[];
+end
+
+
 i=1;
 for i=1:numel(subjects)  % subject loop
-       
+    
     subject = subjects{i};
     
     fprintf(['\n\nworking on subject ' subject '...\n\n']);
-  
-%     for k = 1:numel(stims)
-        
-        % this subject's brain data
-        seed = dlmread(sprintf(inFile,subject,seedRoiName,stims{k})); seed = mean(seed(:,TRi),2);
-        
-        % this subjects behavior/self-report data
-        beh = behData(i,:)'; 
-        
-        % correlate per-trial brain-behavior activity
-        r(i,k) = corr(seed,beh);
-        
-        
-end
     
+    %     for k = 1:numel(stims)
+    
+    % this subject's brain data
+    seed = dlmread(sprintf(inFile,subject,seedRoiName,stims{k})); seed = mean(seed(:,TRi),2);
+    
+    % this subjects behavior/self-report data
+    beh = behData(i,:)';
+    
+    % correlate per-trial brain-behavior activity
+    r(i,k) = corr(seed,beh);
+    
+    
+end
+
 %     end % stims
-       
+
 % Fisher  transform the correlation coefficients
 Z = cellfun(@(x) .5.*log((1+x)./(1-x)),r,'uniformoutput',0);
 
-    
-%% rearrange by group and plot 
+
+%% rearrange by group and plot
 
 groupNames = {'controls','patients'};
 plotSig = [1 1];
 cols=getCueExpColors(numel(groupNames));
-    
-    
+
+
 j=1;
 for j=1:numel(roiNames)
     
@@ -93,10 +101,10 @@ for j=1:numel(roiNames)
     d{2}=Z{j}(gi==1,:); % " " for patients
     
     dName=['Z-transformed corr coefficients'];
-   
+    
     titleStr = [strrep(seedRoiName,'_','') '-' roiNames{j} ' func connectivity; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
     
-    savePath = fullfile(saveDir,[roiNames{j} '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]); 
+    savePath = fullfile(saveDir,[roiNames{j} '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
     
     [fig,leg] = plotNiceBars(d,dName,stims,groupNames,cols,plotSig,titleStr,1,savePath,0);
     
