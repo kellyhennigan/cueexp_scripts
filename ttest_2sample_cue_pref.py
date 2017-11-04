@@ -30,7 +30,7 @@ print(subjsA)
 print(subjsB)
 
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
-res_dir = os.path.join(data_dir,'results_cue_afni_pref')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_cue_afni_pa')  # directory containing glm stat files
 
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
@@ -50,7 +50,7 @@ sub_labels = ['cue#0',
 'choice#0',
 'choice_rt#0',
 'trial#0',
-'pref#0'] 
+'pa#0'] 
 
 # labels for out files 
 out_labels =  ['Zcue'+out_str,
@@ -58,7 +58,7 @@ out_labels =  ['Zcue'+out_str,
 'Zchoice'+out_str,
 'Zchoice_rt'+out_str,
 'Ztrial'+out_str,
-'Zpref'+out_str]
+'Zpa'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
 in_str2 = '_glm+tlrc'
