@@ -184,7 +184,7 @@ for s=1:numel(subjects)
         if all(isnan(pa))
             pa=choice_num(find(tr==1))';
         end
-        pa=pa-mean(pa);
+        pa=pa-nanmean(pa);
         pa=reshape(repmat(pa,4,1),[],1);
         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
 %         
