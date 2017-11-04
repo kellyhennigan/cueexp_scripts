@@ -24,6 +24,13 @@ stims = {'stim','drugs','food','neutral'};
 behDataName = ['pa_%s_trials']; % name of data for getCueData()
 behDataLabel = ['pa_%s']; % name for output
 
+
+%%%%% omit subs? 
+omit_subs={'nd150921','ds170728','rc170730'};
+idx=ismember(subjects,omit_subs);
+subjects(idx)=[]; gi(idx)=[];
+
+
 %%%%%%%%%%%%%% brain data
 seedRoiName = 'nacc_desai';
 
@@ -53,13 +60,6 @@ for k=1:numel(stims)
 
 % behavior/self-report measure
 behData = getCueData(subjects,sprintf(behDataName,stims{k}));
-
-% remove subjects without behavior/self-report data
-if k==1
-    [ri,~]=find(isnan(behData));
-    subjects(unique(ri))=[]; gi(unique(ri))=[];
-end
-
 
 i=1;
 for i=1:numel(subjects)  % subject loop
