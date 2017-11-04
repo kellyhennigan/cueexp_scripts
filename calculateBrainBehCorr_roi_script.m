@@ -18,7 +18,7 @@ task = 'cue';
 [subjects,gi]=getCueSubjects(task);
 
 % stim name
-stims = {'stim'};
+stims = {'stim','drugs','food','neutral'};
 
 %%%%%%%%%%%%%% behavioral/self-report data
 behDataName = ['pa_%s_trials']; % name of data for getCueData()
@@ -47,8 +47,9 @@ end
 %% do it
 
 
-% for k=1:numel(stims)
+
 k=1;
+for k=1:numel(stims)
 
 % behavior/self-report measure
 behData = getCueData(subjects,sprintf(behDataName,stims{k}));
@@ -81,7 +82,7 @@ for i=1:numel(subjects)  % subject loop
     
 end
 
-%     end % stims
+end % stims
 
 % Fisher  transform the correlation coefficients
 % Z = cellfun(@(x) .5.*log((1+x)./(1-x)),r,'uniformoutput',0);
