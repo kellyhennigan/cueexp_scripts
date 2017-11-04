@@ -138,8 +138,10 @@ for i=1:numel(subjects) % subject loop
                 
         end % stims
     
-        if i==1
-            colNames = [colNames splitstring(sprintf([strrep(roiNames{j},'_','') '_TR%d\n'],1:nTRs))];
+        if saveBigFile
+            if i==1
+                colNames = [colNames splitstring(sprintf([strrep(roiNames{j},'_','') '_TR%d\n'],1:nTRs))];
+            end
         end
         
     end % rois
