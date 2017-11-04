@@ -61,7 +61,7 @@ for subject in subjects:
 		'-jobs 2 '
 		'-input '+func_dir+'/'+func_files+' '
 		'-censor '+func_dir+'/'+'cue_censor.1D '
-		'-num_stimts 14 '
+		'-num_stimts 20 '
 		'-polort 2 '
 		'-dmbase '						# de-mean baseline regressors
 		'-xjpeg '+os.path.join(out_dir,'Xmat')+' '
