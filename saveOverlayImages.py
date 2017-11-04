@@ -19,7 +19,7 @@ dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 # directory (*RELATIVE TO DATADIR*) where brain map files are located
 #bmapDir = 'results_cue_afni'
-bmapDir = 'results_cue_afni/survival_analysis'
+bmapDir = 'results_cue_afni_pa'
 
 # full path to inDir
 inDir = os.path.join(dataDir,bmapDir)
@@ -29,16 +29,16 @@ outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bma
 
 underlay_file = 'TT_N27.nii' # file should be in inDir
 
-overlays = ['Zdrugs'] # overlays
+overlays = ['Zpa','Zpref'] # overlays
 #overlays = ['Zfood-neutral'] # overlays
 
-overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
-#overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
+#overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
+overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
 
-sub_vols = [0] # maps of interest to plot
-sub_volnames = ['cox_relapse'] # corresponding labels for maps of interest
-# sub_vols = [1,3,5] # maps of interest to plot
-# sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
+# sub_vols = [0] # maps of interest to plot
+# sub_volnames = ['cox_relapse'] # corresponding labels for maps of interest
+sub_vols = [1,3,5] # maps of interest to plot
+sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
 
 
 

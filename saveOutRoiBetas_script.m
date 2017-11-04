@@ -15,6 +15,9 @@ close all
 dataDir = p.data;
 
 
+endStr = input('enter end string: (e.g., _pa or _pref): ','s');
+bStr = strrep(endStr,'_',''); % beta string (e.g., pa or pref)
+
 % ROIs
 % roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
 roiDir = fullfile(dataDir,'ROIs');
@@ -22,12 +25,16 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 
 % directory that contains glm results of interest
-resultsDir = fullfile(dataDir,['results_' task '_afni']);
+% resultsDir = fullfile(dataDir,['results_' task '_afni']);
+resultsDir = fullfile(dataDir,['results_' task '_afni' endStr]);
+
 
 fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
-volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
+% volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+% bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
+volIdx = [16]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+bNames = {bStr}; % bNames should correspond to volumes in index volIdx
 
 % out file path
 outStrPath = fullfile(resultsDir,'roi_betas','%s','%s.csv'); %s is roiNames and bNames

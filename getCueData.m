@@ -229,10 +229,10 @@ switch measure
         
  
      
-  case {'pa_stim','pa_alc','pa_drug','pa_food','pa_neut','pa_stim_trials',...
-          'pa_alc_trials','pa_drug_trials','pa_food_trials','pa_neut_trials',...
-          'na_stim','na_alc','na_drug','na_food','na_neut','na_stim_trials',...
-          'na_alc_trials','na_drug_trials','na_food_trials','na_neut_trials'}
+  case {'pa_stim','pa_alcohol','pa_drugs','pa_food','pa_neutral','pa_stim_trials',...
+          'pa_alcohol_trials','pa_drugs_trials','pa_food_trials','pa_neutral_trials',...
+          'na_stim','na_alcohol','na_drugs','na_food','na_neutral','na_stim_trials',...
+          'na_alcohol_trials','na_drugs_trials','na_food_trials','na_neutral_trials'}
         
               data = getStimPANA(subjects,measure);
 
@@ -612,44 +612,44 @@ end
            
             case 'pa_stim'
                 data = mean_pa;   % return mean pa ratings for all stim
-            case 'pa_alc'
+            case 'pa_alcohol'
                 data = mean_pa(:,1); % alcohol is 1st col
-            case 'pa_drug'
+            case 'pa_drugs'
                 data = mean_pa(:,2); % drugs are 2nd col
             case 'pa_food'
                 data = mean_pa(:,3); % food is 3rd col
-            case 'pa_neut'
+            case 'pa_neutral'
                 data = mean_pa(:,4); % neutral is 4th col
             case 'pa_stim_trials'
                 data = pa;   % return pa ratings for all stim/all trials
-            case 'pa_alc_trials'
+            case 'pa_alcohol_trials'
                 data = pa(:,ci==1); % alcohol is 1st col
-            case 'pa_drug_trials'
+            case 'pa_drugs_trials'
                 data = pa(:,ci==2); % drugs are 2nd col
             case 'pa_food_trials'
                 data = pa(:,ci==3);  % food is 3rd col
-            case 'pa_neut_trials'
+            case 'pa_neutral_trials'
                 data = pa(:,ci==4);  % neutral is 4th col
                 
             case 'na_stim'
                 data = mean_na;   % return mean na ratings for all stim
-            case 'na_alc'
+            case 'na_alcohol'
                 data = mean_na(:,1); % alcohol is 1st col
-            case 'na_drug'
+            case 'na_drugs'
                 data = mean_na(:,2); % drugs are 2nd col
             case 'na_food'
                 data = mean_na(:,3); % food is 3rd col
-            case 'na_neut'
+            case 'na_neutral'
                 data = mean_na(:,4); % neutral is 4th col
             case 'na_stim_trials'
                 data = na;   % return na ratings for all stim/all trials
-            case 'na_alc_trials'
+            case 'na_alcohol_trials'
                 data = na(:,ci==1); % alcohol is 1st col
-            case 'na_drug_trials'
+            case 'na_drugs_trials'
                 data = na(:,ci==2); % drugs are 2nd col
             case 'na_food_trials'
                 data = na(:,ci==3);  % food is 3rd col
-            case 'na_neut_trials'
+            case 'na_neutral_trials'
                 data = na(:,ci==4);  % neutral is 4th col
                 
         end
