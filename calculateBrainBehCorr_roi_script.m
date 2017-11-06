@@ -34,7 +34,7 @@ subjects(idx)=[]; gi(idx)=[];
 
 
 %%%%%%%%%%%%%% brain data
-seedRoiName = 'mpfc';
+seedRoiName = 'VTA';
 
 % name of dir to save to where %s is: subject, roi, stim
 inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s');
