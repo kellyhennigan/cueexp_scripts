@@ -24,7 +24,10 @@ from getCueSubjects import getsubs
 subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
-#subjsA.remove('tf151127')
+
+# REMOVE SUBJECTS WITH NO VARIANCE IN DRUG RATINGS
+subjsA.remove('rv160413','tj160529','at160601','as170730','er171009')
+subjsB.remove('vm151031','jw160316','jn160403','rb160407','yl160507','kn160918','cs171002')
 
 print(subjsA)
 print(subjsB)
@@ -42,7 +45,7 @@ out_str = ''
 cv_file = ''
 
 
-in_str = '_glm_pafood_B+tlrc'  # identify file string of coefficients file 
+in_str = '_glm_padrugs_B+tlrc'  # identify file string of coefficients file 
 
 # labels of sub-bricks to test
 sub_labels = ['cue#0',
@@ -52,7 +55,7 @@ sub_labels = ['cue#0',
 'drugs#0',
 'food#0',
 'neutral#0',
-'pa_food#0'] 
+'pa_drugs#0'] 
 
 # labels for out files 
 out_labels =  ['Zcue'+out_str,
@@ -63,10 +66,10 @@ out_labels =  ['Zcue'+out_str,
 'Zdrugs'+out_str,
 'Zfood'+out_str,
 'Zneutral'+out_str,
-'Zpa_food'+out_str]
+'Zpa_drugs'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
-in_str2 = '_glm_pafood+tlrc'
+in_str2 = '_glm_padrugs+tlrc'
 
 sub_labels2 = ['Full_R^2',
 'Full_Fstat']
