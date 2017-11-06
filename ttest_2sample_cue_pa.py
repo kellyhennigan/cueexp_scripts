@@ -57,32 +57,22 @@ out_str = ''
 cv_file = ''
 
 
-in_str = '_glm_pafood_B+tlrc'  # identify file string of coefficients file 
+in_str = '_glm_pa2_B+tlrc'  # identify file string of coefficients file 
 
 # labels of sub-bricks to test
-sub_labels = ['cue#0',
-'cue_rt#0',
-'choice#0',
-'choice_rt#0',
-'alcohol#0',
-'drugs#0',
-'food#0',
-'neutral#0',
-'pa_food#0'] 
+sub_labels = ['alcoholdrugs#0',
+'foodneutral#0',
+'pa_alcoholdrugs#0',
+'pa_foodneutral#0']
 
 # labels for out files 
-out_labels =  ['Zcue'+out_str,
-'Zcue_rt'+out_str,
-'Zchoice'+out_str,
-'Zchoice_rt'+out_str,
-'Zalcohol'+out_str,
-'Zdrugs'+out_str,
-'Zfood'+out_str,
-'Zneutral'+out_str,
-'Zpa_food'+out_str]
+out_labels =  ['Zalcoholdrugs'+out_str,
+'Zfoodneutral'+out_str,
+'Zpa_alcoholdrugs'+out_str,
+'Zpa_foodneutral'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
-in_str2 = '_glm_pafood+tlrc'
+in_str2 = '_glm_pa2+tlrc'
 
 sub_labels2 = ['Full_R^2',
 'Full_Fstat']

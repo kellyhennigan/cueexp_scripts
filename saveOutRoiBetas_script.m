@@ -14,15 +14,15 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim');
 dataDir = p.data;
 
-omit_subs = {'rv160413','tj160529','at160601','as170730','rc170730',...
-    'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
-    'kn160918','cs171002'};
-omit_idx=ismember(subjects,omit_subs);
-subjects(omit_idx)=[];
-gi(omit_idx)=[];
+% omit_subs = {'rv160413','tj160529','at160601','as170730','rc170730',...
+%     'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
+%     'kn160918','cs171002'};
+% omit_idx=ismember(subjects,omit_subs);
+% subjects(omit_idx)=[];
+% gi(omit_idx)=[];
 
 
-bStr = 'pa_drugs'; % beta string (e.g., pa or pref)
+% bStr = 'pa_foodneutral'; % beta string (e.g., pa or pref)
 
 % ROIs
 % roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
@@ -35,12 +35,12 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
 
 
-fileStr = 'glm_padrugs_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
+fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
 % volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 % bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
-volIdx = [19]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-bNames = {bStr}; % bNames should correspond to volumes in index volIdx
+volIdx = [17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+bNames = {'pa_alcoholdrugs','pa_foodneutral'}; % bNames should correspond to volumes in index volIdx
 
 % out file path
 outStrPath = fullfile(resultsDir,'roi_betas','%s','%s.csv'); %s is roiNames and bNames
