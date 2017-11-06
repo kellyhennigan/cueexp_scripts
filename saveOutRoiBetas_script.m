@@ -32,7 +32,7 @@ fileStr = 'glm_padrugs_B+tlrc.HEAD'; % string identifying files w/single subject
 
 % volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 % bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
-volIdx = [17]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+volIdx = [19]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 bNames = {bStr}; % bNames should correspond to volumes in index volIdx
 
 % out file path
