@@ -39,8 +39,8 @@ seedRoiName = 'nacc_desai';
 % name of dir to save to where %s is: subject, roi, stim
 inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s');
 
-% TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
-TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
+TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
+% TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
 TR = 2; % 2 sec TR
 ti = (TRi-1).*TR; % time at the indexed TR
 
