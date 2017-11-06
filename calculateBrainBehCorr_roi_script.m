@@ -18,7 +18,7 @@ task = 'cue';
 [subjects,gi]=getCueSubjects(task);
 
 % stim name
-stims = {'drugs','food','neutral'};
+stims = {'drugs','food'};
 % stims = {'stim'};
 
 %%%%%%%%%%%%%% behavioral/self-report data
