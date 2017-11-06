@@ -11,12 +11,12 @@ task = 'cue';
 
 betaDir = fullfile(dataDir,['results_' task '_afni_pa'],'roi_betas');
 
-% roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
-roiNames = {'nacc_desai'}
+roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
+% roiNames = {'nacc_desai'}
 
-stims = {'pa_drugs','pa_food'};
-% stims = {'pref'};
-stimStr = 'pa_drugs_food'
+% stims = {'pa_drugs','pa_food'};
+stims = {'pa'};
+stimStr = 'pa'
 
 groups = {'controls','patients'};
 
@@ -46,7 +46,11 @@ for j=1:numel(roiNames)
     % plot it
     if saveOut
         %     savePath = fullfile(figDir,'roi_betas',[roi '_betas_bars_bygroup.png']);
-        savePath = fullfile(figDir,'roi_betas',[roi '_' stimStr '_betas.png']);
+        outDir = fullfile(figDir,'roi_betas',roi);
+        if ~exist(outDir,'dir')
+            mkdir(outDir)
+        end
+        savePath = fullfile(outDir,[stimStr '_betas.png']);
     else
         savePath = [];
     end

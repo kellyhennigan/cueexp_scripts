@@ -7,10 +7,10 @@ close all
 
 p = getCuePaths(); 
 dataDir = p.data;
+figDir = p.figures;
 
-
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171105.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -35,11 +35,11 @@ a={};
 tB=[];
 
 for i=7:numel(vars)
-    
+    i
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = ['relIn6Mos ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
-    if res.Coefficients.pValue(2)<.1
+    if res.Coefficients.pValue(2)<.05
         a=[a vars{i}];
         tB = [tB res.Coefficients.tStat(2)];
     end
@@ -146,7 +146,7 @@ stairs(x1,empFup1,':','Linewidth',2,'color',col(1,:));
 stairs(x2,empFlo2,':','Linewidth',2,'color',col(2,:)); 
 stairs(x2,empFup2,':','Linewidth',2,'color',col(2,:));
 
-fsize = 32;
+fsize = 22;
 set(gca,'fontName','Arial','fontSize',fsize)  
 xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
 

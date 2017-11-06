@@ -63,7 +63,7 @@ hrf = 'waver'; % choices are spm or 'waver'
 
 %%
 
-[qd,pa,na,famil,qimage_type]=getQualtricsData(qualtricsfilepath,subjects);
+[qd,PA,NA,famil,qimage_type]=getQualtricsData(qualtricsfilepath,subjects);
 
 
 for s=1:numel(subjects)
@@ -181,13 +181,13 @@ for s=1:numel(subjects)
         
         
         %%%%%%%%%% whole-trial parametric regressor modulated by pref by cond
-        for i=1:4
-            pref=choice_num(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)));
-            pref=pref-mean(pref);
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),pref,nTRs,hrf,[regDir '/pref' conds{i} '_trial_cue.1D']);
-        end
-        
-        
+%         for i=1:4
+%             pref=choice_num(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)));
+%             pref=pref-mean(pref);
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),pref,nTRs,hrf,[regDir '/pref' conds{i} '_trial_cue.1D']);
+%         end
+%         
+%         
         % %         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
         %         pa=getCueData(subjects{s},'pa_stim_trials');
         %         if any(isnan(pa))
@@ -199,38 +199,73 @@ for s=1:numel(subjects)
         %         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
         %
         %
-        %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings by cond
-        for i=1:4
-            pa=getCueData(subjects{s},['pa_' conds{i} '_trials']);
-            if any(isnan(pa)) || var(pa)<.05
-                pa=choice_num(find(trial_type==i & tr==1))';
-            end
-            pa=pa-mean(pa);
-            pa=reshape(repmat(pa,4,1),[],1);
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),pa,nTRs,hrf,[regDir '/pa' conds{i} '_trial_cue.1D']);
-        end
-        
+       
+%         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings by cond
+%         for i=1:4
+%             pa=getCueData(subjects{s},['pa_' conds{i} '_trials']);
+%             if any(isnan(pa)) || var(pa)<.05
+%                 pa=choice_num(find(trial_type==i & tr==1))';
+%             end
+%             pa=pa-mean(pa);
+%             pa=reshape(repmat(pa,4,1),[],1);
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),pa,nTRs,hrf,[regDir '/pa' conds{i} '_trial_cue.1D']);
+%         end
+%         
+%         
         
         %            %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
-        na=getCueData(subjects{s},'na_stim_trials');
-        if any(isnan(na))
-            na=choice_num(find(tr==1))'; na=na.*-1;
-        end
-        na=na-mean(na);
-        na=reshape(repmat(na,4,1),[],1);
-        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),na,nTRs,hrf,[regDir '/na_trial_cue.1D']);
-    
+%         na=getCueData(subjects{s},'na_stim_trials');
+%         if any(isnan(na))
+%             na=choice_num(find(tr==1))'; na=na.*-1;
+%         end
+%         na=na-mean(na);
+%         na=reshape(repmat(na,4,1),[],1);
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),na,nTRs,hrf,[regDir '/na_trial_cue.1D']);
+%     
         
-        %%%%%%%%%% whole-trial parametric regressor modulated by na ratings by cond
-        for i=1:4
-            na=getCueData(subjects{s},['na_' conds{i} '_trials']);
-            if any(isnan(na))
-                na=choice_num(find(trial_type==i & tr==1))'; na=na.*-1;
-            end
-            na=na-mean(na);
-            na=reshape(repmat(na,4,1),[],1);
-            [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),na,nTRs,hrf,[regDir '/na' conds{i} '_trial_cue.1D']);
-        end
+%         %%%%%%%%%% whole-trial parametric regressor modulated by na ratings by cond
+%         for i=1:4
+%             na=getCueData(subjects{s},['na_' conds{i} '_trials']);
+%             if any(isnan(na))
+%                 na=choice_num(find(trial_type==i & tr==1))'; na=na.*-1;
+%             end
+%             na=na-mean(na);
+%             na=reshape(repmat(na,4,1),[],1);
+%             [reg,regc]=createRegTS(find(trial_type==i & (tr==1 | tr==2 | tr==3 | tr==4)),na,nTRs,hrf,[regDir '/na' conds{i} '_trial_cue.1D']);
+%         end
+%         
+        
+            
+        %         %%%%%%%%%% whole-trial parametric regressor modulated by
+        %         pa ratings for food and neutral trials only 
+                pa=PA(s,qimage_type==3 | qimage_type==4)';
+                if any(isnan(pa))  || var(pa)<.05
+                    pa=choice_num(find(tr==1 & (trial_type==3 | trial_type==4))');
+                end
+                pa=pa-nanmean(pa);
+                pa=reshape(repmat(pa,4,1),[],1);
+                pa(isnan(pa))=0;
+                [reg,regc]=createRegTS(find((trial_type==3 | trial_type==4) & (tr==1 | tr==2 | tr==3 | tr==4)),pa,nTRs,hrf,[regDir '/pafoodneutral_trial_cue.1D']);
+    
+                
+           %         %%%%%%%%%% whole-trial parametric regressor modulated by
+        %         pa ratings for drugs and alcohol trials only 
+                pa=PA(s,qimage_type==1 | qimage_type==2)';
+                if any(isnan(pa))  || var(pa)<.05
+                    pa=choice_num(find(tr==1 & (trial_type==1 | trial_type==2))');
+                end
+                pa=pa-nanmean(pa);
+                pa=reshape(repmat(pa,4,1),[],1);
+                pa(isnan(pa))=0;
+                [reg,regc]=createRegTS(find((trial_type==1 | trial_type==2) & (tr==1 | tr==2 | tr==3 | tr==4)),pa,nTRs,hrf,[regDir '/paalcoholdrugs_trial_cue.1D']);
+    
+                
+                
+        %         %%%%%%%%%%%%%%%%%%% cue onset by trial type
+        %         for i=1:4
+        %             [reg,regc]=createRegTS(find(tr==1 & trial_type==i),1,nTRs,hrf,[regDir '/' conds{i} '_cue_cue.1D']);
+        %         end
+        
         
         fprintf(['\n\ndone with subject ' subject '.\n']);
         
