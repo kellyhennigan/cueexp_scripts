@@ -202,7 +202,7 @@ for s=1:numel(subjects)
         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings by cond
         for i=1:4
             pa=getCueData(subjects{s},['pa_' conds{i} '_trials']);
-            if any(isnan(pa))
+            if any(isnan(pa)) || var(pa)<.05
                 pa=choice_num(find(trial_type==i & tr==1))';
             end
             pa=pa-mean(pa);

@@ -160,8 +160,8 @@ switch measure
         data = getBAMData(subjects,qStr);
         
         
-    case {'pref_stim','pref_alc','pref_drug','pref_food','pref_neut',...
-            'pref_stim_trials','pref_alc_trials','pref_drug_trials','pref_food_trials','pref_neut_trials'}
+    case {'pref_stim','pref_alcohol','pref_drugs','pref_food','pref_neutral',...
+            'pref_stim_trials','pref_alcohol_trials','pref_drugs_trials','pref_food_trials','pref_neutral_trials'}
         
         % define path to subject stim file(s)
         p = getCuePaths();
@@ -188,23 +188,23 @@ switch measure
            
             case 'pref_stim'
                 data = mean_pref;   % return mean pref ratings for all stim
-            case 'pref_alc'
+            case 'pref_alcohol'
                 data = mean_pref(:,1); % alcohol is 1st col
-            case 'pref_drug'
+            case 'pref_drugs'
                 data = mean_pref(:,2); % drugs are 2nd col
             case 'pref_food'
                 data = mean_pref(:,3); % food is 3rd col
-            case 'pref_neut'
+            case 'pref_neutral'
                 data = mean_pref(:,4); % neutral is 4th col
             case 'pref_stim_trials'
                 data = pref;   % return pref ratings for all stim/all trials
-            case 'pref_alc_trials'
+            case 'pref_alcohol_trials'
                 data = pref(:,ci==1); % alcohol is 1st col
-            case 'pref_drug_trials'
+            case 'pref_drugs_trials'
                 data = pref(:,ci==2); % drugs are 2nd col
             case 'pref_food_trials'
                 data = pref(:,ci==3);  % food is 3rd col
-            case 'pref_neut_trials'
+            case 'pref_neutral_trials'
                 data = pref(:,ci==4);  % neutral is 4th col
         end
      
