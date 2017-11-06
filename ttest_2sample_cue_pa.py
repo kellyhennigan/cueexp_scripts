@@ -63,6 +63,7 @@ in_str = '_glm_padrugs_B+tlrc'  # identify file string of coefficients file
 sub_labels = ['cue#0',
 'cue_rt#0',
 'choice#0',
+'choice_rt#0',
 'alcohol#0',
 'drugs#0',
 'food#0',
