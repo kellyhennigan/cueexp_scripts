@@ -107,6 +107,7 @@ mean_d = cell2mat(cellfun(@nanmean, d,'uniformoutput',0)')';
 se_d = cell2mat(cellfun(@(x) nanstd(x)./sqrt(size(x,1)), d,'uniformoutput',0)')';
 
 
+
 %% plot it
 
 fontName = 'Helvetica';
@@ -134,8 +135,15 @@ set(fig,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
 set(gca,'fontName',fontName,'fontSize',fontSize)
 
-h = barwitherr(se_d,mean_d);
-
+% if plotting just 1 condition but with multiple groups, do this to make
+% sure the bars are plotted by group color:
+if size(mean_d,1)==1 && size(se_d,1)==1
+    h = barwitherr([se_d;nan(1,size(se_d,2))],[mean_d;nan(1,size(mean_d,2))]);
+    xl=xlim;
+    xlim([xl(1) 2-xl(1)])
+else
+    h = barwitherr(se_d,mean_d);
+end
 set(h,'EdgeColor','w')
 
 set(gca,'box','off');
@@ -196,7 +204,7 @@ if numel(groupNames)==1
         elseif p<.05, a = '*';
         else a = '';
         end
-       
+        
         text(.5+size(d{1},2)./2,y_ast,a,'FontName','Times','FontSize',20,'HorizontalAlignment','center','color','k')
         
         % move up the upper y-axis limit for asterisks, if needed
@@ -230,9 +238,9 @@ else
     % plot asterisks over sig group differences?
     if plotSig(1)==1
         
-%         y_ast = max(mean_d(:)+se_d(:))+max(se_d(:)); % y-level for asterisks
+        %         y_ast = max(mean_d(:)+se_d(:))+max(se_d(:)); % y-level for asterisks
         y_ast = max(mean_d(:)+(2.*se_d(:))); % y-level for asterisks
-      
+        
         for ci=1:nConds
             p = anova_rm(cellfun(@(x) x(:,ci), d,'uniformoutput',0),'off');
             p = p(~isnan(p)); % p-val for this comparison

@@ -9,12 +9,14 @@ figDir = p.figures;
 
 task = 'cue';
 
-betaDir = fullfile(dataDir,['results_' task '_afni_pref'],'roi_betas');
+betaDir = fullfile(dataDir,['results_' task '_afni_pa'],'roi_betas');
 
-roi = 'nacc_desai';
+roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
+% roiNames = {'nacc_desai'}
 
-% stims = {'drugs','neutral','food'};
-stims = {'pref'};
+stims = {'drugs','food'};
+stims = {'pa'};
+stimStr = 'pa_drugs_food'
 
 groups = {'controls','patients'};
 
@@ -25,12 +27,16 @@ saveOut = 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
 
+for j=1:numel(roiNames)
+    
+    roi=roiNames{j};
+    
 % load data
 for g = 1:numel(groups)
     
-    for j=1:numel(stims)
+    for k=1:numel(stims)
         
-        B{g}(:,j) = loadRoiTimeCourses(fullfile(betaDir,roi,[stims{j} '.csv']),getCueSubjects('cue',groups{g}));
+        B{g}(:,k) = loadRoiTimeCourses(fullfile(betaDir,roi,[stims{k} '.csv']),getCueSubjects('cue',groups{g}));
         
     end % stims
     
@@ -39,13 +45,14 @@ end % groups
 
 % plot it
 if saveOut
-    savePath = fullfile(figDir,'roi_betas',[roi '_betas_bars_bygroup.png']);
+%     savePath = fullfile(figDir,'roi_betas',[roi '_betas_bars_bygroup.png']);
+ savePath = fullfile(figDir,'roi_betas',[roi '_' stimStr '_betas.png']);
 else
     savePath = [];
 end
 [fig,leg] = plotNiceBars(B,[roi ' betas'],stims,groups,cols,1,[roi ' betas by group and stim'],1,savePath,1);
     
-
+end % roiNames
 
 % % also plot as points 
 % b0= B{1}(:,1)-B{1}(:,2); % drugs-neutral
