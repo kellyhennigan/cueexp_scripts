@@ -18,7 +18,8 @@ task = 'cue';
 [subjects,gi]=getCueSubjects(task);
 
 % stim name
-stims = {'stim','drugs','food','neutral'};
+% stims = {'stim','drugs','food','neutral'};
+stims = {'stim'};
 
 %%%%%%%%%%%%%% behavioral/self-report data
 behVar = 'pa'; 
@@ -103,7 +104,7 @@ dName=['Z-transformed corr coefficients'];
 
 titleStr = [strrep(seedRoiName,'_','') '-' behVar ' correlation; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
 
-savePath = fullfile(saveDir,[behVar '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
+savePath = fullfile(saveDir,[sprintf(behDataLabel,strcat(stims{:})) '_TR' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
 
 [fig,leg] = plotNiceBars(d,dName,cellfun(@(x) sprintf(behDataLabel,x), stims, 'uniformoutput',0),groupNames,cols,plotSig,titleStr,1,savePath,0);
 
