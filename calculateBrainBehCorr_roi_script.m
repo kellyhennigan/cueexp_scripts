@@ -21,8 +21,9 @@ task = 'cue';
 stims = {'stim','drugs','food','neutral'};
 
 %%%%%%%%%%%%%% behavioral/self-report data
-behDataName = ['pa_%s_trials']; % name of data for getCueData()
-behDataLabel = ['pa_%s']; % name for output
+behVar = 'pa'; 
+behDataName = [behVar '_%s_trials']; % name of data for getCueData()
+behDataLabel = [behVar '_%s']; % name for output
 
 
 %%%%% omit subs? 
@@ -38,7 +39,7 @@ seedRoiName = 'nacc_desai';
 inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s');
 
 % TRi = 4:7; % index of which TR to extract (TR1 is at trial onset, etc.)
-TRi = 4; % index of which TR to extract (TR1 is at trial onset, etc.)
+TRi = 5; % index of which TR to extract (TR1 is at trial onset, etc.)
 TR = 2; % 2 sec TR
 ti = (TRi-1).*TR; % time at the indexed TR
 
@@ -58,30 +59,30 @@ end
 k=1;
 for k=1:numel(stims)
 
-% behavior/self-report measure
-behData = getCueData(subjects,sprintf(behDataName,stims{k}));
-
-i=1;
-for i=1:numel(subjects)  % subject loop
+    % behavior/self-report measure
+    behData = getCueData(subjects,sprintf(behDataName,stims{k}));
     
-    subject = subjects{i};
+    i=1;
+    for i=1:numel(subjects)  % subject loop
+        
+        subject = subjects{i};
+        
+        fprintf(['\n\nworking on subject ' subject '...\n\n']);
+        
+        %     for k = 1:numel(stims)
+        
+        % this subject's brain data
+        seed = dlmread(sprintf(inFile,subject,seedRoiName,stims{k})); seed = mean(seed(:,TRi),2);
+        
+        % this subjects behavior/self-report data
+        beh = behData(i,:)';
+        
+        % correlate per-trial brain-behavior activity
+        r(i,k) = corr(seed,beh);
+        
+        
+    end
     
-    fprintf(['\n\nworking on subject ' subject '...\n\n']);
-    
-    %     for k = 1:numel(stims)
-    
-    % this subject's brain data
-    seed = dlmread(sprintf(inFile,subject,seedRoiName,stims{k})); seed = mean(seed(:,TRi),2);
-    
-    % this subjects behavior/self-report data
-    beh = behData(i,:)';
-    
-    % correlate per-trial brain-behavior activity
-    r(i,k) = corr(seed,beh);
-    
-    
-end
-
 end % stims
 
 % Fisher  transform the correlation coefficients
@@ -100,11 +101,11 @@ d{2}=Z(gi==1,:); % " " for patients
 
 dName=['Z-transformed corr coefficients'];
 
-titleStr = [strrep(seedRoiName,'_','') '-' sprintf(behDataLabel,stims{k}) ' correlation; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
+titleStr = [strrep(seedRoiName,'_','') '-' behVar ' correlation; TRs ' sprintf(repmat('%d',1,numel(TRi)),TRi)];
 
-savePath = fullfile(saveDir,[sprintf(behDataLabel,stims{k}) '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
+savePath = fullfile(saveDir,[behVar '_TRs' sprintf(repmat('%d',1,numel(TRi)),TRi)]);
 
-[fig,leg] = plotNiceBars(d,dName,stims,groupNames,cols,plotSig,titleStr,1,savePath,0);
+[fig,leg] = plotNiceBars(d,dName,cellfun(@(x) sprintf(behDataLabel,x), stims, 'uniformoutput',0),groupNames,cols,plotSig,titleStr,1,savePath,0);
 
     
 
