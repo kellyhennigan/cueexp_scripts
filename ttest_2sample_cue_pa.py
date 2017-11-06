@@ -26,8 +26,19 @@ subjsB,_ = getsubs('cue',0) # controls
 
 
 # REMOVE SUBJECTS WITH NO VARIANCE IN DRUG RATINGS
-subjsA.remove('rv160413','tj160529','at160601','as170730','er171009')
-subjsB.remove('vm151031','jw160316','jn160403','rb160407','yl160507','kn160918','cs171002')
+subjsA.remove('rv160413')
+subjsA.remove('tj160529')
+subjsA.remove('at160601')
+subjsA.remove('as170730')
+subjsA.remove('er171009')
+
+subjsB.remove('vm151031')
+subjsB.remove('jw160316')
+subjsB.remove('jn160403')
+subjsB.remove('rb160407')
+subjsB.remove('yl160507')
+subjsB.remove('kn160918')
+subjsB.remove('cs171002')
 
 print(subjsA)
 print(subjsB)
