@@ -14,6 +14,13 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim');
 dataDir = p.data;
 
+omit_subs = {'rv160413','tj160529','at160601','as170730','rc170730',...
+    'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
+    'kn160918','cs171002'};
+omit_idx=ismember(subjects,omit_subs);
+subjects(omit_idx)=[];
+gi(omit_idx)=[];
+
 
 bStr = 'pa_drugs'; % beta string (e.g., pa or pref)
 
