@@ -15,7 +15,7 @@ close all
 dataDir = p.data;
 
 
-bStr = 'pa_food'; % beta string (e.g., pa or pref)
+bStr = 'pa_drugs'; % beta string (e.g., pa or pref)
 
 % ROIs
 % roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
@@ -28,11 +28,11 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
 
 
-fileStr = 'glm_pafood_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
+fileStr = 'glm_padrugs_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
 % volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 % bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
-volIdx = [19]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+volIdx = [17]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 bNames = {bStr}; % bNames should correspond to volumes in index volIdx
 
 % out file path
