@@ -14,7 +14,7 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim');
 dataDir = p.data;
 
-omit_subs = {'tj160529'};
+omit_subs = {'tj160529','rc170730'};
 % omit_subs = {'at160601','as170730','rc170730',...
 %     'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
 %     'kn160918','cs171002'};
