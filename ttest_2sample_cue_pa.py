@@ -25,21 +25,21 @@ subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
 
-# REMOVE SUBJECTS WITH NO VARIANCE IN DRUG RATINGS
-subjsA.remove('rv160413')
-subjsA.remove('tj160529')
-subjsA.remove('at160601')
-subjsA.remove('as170730')
-subjsA.remove('rc170730')
-subjsA.remove('er171009')
+# # REMOVE SUBJECTS WITH NO VARIANCE IN DRUG RATINGS
+# subjsA.remove('rv160413')
+# subjsA.remove('tj160529')
+# subjsA.remove('at160601')
+# subjsA.remove('as170730')
+# subjsA.remove('rc170730')
+# subjsA.remove('er171009')
 
-subjsB.remove('vm151031')
-subjsB.remove('jw160316')
-subjsB.remove('jn160403')
-subjsB.remove('rb160407')
-subjsB.remove('yl160507')
-subjsB.remove('kn160918')
-subjsB.remove('cs171002')
+# subjsB.remove('vm151031')
+# subjsB.remove('jw160316')
+# subjsB.remove('jn160403')
+# subjsB.remove('rb160407')
+# subjsB.remove('yl160507')
+# subjsB.remove('kn160918')
+# subjsB.remove('cs171002')
 
 print(subjsA)
 print(subjsB)
@@ -57,7 +57,7 @@ out_str = ''
 cv_file = ''
 
 
-in_str = '_glm_padrugs_B+tlrc'  # identify file string of coefficients file 
+in_str = '_glm_pafood_B+tlrc'  # identify file string of coefficients file 
 
 # labels of sub-bricks to test
 sub_labels = ['cue#0',
@@ -68,7 +68,7 @@ sub_labels = ['cue#0',
 'drugs#0',
 'food#0',
 'neutral#0',
-'pa_drugs#0'] 
+'pa_food#0'] 
 
 # labels for out files 
 out_labels =  ['Zcue'+out_str,
@@ -79,10 +79,10 @@ out_labels =  ['Zcue'+out_str,
 'Zdrugs'+out_str,
 'Zfood'+out_str,
 'Zneutral'+out_str,
-'Zpa_drugs'+out_str]
+'Zpa_food'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
-in_str2 = '_glm_padrugs+tlrc'
+in_str2 = '_glm_pafood+tlrc'
 
 sub_labels2 = ['Full_R^2',
 'Full_Fstat']
