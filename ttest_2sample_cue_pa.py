@@ -31,7 +31,7 @@ subjsA.remove('tj160529')
 # subjsA.remove('at160601')
 # subjsA.remove('as170730')
 subjsA.remove('rc170730')
-# subjsA.remove('er171009')
+subjsA.remove('er171009')
 
 # subjsB.remove('vm151031')
 # subjsB.remove('jw160316')
