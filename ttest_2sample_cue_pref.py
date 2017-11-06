@@ -48,17 +48,22 @@ in_str = '_glm_B+tlrc'  # identify file string of coefficients file
 sub_labels = ['cue#0',
 'cue_rt#0',
 'choice#0',
-'choice_rt#0',
-'trial#0',
-'pa#0'] 
+'alcohol#0',
+'drugs#0',
+'food#0',
+'neutral#0',
+'pa_food#0'] 
 
 # labels for out files 
 out_labels =  ['Zcue'+out_str,
 'Zcue_rt'+out_str,
 'Zchoice'+out_str,
 'Zchoice_rt'+out_str,
-'Ztrial'+out_str,
-'Zpa'+out_str]
+'Zalcohol'+out_str,
+'Zdrugs'+out_str,
+'Zfood'+out_str,
+'Zneutral'+out_str,
+'Zpa_food'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
 in_str2 = '_glm+tlrc'

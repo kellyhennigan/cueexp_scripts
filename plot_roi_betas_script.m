@@ -9,11 +9,12 @@ figDir = p.figures;
 
 task = 'cue';
 
-betaDir = fullfile(dataDir,['results_' task '_afni'],'roi_betas');
+betaDir = fullfile(dataDir,['results_' task '_afni_pref'],'roi_betas');
 
 roi = 'nacc_desai';
 
-stims = {'drugs','neutral','food'};
+% stims = {'drugs','neutral','food'};
+stims = {'pref'};
 
 groups = {'controls','patients'};
 
@@ -49,19 +50,17 @@ end
 % % also plot as points 
 % b0= B{1}(:,1)-B{1}(:,2); % drugs-neutral
 % b1= B{2}(:,1)-B{2}(:,2); % drugs-neutral
-b0= B{1}(:,1); % drugs
-b1= B{2}(:,1); % drugs
-
-
-
-fig2=setupFig
-hold on
-plot(zeros(numel(b0),1),b0(:,1),'.','color',cols(1,:),'markersize',20);
-plot(ones(numel(b1),1),b1(:,1),'.','color',cols(2,:),'markersize',20)
-xlim([-1 2])
-title([roi ' betas for drug-neutral by group'])
-
-if saveOut
-    savePath2 = fullfile(figDir,'roi_betas',[roi '_betas_dots_bygroup.png']);
-    print(fig2,'-dpng','-r300',savePath2)
-end
+% b0= B{1}(:,1); % drugs
+% b1= B{2}(:,1); % drugs
+% 
+% fig2=setupFig
+% hold on
+% plot(zeros(numel(b0),1),b0(:,1),'.','color',cols(1,:),'markersize',20);
+% plot(ones(numel(b1),1),b1(:,1),'.','color',cols(2,:),'markersize',20)
+% xlim([-1 2])
+% title([roi ' betas for drug-neutral by group'])
+% 
+% if saveOut
+%     savePath2 = fullfile(figDir,'roi_betas',[roi '_betas_dots_bygroup.png']);
+%     print(fig2,'-dpng','-r300',savePath2)
+% end
