@@ -260,6 +260,10 @@ for s=1:numel(subjects)
                 [reg,regc]=createRegTS(find((trial_type==1 | trial_type==2) & (tr==1 | tr==2 | tr==3 | tr==4)),pa,nTRs,hrf,[regDir '/paalcoholdrugs_trial_cue.1D']);
     
                 
+                %%%%%%%%%%%%%%%%%% model whole trial by alc/drugs & food/neutral
+                [reg,regc]=createRegTS(find((trial_type==1 | trial_type==2) & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} 'alcoholdrugs_trial_cue.1D']);
+                [reg,regc]=createRegTS(find((trial_type==3 | trial_type==4) & (tr==1 | tr==2 | tr==3 | tr==4)),1,nTRs,hrf,[regDir '/' conds{i} 'foodneutral_trial_cue.1D']);
+                
                 
         %         %%%%%%%%%%%%%%%%%%% cue onset by trial type
         %         for i=1:4
