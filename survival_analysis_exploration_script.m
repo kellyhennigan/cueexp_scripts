@@ -16,8 +16,8 @@ figDir = p.figures;
 % get relapse data
 % [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171107.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -113,16 +113,47 @@ stairs(x,empFup,':','Linewidth',2,'color',col);
 hold off
 xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
 
-xlim([0 200])
-
-savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_200days.png');
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_rel.png');
 print(gcf,'-dpng','-r300',savePath);
+
+xlim([0 180])
+
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_rel_180days.png');
+print(gcf,'-dpng','-r300',savePath);
+
+
+
+%% cumulative survival 
+
+[obstime,si]=sort(T.obstime);
+censored = T.censored(si);
+subjects = T.subjid(si);
+
+figure=setupFig;
+subplot(1,1,1);
+[empF,x,empFlo,empFup] = ecdf(obstime,'censoring',censored);
+stairs(x,1-empF,'Linewidth',2,'color',col);
+hold on;
+stairs(x,1-empFlo,':','Linewidth',2,'color',col); 
+stairs(x,1-empFup,':','Linewidth',2,'color',col);
+hold off
+xlabel('Time (days)'); ylabel('Cumulative survival'); title('Empirical CDF')
+
+xl=xlim;
+xlim([-10 xl(2)])
+
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_survival.png');
+print(gcf,'-dpng','-r300',savePath);
+
+xlim([-10 180])
+
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_survival_180days.png');
+print(gcf,'-dpng','-r300',savePath);
+
 
 
 %% median split based on NAcc activity 
 
-%% empirical distribution of relapse 
-% 
 
 % sort and format 
 [obstime,si]=sort(T.obstime);
@@ -167,7 +198,58 @@ xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
 hold off
 
 
-savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_lohi.png');
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_rel_lohi.png');
+print(gcf,'-dpng','-r300',savePath);
+
+
+
+%% median split on Nacc activity - survival curve 
+
+% sort and format 
+[obstime,si]=sort(T.obstime);
+censored = T.censored(si);
+subjects = T.subjid(si);
+nacc = T.nacc_drugs_beta(si);
+
+hi = find(nacc>median(nacc));
+lo = find(nacc<median(nacc));
+
+col=[    0.1294    0.4118    0.8157
+    0.9804    0.1255    0.6314];
+
+figure=setupFig;
+hold on;
+
+% lo
+[empF1,x1,empFlo1,empFup1] = ecdf(obstime(lo),'censoring',censored(lo));
+stairs(x1,1-empF1,'Linewidth',2,'color',col(1,:));
+
+
+% hi
+[empF2,x2,empFlo2,empFup2] = ecdf(obstime(hi),'censoring',censored(hi));
+stairs(x2,1-empF2,'Linewidth',2,'color',col(2,:));
+
+legend('low reactivity','high reactivity','Location','EastOutside')
+legend('boxoff')
+
+% confidence intervals
+stairs(x1,1-empFlo1,':','Linewidth',2,'color',col(1,:)); 
+stairs(x1,1-empFup1,':','Linewidth',2,'color',col(1,:));
+
+stairs(x2,1-empFlo2,':','Linewidth',2,'color',col(2,:)); 
+stairs(x2,1-empFup2,':','Linewidth',2,'color',col(2,:));
+
+fsize = 18;
+set(gca,'fontName','Arial','fontSize',fsize)  
+xlabel('Time (days)'); ylabel('cumulative survival'); title('Empirical CDF')
+
+xl=xlim;
+xlim([-10 xl(2)])
+ylim([0 1.05])
+hold off
+
+
+savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_survival_lohi.png');
 print(gcf,'-dpng','-r300',savePath);
 
 %% 

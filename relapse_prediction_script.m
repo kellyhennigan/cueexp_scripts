@@ -10,7 +10,7 @@ dataDir = p.data;
 figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171105.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171107.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -58,6 +58,9 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
+% standardized coefficients: 
+X=[T.years_of_use T.poly_drug_dep T.clinical_diag]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
 
 %% model : self-report predictors
 
@@ -67,6 +70,11 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
+
+% standardized coefficients: 
+X=[T.pref_drug T.craving T.bam_upset]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+
 
 %% model : brain predictors
 
@@ -79,6 +87,10 @@ res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
 
+% standardized coefficients: 
+X=[T.mpfc_drugs_beta T.nacc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+
 
 
 %% model: demographics + behavior + brain 
@@ -89,7 +101,9 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 res.Rsquared.Ordinary
 res.ModelCriterion.AIC
 
-
+% standardized coefficients: 
+X=[T.years_of_use T.bam_upset T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

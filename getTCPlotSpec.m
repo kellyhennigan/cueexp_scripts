@@ -47,11 +47,6 @@ switch task
             'controls relapsers_6months nonrelapsers_6months';
             'controls relapsers_6months nonrelapsers_6months';
             'controls relapsers_6months nonrelapsers_6months';
-            'nonrelapsers_6months relapsers_6months';
-            'nonrelapsers_6months relapsers_6months';
-            'nonrelapsers_6months relapsers_6months';
-            'nonrelapsers_6months relapsers_6months';
-            'nonrelapsers_6months relapsers_6months'
             };
         %             'controls relapsers nonrelapsers';
         %             'controls relapsers nonrelapsers';
@@ -83,11 +78,6 @@ switch task
             'food';
             'neutral';
             'drugs-neutral';
-              'alcohol';
-            'drugs';
-            'food';
-            'neutral';
-            'drugs-neutral';
             };
         
         % corresponding stim strings to use in figure and file name
@@ -101,11 +91,6 @@ switch task
             'neutral';
             'drugs-neutral';
             'alcohol';
-            'drugs';
-            'food';
-            'neutral';
-            'drugs-neutral';
-              'alcohol';
             'drugs';
             'food';
             'neutral';

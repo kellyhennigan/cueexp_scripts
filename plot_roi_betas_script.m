@@ -11,12 +11,14 @@ task = 'cue';
 
 betaDir = fullfile(dataDir,['results_' task '_afni_pa'],'roi_betas');
 
-roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
-% roiNames = {'nacc_desai'}
+% roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
+roiNames = {'nacc_desai'}
 
-% stims = {'pa_drugs','pa_food'};
-stims = {'pa'};
-stimStr = 'pa'
+stims = {'pa_alcoholdrugs'};
+stimStr = 'pa_alcoholdrugs'
+
+% stims = {'pa'};
+% stimStr = 'pa'
 
 groups = {'controls','patients'};
 

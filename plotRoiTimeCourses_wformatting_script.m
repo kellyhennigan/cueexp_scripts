@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'nacc_desai';
+roiName = 'mpfc';
 
 
 nTRs = 10; % # of TRs to plot
@@ -49,26 +49,26 @@ outDir_suffix = '';
 
 %% y axis depends on ROI
 
-% if strcmp(roiName,'nacc_desai')
-%     YL = [-.12 .08]
-%     YT = [-.1:.05:.1];
-% end
+if strcmp(roiName,'nacc_desai')
+    YL = [-.17 .13]
+    YT = [-.15:.05:.1];
+end
 
-% if strcmp(roiName,'VTA')
-%     YL = [-.15 .15];
-%     YT = [-.15:.05:.15];
-% end
-% 
-% if strcmp(roiName,'mpfc')
-%     YL = [-.22 .15];
-%     YT = [-.2:.05:.15];
-% end
-% 
-% if strcmp(roiName,'ins_desai')
-%     YL = [-.1 .13];
-%     YT = [-.1:.05:.15];
-% end
-% 
+if strcmp(roiName,'VTA')
+    YL = [-.15 .2];
+    YT = [-.15:.05:.2];
+end
+
+if strcmp(roiName,'mpfc')
+    YL = [-.3 .2];
+    YT = [-.3:.1:.2];
+end
+
+if strcmp(roiName,'ins_desai')
+    YL = [-.15 .2];
+    YT = [-.15:.05:.2];
+end
+
 
 
 
@@ -106,7 +106,7 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
-    for f=15:nFigs
+    for f=11:14
 % for f = 1:nFigs
     
     % get the plot name and stims & groups to plot for this figure

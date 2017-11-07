@@ -20,7 +20,7 @@ conds = {'alcohol','drugs','food','neutral'};
 % groups = {'controls','patients'};
 % groupStr = '';
 
-% % % uncomment to use plot relapse and nonrelapse groups: 
+% % uncomment to use plot relapse and nonrelapse groups: 
 groups = {'controls','relapsers_6months','nonrelapsers_6months'};
 groupStr = ' by relapse'; 
 ri=getCueData(subjects(gi==1),'relapse_6months');
@@ -135,12 +135,12 @@ end
 %% Q: differences in preference across trial types & groups? 
 
 % pref ratings 
-dName = 'preference ratings'; % name of measure to plot
-saveStr = 'pref'; % string for fig out name
+dName = 'wanting'; % name of measure to plot
+saveStr = 'want'; % string for fig out name
 d = mean_pref; % data w/subjects in rows, conds in columns
 
 plotSig = [1 1];
-titleStr = 'preference ratings by group and condition';
+titleStr = 'want ratings by group and condition';
 plotLeg = 1;
 savePath = fullfile(outDir,[saveStr groupStr '.png']);
 
@@ -148,16 +148,20 @@ dg={};
 for k=1:numel(groups)
     dg{k} = d(gi==k-1,:); % data in cell array by groups
 end
-[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+[fig,leg] = plotNiceBars(dg,dName,conds,strrep(groups,'_',' '),cols,plotSig,titleStr,plotLeg,savePath);
 
 
 % now plot without alc condition
 idx = [2 4 3]; % drugs neutral food
 dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
 savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
-fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+fig = plotNiceBars(dg,dName,conds(idx),strrep(groups,'_',' '),cols,plotSig,titleStr,1,savePath);
 
+% ttest for drug want ratings difference in patients vs controls
+% [h,p,~,stats]=ttest2(dg{2}(:,1),dg{1}(:,1))
 
+% % ttest for pref ratings difference in relapsers vs nonrelapsers
+[h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
 
 %% Q: differences in pos arousal across trial types and groups? 
 
@@ -175,14 +179,17 @@ dg={};
 for k=1:numel(groups)
     dg{k} = d(gi==k-1,:); % data in cell array by groups
 end
-[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+[fig,leg] = plotNiceBars(dg,dName,conds,strrep(groups,'_',' '),cols,plotSig,titleStr,plotLeg,savePath);
 
 
 % now plot without alc condition
 idx = [2 4 3]; % drugs neutral food
 dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
 savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
-fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+fig = plotNiceBars(dg,dName,conds(idx),strrep(groups,'_',' '),cols,plotSig,titleStr,1,savePath);
+
+% ttest for pref ratings difference in relapsers vs nonrelapsers
+[h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
 
 
 

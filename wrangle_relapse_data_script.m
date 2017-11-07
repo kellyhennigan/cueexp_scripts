@@ -56,10 +56,11 @@ for i=1:numel(demVars)
     Tdem=[Tdem array2table(getCueData(subjects,demVars{i}),'VariableNames',demVars(i))];
 end
 
-% make ptsd and depression diagnosis vars binary 
-Tdem.ptsd_diag=strcmp(Tdem.ptsd_diag,'yes')
-Tdem.depression_diag=strcmp(Tdem.depression_diag,'yes')
-Tdem.clinical_diag = (Tdem.ptsd_diag | Tdem.depression_diag); 
+% make anxiety, ptsd, and depression diagnosis vars binary 
+Tdem.ptsd_diag=strcmp(Tdem.ptsd_diag,'yes');
+Tdem.depression_diag=strcmp(Tdem.depression_diag,'yes');
+Tdem.anxiety_diag=strcmp(Tdem.anxiety_diag,'yes');
+Tdem.clinical_diag = (Tdem.ptsd_diag | Tdem.depression_diag | Tdem.anxiety_diag); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% behavioral data

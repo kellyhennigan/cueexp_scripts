@@ -14,13 +14,13 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim');
 dataDir = p.data;
 
-omit_subs = {'tj160529','rc170730','er171009'};
+% omit_subs = {'tj160529','rc170730','er171009'};
 % omit_subs = {'at160601','as170730','rc170730',...
 %     'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
 %     'kn160918','cs171002'};
-omit_idx=ismember(subjects,omit_subs);
-subjects(omit_idx)=[];
-gi(omit_idx)=[];
+% omit_idx=ismember(subjects,omit_subs);
+% subjects(omit_idx)=[];
+% gi(omit_idx)=[];
 
 
 % bStr = 'pa_foodneutral'; % beta string (e.g., pa or pref)
@@ -32,16 +32,16 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 
 % directory that contains glm results of interest
-% resultsDir = fullfile(dataDir,['results_' task '_afni']);
+resultsDir = fullfile(dataDir,['results_' task '_afni']);
 resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
 
+fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
+% fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
-fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
-
-% volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-% bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
-volIdx = [17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-bNames = {'pa_alcoholdrugs','pa_foodneutral'}; % bNames should correspond to volumes in index volIdx
+volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
+% volIdx = [17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+% bNames = {'pa_alcoholdrugs','pa_foodneutral'}; % bNames should correspond to volumes in index volIdx
 
 % out file path
 outStrPath = fullfile(resultsDir,'roi_betas','%s','%s.csv'); %s is roiNames and bNames

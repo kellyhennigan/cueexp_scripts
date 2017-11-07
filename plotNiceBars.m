@@ -110,9 +110,9 @@ se_d = cell2mat(cellfun(@(x) nanstd(x)./sqrt(size(x,1)), d,'uniformoutput',0)')'
 
 %% plot it
 
-fontName = 'Helvetica';
-fontSize = 12;
-% fontSize = 18;
+fontName = 'Arial';
+% fontSize = 12;
+fontSize = 18;
 
 if plotToScreen
     fig=figure;
@@ -152,18 +152,20 @@ colormap(cols)
 
 % try to rotate the xlabels by 30 degrees, but if that doesnt work, no prob
 try
-    set(gca,'XTickLabel',condNames)
+    set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
+%         ylabel(ylab,'fontName','Arial','FontSize',fsize)
+%)
     xtickangle(30)
 catch ME
     try
         xticklabel_rotate(1:numel(condNames),30,condNames)
     catch ME
-        set(gca,'XTickLabel',condNames)
+        set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
     end
 end
 
 % y axis
-ylabel(dName)
+ylabel(dName,'fontName',fontName,'FontSize',fontSize)
 % ylim([ -2 3])
 
 
@@ -178,6 +180,7 @@ if plotLeg
     
     leg=legend(leg_text{:},'location','NorthEastOutside');
     legend(gca,'boxoff')
+%     legend(leg,'FontName',fontName,'FontSize',fontSize)
     
     % % shift legend over to the right to avoid smushing the plot
     % % lpos=get(leg,'position');
@@ -280,13 +283,14 @@ else
             'group',df_g,df_e,Fg,p(2),...
             'group x cond interaction',df_i,df_e,Fi,p(4));
         
-        text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',fontSize,'FontName',fontName,'VerticalAlignment','top')
+        statFontSize = 12;
+        text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',statFontSize,'FontName',fontName,'VerticalAlignment','top')
     end
     
 end % # of groups
 
 % title
-title(titleStr)
+title(titleStr,'fontName',fontName,'fontSize',fontSize)
 
 
 %% save out fig?
