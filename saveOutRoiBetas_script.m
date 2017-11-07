@@ -33,7 +33,7 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 % directory that contains glm results of interest
 resultsDir = fullfile(dataDir,['results_' task '_afni']);
-resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
+% resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
 
 fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 % fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
