@@ -7,45 +7,36 @@ clear all
 close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
-[p,task,subjects,gi]=whichCueSubjects();
+task = whichCueTask();
+
+p = getCuePaths();
+
 dataDir = p.data;
 figDir = p.figures;
 
-% filepath to pre-processed functional data where %s is subject then task
-if isempty(strfind(dataDir,'claudia'))
-    groupStr = '';
-else
-    groupStr = 'alc';
-end
-
-stims = {'food','neutral','drugs'};
-
-% rois to potentially process
-allRoiNames = {'nacc','acing','dlpfc','caudate','ins','LC','mpfc','VTA','SN',...
-    'naccL','naccR','insR','insL','mfg'};
-disp(allRoiNames');
-fprintf('\nwhich ROIs to process? \n');
-roiNames = input('enter roi name(s), or hit return for all ROIs above: ','s');
-
-if isempty(roiNames)
-    roiNames = allRoiNames;
-else
-    roiNames = splitstring(roiNames);
-end
-
 
 % tcDir = ['timecourses_' task ];
+% tcDir = ['timecourses_' task '_woOutliers' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];
 tcDir = ['timecourses_' task '_afni' ];
 
 
+tcPath = fullfile(dataDir,tcDir);
+
+
+% which rois to process?
+roiNames = whichRois(tcPath);
+
+
+stims = {'drugs','food','neutral'};
+
+groups = {'controls','patients'};
+
+    
 % t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 % xt = t; %  xticks on the plotted x axis
 TRs = [4 7]; % 1x2 vector denoting the first and last TR to average over
 
-
-% omitSubs = {'cm160510','zm160627'}; % any subjects to omit?
-omitSubs = {''}; % any subjects to omit?
 
 plotStats = 1; % 1 to note statistical signficance on figures
 
@@ -73,8 +64,9 @@ for r = 1:numel(roiNames)
         stimFile = fullfile(inDir,[stims{c} '.csv']);
         
         % load roi time courses
-        for s=0:1
-            [tc,subs_tc]=loadRoiTimeCourses(stimFile,s);
+        for g = 1:numel(groups)
+            
+            tc=loadRoiTimeCourses(stimFile,getCueSubjects(task,groups{g}));
             
             % make sure all the time courses are loaded
             if isempty(tc)
@@ -82,7 +74,7 @@ for r = 1:numel(roiNames)
                 error('\hold up - time courses for at least one stim/group weren''t loaded.')
             end
             
-            d{s+1}(:,c) = mean(tc(:,TRs(1):TRs(2)),2);
+            d{g}(:,c) = mean(tc(:,TRs(1):TRs(2)),2);
             
         end
     end
@@ -91,11 +83,10 @@ for r = 1:numel(roiNames)
     %% plot
     
     ylab = '%\Delta BOLD';
-    groupNames = {'controls','patients'};
-%     cols = getCueExpColors(2);
-    cols = [200 200 200; 50 50 50]./255;
+    cols = getCueExpColors(numel(groups));
+%     cols = [200 200 200; 50 50 50]./255;
     plotSig = 1;
-    figtitle = sprintf('%s activity (TRs %d-%d)',roiName,TRs(1),TRs(2));
+    figtitle = sprintf('%s activity (TRs %d-%d)',strrep(roiName,'_',' '),TRs(1),TRs(2));
     
     % filename, if saving
     savePath = [];
@@ -113,12 +104,9 @@ for r = 1:numel(roiNames)
     %% finally, plot the thing!
     
     fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
-    
-    [fig,leg] = plotNiceBars(d,ylab,stims,groupNames,cols,plotSig)
-    title(figtitle)
-    if saveFig
-        print(fig,'-dpng','-r600',savePath)
-    end
+   
+    [fig,leg] = plotNiceBars(d,ylab,stims,groups,cols,plotSig,figtitle,1,savePath,1)
+   
     
     fprintf('done.\n\n')
     

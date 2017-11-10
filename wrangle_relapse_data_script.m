@@ -121,8 +121,8 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','VTA_clust','vstriatumL_clust','vstriatumR_clust','acing','ins_desai','dlpfc'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','vta_clust','vsL_clust','vsR_clust','acc','ains','dlpfc'};
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains','pvt'};
 
 % stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
 stims = {'drugs','food','neutral'};

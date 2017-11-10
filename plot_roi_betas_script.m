@@ -9,16 +9,16 @@ figDir = p.figures;
 
 task = 'cue';
 
-betaDir = fullfile(dataDir,['results_' task '_afni_pa'],'roi_betas');
+betaDir = fullfile(dataDir,['results_' task '_afni'],'roi_betas');
 
 % roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
 roiNames = {'nacc_desai'}
 
-stims = {'pa_alcoholdrugs'};
-stimStr = 'pa_alcoholdrugs'
+% stims = {'pa_alcoholdrugs'};
+% stimStr = 'pa_alcoholdrugs'
 
-% stims = {'pa'};
-% stimStr = 'pa'
+stims = {'drugs'};
+stimStr = 'drugs'
 
 groups = {'controls','patients'};
 
@@ -47,7 +47,7 @@ for j=1:numel(roiNames)
     
     % plot it
     if saveOut
-        %     savePath = fullfile(figDir,'roi_betas',[roi '_betas_bars_bygroup.png']);
+%             savePath = fullfile(figDir,'roi_betas',[roi '_betas_bars_bygroup.png']);
         outDir = fullfile(figDir,'roi_betas',roi);
         if ~exist(outDir,'dir')
             mkdir(outDir)
@@ -56,8 +56,10 @@ for j=1:numel(roiNames)
     else
         savePath = [];
     end
-    [fig,leg] = plotNiceBars(B,[roi ' betas'],stims,groups,cols,1,[roi ' betas by group and stim'],1,savePath,1);
     
+    % [fig,leg] = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,titleStr,plotLeg,savePath,plotToScreen)
+    [fig,leg] = plotNiceBars(B,[strrep(roi,'_',' ') ' betas'],stims,groups,cols,[1 1],[strrep(roi,'_',' ') ' betas by group and stim'],1,savePath,1);
+
 end % roiNames
 
 % % also plot as points

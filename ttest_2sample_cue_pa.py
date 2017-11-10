@@ -27,11 +27,11 @@ subjsB,_ = getsubs('cue',0) # controls
 
 # # REMOVE SUBJECTS WITH NO VARIANCE IN DRUG RATINGS
 # subjsA.remove('rv160413')
-subjsA.remove('tj160529')
+#subjsA.remove('tj160529')
 # subjsA.remove('at160601')
 # subjsA.remove('as170730')
-subjsA.remove('rc170730')
-subjsA.remove('er171009')
+#subjsA.remove('rc170730')
+#subjsA.remove('er171009')
 
 # subjsB.remove('vm151031')
 # subjsB.remove('jw160316')
@@ -45,7 +45,7 @@ print(subjsA)
 print(subjsB)
 
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
-res_dir = os.path.join(data_dir,'results_cue_afni_pa_cond')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_cue_afni_pa')  # directory containing glm stat files
 
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
@@ -57,22 +57,26 @@ out_str = ''
 cv_file = ''
 
 
-in_str = '_glm_pa2_B+tlrc'  # identify file string of coefficients file 
+in_str = '_glm_B+tlrc'  # identify file string of coefficients file 
 
 # labels of sub-bricks to test
-sub_labels = ['alcoholdrugs#0',
-'foodneutral#0',
-'pa_alcoholdrugs#0',
-'pa_foodneutral#0']
+# sub_labels = ['alcoholdrugs#0',
+# 'foodneutral#0',
+# 'pa_alcoholdrugs#0',
+# 'pa_foodneutral#0']
+
+sub_labels = ['pa#0']
 
 # labels for out files 
-out_labels =  ['Zalcoholdrugs'+out_str,
-'Zfoodneutral'+out_str,
-'Zpa_alcoholdrugs'+out_str,
-'Zpa_foodneutral'+out_str]
+# out_labels =  ['Zalcoholdrugs'+out_str,
+# 'Zfoodneutral'+out_str,
+# 'Zpa_alcoholdrugs'+out_str,
+# 'Zpa_foodneutral'+out_str]
+
+out_labels =  ['Zpa'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
-in_str2 = '_glm_pa2+tlrc'
+in_str2 = '_glm+tlrc'
 
 sub_labels2 = ['Full_R^2',
 'Full_Fstat']

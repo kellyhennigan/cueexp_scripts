@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'mpfc';
+roiName = 'PVT';
 
 
 nTRs = 10; % # of TRs to plot
@@ -106,8 +106,8 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
-    for f=11:14
-% for f = 1:nFigs
+%     for f=11:14
+for f = 1:nFigs
     
     % get the plot name and stims & groups to plot for this figure
     groups = splitstring(plotGroups{f});

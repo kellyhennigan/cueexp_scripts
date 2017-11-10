@@ -13,7 +13,7 @@ task = 'cue';
 
 inDir = fullfile(dataDir,['results_' task '_afni'],'roi_betas');
 
-roi = 'VTA_clust'; % will look for a dir within inDir called this
+roi = 'nacc_desai'; % will look for a dir within inDir called this
 
 stim = 'drugs'; % will compare this stim for patients vs controls 
 

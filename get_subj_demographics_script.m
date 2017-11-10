@@ -8,8 +8,8 @@ dataDir = p.data;
 
 task = 'cue'; 
 
-group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
-% group = 'patients';
+% group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+group = 'patients';
 
 [subjects,gi,notes] = getCueSubjects(task,group);
 
@@ -97,6 +97,12 @@ else
     nVets = sum(cellfun(@(x) ~isempty(strfind(x,'veteran')), notes));
 end
 s{end+1}=sprintf('\npercent veterans: %.2f',nVets./N);
+
+%% discount rate
+
+k = getCueData(subjects,'discount_rate');
+
+s{end+1}=sprintf('\nkirby discounting (mean/sd): %.1f/%.1f',nanmean(k),nanstd(k));
 
 
 %% BDI 

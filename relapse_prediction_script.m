@@ -105,6 +105,32 @@ res.ModelCriterion.AIC
 X=[T.years_of_use T.bam_upset T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
 
+
+%% model: ROI drugs, food, neutral betas
+
+roi = 'nacc';
+
+% DRUGS
+modelspec = ['relIn6Mos ~ ' roi '_drugs_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
+% FOOD
+modelspec = ['relIn6Mos ~ ' roi '_food_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
+% NEUTRAL
+modelspec = ['relIn6Mos ~ ' roi '_neutral_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
+% DRUGS & FOOD 
+modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta' ];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
+% % DRUGS & FOOD & NEUTRAL
+% modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
+% res=fitglm(T,modelspec,'Distribution','binomial')
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Cox regression on relapse 

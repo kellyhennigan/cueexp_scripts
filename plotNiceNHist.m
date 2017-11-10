@@ -32,11 +32,16 @@ if notDefined('cols')
     cols = solarizedColors(numel(d));
 end
 
+% use solarized colors by default
+if notDefined('cols')
+    cols = solarizedColors(numel(d));
+end
 
 % plot histogram(s)
 fig = setupFig;
-hold on
 
+hold on
+    
 for i=1:numel(d)
     
     hh(i) = histogram(d{i});
@@ -54,8 +59,6 @@ for i=1:numel(d)
     hh(i).NumBins = nbins; % max # of bins
 end
 
-hold off
-
 % add title, if desired
 if ~notDefined('titleStr')
     title(titleStr)
@@ -66,6 +69,8 @@ if ~notDefined('legStr')
     legend(legStr)
     legend('boxoff')
 end
+
+hold off
 
 % save, if desired
 if ~notDefined('savePath')
