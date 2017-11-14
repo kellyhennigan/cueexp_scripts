@@ -10,7 +10,7 @@ dataDir = p.data;
 figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171107.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171114.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -35,7 +35,7 @@ a={};
 tB=[];
 
 for i=7:numel(vars)
-    i
+%     i
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = ['relIn6Mos ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
@@ -128,9 +128,13 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta' ];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
+% DRUGS & NEUTRAL
+modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_neutral_beta' ];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
 % % DRUGS & FOOD & NEUTRAL
-% modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
-% res=fitglm(T,modelspec,'Distribution','binomial')
+modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -144,9 +144,23 @@ switch measure
         % otherwise), classify as polydrug dep
         alc = getPatientData(subjects,'alc_dep');
         
-        other_drug = getPatientData(subjects,'other_drug_dep');
-        other_drug = cell2mat(cellfun(@(x) str2double(x), other_drug,'uniformoutput',0)); % 0=no other drug, nan=dep on another drug
-        other_drug(isnan(other_drug))=1;
+        other_drug_dep = getPatientData(subjects,'other_drug_dep');
+        
+        other_drug_dep
+        
+        % HACKY - MAKE THIS BETTER!
+        other_drug = [];
+        for i=1:numel(subjects)
+            i
+            if strcmp(other_drug_dep{i},'0') || isnan(other_drug_dep{i}(1))
+                other_drug(i,1) = 0;
+            else
+                other_drug(i,1) = 1;
+            end
+        end
+        
+%         other_drug = cell2mat(cellfun(@(x) str2double(x), other_drug,'uniformoutput',0)); % 0=no other drug, nan=dep on another drug
+%         other_drug(isnan(other_drug))=1;
         
         % data returns 1 if dependent on alc and/or drug in addition to
         % stim; otherwise 0

@@ -21,7 +21,7 @@ task = 'cue';
 
 
 % seed roi mask path
-seedRoiName = 'Choi_ventralcaudateR';
+seedRoiName = 'nacc_desai';
 seedRoiFilePath = fullfile(dataDir,'ROIs',[seedRoiName '_func.nii']);
 
 
@@ -64,7 +64,7 @@ stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
 
 % index of which TR(s) to extract (TR1 is at trial onset, etc.)
 % TRi = 4:7;
-TRi=5;
+TRi=6;
 TR = 2; % 2 sec TR
 ti = (TRi-1).*TR; % time at the indexed TR
 
