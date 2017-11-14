@@ -29,7 +29,8 @@ dataDir = p.data;
 task = 'cue';
 
 [subjects,gi]=getCueSubjects('cue');
-
+subjects = {'as170730'};
+gi = 1;
 
  afniStr = '_afni';
 % afniStr = ''; % to use ants version
@@ -37,6 +38,9 @@ task = 'cue';
 % filepath to pre-processed functional data where %s is subject then task
 funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_' task '_tlrc' afniStr '.nii.gz']);
 
+
+% file path to file that says which volumes to censor due to head movement
+censorFilePath = fullfile(dataDir, ['%s/func_proc/%s_censor.1D']);
 
 
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)
@@ -51,6 +55,12 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 % name of dir to save to;  %s is task and then roiName
 outDir = fullfile(dataDir,'%s/single_trial_cue_timecourses/%s');
+% 
+omitOTs=0; % 1 to omit outliers, otherwise 0
+if omitOTs
+    outDir = [outDir '_woOutliers'];
+end
+
 
 nTRs = 8; % # of TRs to extract
 TR = 2; % 2 sec TR
@@ -58,9 +68,10 @@ t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
 
 % save out a large .csv file with trials in rows
-saveBigFile = 0; %1 for yes, 0 for no
+saveBigFile = 1; %1 for yes, 0 for no
 
 %% do it
+
 
 % get roi masks
 roiFiles = cellfun(@(x) [x '_func.nii'], roiNames,'UniformOutput',0);
@@ -77,7 +88,7 @@ if saveBigFile
 end
 
 
-i=1;
+i=1; j=1; k=1; 
 for i=1:numel(subjects) % subject loop
     
     
@@ -88,6 +99,10 @@ for i=1:numel(subjects) % subject loop
     % load pre-processed data
     func = niftiRead(sprintf(funcFilePath,subject));
     
+    % load subject's motion_censor.1D file that says which volumes to
+    % censor due to motion
+    censorVols = find(dlmread(sprintf(censorFilePath,subject,task))==0);
+  
     
     j=1;
     for j=1:numel(rois)
@@ -107,6 +122,15 @@ for i=1:numel(subjects) % subject loop
         roi_ts = [roi_ts;nan(nTRs,1)];
         
         
+        % set vols with abs(zscore > 4) to nan (assume this is due to
+        % some non-bio noise)
+        if omitOTs
+            % temporarily assign censored vols due to head motion to nan
+            temp = roi_ts; temp(censorVols)=nan;
+            censorVols=[censorVols;find(abs(zscore(temp(~isnan(temp))))>4)];
+        end
+%     
+        
         for k=1:numel(stims)
             
             
@@ -122,6 +146,11 @@ for i=1:numel(subjects) % subject loop
             % single trial time courses for this stim
             this_stim_tc=roi_ts(this_stim_TRs);
             
+            % set TRs that should be censored to NaN
+            censor_idx=find(ismember(this_stim_TRs,censorVols));
+            this_stim_tc(censor_idx)=nan; 
+            
+             
             dlmwrite(fullfile(thisOutDir,stims{k}),this_stim_tc)
             
             if saveBigFile 

@@ -78,7 +78,9 @@ res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
 
 %% model : brain predictors
 
-modelspec = 'relIn6Mos ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
+modelspec = 'relIn6Mos ~ nacc_drugs_beta';
+
+% modelspec = 'relIn6Mos ~ nacc_drugs_beta + vta_drugs_beta + mpfc_drugs_beta';
 % modelspec = 'relIn6Mos ~ mpfc_drugs_beta + ains_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
 
 res=fitglm(T,modelspec,'Distribution','binomial')
