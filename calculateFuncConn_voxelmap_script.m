@@ -43,8 +43,8 @@ outDir = fullfile(dataDir,['results_' task '_funcconn'],seedRoiName);
 
 
 % group names
-groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
-% groups = {'nonrelapsers','relapsers'}; % order corresponding to ri=0, ri=1
+% groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
+groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
 
 
 % save out single subject results?

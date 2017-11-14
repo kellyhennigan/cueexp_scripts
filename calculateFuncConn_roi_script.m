@@ -1,5 +1,5 @@
 % script to calculate functional connectivity between a seed and other ROIs
-% to run this script, "saveRoiTimeCourses_signletrial_script" should be run
+% to run this script, "saveRoiTimeCourses_signaltrial_script" should be run
 % first so that roi estimates of single trial activity are saved out.
 
 
