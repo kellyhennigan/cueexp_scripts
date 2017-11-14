@@ -29,8 +29,6 @@ dataDir = p.data;
 task = 'cue';
 
 [subjects,gi]=getCueSubjects('cue');
-subjects = {'as170730'};
-gi = 1;
 
  afniStr = '_afni';
 % afniStr = ''; % to use ants version
