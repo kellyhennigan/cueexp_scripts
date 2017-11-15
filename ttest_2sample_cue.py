@@ -24,7 +24,6 @@ from getCueSubjects import getsubs
 subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
 
-#subjsA.remove('tf151127')
 
 print(subjsA)
 print(subjsB)
@@ -34,6 +33,9 @@ res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm 
 
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
+
+
+doClustSim = 1 # 1 to do clustsim, otherwise 0 (it takes a while)
 
 
 # file containing covariate data 
@@ -143,7 +145,13 @@ for i, sub_label in enumerate(sub_labels):
 		cv_cmd = ''
 
 
-	cmd = '3dttest++ -prefix '+out_labels[i]+mask_cmd+' -toz '+subjA_cmd+subjB_cmd+cv_cmd
+	# clustsim command, if desired
+	if doClustSim:
+		clustsim_cmd = ' -Clustsim '
+	else:
+		clustsim_cmd = ''
+
+	cmd = '3dttest++ -prefix '+out_labels[i]+mask_cmd+' -toz '+clustsim_cmd+subjA_cmd+subjB_cmd+cv_cmd
 	print(cmd+'\n')
 	if not justPrint:
 		os.system(cmd)
