@@ -16,9 +16,6 @@ dataDir = p.data;
 
 task = 'cue';
 
-[subjects,gi]=getCueSubjects(task);
-% subjects = {'jh160702'};
-
 
 % seed roi mask path
 seedRoiName = 'nacc_desai';
@@ -42,9 +39,14 @@ nuisance_designmat_file = fullfile(dataDir,'%s','func_proc',[task '_nuisance_reg
 outDir = fullfile(dataDir,['results_' task '_funcconn'],seedRoiName);
 
 
+[subjects,gi]=getCueSubjects(task,1);
+% subjects = {'jh160702'};
+
+
 % group names
 % groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
 groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
+gi=getCueData(subjects,'relapse_6months');
 
 
 % save out single subject results?
