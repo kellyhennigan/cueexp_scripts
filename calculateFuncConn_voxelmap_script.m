@@ -23,7 +23,8 @@ seedRoiFilePath = fullfile(dataDir,'ROIs',[seedRoiName '_func.nii']);
 
 
 % path to brain mask
-maskFilePath = fullfile(dataDir,'templates','bmask.nii');
+% maskFilePath = fullfile(dataDir,'templates','bmask.nii');
+maskFilePath = fullfile(dataDir,'templates','tt29_bmask.nii');
 
 
 % filepath to pre-processed functional data where %s is subject then task
@@ -39,19 +40,23 @@ nuisance_designmat_file = fullfile(dataDir,'%s','func_proc',[task '_nuisance_reg
 outDir = fullfile(dataDir,['results_' task '_funcconn'],seedRoiName);
 
 
-[subjects,gi]=getCueSubjects(task,1);
+%%%%%%%%%%%%%%%  subjects, group names, group index 
+[subjects,gi]=getCueSubjects(task);
+groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
+
+% [subjects,gi]=getCueSubjects(task,1);
+% groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
+% gi=getCueData(subjects,'relapse_6months');
+
 % subjects = {'jh160702'};
 
 
-% group names
-% groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
-groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
-gi=getCueData(subjects,'relapse_6months');
-
-
 % save out single subject results?
-saveOutSingleSubjectVols = 0; % 1 for yes, 0 for no
+saveOutSingleSubjectVols = 1; % 1 for yes, 0 for no
 
+
+% save out error time series after regressing out baseline model? 
+saveOutErrTsNii = 1; % 1 for yes, 0 for no
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% which type of FC analysis: resting-state-style or event-related? %%%
@@ -113,6 +118,14 @@ for i=1:numel(subjects) % subject loop
         stats=glm_fmri_fit_vol(func.data,X,[],mask.data);
         func.data = stats.err_ts;
         
+        % to save out error time series:
+        if saveOutErrTsNii
+            [fdir,fname,~]= fileparts(func.fname);
+            errtsFilePath = fullfile(fdir,[fname(1:strfind(fname,'.nii')-1) '_nuisancereg_errts.nii.gz']);
+            func.fname = errtsFilePath;
+            writeFileNifti(func);
+        end
+
     end
     
     
