@@ -64,7 +64,7 @@ if omitOTs
     outDir = [outDir '_woOutliers'];
 end
 
-nTRs = 12; % # of TRs to extract
+nTRs = 10; % # of TRs to extract
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
@@ -84,7 +84,7 @@ rois = cellfun(@(x) niftiRead(fullfile(roiDir,x)), roiFiles,'uniformoutput',0);
 
 
 i=1; j=1; k=1;
-for i=1:numel(subjects); % subject loop
+for i=1:numel(subjects) % subject loop
     
     subject = subjects{i};
     
@@ -137,52 +137,53 @@ for i=1:numel(subjects); % subject loop
                 % single trial time courses for this stim
                 this_stim_tc=roi_ts(this_stim_TRs);
                
-                % set TRs that should be censored to NaN
-                censor_idx=find(ismember(this_stim_TRs,censorVols));
-                this_stim_tc(censor_idx)=nan;
+                %%%%% TO ONLY OMIT CENSORED TRS: 
+%                 censor_idx=find(ismember(this_stim_TRs,censorVols));
+%                 this_stim_tc(censor_idx)=nan;
                 
-                  % identify & omit trials w/censored TRs
+                %%%%%% TO OMIT ENTIRE TRIALS FROM AVERAGING THAT HAVE
+                %%%%%% CENSORED TRS:
                   
-%                 % identify & omit trials w/censored TRs
-%                 [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
-%                 censor_idx = unique(censor_idx);
-%                 censored_tc = this_stim_tc(censor_idx,:);
-%                 this_stim_tc(censor_idx,:) = [];
+                % identify & omit trials w/censored TRs
+                [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
+                censor_idx = unique(censor_idx);
+                censored_tc = this_stim_tc(censor_idx,:);
+                this_stim_tc(censor_idx,:) = [];
 %                 
 %                 % keep count of the # of censored & outlier trials
-%                 nBadTrials{j}(i,k) = numel(censor_idx);
+                nBadTrials{j}(i,k) = numel(censor_idx);
 %                 
 %                 %
 %                 
 %                 % plot single trials
-%                 if plotSingleTrials
-%                     h = figure;
-%                     set(gcf, 'Visible', 'off');
-%                     hold on
-%                     set(gca,'fontName','Arial','fontSize',12)
-%                     % plot good and bad (censored) single trials
-%                     plot(t,this_stim_tc','linewidth',1.5,'color',[.15 .55 .82])
-%                     if ~isempty(censored_tc)
-%                         plot(t,censored_tc','linewidth',1.5,'color',[1 0 0])
-%                     end
-%                     xlim([t(1) t(end)])
-%                     set(gca,'XTick',t)
-%                     xlabel('time (in seconds) relative to cue onset')
-%                     ylabel('%\Delta BOLD')
-%                     set(gca,'box','off');
-%                     set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
-%                     
-%                     title(gca,[subject ' ' stims{k}])
-%                     
-%                     % save out plot
-%                     thisOutDir = fullfile(outDir,roiNames{j},'single_trial_plots');
-%                     if ~exist(thisOutDir,'dir')
-%                         mkdir(thisOutDir);
-%                     end
-%                     outName = [subject '_' stims{k}];
-%                     print(gcf,'-dpng','-r600',fullfile(thisOutDir,outName));
-%                 end
-%                 
+                if plotSingleTrials
+                    h = figure;
+                    set(gcf, 'Visible', 'off');
+                    hold on
+                    set(gca,'fontName','Arial','fontSize',12)
+                    % plot good and bad (censored) single trials
+                    plot(t,this_stim_tc','linewidth',1.5,'color',[.15 .55 .82])
+                    if ~isempty(censored_tc)
+                        plot(t,censored_tc','linewidth',1.5,'color',[1 0 0])
+                    end
+                    xlim([t(1) t(end)])
+                    set(gca,'XTick',t)
+                    xlabel('time (in seconds) relative to cue onset')
+                    ylabel('%\Delta BOLD')
+                    set(gca,'box','off');
+                    set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
+                    
+                    title(gca,[subject ' ' stims{k}])
+                    
+                    % save out plot
+                    thisOutDir = fullfile(outDir,roiNames{j},'single_trial_plots');
+                    if ~exist(thisOutDir,'dir')
+                        mkdir(thisOutDir);
+                    end
+                    outName = [subject '_' stims{k}];
+                    print(gcf,'-dpng','-r600',fullfile(thisOutDir,outName));
+                end
+                
                 TC{j,k}(i,:) = nanmean(this_stim_tc);
                 
             end % isempty(onsetTRs)

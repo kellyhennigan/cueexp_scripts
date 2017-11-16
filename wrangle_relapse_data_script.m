@@ -118,8 +118,8 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','dlpfc'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','dlpfc'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains'};
 
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains','pvt'};
