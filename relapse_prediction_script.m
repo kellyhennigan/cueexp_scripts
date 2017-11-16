@@ -35,7 +35,7 @@ a={};
 tB=[];
 
 for i=7:numel(vars)
-%     i
+     i
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = ['relIn6Mos ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
@@ -132,6 +132,10 @@ res=fitglm(T,modelspec,'Distribution','binomial')
 modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_neutral_beta' ];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
+% FOOD & NEUTRAL
+modelspec = ['relIn6Mos ~ ' roi '_food_beta + ' roi '_neutral_beta' ];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
 % % DRUGS & FOOD & NEUTRAL
 modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
@@ -150,9 +154,48 @@ censored = T.censored;
 
 % only look at the first 6 months
 idx=find(T.obstime>200 & T.relapse==1);
-censored(idx)=1;
-y(y>200) = 200;
+censored_6months=censored; censored_6months(idx)=1;
+y_6months=y; y_6months(y>200) = 200;
 [b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+
+%% cox regression on relapse for ROI drugs, food, neutral betas
+
+
+y = T.obstime;
+censored = T.censored;
+
+
+roi = 'mpfc';
+
+% DRUGS
+X = eval(['T.' roi '_drugs_beta']);
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% FOOD
+X = eval(['T.' roi '_food_beta']);
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% NEUTRAL
+X = eval(['T.' roi '_neutral_beta']);
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% DRUGS & FOOD 
+X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_food_beta'])];
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% DRUGS & NEUTRAL
+X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_neutral_beta'])];
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% FOOD & NEUTRAL
+X = [eval(['T.' roi '_food_beta']) eval(['T.' roi '_neutral_beta'])];
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+% % DRUGS & FOOD & NEUTRAL
+X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_food_beta']) eval(['T.' roi '_neutral_beta'])];
+[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
 
 
 %% plot empirical distribution of relapse based on NAcc activity 

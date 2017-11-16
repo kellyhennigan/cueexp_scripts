@@ -18,8 +18,8 @@ import os,sys,glob
 dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 # directory (*RELATIVE TO DATADIR*) where brain map files are located
-#bmapDir = 'results_cue_afni'
-bmapDir = 'results_cue_afni/survival_analysis'
+bmapDir = 'results_cue_afni'
+# bmapDir = 'results_cue_afni/survival_analysis'
 
 # full path to inDir
 inDir = os.path.join(dataDir,bmapDir)
@@ -29,16 +29,16 @@ outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bma
 
 underlay_file = 'TT_N27.nii' # file should be in inDir
 
-overlays = ['Zdrugs_p.001_clthresh'] # overlays
-#overlays = ['Zfood-neutral'] # overlays
+# overlays = ['Zdrugs_p.001_clthresh'] # overlays
+overlays = ['Zfood-neutral'] # overlays
 
-overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
-#overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
+#overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
+overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
 
-sub_vols = [0] # maps of interest to plot
-sub_volnames = ['cox_relapse'] # corresponding labels for maps of interest
-# sub_vols = [1,3,5] # maps of interest to plot
-# sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
+# sub_vols = [0] # maps of interest to plot
+# sub_volnames = ['cox_relapse'] # corresponding labels for maps of interest
+sub_vols = [1,3,5] # maps of interest to plot
+sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
 
 
 
@@ -138,7 +138,7 @@ def dispOverlay(overlay_file,sub_vol,coordStr,viewStr,outPath):
 		'-com "SET_XHAIRS OFF" '
 		'-com "SET_FUNC_RESAM A.NN.Cu" '
 		'-com "SET_PBAR_ALL A.-9 1=yellow 0.44172=oran-yell 0.38906=orange 0.32905=oran-red 0.25758=none -0.25758=dk-blue -0.32905=blue -0.38906=lt-blue1 -0.48916=blue-cyan" '
-		'-com "SAVE_JPEG A.'+viewStr+'image '+outPath+' blowup=3" '
+		'-com "SAVE_TIF A.'+viewStr+'image '+outPath+' blowup=3" '
 		'-quit')
 	doCommand(cmd)
 

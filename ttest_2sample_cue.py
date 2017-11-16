@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 0 # 1 to just print, 0 to print and execute
+justPrint = 1 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -35,7 +35,7 @@ out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
 
 
-doClustSim = 1 # 1 to do clustsim, otherwise 0 (it takes a while)
+doClustSim = 0 # 1 to do clustsim, otherwise 0 (it takes a while)
 
 
 # file containing covariate data 
