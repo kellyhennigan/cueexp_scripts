@@ -43,30 +43,31 @@ outDir = fullfile(dataDir,['results_' task '_funcconn'],seedRoiName);
 %%%%%%%%%%%%%%%  subjects, group names, group index 
 [subjects,gi]=getCueSubjects(task);
 groups = {'controls','patients'}; % order corresponding to gi=0, gi=1
+groupStr = ''; 
 
 % [subjects,gi]=getCueSubjects(task,1);
 % groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
 % gi=getCueData(subjects,'relapse_6months');
+% groupStr = '_REL'; 
 
-% subjects = {'jh160702'};
 
 
 % save out single subject results?
-saveOutSingleSubjectVols = 1; % 1 for yes, 0 for no
+saveOutSingleSubjectVols = 0; % 1 for yes, 0 for no
 
 
 % save out error time series after regressing out baseline model? 
-saveOutErrTsNii = 1; % 1 for yes, 0 for no
+saveOutErrTsNii = 0; % 1 for yes, 0 for no
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% which type of FC analysis: resting-state-style or event-related? %%%
 
 % define stims as 'restingstate' to do resting state style func connectvity
-% stims = {'restingstate'};
+stims = {'restingstate'};
 
 % if event-related style is desired, use stims to define epochs of interest
-stims = {'drugs','food','neutral'};
-stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
+% stims = {'drugs','food','neutral'};
+% stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
 
 
 % index of which TR(s) to extract (TR1 is at trial onset, etc.)
@@ -220,19 +221,18 @@ for j=1:numel(stims)
     % change all nan values to 0 (these are all outside of the mask)
     Z{j}(isnan(Z{j}))=0;
     
-    outPath = fullfile(outDir,['Z' outStr{j} '.nii.gz']);
+    outPath = fullfile(outDir,['Z' outStr{j} groupStr '.nii.gz']);
   
     out = glm_fmri_ttest3d(Z{j}(gi==0,:),Z{j}(gi==1,:),groups,mask,outPath);
     
 end
-
 
 %%%%%%%%%%%%% Z map for drugs-neutral
 stim1 = 'drugs'; 
 stim2 = 'neutral'; 
 if any(strcmp(stims,stim1)) && any(strcmp(stims,stim2))
     Zdiff = Z{strcmp(stims,stim1)}-Z{strcmp(stims,stim2)};
-    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') '.nii.gz']);
+    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') groupStr '.nii.gz']);
     out = glm_fmri_ttest3d(Zdiff(gi==0,:),Zdiff(gi==1,:),groups,mask,outPath);
 end
 
@@ -241,12 +241,55 @@ stim1 = 'food';
 stim2 = 'neutral';
 if any(strcmp(stims,stim1)) && any(strcmp(stims,stim2))
     Zdiff = Z{strcmp(stims,stim1)}-Z{strcmp(stims,stim2)};
-    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') '.nii.gz']);
+    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') groupStr '.nii.gz']);
     out = glm_fmri_ttest3d(Zdiff(gi==0,:),Zdiff(gi==1,:),groups,mask,outPath);
 end
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NOW DO TESTS FOR NON vs RELAPSERS
 
 
+%%%%%%%%%%%%% Z map for each stim
+for j=1:numel(stims)
+    
+    Z{j}(gi==0,:)=[];
+    
+end
+
+[subjects,gi]=getCueSubjects(task,1);
+groups = {'nonrelapsers_6months','relapsers_6months'}; % order corresponding to ri=0, ri=1
+gi=getCueData(subjects,'relapse_6months');
+groupStr = '_REL'; 
+
+
+
+%%%%%%%%%%%%% Z map for each stim
+for j=1:numel(stims)
+    
+    outPath = fullfile(outDir,['Z' outStr{j} groupStr '.nii.gz']);
+  
+    out = glm_fmri_ttest3d(Z{j}(gi==0,:),Z{j}(gi==1,:),groups,mask,outPath);
+    
+end
+
+%%%%%%%%%%%%% Z map for drugs-neutral
+stim1 = 'drugs'; 
+stim2 = 'neutral'; 
+if any(strcmp(stims,stim1)) && any(strcmp(stims,stim2))
+    Zdiff = Z{strcmp(stims,stim1)}-Z{strcmp(stims,stim2)};
+    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') groupStr '.nii.gz']);
+    out = glm_fmri_ttest3d(Zdiff(gi==0,:),Zdiff(gi==1,:),groups,mask,outPath);
+end
+
+%%%%%%%%%%%%% Z map for food-neutral
+stim1 = 'food';
+stim2 = 'neutral';
+if any(strcmp(stims,stim1)) && any(strcmp(stims,stim2))
+    Zdiff = Z{strcmp(stims,stim1)}-Z{strcmp(stims,stim2)};
+    outPath = fullfile(outDir,['Z' stim1 '-' stim2 '_TR' strrep(num2str(TRi),' ','') groupStr '.nii.gz']);
+    out = glm_fmri_ttest3d(Zdiff(gi==0,:),Zdiff(gi==1,:),groups,mask,outPath);
+end
 
