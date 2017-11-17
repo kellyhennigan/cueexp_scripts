@@ -30,10 +30,15 @@ groupStr = '';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 cols = getCueExpColors(numel(groups));
+% if numel(groups)==2
+%     cols=[   0.1294    0.4118    0.8157
+%     0.9922    0.1725    0.0784];
+% end
 if numel(groups)==2
-    cols=[   0.1294    0.4118    0.8157
-    0.9922    0.1725    0.0784];
+   cols=[150 150 150; 40 40 40]./255
 end
+
+
 
 % # of total subjects, and # of controls and patients
 N=numel(subjects);
@@ -97,6 +102,14 @@ mean_pa = []; mean_na = [];
 for j=1:numel(conds) % # of trial types
     mean_pa(:,j) = nanmean(pa(:,qimage_type==j),2);
     mean_na(:,j) = nanmean(na(:,qimage_type==j),2);
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% familiarity image ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get mean familiarity ratings by condition w/subjects in rows
+mean_famil = []; 
+for j=1:numel(conds) % # of trial types
+    mean_famil(:,j) = nanmean(famil(:,qimage_type==j),2);
 end
 
 
@@ -201,6 +214,33 @@ d = mean_na; % data w/subjects in rows, conds in columns
 
 plotSig = [1 1];
 titleStr = 'NA ratings by group and condition';
+plotLeg = 1;
+savePath = fullfile(outDir,[saveStr groupStr '.png']);
+
+dg={};
+for k=1:numel(groups)
+    dg{k} = d(gi==k-1,:); % data in cell array by groups
+end
+[fig,leg] = plotNiceBars(dg,dName,conds,groups,cols,plotSig,titleStr,plotLeg,savePath);
+
+
+% now plot without alc condition
+idx = [2 4 3]; % drugs neutral food
+dg=cellfun(@(x) x(:,idx), dg, 'uniformoutput',0);
+savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
+fig = plotNiceBars(dg,dName,conds(idx),groups,cols,plotSig,titleStr,1,savePath);
+
+
+
+
+%% Q: difference in negative arousal across trial types and groups?
+
+dName = 'image familiarity'; % name of measure to plot
+saveStr = 'imageFamiliarity'; % string for fig out name
+d = mean_famil; % data w/subjects in rows, conds in columns
+
+plotSig = [1 1];
+titleStr = 'familiarity ratings by group and condition';
 plotLeg = 1;
 savePath = fullfile(outDir,[saveStr groupStr '.png']);
 

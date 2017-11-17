@@ -10,7 +10,7 @@ dataDir = p.data;
 figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171114.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -210,8 +210,8 @@ nacc = T.nacc_drugs_beta(si);
 hi = find(nacc>median(nacc));
 lo = find(nacc<median(nacc));
 
-col=[    0.1294    0.4118    0.8157
-    0.9804    0.1255    0.6314];
+col(1,:) = [150 150 150]./255; % nonrelapsers
+col(2,:) = [30 30 30]./255; % relapsers
 
 figure=setupFig;
 hold on;
@@ -236,8 +236,9 @@ stairs(x2,empFlo2,':','Linewidth',2,'color',col(2,:));
 stairs(x2,empFup2,':','Linewidth',2,'color',col(2,:));
 
 fsize = 22;
-set(gca,'fontName','Arial','fontSize',fsize)  
-xlabel('Time (days)'); ylabel('Proportion relapsed'); title('Empirical CDF')
+set(gca,'fontName','Helvetica','fontSize',fsize)  
+xlabel('Time (days)'); ylabel('Proportion relapsed'); 
+title('Empirical CDF')
 
 % xlim([0 200])
 

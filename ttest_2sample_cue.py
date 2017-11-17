@@ -96,7 +96,7 @@ print(in_str)
 print('\n\n\n\n\n\n')
 
 # define mask file if masking is desired; otherwise leave blank
-mask_file = os.path.join(data_dir,'templates','bmask.nii')  
+mask_file = os.path.join(data_dir,'templates','tt29_bmask.nii')  
 #mask_file = ''
 
 ##########################################################################################

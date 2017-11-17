@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'PVT';
+roiName = 'nacc_desai';
 
 
 nTRs = 10; % # of TRs to plot
@@ -47,28 +47,9 @@ numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 outDir_suffix = '';
 
 
-%% y axis depends on ROI
+plotColorSet = 'grayscale'; % 'grayscale' or 'color'
 
-if strcmp(roiName,'nacc_desai')
-    YL = [-.17 .13]
-    YT = [-.15:.05:.1];
-end
-
-if strcmp(roiName,'VTA')
-    YL = [-.15 .2];
-    YT = [-.15:.05:.2];
-end
-
-if strcmp(roiName,'mpfc')
-    YL = [-.3 .2];
-    YT = [-.3:.1:.2];
-end
-
-if strcmp(roiName,'ins_desai')
-    YL = [-.15 .2];
-    YT = [-.15:.05:.2];
-end
-
+plotErr = 'bar'; % 'bar' or 'shaded'
 
 
 
@@ -177,19 +158,20 @@ for f = 1:nFigs
     
     
     % labels for each line plot (goes in the legend)
-    pLabels = cell(numel(groups),numel(stims));
+    lineLabels = cell(numel(groups),numel(stims));
     if numel(stims)>1
-        pLabels = repmat(stims,numel(groups),1); pLabels = strrep(pLabels,'_',' ');
+        lineLabels = repmat(stims,numel(groups),1); lineLabels = strrep(lineLabels,'_',' ');
     end
     if numel(groups)>1
         for g=1:numel(groups)
-            pLabels(g,:) = cellfun(@(x) [x ' ' groups{g} ], pLabels(g,:), 'uniformoutput',0);
+            lineLabels(g,:) = cellfun(@(x) [x groups{g} ], lineLabels(g,:), 'uniformoutput',0);
         end
     end
     
     
-    % line colors
-    cols = reshape(getCueExpColors(numel(tc),'cell'),size(tc,1),[]);
+    % line colors & line specs
+    cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
+    lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
     
     
     % get stats, if plotting
@@ -231,19 +213,28 @@ for f = 1:nFigs
     
     fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
     
-    
-    [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,'','',1);
-    
+    switch plotErr
+        case 'bar'
+            [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,1,lspec);
+        case 'shaded'
+            [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,1,lspec);
+    end
     
     %% make lines thicker
     
-    lw=6;
+    lw=4;
     ch=get(gca,'Children');
     set(ch(:),'LineWidth',lw)
     
 
-    %% change y-axis params:
- 
+    
+%% manually change y axis here:
+
+% YL is ylim
+% YT determines YTicks
+%     YL = [-.17 .13]
+%     YT = [-.15:.05:.1];
+
     if ~notDefined('YT')
         set(gca,'YTick',YT)
     end

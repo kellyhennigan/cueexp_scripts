@@ -64,9 +64,9 @@ switch task
         
         
         % corresponding stims:
-        stims =  {'neutral drugs food';
+        stims =  {'food drugs neutral';
             'strong_dontwant somewhat_dontwant somewhat_want strong_want';
-            'neutral drugs food';
+            'food drugs neutral';
             'strong_dontwant somewhat_dontwant somewhat_want strong_want';
             'alcohol';
             'drugs';

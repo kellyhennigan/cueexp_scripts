@@ -138,7 +138,7 @@ def dispOverlay(overlay_file,sub_vol,coordStr,viewStr,outPath):
 		'-com "SET_XHAIRS OFF" '
 		'-com "SET_FUNC_RESAM A.NN.Cu" '
 		'-com "SET_PBAR_ALL A.-9 1=yellow 0.44172=oran-yell 0.38906=orange 0.32905=oran-red 0.25758=none -0.25758=dk-blue -0.32905=blue -0.38906=lt-blue1 -0.48916=blue-cyan" '
-		'-com "SAVE_TIF A.'+viewStr+'image '+outPath+' blowup=3" '
+		'-com "SAVE_JPEG A.'+viewStr+'image '+outPath+' blowup=3" '
 		'-quit')
 	doCommand(cmd)
 

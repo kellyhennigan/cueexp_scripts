@@ -9,12 +9,13 @@ p = getCuePaths(); dataDir = p.data; % cue exp paths
 
 task = 'cue';
 
-subjects = getCueSubjects(task); % stim patients
+% subjects = getCueSubjects(task); % stim patients
+subjects = getCueSubjects(task,1); % stim patients
 
 
 % filepath for saving out table of variables
-outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '_allsubs.csv']);
-% outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '_nacc.csv']);
+% outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '_allsubs.csv']);
+outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '.csv']);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

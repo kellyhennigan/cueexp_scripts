@@ -1,4 +1,4 @@
-function [fig,leg]=plotNiceLines(x,y,se,cols,pvals,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen)
+function [fig,leg]=plotNiceLines(x,y,se,cols,pvals,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec)
 % [fig,leg] = plotNiceBars(d,dName,condNames,groupNames,cols,plotSig,savePath)
 % -------------------------------------------------------------------------
 % usage: function to make nice line plots with shaded error;
@@ -16,6 +16,7 @@ function [fig,leg]=plotNiceLines(x,y,se,cols,pvals,lineLabels,xlab,ylab,figtitle
 %   savePath - filepath to save out figure to; if not given, it won't be
 %      saved.
 %   plotToScreen - 1 to display plot on screen, otherwise 0. Default is 1.
+%   lspec - (optional) cell array of line specs for plotting each line
 %
 % OUTPUT:
 %   fig - figure handle
@@ -54,6 +55,9 @@ if notDefined('plotToScreen')
     plotToScreen = 1; % default is to plot to screen.
 end
 
+if notDefined('lspec')
+    lspec = repmat({'-'},size(y));
+end
 
 
 %%
@@ -68,12 +72,12 @@ end
 hold on
 ss = get(0,'Screensize'); % screen size
 set(fig,'Position',[ss(3)-700 ss(4)-525 700 525]) % make figure 700 x 525 pixels
-set(gca,'fontName','Arial','fontSize',16)
+set(gca,'fontName','Helvetica','fontSize',16)
 set(gca,'box','off');
 set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
 % plot lines
-cellfun(@(a,b) plot(x,a,'color',b,'linewidth',2),y,cols)
+cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)
 
 % legend
 leg=legend(reshape(lineLabels,1,[]),'Location','Best')
@@ -85,7 +89,8 @@ ylabel(ylab)
 
 % plot shaded error bar
 if ~isempty(se)
-    h=cellfun(@(a,b,c) shadedErrorBar(x,a,b,{'color',c},.5), y, se, cols, 'uniformoutput',0);
+%     h=cellfun(@(a,b,c) shadedErrorBar(x,a,b,{'color',c},.5), y, se, cols, 'uniformoutput',0);
+  h=cellfun(@(a,b,c,d) shadedErrorBar(x,a,b,{c,'color',d},.5), y, se, lspec, cols, 'uniformoutput',0);
     cellfun(@(a) set(a.edge(1), 'Visible','off'), h)
     cellfun(@(a) set(a.edge(2), 'Visible','off'), h)
     hc = get(gca,'Children');

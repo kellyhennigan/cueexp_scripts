@@ -45,7 +45,7 @@ nGroups = numel(d); % # of groups
 % assign default values for variables if they're not defined
 
 if notDefined('dName')
-    dName = 'measure';
+    dName = '';
 end
 
 if notDefined('condNames')
@@ -110,7 +110,7 @@ se_d = cell2mat(cellfun(@(x) nanstd(x)./sqrt(size(x,1)), d,'uniformoutput',0)')'
 
 %% plot it
 
-fontName = 'Arial';
+fontName = 'Helvetica';
 % fontSize = 12;
 fontSize = 18;
 
@@ -153,7 +153,7 @@ colormap(cols)
 % try to rotate the xlabels by 30 degrees, but if that doesnt work, no prob
 try
     set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
-%         ylabel(ylab,'fontName','Arial','FontSize',fsize)
+%         ylabel(ylab,'fontName','Helvetica','FontSize',fsize)
 %)
     xtickangle(30)
 catch ME

@@ -51,6 +51,10 @@ numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 % outDir_suffix = '_nr16';
 outDir_suffix = '';
 
+plotColorSet = 'grayscale'; % 'grayscale' or 'color'
+
+plotErr = 'bar'; % 'bar' or 'shaded'
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% get task specific conditions/groups to plot
@@ -160,19 +164,20 @@ for r = 1:numel(roiNames)
         
         
         % labels for each line plot (goes in the legend)
-        pLabels = cell(numel(groups),numel(stims));
+        lineLabels = cell(numel(groups),numel(stims));
         if numel(stims)>1
-            pLabels = repmat(stims,numel(groups),1); pLabels = strrep(pLabels,'_',' ');
+            lineLabels = repmat(stims,numel(groups),1); lineLabels = strrep(lineLabels,'_',' ');
         end
         if numel(groups)>1
             for g=1:numel(groups)
-                pLabels(g,:) = cellfun(@(x) [x ' ' strrep(groups{g},'_',' ') ], pLabels(g,:), 'uniformoutput',0);
+                lineLabels(g,:) = cellfun(@(x) [x strrep(groups{g},'_',' ') ], lineLabels(g,:), 'uniformoutput',0);
             end
         end
         
         
-        % line colors
-        cols = reshape(getCueExpColors(numel(tc),'cell'),size(tc,1),[]);
+        % line colors & line specs
+        cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
+        lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
         
         
         % get stats, if plotting
@@ -210,8 +215,14 @@ for r = 1:numel(roiNames)
         
         fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
         
-        [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,pLabels,xlab,ylab,figtitle,savePath,0);
-
+        switch plotErr
+            case 'bar'
+                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,0,lspec);   
+            case 'shaded'
+                [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,0,lspec);
+        end
+        
+        
         fprintf('done.\n\n');
         
         
