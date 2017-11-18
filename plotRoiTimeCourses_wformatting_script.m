@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'nacc_desai';
+roiName = 'VTA';
 
 
 nTRs = 10; % # of TRs to plot
@@ -83,6 +83,14 @@ nFigs = numel(plotStimStrs); % number of figures to be made
 
 
 inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
+
+
+%% define which figure #s to plot and the y params for them
+
+% YL is ylim
+% YT determines YTicks
+    YL = [-.16 .2]
+    YT = [-.2:.05:.2];
 
 
 %% define time courses to plot
@@ -230,10 +238,6 @@ for f = 1:nFigs
     
 %% manually change y axis here:
 
-% YL is ylim
-% YT determines YTicks
-%     YL = [-.17 .13]
-%     YT = [-.15:.05:.1];
 
     if ~notDefined('YT')
         set(gca,'YTick',YT)
@@ -274,18 +278,20 @@ for f = 1:nFigs
     
     % change font size
     fsize = 26;
-    set(gca,'fontName','Arial','fontSize',fsize)
-    %         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
+    set(gca,'fontName','Helvetica','fontSize',fsize)
+    %         title('NAc response to drugs-neutral trials','fontName','Helvetica','fontSize',fsize)
   
     % xlabel
-    xlabel(xlab,'fontName','Arial','FontSize',fsize)
-%       xlabel([],'fontName','Arial','FontSize',fsize)
+    xlabel(xlab,'fontName','Helvetica','FontSize',fsize)
+%       xlabel([],'fontName','Helvetica','FontSize',fsize)
 %        xticklabels('')  
     
     % y label
-    ylabel([],'fontName','Arial','FontSize',fsize)
+    ylabel([],'fontName','Helvetica','FontSize',fsize)
     
     
+    % title (remove)
+    title('')
     
     % re-save fig with changed formatting
     print(gcf,'-dpng','-r300',savePath);
@@ -298,10 +304,10 @@ end % figures
 
 
 %         fsize = 26;
-%         set(gca,'fontName','Arial','fontSize',fsize)
-%         title('NAc response to drugs-neutral trials','fontName','Arial','fontSize',fsize)
-%         xlabel(xlab,'fontName','Arial','FontSize',fsize)
-%         ylabel(ylab,'fontName','Arial','FontSize',fsize)
+%         set(gca,'fontName','Helvetica','fontSize',fsize)
+%         title('NAc response to drugs-neutral trials','fontName','Helvetica','fontSize',fsize)
+%         xlabel(xlab,'fontName','Helvetica','FontSize',fsize)
+%         ylabel(ylab,'fontName','Helvetica','FontSize',fsize)
 %
 %      set(leg,'String',{'relapsers (n=8)','non-relapsers (n=12)','controls (n=33)'})
 %         set(gca,'XTick',[0:2:18])

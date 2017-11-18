@@ -55,12 +55,17 @@ modelspec = 'relIn6Mos ~ years_of_use + poly_drug_dep + clinical_diag';
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-res.Rsquared.Ordinary
-res.ModelCriterion.AIC
+sprintf('%.3f',res.Rsquared.Ordinary)
+sprintf('%.2f',res.ModelCriterion.AIC)
 
 % standardized coefficients: 
 X=[T.years_of_use T.poly_drug_dep T.clinical_diag]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
+
+sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
+
 
 %% model : self-report predictors
 
@@ -68,30 +73,36 @@ modelspec = 'relIn6Mos ~ pref_drug + craving + bam_upset';
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 
-res.Rsquared.Ordinary
-res.ModelCriterion.AIC
+sprintf('%.3f',res.Rsquared.Ordinary)
+sprintf('%.2f',res.ModelCriterion.AIC)
 
 % standardized coefficients: 
 X=[T.pref_drug T.craving T.bam_upset]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
+sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
 
 
 %% model : brain predictors
 
-modelspec = 'relIn6Mos ~ nacc_drugs_beta';
+% modelspec = 'relIn6Mos ~ nacc_drugs_beta';
 
-% modelspec = 'relIn6Mos ~ nacc_drugs_beta + vta_drugs_beta + mpfc_drugs_beta';
-% modelspec = 'relIn6Mos ~ mpfc_drugs_beta + ains_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
+modelspec = 'relIn6Mos ~ nacc_drugs_beta + vta_drugs_beta + mpfc_drugs_beta';
+% modelspec = 'relIn6Mos ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-res.Rsquared.Ordinary
-res.ModelCriterion.AIC
+sprintf('%.3f',res.Rsquared.Ordinary)
+sprintf('%.2f',res.ModelCriterion.AIC)
 
 
 % standardized coefficients: 
-X=[T.mpfc_drugs_beta T.nacc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+X=[T.nacc_drugs_beta T.mpfc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
+sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
 
 
 
@@ -100,12 +111,15 @@ res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
 modelspec = ['relIn6Mos ~ years_of_use + bam_upset + nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-res.Rsquared.Ordinary
-res.ModelCriterion.AIC
+sprintf('%.3f',res.Rsquared.Ordinary)
+sprintf('%.2f',res.ModelCriterion.AIC)
 
 % standardized coefficients: 
 X=[T.years_of_use T.bam_upset T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial')
+res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
+sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
+sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
 
 
 %% model: ROI drugs, food, neutral betas

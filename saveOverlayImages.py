@@ -30,7 +30,7 @@ outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bma
 underlay_file = 'TT_N27.nii' # file should be in inDir
 
 # overlays = ['Zdrugs_p.001_clthresh'] # overlays
-overlays = ['Zfood-neutral'] # overlays
+overlays = ['Zdrug-neutral','Zdrug-food','Zfood-neutral'] # overlays
 
 #overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
 overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'

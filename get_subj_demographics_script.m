@@ -8,7 +8,7 @@ dataDir = p.data;
 
 task = 'cue'; 
 
-% group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+%  group = 'relapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
 group = 'patients';
 
 [subjects,gi,notes] = getCueSubjects(task,group);
@@ -102,7 +102,7 @@ s{end+1}=sprintf('\npercent veterans: %.2f',nVets./N);
 
 k = getCueData(subjects,'discount_rate');
 
-s{end+1}=sprintf('\nkirby discounting (mean/sd): %.1f/%.1f',nanmean(k),nanstd(k));
+s{end+1}=sprintf('\nkirby discounting (mean/sd): %.3f/%.3f',nanmean(k),nanstd(k));
 
 
 %% BDI 
