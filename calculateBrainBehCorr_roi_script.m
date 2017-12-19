@@ -19,7 +19,7 @@ task = 'cue';
 
 % stim name
 % stims = {'drugs','food'};
-stims = {'stim'};
+stims = {'neutral'};
 
 %%%%%%%%%%%%%% behavioral/self-report data
 behVar = 'pa'; 
@@ -28,13 +28,14 @@ behDataLabel = [behVar '_%s']; % name for output
 
 
 %%%%% omit subs? 
-omit_subs={'nd150921','ds170728','rc170730'};
+% omit_subs={'nd150921','ds170728','rc170730'};
+omit_subs={''};
 idx=ismember(subjects,omit_subs);
 subjects(idx)=[]; gi(idx)=[];
 
 
 %%%%%%%%%%%%%% brain data
-seedRoiName = 'mpfc';
+seedRoiName = 'nacc_desai';
 
 % name of dir to save to where %s is: subject, roi, stim
 inFile = fullfile(dataDir,'%s',['single_trial_' task '_timecourses'],'%s','%s');

@@ -179,8 +179,8 @@ y_6months=y; y_6months(y>200) = 200;
 y = T.obstime;
 censored = T.censored;
 
-
-roi = 'mpfc';
+% enter ROI string here: 
+roi = 'nacc';
 
 % DRUGS
 X = eval(['T.' roi '_drugs_beta']);
