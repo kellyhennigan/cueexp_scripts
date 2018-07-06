@@ -20,7 +20,7 @@ function data = getCueData(subjects,measure)
 if notDefined('subjects')
     subjects = {};
 end
-% make sure input var subjects is an Nx1 cell array  
+% make sure input var subjects is an Nx1 cell array
 if ischar(subjects)
     subjects = splitstring(subjects);
 end
@@ -88,24 +88,63 @@ switch measure
         data = data{2}; % cell array of strings describing how much smoking per day
         
         
-    case 'education'
+    case 'education_qualtrics'
         
-        data = getEducation(subjects);
+        data = getEducationQualtrics(subjects);
         data = data{1}; % just return the quantitative var
         
+    case 'education'
+        
+        data = getEducation(subjects); % years of education from SaFE questionnaire
         
     case 'relapse'
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         data = ri;
         
+    case 'early_relapsers'
+        
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >220 days after participation
+        data = ri;
+        
+    case 'relapse_3months'
+        
+       
+        [ri,days2relapse,notes]=getCueRelapseData(subjects); 
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        
+        ri(days2relapse>90) = 0; % set relapse to 0 if it occurred >90 days after participation
+        ri(ri==0 & obstime < 90)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
+        data = ri;
+        
+    case 'relapse_4months'
+        
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+                 
+        ri(days2relapse>120) = 0; % set relapse to 0 if it occurred >120 days after participation
+          ri(ri==0 & obstime < 90)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        data = ri;
         
     case 'relapse_6months'
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
+         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+         
         ri(days2relapse>200) = 0; % set relapse to 0 if it occurred >200 days after participation
+        ri(ri==0 & obstime < 160)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
+  
+   case 'relapse_8months'
         
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+         
+        ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >160 days after participation
+        ri(ri==0 & obstime < 160)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        data = ri;
+  
         
     case 'days2relapse'
         
@@ -119,16 +158,34 @@ switch measure
         data = obstime;
         
         
+    case {'3monthfollowupdays','finalfollowupdays'}
+        
+        data = getFollowupDays(subjects,measure);
+        
+        
     case {'dop','for_admit_date','for_discharge_date',...
             'first_use_date','most_recent_use_date','primary_stim',...
             'alc_dep','other_drug_dep',...
             'depression_diag','anxiety_diag','ptsd_diag','other_diag',...
-            'meds','dop_drugtest',...
+            'post_for_treatment','meds','dop_drugtest',...
             'days_sober','days_in_rehab','years_of_use'}
         
         data = getPatientData(subjects,measure);
         
-    
+    case {'primary_meth','primary_cocaine','primary_crack'}
+        
+        primary_stim = getPatientData(subjects,'primary_stim');
+           
+        if strcmp(measure,'primary_cocaine')
+            stim='cocaine';
+        elseif strcmp(measure,'primary_crack')
+            stim='crack';
+        elseif strcmp(measure,'primary_meth')
+            stim='meth';
+        end
+        data=cellfun(@(x) ~isempty(strfind(x,stim)), primary_stim);
+        
+        
     case 'first_use_age'
         
         fud=getCueData(subjects,'first_use_date');
@@ -146,12 +203,10 @@ switch measure
         
         other_drug_dep = getPatientData(subjects,'other_drug_dep');
         
-        other_drug_dep
         
         % HACKY - MAKE THIS BETTER!
         other_drug = [];
         for i=1:numel(subjects)
-            i
             if strcmp(other_drug_dep{i},'0') || isnan(other_drug_dep{i}(1))
                 other_drug(i,1) = 0;
             else
@@ -159,8 +214,8 @@ switch measure
             end
         end
         
-%         other_drug = cell2mat(cellfun(@(x) str2double(x), other_drug,'uniformoutput',0)); % 0=no other drug, nan=dep on another drug
-%         other_drug(isnan(other_drug))=1;
+        %         other_drug = cell2mat(cellfun(@(x) str2double(x), other_drug,'uniformoutput',0)); % 0=no other drug, nan=dep on another drug
+        %         other_drug(isnan(other_drug))=1;
         
         % data returns 1 if dependent on alc and/or drug in addition to
         % stim; otherwise 0
@@ -183,7 +238,7 @@ switch measure
         
         % load pref ratings
         [~,~,~,~,~,trial_type,~,~,choice_num]=cellfun(@(x) getCueTaskBehData(x,'short'),...
-            stimfilepath, 'uniformoutput',0); 
+            stimfilepath, 'uniformoutput',0);
         ci=trial_type{1}; % index of each trial's condition (alc=1, drug=2, food=3, neutral=4)
         
         % get matrix of pref ratings by trial type w/subjects in rows
@@ -199,7 +254,7 @@ switch measure
         
         % return desired output
         switch measure
-           
+            
             case 'pref_stim'
                 data = mean_pref;   % return mean pref ratings for all stim
             case 'pref_alcohol'
@@ -221,7 +276,7 @@ switch measure
             case 'pref_neutral_trials'
                 data = pref(:,ci==4);  % neutral is 4th col
         end
-     
+        
         
     case {'pa_cue','na_cue'}
         
@@ -241,16 +296,16 @@ switch measure
                 data = na;
         end
         
- 
-     
-  case {'pa_stim','pa_alcohol','pa_drugs','pa_food','pa_neutral','pa_stim_trials',...
-          'pa_alcohol_trials','pa_drugs_trials','pa_food_trials','pa_neutral_trials',...
-          'na_stim','na_alcohol','na_drugs','na_food','na_neutral','na_stim_trials',...
-          'na_alcohol_trials','na_drugs_trials','na_food_trials','na_neutral_trials'}
         
-              data = getStimPANA(subjects,measure);
-
-      
+        
+    case {'pa_stim','pa_alcohol','pa_drugs','pa_food','pa_neutral','pa_stim_trials',...
+            'pa_alcohol_trials','pa_drugs_trials','pa_food_trials','pa_neutral_trials',...
+            'na_stim','na_alcohol','na_drugs','na_food','na_neutral','na_stim_trials',...
+            'na_alcohol_trials','na_drugs_trials','na_food_trials','na_neutral_trials'}
+        
+        data = getStimPANA(subjects,measure);
+        
+        
     otherwise
         
         % print out a list of all possible measure options
@@ -285,6 +340,7 @@ function age = getAge(subjects)
 
 age = []; % var to populate with subjects' age
 
+% from the 'Cue_fMRI_subjects' gsheet
 docid = '1wcYTCKhouZ8Cf8omTFQMkekxcJn0lVBKi9ApPHTR3ak'; % doc id for google sheet w/relapse data
 
 % try to load spreadsheet; if it can't be loaded, return age var as empty
@@ -322,6 +378,7 @@ function gender = getGender(subjects)
 
 gender = nan(numel(subjects),1); % var to populate with subjects' age
 
+% from the 'Cue_fMRI_subjects' gsheet
 docid = '1wcYTCKhouZ8Cf8omTFQMkekxcJn0lVBKi9ApPHTR3ak'; % doc id for google sheet w/relapse data
 
 % try to load spreadsheet; if it can't be loaded, return age var as empty
@@ -589,7 +646,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data
-function education = getEducation(subjects)
+function education = getEducationQualtrics(subjects)
 
 p = getCuePaths();
 a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
@@ -600,11 +657,19 @@ d=getQualtricsData(fp,subjects);
 education{1} = d.education;
 education{2} = d.education2;
 
+% education:
+%     1= Grammar school
+%     2= High school or equivalent
+%     3= Some college
+%     4= Bachelor's degree
+%     5= Master's degree
+%     6= Doctoral degree
+%     7= Professional degree
+
 end
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get PA and NA ratings
 function data = getStimPANA(subjects,measure)
 
 
@@ -620,57 +685,170 @@ for j=1:4 % # of trial types
     mean_pa(:,j) = nanmean(pa(:,ci==j),2);
     mean_na(:,j) = nanmean(na(:,ci==j),2);
 end
-       
-        % return desired output
-        switch measure
-           
-            case 'pa_stim'
-                data = mean_pa;   % return mean pa ratings for all stim
-            case 'pa_alcohol'
-                data = mean_pa(:,1); % alcohol is 1st col
-            case 'pa_drugs'
-                data = mean_pa(:,2); % drugs are 2nd col
-            case 'pa_food'
-                data = mean_pa(:,3); % food is 3rd col
-            case 'pa_neutral'
-                data = mean_pa(:,4); % neutral is 4th col
-            case 'pa_stim_trials'
-                data = pa;   % return pa ratings for all stim/all trials
-            case 'pa_alcohol_trials'
-                data = pa(:,ci==1); % alcohol is 1st col
-            case 'pa_drugs_trials'
-                data = pa(:,ci==2); % drugs are 2nd col
-            case 'pa_food_trials'
-                data = pa(:,ci==3);  % food is 3rd col
-            case 'pa_neutral_trials'
-                data = pa(:,ci==4);  % neutral is 4th col
-                
-            case 'na_stim'
-                data = mean_na;   % return mean na ratings for all stim
-            case 'na_alcohol'
-                data = mean_na(:,1); % alcohol is 1st col
-            case 'na_drugs'
-                data = mean_na(:,2); % drugs are 2nd col
-            case 'na_food'
-                data = mean_na(:,3); % food is 3rd col
-            case 'na_neutral'
-                data = mean_na(:,4); % neutral is 4th col
-            case 'na_stim_trials'
-                data = na;   % return na ratings for all stim/all trials
-            case 'na_alcohol_trials'
-                data = na(:,ci==1); % alcohol is 1st col
-            case 'na_drugs_trials'
-                data = na(:,ci==2); % drugs are 2nd col
-            case 'na_food_trials'
-                data = na(:,ci==3);  % food is 3rd col
-            case 'na_neutral_trials'
-                data = na(:,ci==4);  % neutral is 4th col
-                
+
+% return desired output
+switch measure
+    
+    case 'pa_stim'
+        data = mean_pa;   % return mean pa ratings for all stim
+    case 'pa_alcohol'
+        data = mean_pa(:,1); % alcohol is 1st col
+    case 'pa_drugs'
+        data = mean_pa(:,2); % drugs are 2nd col
+    case 'pa_food'
+        data = mean_pa(:,3); % food is 3rd col
+    case 'pa_neutral'
+        data = mean_pa(:,4); % neutral is 4th col
+    case 'pa_stim_trials'
+        data = pa;   % return pa ratings for all stim/all trials
+    case 'pa_alcohol_trials'
+        data = pa(:,ci==1); % alcohol is 1st col
+    case 'pa_drugs_trials'
+        data = pa(:,ci==2); % drugs are 2nd col
+    case 'pa_food_trials'
+        data = pa(:,ci==3);  % food is 3rd col
+    case 'pa_neutral_trials'
+        data = pa(:,ci==4);  % neutral is 4th col
+        
+    case 'na_stim'
+        data = mean_na;   % return mean na ratings for all stim
+    case 'na_alcohol'
+        data = mean_na(:,1); % alcohol is 1st col
+    case 'na_drugs'
+        data = mean_na(:,2); % drugs are 2nd col
+    case 'na_food'
+        data = mean_na(:,3); % food is 3rd col
+    case 'na_neutral'
+        data = mean_na(:,4); % neutral is 4th col
+    case 'na_stim_trials'
+        data = na;   % return na ratings for all stim/all trials
+    case 'na_alcohol_trials'
+        data = na(:,ci==1); % alcohol is 1st col
+    case 'na_drugs_trials'
+        data = na(:,ci==2); % drugs are 2nd col
+    case 'na_food_trials'
+        data = na(:,ci==3);  % food is 3rd col
+    case 'na_neutral_trials'
+        data = na(:,ci==4);  % neutral is 4th col
+        
+end
+
+
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data (from SAFE)
+function educ_years = getEducation(subjects)
+
+docid = '1oH0mM7oka6MxElE4Wxu69g3TpsXA2-fLCxTAtggCDQA'; % doc id for google sheet w/SaFE data
+
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using offline values that may not be the most updated...'])
+    d={}; % ADD OFFLINE VALS HERE...
+end
+
+% if data is loaded, compute scores
+if isempty(d)
+    educ_years=[];
+else
+    for i=1:numel(subjects)
+        idx=find(strncmp(d(:,1),subjects{i},8));
+        if isempty(idx)
+            educ_str{i,1} = nan;
+            educ_years(i,1)=nan;
+        else
+            educ_str{i,1} = d{idx,strcmp(d(1,:),'Q90')};
+            switch educ_str{i,1}(1:4)
+                case 'Prim'                 % primary school, 6 years
+                    educ_years(i,1)=6;
+                case 'High'                 % High school, 12 years
+                    educ_years(i,1)=12;
+                case 'Asso'                 % Associate's, 14 years
+                    educ_years(i,1)=14;
+                case 'Bach'                 % Bachelor's, 16 years
+                    educ_years(i,1)=16;
+                case 'Mast'                 % master's, 18 years
+                    educ_years(i,1)=18;
+                case 'MBA '                 % MBA/JD, 18 years
+                    educ_years(i,1)=18;
+                case 'Doct'                 % PhD, 21+ years
+                    educ_years(i,1)=21;
+                case 'Medi'                 % Medical/MD, 21+ years
+                    educ_years(i,1)=21;
+                otherwise
+                    educ_years(i,1)=nan;
+            end
         end
-   
+    end % subjects
+    
+end
+
+% returns educ_years
+
+end % getEducation
 
 
 
+function days=getFollowupDays(subjects,measure)
+% -------------------------------------------------------------------------
+% usage: get 3 month follow-up date - date of discharge
+
+
+if ischar(subjects)
+    subjects = splitstring(subjects);
+end
+
+
+days=[]; % 3-month followup date - date of discharge
+
+
+docid = '1_6dQvMQQuLPFo8ciPSvaaOAcW3RrGHtzpx3uX3oaHWk'; % doc id for google sheet w/relapse data
+
+% try to load spreadsheet; if it can't be loaded, return age var as empty
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+    
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'returning output as empty...']);
+    return
+    
+end
+
+
+% find columns with desired data
+if strcmp(measure,'3monthfollowupdays')
+    cj = find(strncmp(d(1,:),'3 month follow-up date',22));
+elseif strcmp(measure,'finalfollowupdays')
+    cj = find(strncmp(d(1,:),'final follow-up date',20));
+end
+
+for i=1:numel(subjects)
+    
+    
+    % get row with this subject id
+    idx=find(ismember(d(:,1),subjects{i}));
+    
+    % if cant find subject id, assign vals to nan
+    if isempty(idx)
+        days(i,1) = nan;
+        
+    else
+        
+        %  do the same for relapse date
+        if isempty(d{idx,cj})
+            days(i,1) = nan;
+        else
+            days(i,1) = str2num(d{idx,cj});
+        end
+        
+    end % isempty(idx)
+    
+end % subj loop
 
 end
 

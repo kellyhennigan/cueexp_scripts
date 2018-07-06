@@ -11,24 +11,28 @@ task = 'cue';
 
 betaDir = fullfile(dataDir,['results_' task '_afni'],'roi_betas');
 
-% roiNames = {'nacc_desai','mpfc','VTA','ins_desai'};
-roiNames = {'nacc_desai'}
+% roiNames = {'ins_desai'};
+roiNames = {'mpfc'}
 
 % stims = {'pa_alcoholdrugs'};
 % stimStr = 'pa_alcoholdrugs'
 
-stims = {'drugs'};
-stimStr = 'drugs'
+stims = {'drugs','food','neutral'};
+stimStr = 'type';
+% stims = {'drugs'}
+% stimStr = 'drugs';
+
 
 groups = {'controls','patients'};
 
-cols = getCueExpColors(numel(groups));
+cols = getCueExpColors(groups);
 
 saveOut = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
 
+j=1
 for j=1:numel(roiNames)
     
     roi=roiNames{j};

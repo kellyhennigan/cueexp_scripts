@@ -96,6 +96,24 @@ if ~isempty(group)
         notes = notes(gi==1);
         gi = gi(gi==1);
         
+    % return patients with complete followup data (or confirmed relapse before then) 
+    elseif strcmpi(group,'patients_complete') 
+        ri=getCueData(subjects,'relapse');
+        obs=getCueData(subjects,'observedtime');
+        idx=find(ri==1 | obs>150); % either relapsed or followed up for >5 months
+        subjects = subjects(idx); 
+        notes = notes(idx);
+        gi = gi(idx);
+   
+        % return patients with at least 3 months followup data (or confirmed relapse before then)
+    elseif strcmpi(group,'patients_3months') 
+        ri=getCueData(subjects,'relapse');
+        obs=getCueData(subjects,'observedtime');
+        idx=find(ri==1 | obs>=90); % either relapsed or followed up for >=3 months
+        subjects = subjects(idx);
+        notes = notes(idx);
+        gi = gi(idx);
+        
         % return relapsers
     elseif strcmpi(group,'relapsers')
         ri=getCueData(subjects,'relapse');
@@ -110,9 +128,39 @@ if ~isempty(group)
         subjects = subjects(ri==0);
         notes = notes(ri==0);
         gi = gi(ri==0);
+        
+        % return those who relapsed within 3 mos
+    elseif any(strcmpi(group,{'relapsers_3months','relapse_3months'}))
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return those who did not relapse within 3 mos
+    elseif any(strcmpi(group,{'nonrelapsers_3months','nonrelapse_3months'}))
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+        
+             % return those who relapsed within 4 mos
+    elseif any(strcmpi(group,{'relapsers_4months','relapse_4months'}))
+        ri=getCueData(subjects,'relapse_4months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return those who did not relapse within 4 mos
+    elseif any(strcmpi(group,{'nonrelapsers_4months','nonrelapse_4months'}))
+        ri=getCueData(subjects,'relapse_4months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
        
         % return those who relapsed within 6 mos
-    elseif strcmpi(group,'relapsers_6months')
+    elseif any(strcmpi(group,{'relapsers_6months','relapse_6months'}))
         ri=getCueData(subjects,'relapse_6months');
         subjects = subjects(ri==1);
         notes = notes(ri==1);
@@ -120,14 +168,40 @@ if ~isempty(group)
         
         
         % return those who did not relapse within 6 mos
-    elseif strcmpi(group,'nonrelapsers_6months')
+    elseif any(strcmpi(group,{'nonrelapsers_6months','nonrelapse_6months'}))
         ri=getCueData(subjects,'relapse_6months');
         subjects = subjects(ri==0);
         notes = notes(ri==0);
         gi = gi(ri==0);
  
+     % return those who relapsed within 8 mos
+    elseif any(strcmpi(group,{'relapsers_8months','relapse_8months'}))
+        ri=getCueData(subjects,'relapse_8months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
         
         
+        % return those who did not relapse within 8 mos
+    elseif any(strcmpi(group,{'nonrelapsers_8months','nonrelapse_8months'}))
+        ri=getCueData(subjects,'relapse_8months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+        
+%         % return the first 15 to have relapsed
+%     elseif any(strcmpi(group,{'early_relapse','early_relapsers'}))
+%         ri=getCueData(subjects,'early_relapsers');
+%         subjects = subjects(ri==1);
+%         notes = notes(ri==1);
+%         gi = gi(ri==1);
+%         
+%     elseif any(strcmpi(group,{'early_abstainers'}))
+%         ri=getCueData(subjects,'early_relapsers');
+%         subjects = subjects(ri==0);
+%         notes = notes(ri==0);
+%         gi = gi(ri==0);
+%         
     end
     
 end % if ~isempty(group)

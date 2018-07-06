@@ -1,0 +1,139 @@
+---
+title: "Analysis test"
+output: html_document
+---
+
+```{r, echo=FALSE, warning=FALSE}
+# This code chunk simply makes sure that all the libraries used here are installed, it will not be shown in the report (notice echo = FALSE).
+packages <- c("readxl", "knitr", "tidyr", "dplyr", "ggplot2", "plotly")
+if ( length(missing_pkgs <- setdiff(packages, rownames(installed.packages()))) > 0) {
+  message("Installing missing package(s): ", paste(missing_pkgs, collapse = ", "))
+  install.packages(missing_pkgs)
+}
+```
+
+
+This is a simple example analysis of data including import from Excel, data structuring and plotting. The data in this case happens to be optical density data over time (replicate growth curves for a microorganism) but the nature of the data matters little to the basics introduced. 
+
+## Import OD data
+
+```{r}
+library(readxl) # fast excel reader
+#library(googlesheets) # fast google spreadsheet reader (not used here but could be useful)
+data.raw <- read_excel("example.xlsx", skip = 1)
+```
+
+#### Show the raw data
+
+```{r}
+library(knitr) # the package that renders R markdown and has some good additional functionality
+kable(data.raw)
+```
+
+### Restructuring the data
+
+Turning the wide format excel data into *long* format. Note: here we make use of the pipe operator `%>%`, which just simplifies chaining operations.
+
+```{r}
+library(tidyr) # for restructuring data very easily
+data.long <- data.raw %>% gather(sample, OD600, -Time)
+# melt <- gather(raw, sample, OD600, -Time) # this would be identical without using %>%
+```
+
+Introducing time in hours.
+
+```{r}
+library(dplyr, warn.conflicts = FALSE) # powerful for doing calculations on data (by group, etc.)
+data.long <- data.long %>% mutate(time.hrs = as.numeric(Time - Time[1], units = "hours"))
+```
+
+First plot of all the data
+
+```{r}
+library(ggplot2) # powerful plotting package for aesthetics driven plotting
+
+p1 <- 
+  ggplot(data.long) + # initiate plot
+  aes(x = time.hrs, y = OD600, color = sample) + # setup aesthetic mappings
+  geom_point(size = 5) # add points to plot
+print(p1) # output plot
+```
+
+
+### Combining data by adding sample meta information from the spreadsheet's second tab
+
+```{r}
+data.info <- read_excel("example.xlsx", sheet = "info")
+```
+
+Show all information (these are the experimental conditions for each sample)
+
+```{r}
+kable(data.info)
+```
+
+Combine OD data with sample information.
+
+```{r}
+data.all <- merge(data.long, data.info, by = "sample")
+```
+
+### Show us the datas
+
+Reuse same plot using `%+%` to substitute the original data set with a new one and changing the color to be determined based on the new information we added (but keep everything else about the plot the same). 
+
+```{r}
+p1 %+% data.all %+% aes(color = substrate)
+```
+
+### Summarize data
+
+To make the figure a little bit easier to navigate, we're going to summarize the data for each condition (combine the replicates) and replot it with an error band showing the whole range of data points for each condition. We could reuse the plot `p1` again, but for clarity are constructing the plot from scratch instead. 
+
+```{r}
+data.sum <- data.all %>%
+  group_by(time.hrs, substrate) %>%
+  summarize(
+    OD600.avg = mean(OD600),
+    OD600.min = min(OD600),
+    OD600.max = max(OD600))
+data.sum %>% head() %>% kable() # show the first couple of lines
+
+p2 <- ggplot(data.sum) + # initiate plot
+  aes(x = time.hrs, y = OD600.avg, ymin = OD600.min, ymax = OD600.max, 
+      fill = substrate) + # setup global aesthetic mappings
+  geom_ribbon(alpha = 0.3) + # value range (uses ymin and ymax, and fill for color)
+  geom_line() + # connect averages (uses y)
+  geom_point(shape = 21, size = 5) + # add points for averages (uses y and fill for color)
+  theme_bw() + # style plot
+  labs(title = "My plot", x = "Time [h]", y = "OD600", color = "Condition") # add labels
+
+print(p2)
+```
+
+*Note that we could also have had ggplot do the whole statistical summarising for us using `stat_summary` but it's often helpful to have these values separately for other calcluations and purposes.*
+
+Now could e.g. focus on a subset of data but reuse same plot using `%+%` to substitute the original data set with a new one (but keep everythign else about the plot the same). 
+
+```{r}
+p2 %+% filter(data.sum, !grepl("background", substrate), time.hrs < 25)
+```
+
+Save this plot automatically as pdf by setting specific plot options in the r code chunk
+
+```{r this-is-my-plot, dev="pdf", fig.width=7, fig.height=5, fig.path="./"}
+print(p2)
+```
+
+#### Interactive plot
+
+Last, you can make simple interactive (javascript) plots out of your original ggplots (plotly does not yet work great for all ggplot features but it's a start for easy visualization). You can of course construct plotly plots without ggplot for more customization too but that's for another time.
+
+```{r}
+library(plotly, warn.conflicts = FALSE)
+ggplotly(p1)
+```
+
+
+
+

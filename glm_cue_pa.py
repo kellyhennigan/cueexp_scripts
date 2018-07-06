@@ -21,7 +21,7 @@ func_dir = 'func_proc'  	# relative to subject-specific directory
 func_files = 'pp_cue_tlrc'+afniStr+'.nii.gz'
 
 out_dir = os.path.join(data_dir,'results_cue'+afniStr+'_pa_cond')  	# directory for out files 
-out_str = 'glm_paneutral'					# string for output files
+out_str = 'glm'					# string for output files
 
 
 ##########################################################################################
@@ -61,7 +61,7 @@ for subject in subjects:
 		'-jobs 2 '
 		'-input '+func_dir+'/'+func_files+' '
 		'-censor '+func_dir+'/'+'cue_censor.1D '
-		'-num_stimts 17 '
+		'-num_stimts 14 '
 		'-polort 2 '
 		'-dmbase '						# de-mean baseline regressors
 		'-xjpeg '+os.path.join(out_dir,'Xmat')+' '
@@ -78,15 +78,15 @@ for subject in subjects:
 		#'-stim_file 10 regs/img_cuec.1D -stim_label 10 img '
 		'-stim_file 11 regs/choice_cuec.1D -stim_label 11 choice ' 
 		'-stim_file 12 regs/choicert_cuec.1D -stim_label 12 choice_rt ' 
-		# '-stim_file 13 regs/trial_cuec.1D -stim_label 13 trial ' 
-		# '-stim_file 14 regs/na_trial_cuec.1D -stim_label 14 na ' 
-		'-stim_file 13 regs/alcohol_trial_cuec.1D -stim_label 13 alcohol ' 
+		'-stim_file 13 regs/trial_cuec.1D -stim_label 13 trial ' 
+		'-stim_file 14 regs/pa_trial_cuec.1D -stim_label 14 pa ' 
+		#'-stim_file 13 regs/alcohol_trial_cuec.1D -stim_label 13 alcohol ' 
 		#'-stim_file 14 regs/paalcohol_trial_cuec.1D -stim_label 14 pa_alcohol ' 
-		'-stim_file 14 regs/drugs_trial_cuec.1D -stim_label 14 drugs ' 
+		#'-stim_file 14 regs/drugs_trial_cuec.1D -stim_label 14 drugs ' 
 		#'-stim_file 16 regs/padrugs_trial_cuec.1D -stim_label 16 pa_drugs ' 
-		'-stim_file 15 regs/food_trial_cuec.1D -stim_label 15 food ' 
-		'-stim_file 16 regs/neutral_trial_cuec.1D -stim_label 16 neutral ' 
-		'-stim_file 17 regs/paneutral_trial_cuec.1D -stim_label 17 pa_neutral ' 
+		#'-stim_file 15 regs/food_trial_cuec.1D -stim_label 15 food ' 
+		#'-stim_file 16 regs/neutral_trial_cuec.1D -stim_label 16 neutral ' 
+		#'-stim_file 17 regs/pafood_trial_cuec.1D -stim_label 17 pa_food ' 
 		#'-stim_file 17 regs/padrugs_trial_cuec.1D -stim_label 17 pa_drugs ' 
 		#'-stim_file 20 regs/paneutral_trial_cuec.1D -stim_label 20 pa_neutral ' 
 		# '-num_glt 5 '					 # of contrasts

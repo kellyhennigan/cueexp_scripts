@@ -35,11 +35,20 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 resultsDir = fullfile(dataDir,['results_' task '_afni']);
 % resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
 
-fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
-% fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
+% fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
+% volIdx = [13,15]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+% bNames = {'gvnant','gvnout'}; % bNames should correspond to volumes in index volIdx
+
+% fileStr = 'glm+tlrc.HEAD'; % string identifying files w/single subject beta maps
+% volIdx = [29,32,35]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+% bNames = {'drugs-neutral','food-neutral','drugs-food'}; % bNames should correspond to volumes in index volIdx
+
+fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 volIdx = [16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 bNames = {'drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
+
+% fileStr = 'glm_pa2_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 % volIdx = [17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
 % bNames = {'pa_alcoholdrugs','pa_foodneutral'}; % bNames should correspond to volumes in index volIdx
 

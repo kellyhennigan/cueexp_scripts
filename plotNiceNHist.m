@@ -32,10 +32,6 @@ if notDefined('cols')
     cols = solarizedColors(numel(d));
 end
 
-% use solarized colors by default
-if notDefined('cols')
-    cols = solarizedColors(numel(d));
-end
 
 % plot histogram(s)
 fig = setupFig;

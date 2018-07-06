@@ -42,11 +42,12 @@ switch task
             'controls patients';
             'controls patients';
             'controls patients';
-            'controls relapsers_6months nonrelapsers_6months';
-            'controls relapsers_6months nonrelapsers_6months';
-            'controls relapsers_6months nonrelapsers_6months';
-            'controls relapsers_6months nonrelapsers_6months';
-            'controls relapsers_6months nonrelapsers_6months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'relapsers_3months nonrelapsers_3months';
             };
         %             'controls relapsers nonrelapsers';
         %             'controls relapsers nonrelapsers';
@@ -54,12 +55,12 @@ switch task
         %             'controls relapsers nonrelapsers';
         %             'controls relapsers nonrelapsers';
         %             'controls relapsers nonrelapsers';
-        %             'controls relapsers_6months nonrelapsers_6months';
-        %             'controls relapsers_6months nonrelapsers_6months';
-        %             'controls relapsers_6months nonrelapsers_6months';
-        %             'controls relapsers_6months nonrelapsers_6months';
-        %             'controls relapsers_6months nonrelapsers_6months';
-        %             'controls relapsers_6months nonrelapsers_6months';
+        %             'controls relapsers_3months nonrelapsers_3months';
+        %             'controls relapsers_3months nonrelapsers_3months';
+        %             'controls relapsers_3months nonrelapsers_3months';
+        %             'controls relapsers_3months nonrelapsers_3months';
+        %             'controls relapsers_3months nonrelapsers_3months';
+        %             'controls relapsers_3months nonrelapsers_3months';
         %            };
         
         
@@ -78,6 +79,7 @@ switch task
             'food';
             'neutral';
             'drugs-neutral';
+            'drugs';
             };
         
         % corresponding stim strings to use in figure and file name
@@ -95,6 +97,7 @@ switch task
             'food';
             'neutral';
             'drugs-neutral';
+            'drugs';
             };
         
         

@@ -16,14 +16,14 @@ dataDir = p.data;
 
 % omit_subs = {'tj160529','rc170730','er171009'};
 % omit_subs = {'at160601','as170730','rc170730',...
-%     'er171009','vm151031','jw160316','jn160403','rb160407','yl160507',...
-%     'kn160918','cs171002'};
+%     'er171009','vm151031','jw160316','jn160403','rb160407','rv160413','yl160507',...
+%     'tj160529','kn160918','cs171002'};
 % omit_idx=ismember(subjects,omit_subs);
 % subjects(omit_idx)=[];
 % gi(omit_idx)=[];
 
+stim = 'neutral';
 
-bStr = 'pa_neutral'; % beta string (e.g., pa or pref)
 
 % ROIs
 % roiNames = {'VTA','ins_desai','mpfc','vstriatumR_clust','vstriatumL_clust','VTA_clust'};
@@ -32,16 +32,16 @@ roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 
 % directory that contains glm results of interest
-%resultsDir = fullfile(dataDir,['results_' task '_afni']);
 resultsDir = fullfile(dataDir,['results_' task '_afni_pa_cond']);
+% resultsDir = fullfile(dataDir,['results_' task '_afni_pa']);
 
-%fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
-fileStr = 'glm_paneutral_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
+fileStr = ['glm_pa' stim '_B+tlrc.HEAD']; % string identifying files w/single subject beta maps
+% fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
 
 volIdx = [19]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-bNames = {'pa_neutral'}; % bNames should correspond to volumes in index volIdx
-% volIdx = [17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-% bNames = {'pa_alcoholdrugs','pa_foodneutral'}; % bNames should correspond to volumes in index volIdx
+bNames = {['pa_' stim]}; % bNames should correspond to volumes in index volIdx
+% volIdx = [16]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+% bNames = {'pa'}; % bNames should correspond to volumes in index volIdx
 
 % out file path
 outStrPath = fullfile(resultsDir,'roi_betas','%s','%s.csv'); %s is roiNames and bNames

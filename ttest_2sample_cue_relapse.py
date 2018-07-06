@@ -23,16 +23,17 @@ else:
 
 from getCueSubjects import getsubs
 
-# relapsers
-subjsA = ['si151120','wr151127','ja151218','nb160221','rv160413','tj160529','gm160909','rc161007','al170316','jd170330','jw170330','tg170423','jc170501','rc170730']
+# # relapsers (n=15)
+# subjsA = ['si151120','wr151127','ja151218','nb160221','rv160413','tj160529','rc161007','al170316','jd170330','jw170330','tg170423','jc170501','as170730','rc170730','rt170816']
 
-# non-relapsers (INCLUDING NAN)
-#subjsB = ['ag151024','wh160130','rv160413','ja160416','cm160510','at160601','zm160627','jf160703','rs160730','nc160905','lm160914','jb161004','se161021','mr161024','al170316','jd170330','jw170330','tg170423','jc170501','hp170601','rl170603']
+# # non-relapsers (n=18)
+# subjsB = ['ag151024','wh160130','cm160510','zm160627','jf160703','cg160715','rs160730','nc160905','jb161004','se161021','mr161024','rl170603','rf170610','mr170621','ds170728','vb170914','ds170915','ts170927']
 
+# relapsers @ 3months (n=12)
+subjsA = ['si151120','wr151127','nb160221','tj160529','rc161007','jd170330','jw170330','tg170423','jc170501','as170730','rc170730','rt170816']
 
-# non-relapsers (NOT INCLUDING NAN)
-subjsB = ['ag151024','wh160130','ja160416','cm160510','at160601','zm160627','jf160703','cg160715','rs160730','nc160905','lm160914','jb161004','se161021','mr161024','rl170603','rf170610','mr170621','ds170728','as170730','rt170816','vb170914','ds170915']
-
+# non-relapsers @ 3 months (n=21)
+subjsB = ['ag151024','ja151218','wh160130','rv160413','cm160510','zm160627','jf160703','cg160715','rs160730','nc160905','jb161004','se161021','mr161024','al170316','rl170603','rf170610','mr170621','ds170728','vb170914','ds170915','ts170927']
 
 
 print subjsA
@@ -73,8 +74,7 @@ sub_labels2 = ['Full_R^2',
 'alcohol-neutral_GLT#0_Coef',
 'drugs-neutral_GLT#0_Coef',
 'food-neutral_GLT#0_Coef',
-'drugs-food_GLT#0_Coef',
-'drugs-foodneutral_GLT#0_Coef']
+'drugs-food_GLT#0_Coef']
 
 
 # labels for out files 
@@ -83,8 +83,7 @@ out_labels2 =  ['ZFull_R^2'+out_str,
 'Zalc-neutral'+out_str,
 'Zdrug-neutral'+out_str,
 'Zfood-neutral'+out_str,
-'Zdrug-food'+out_str,
-'Zdrug-foodneutral'+out_str]
+'Zdrug-food'+out_str]
 
 
 # concatenate lists 

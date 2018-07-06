@@ -1,0 +1,15 @@
+// AFNI startup script, from Datamode->Misc->Save Layout
+ADD_OVERLAY_COLOR #ff8866 salmon
+ADD_OVERLAY_COLOR navyblue navy
+OPEN_WINDOW A geom=+0+66
+SET_THRESHOLD A.2571 1
+SET_PBAR_ALL A.-9 1=yellow 0.44172=oran-yell 0.38906=orange 0.32905=oran-red 0.25758=none -0.25758=dk-blue -0.32905=blue -0.38906=lt-blue1 -0.48916=blue-cyan
+SET_FUNC_VISIBLE A.+
+SET_FUNC_RESAM A.NN.Cu
+SET_FUNC_RANGE A.10.000000
+SET_UNDERLAY A.TT_N27.nii 0
+SET_OVERLAY A.Zdrug-neutral 5 5
+SET_DICOM_XYZ A 2.000000 -12.000000 0.000000
+OPEN_WINDOW A.axialimage geom=258x306+3+477 ifrac=0.8 opacity=8
+OPEN_WINDOW A.sagittalimage geom=316x250+291+477 ifrac=0.8 opacity=8
+OPEN_WINDOW A.coronalimage geom=290x272+13+476 ifrac=0.8 opacity=8

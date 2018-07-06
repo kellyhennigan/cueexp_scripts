@@ -17,7 +17,7 @@ figDir = p.figures;
 % get relapse data
 % [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171017.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_180312.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_170930.csv');
 
 % load data
@@ -42,7 +42,7 @@ T(nanidx,:)=[];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% define model and response data
 
-X = [T.nacc_drugs_beta T.naccL_drugs_TR6 T.age T.education T.bam_upset];
+X = [T.nacc_drugs_beta T.bam_upset];
 y = T.obstime;
 yrel = T.relapse;
 censored = T.censored; % 1 if data is censored (relapse didnt happen), otherwise 0

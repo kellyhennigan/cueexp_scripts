@@ -1,0 +1,94 @@
+---
+title: "survival_analysis_paperfig.Rmd"
+author: "Kelly MacNiven"
+date: "5/17/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+get libraries & load data
+```{r setup, collapse=TRUE, warning=FALSE}
+
+library(survival)
+library(survminer)
+library(ggplot2)
+library(dplyr)
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/relapse_data/relapse_data_180516.csv')
+
+#remove subjects without relapse data
+d1 = d1[is.na(d1$relIn3Mos) == FALSE,]
+
+
+#make relapse a factor
+d1$relapse = as.factor(d1$relapse)
+d1$relIn3Mos = as.factor(d1$relIn3Mos)
+colnames(d1)[1] = 'subject'
+d1$highlow <- factor(d1$nacc_drugs_beta > median(d1$nacc_drugs_beta), labels=c('high', 'low'), levels=c(T,F))
+
+#create survival variable
+d1$nacc_drugs_beta <- as.numeric(d1$nacc_drugs_beta)
+
+d2 <- select(d1, censored, obstime, nacc_drugs_beta, highlow) %>%
+  filter(censored==0)
+
+d1$survival <- with(d1, Surv(obstime, censored == 0))
+d1$survival
+
+d2$survival <- with(d2, Surv(obstime, censored == 0))
+d2$survival
+```
+
+
+#Kaplan-Meier survival plots
+```{r KM plots, collapse=TRUE, warning=FALSE}
+
+# Figure 1 - all data
+sfit_fig1 <- survfit(survival~1, type="kaplan-meier", conf.type="plain", data=d1)
+#png(filename="KMcurve.png")
+ggsurvplot(sfit_fig1,
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int=T,
+           conf.int.style='ribbon',
+           xlim=c(0,400),
+           ggtheme = theme_survminer()) + scale_color_grey()
+
+# Figure 2 - median split based on NAcc responses to drugs
+sfit_fig2 <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit_fig2,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int=T,
+           conf.int.style='step',
+           #palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           xlim=c(0,400),
+           ggtheme = theme_survminer()) + scale_colour_grey()
+```
+
+#scatter plot of days to relapse by nacc drug betas
+```{r scatterplot, collapse=TRUE, warning=FALSE}
+
+# Figure 3 
+ggplot(data=d2, aes(x=obstime, y=nacc_drugs_beta)) + 
+  geom_point() + 
+  xlim(0,400) + 
+  xlab("Time (days)") +
+  ylab("NAcc drug response") +
+  theme(text=element_text(size=18))
+
+```
+
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(d1, data.frame(relapse, age, pa_drug, nacc_drugs_beta,nacc_food_beta))
+pairs.panels(dp)
+```

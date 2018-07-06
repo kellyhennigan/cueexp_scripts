@@ -13,19 +13,25 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-% stims = {'drugs','food','neutral'};
- stims = {'drugs'};
+stims = {'drugs','food','neutral'};
+%  stims = {'drugs'};
 % stims = {'pa'};
 
-groups = {'controls','relapsers_6months','nonrelapsers_6months'};
-% groupStr = 'byrelapse';
-% groups = {'controls','patients'};
-groupStr = 'bygroup';
+groups = {'relapsers_3months','nonrelapsers_3months'};
+groupStr = 'byrelapse';
 
-cols = getCueExpColors(numel(groups)); % colors for plotting
+% groups = {'controls','patients'};
+% groupStr = 'bygroup';
+
+% groups = {'controls'};
+% groupStr = groups{1};
+
+
+
+cols = getCueExpColors(groups); % colors for plotting
 
 % roiNames = whichRois(inDir);
-roiNames = {'nacc_desai'};
+roiNames = {'PVT'};
 
 saveOut = 1;
 

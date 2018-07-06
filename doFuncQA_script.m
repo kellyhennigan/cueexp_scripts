@@ -5,6 +5,7 @@
 % close all
 
 [p,task,subjects,gi]=whichCueSubjects();
+
 dataDir = p.data;
 
 useAfniVersion=input('use afni xformed version? (1=yes 0=no; no means use ANTS version) ');
@@ -44,7 +45,8 @@ for s = 1:numel(subjects)
         fig = plotMotionParams(mp);
         
         a=get(fig,'Children');
-        title(a(6),subject)
+%         title(a(6),subject)
+        title(gca,subject)
         
         outName = [subject '_mp_' task];
         

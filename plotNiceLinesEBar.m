@@ -40,7 +40,7 @@ end
 
 % deal with default values
 if notDefined('cols')
-    cols = solarizedColors(nGroups);
+    cols = solarizedColors(numel(y));
 end
 
 if ~iscell(cols)

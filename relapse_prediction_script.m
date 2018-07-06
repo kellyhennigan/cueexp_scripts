@@ -1,4 +1,4 @@
-% relIn6Mos prediction
+% relIn3Mos prediction
 
 
 clear all
@@ -9,21 +9,24 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171031.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
+
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
 
 % load data
 T = readtable(dataPath); 
 
-%% omit subjects that have no followup data
+T.relIn6Mos(4)=1; % set ja151218 to be relapsed in 6 months 
 
-% subjects with no followup data
-nanidx=find(isnan(T.relapse));
+% define outcome variable
+Y = 'relIn3Mos';
 
 
-% remove data for subjects with no followup data
-T(nanidx,:)=[];
 
+%% omit subjects that have no outcome data 
+
+eval(['T(isnan(T.' Y '),:)=[];']);
+Yy = eval(['T.' Y]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% check everything by itself
@@ -34,10 +37,10 @@ vars = T.Properties.VariableNames;
 a={};
 tB=[];
 
-for i=7:numel(vars)
+for i=10:numel(vars)
      i
 %     modelspec = ['relapse ~ ' vars{i}];
-    modelspec = ['relIn6Mos ~ ' vars{i}];
+    modelspec = [Y ' ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
     if res.Coefficients.pValue(2)<.05
         a=[a vars{i}];
@@ -49,216 +52,214 @@ end
 a = a(ti)'; a
 
 
+
 %% model : demographic predictors
 
-modelspec = 'relIn6Mos ~ years_of_use + poly_drug_dep + clinical_diag';
+modelspec = [Y ' ~ age'];
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-sprintf('%.3f',res.Rsquared.Ordinary)
-sprintf('%.2f',res.ModelCriterion.AIC)
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 
 % standardized coefficients: 
-X=[T.years_of_use T.poly_drug_dep T.clinical_diag]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
+X=[T.age]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,Yy,'Distribution','binomial');
 
-sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
+for ii=2:numel(res_standard.Coefficients.Estimate)
+    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+
+
+fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
+fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    res_standard.Coefficients.Estimate(1),...
+    res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.pValue(1));
+
+
+
+
+
 
 
 %% model : self-report predictors
 
-modelspec = 'relIn6Mos ~ pref_drug + craving + bam_upset';
+modelspec = [Y '~ pref_drug + craving + bam_upset'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 
-sprintf('%.3f',res.Rsquared.Ordinary)
-sprintf('%.2f',res.ModelCriterion.AIC)
 
 % standardized coefficients: 
 X=[T.pref_drug T.craving T.bam_upset]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
-sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
+res_standard = fitglm(X,Yy,'Distribution','binomial');
+for ii=2:numel(res_standard.Coefficients.Estimate)
+   fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
+fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    res_standard.Coefficients.Estimate(1),...
+    res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.pValue(1));
 
 
 %% model : brain predictors
 
-% modelspec = 'relIn6Mos ~ nacc_drugs_beta';
+% modelspec = 'relIn3Mos ~ nacc_drugs_beta';
+modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
 
-modelspec = 'relIn6Mos ~ nacc_drugs_beta + vta_drugs_beta + mpfc_drugs_beta';
-% modelspec = 'relIn6Mos ~ mpfc_drugs_beta + nacc_drugs_beta + vta_drugs_beta';
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-sprintf('%.3f',res.Rsquared.Ordinary)
-sprintf('%.2f',res.ModelCriterion.AIC)
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 
 
 % standardized coefficients: 
+% X=[T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 X=[T.nacc_drugs_beta T.mpfc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
-sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
+res_standard = fitglm(X,Yy,'Distribution','binomial');
+for ii=2:numel(res_standard.Coefficients.Estimate)
+   fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
+fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    res_standard.Coefficients.Estimate(1),...
+    res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.pValue(1));
 
 
 
-%% model: demographics + behavior + brain 
+%% model: demographics + brain 
 
-modelspec = ['relIn6Mos ~ years_of_use + bam_upset + nacc_drugs_beta'];
+modelspec = [Y ' ~ age + nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-sprintf('%.3f',res.Rsquared.Ordinary)
-sprintf('%.2f',res.ModelCriterion.AIC)
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+
+% standardized coefficients: 
+X=[T.age T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,Yy,'Distribution','binomial');
+for ii=2:numel(res_standard.Coefficients.Estimate)
+   fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
+fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    res_standard.Coefficients.Estimate(1),...
+    res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
+    res_standard.Coefficients.pValue(1));
+
+
+
+%% model:
+
+modelspec = [Y '~  nacc_drugs_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial');
+
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 
 % standardized coefficients: 
 X=[T.years_of_use T.bam_upset T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn6Mos,'Distribution','binomial');
-sprintf('%.3f\n',res_standard.Coefficients.Estimate(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.SE(2:end))
-sprintf('%.3f\n',res_standard.Coefficients.pValue(2:end))
+res_standard = fitglm(X,T.relIn3Mos,'Distribution','binomial');
+for ii=2:numel(res_standard.Coefficients.Estimate)
+  fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+
+
+%% model:  
+
+modelspec = [Y ' ~ nacc_drugs_beta'];
+res=fitglm(T,modelspec,'Distribution','binomial')
+
+fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+
+% standardized coefficients: 
+X=[T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
+res_standard = fitglm(X,Yy,'Distribution','binomial');
+for ii=2:numel(res_standard.Coefficients.Estimate)
+  fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+        res_standard.Coefficients.Estimate(ii),...
+        res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
+        res_standard.Coefficients.pValue(ii));
+end
+
+
 
 
 %% model: ROI drugs, food, neutral betas
 
-roi = 'nacc';
+roi = 'pvt';
 
 % DRUGS
-modelspec = ['relIn6Mos ~ ' roi '_drugs_beta'];
+modelspec = [Y ' ~ ' roi '_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % FOOD
-modelspec = ['relIn6Mos ~ ' roi '_food_beta'];
+modelspec = [Y ' ~ ' roi '_food_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % NEUTRAL
-modelspec = ['relIn6Mos ~ ' roi '_neutral_beta'];
+modelspec = [Y ' ~ ' roi '_neutral_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % DRUGS & FOOD 
-modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta' ];
+modelspec = [Y ' ~ ' roi '_drugs_beta + ' roi '_food_beta' ];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % DRUGS & NEUTRAL
-modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_neutral_beta' ];
+modelspec = [Y ' ~ ' roi '_drugs_beta + ' roi '_neutral_beta' ];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % FOOD & NEUTRAL
-modelspec = ['relIn6Mos ~ ' roi '_food_beta + ' roi '_neutral_beta' ];
+modelspec = [Y '~ ' roi '_food_beta + ' roi '_neutral_beta' ];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 % % DRUGS & FOOD & NEUTRAL
-modelspec = ['relIn6Mos ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
+modelspec = [Y ' ~ ' roi '_drugs_beta + ' roi '_food_beta + ' roi '_neutral_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Cox regression on relapse 
 
-
-X = [T.nacc_drugs_beta];
-y = T.obstime;
-censored = T.censored;
-
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% only look at the first 6 months
-idx=find(T.obstime>200 & T.relapse==1);
-censored_6months=censored; censored_6months(idx)=1;
-y_6months=y; y_6months(y>200) = 200;
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-
-%% cox regression on relapse for ROI drugs, food, neutral betas
-
-
-y = T.obstime;
-censored = T.censored;
-
-% enter ROI string here: 
-roi = 'nacc';
-
-% DRUGS
-X = eval(['T.' roi '_drugs_beta']);
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% FOOD
-X = eval(['T.' roi '_food_beta']);
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% NEUTRAL
-X = eval(['T.' roi '_neutral_beta']);
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% DRUGS & FOOD 
-X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_food_beta'])];
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% DRUGS & NEUTRAL
-X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_neutral_beta'])];
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% FOOD & NEUTRAL
-X = [eval(['T.' roi '_food_beta']) eval(['T.' roi '_neutral_beta'])];
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-% % DRUGS & FOOD & NEUTRAL
-X = [eval(['T.' roi '_drugs_beta']) eval(['T.' roi '_food_beta']) eval(['T.' roi '_neutral_beta'])];
-[b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
-
-
-
-%% plot empirical distribution of relapse based on NAcc activity 
-% 
-
-% sort 
-[obstime,si]=sort(T.obstime);
-censored = T.censored(si);
-subjects = T.subjid(si);
-nacc = T.nacc_drugs_beta(si);
-
-hi = find(nacc>median(nacc));
-lo = find(nacc<median(nacc));
-
-col(1,:) = [150 150 150]./255; % nonrelapsers
-col(2,:) = [30 30 30]./255; % relapsers
-
-figure=setupFig;
-hold on;
-
-% lo
-[empF1,x1,empFlo1,empFup1] = ecdf(obstime(lo),'censoring',censored(lo));
-stairs(x1,empF1,'Linewidth',2,'color',col(1,:));
-
-
-% hi
-[empF2,x2,empFlo2,empFup2] = ecdf(obstime(hi),'censoring',censored(hi));
-stairs(x2,empF2,'Linewidth',2,'color',col(2,:));
-
-legend('low reactivity','high reactivity','Location','EastOutside')
-legend('boxoff')
-
-% confidence intervals
-stairs(x1,empFlo1,':','Linewidth',2,'color',col(1,:)); 
-stairs(x1,empFup1,':','Linewidth',2,'color',col(1,:));
-
-stairs(x2,empFlo2,':','Linewidth',2,'color',col(2,:)); 
-stairs(x2,empFup2,':','Linewidth',2,'color',col(2,:));
-
-fsize = 22;
-set(gca,'fontName','Helvetica','fontSize',fsize)  
-xlabel('Time (days)'); ylabel('Proportion relapsed'); 
-title('Empirical CDF')
-
-% xlim([0 200])
-
-hold off
-
-savePath = fullfile(figDir,'relapse_prediction','empiricalCDF_lohi.png');
-print(gcf,'-dpng','-r300',savePath);
-
+%% 
 

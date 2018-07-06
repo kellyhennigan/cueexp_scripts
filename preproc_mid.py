@@ -35,9 +35,9 @@ import os,sys,glob
 # EDIT AS NEEDED:
 
 data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
-from getCueSubjects import getsubs 
-subjects,gi = getsubs()
-subjects = ['rb160407']
+#from getCueSubjects import getsubs 
+#subjects,gi = getsubs()
+subjects = ['xx180626']
 print subjects
 #data_dir = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data')
 
@@ -54,7 +54,7 @@ truncate = 0 # set to 1 to truncate the last 4 vols from each scan run, otherwis
 
 # if this is set to 1 or True, commands will be printed to the screen but not 
 #executed (for troubleshooting, etc.)
-justPrint = 0
+justPrint = 1
 
 ############### define relevant variables for each pre-processing step as needed
 

@@ -14,5 +14,5 @@ cName=getComputerName;
 if strcmp(cName,'cnic2')               % cni server
     baseDir = '/home/hennigan/cueexp';
 else                                   % assume its my laptop
-    baseDir = '/Users/Kelly/cueexp';
+    baseDir = '/Users/kelly/cueexp';
 end

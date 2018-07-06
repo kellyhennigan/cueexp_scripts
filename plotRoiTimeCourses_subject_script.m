@@ -16,17 +16,17 @@ figDir = p.figures;
 %%%%%%%%%%%%%%%%%%%%%%%%%% EDIT AS DESIRED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 task = 'cue';
 
-group = 'patients';
+group = 'relapsers_3months';
 
 [subjects,gi]=getCueSubjects(task,group);
-subjects(10:end)=[];
-gi(10:end)=[];
+% subjects(10:end)=[];
+% gi(10:end)=[];
 
 stim = 'drugs'; % stim to plot
 
 stimStr = stim; % stim name 
 
-roiName = 'nacc_desai'; % roi to process
+roiName = 'PVT'; % roi to process
 
 tcDir = ['timecourses_' task '_afni' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];

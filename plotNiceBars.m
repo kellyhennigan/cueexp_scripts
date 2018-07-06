@@ -151,18 +151,18 @@ set(gca,'box','off');
 colormap(cols)
 
 % try to rotate the xlabels by 30 degrees, but if that doesnt work, no prob
-try
-    set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
+% try
+%     set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
 %         ylabel(ylab,'fontName','Helvetica','FontSize',fsize)
 %)
-    xtickangle(30)
-catch ME
-    try
-        xticklabel_rotate(1:numel(condNames),30,condNames)
-    catch ME
+%     xtickangle(30)
+% catch ME
+%     try
+%         xticklabel_rotate(1:numel(condNames),30,condNames)
+%     catch ME
         set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
-    end
-end
+%     end
+% end
 
 % y axis
 ylabel(dName,'fontName',fontName,'FontSize',fontSize)

@@ -8,15 +8,23 @@ dataDir = p.data;
 
 task = 'cue'; 
 
-%  group = 'relapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
-group = 'patients';
-
+%  group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+% group = 'patients';
+% group = 'controls';
+group = 'relapsers_3months';
+   
 [subjects,gi,notes] = getCueSubjects(task,group);
 
+% 
+% omit_subs = {'at160601','lm160914'};
+% % omit_subs = {'ja160416'};
+% omit_idx=ismember(subjects,omit_subs);
+% subjects(omit_idx,:)=[];
+
 % idx=find(strcmp(subjects,'tf151127'));
-idx = []
-subjects(idx)=[];
-gi(idx)=[];
+% idx = []
+% subjects(idx)=[];
+% gi(idx)=[];
 
 %% do it 
 
@@ -77,9 +85,9 @@ s{end+1} = raceStr;
 
 %% education
 
-educ = getCueData(subjects,'education');
+education = getCueData(subjects,'education');
 
-s{end+1} = sprintf('\npercent some college: %.2f',numel(find(educ>=3))./numel(educ(~isnan(educ))));
+s{end+1} = sprintf('\nyears of completed education (mean/sd): %.1f/%.1f',nanmean(education),nanstd(education));
 
 
 %% smokers
@@ -98,19 +106,15 @@ else
 end
 s{end+1}=sprintf('\npercent veterans: %.2f',nVets./N);
 
-%% discount rate
-
-k = getCueData(subjects,'discount_rate');
-
-s{end+1}=sprintf('\nkirby discounting (mean/sd): %.3f/%.3f',nanmean(k),nanstd(k));
-
 
 %% BDI 
 
 bdi = getCueData(subjects,'bdi');
 
+s{end+1}=sprintf('\nBDI scores (mean/sd): %.1f/%.1f',nanmean(bdi),nanstd(bdi));
+
 % BDI score of 17 or greater constitutes clinical depression
-s{end+1} = sprintf('\npercent clinical depression (mild-severe): %.2f',numel(find(bdi>=17))./numel(bdi(~isnan(bdi))));
+% s{end+1} = sprintf('\npercent clinical depression (mild-severe): %.2f',numel(find(bdi>=17))./numel(bdi(~isnan(bdi))));
 
 
 %% BIS
@@ -120,15 +124,21 @@ bis = getCueData(subjects,'bis');
 s{end+1}=sprintf('\nBIS scores (mean/sd): %.1f/%.1f',nanmean(bis),nanstd(bis));
 
 
+%% discount rate
+
+k = getCueData(subjects,'discount_rate');
+
+s{end+1}=sprintf('\nkirby discounting log(k) (mean/sd): %.2f/%.2f',nanmean(log(k)),nanstd(log(k)));
+
+
 
 %% patient-specific measures
 
 if ~strcmp(group,'controls')
     
     % primary stim
-    d=getCueData(subjects,'primary_stim');
-    nMethUsers = sum(cellfun(@(x) ~isempty(strfind(x,'meth')), d));
-    s{end+1}=sprintf('\npercent of meth users: %.2f',nMethUsers./N);
+    d=getCueData(subjects,'primary_meth');
+    s{end+1}=sprintf('\npercent of meth users: %.2f',sum(d)./N);
     
     % dependence on alc?
     d=getCueData(subjects,'alc_dep');
@@ -140,34 +150,40 @@ if ~strcmp(group,'controls')
     
     % days sober
     d=getCueData(subjects,'days_sober');
-    
 %      temporary: 
-    d(d>1000)=nan;
-    s{end+1}=sprintf('\ndays sober (mean/sd): %.1f/%.1f',nanmean(d),nanstd(d));
+%     d(d>1000)=nan;
+    s{end+1}=sprintf('\ndays sober (median/sd): %.1f/%.1f',nanmedian(d),nanstd(d));
     
+        % days in rehab
+    rehab_days=getCueData(subjects,'days_in_rehab');
+    s{end+1}=sprintf('\ndays in rehab (mean/sd): %.1f/%.1f',nanmean(rehab_days),nanstd(rehab_days));
+
+      % years of use
+    yearsofuse=getCueData(subjects,'years_of_use');
+    s{end+1}=sprintf('\nyears of use (mean/sd): %.1f/%.1f',nanmean(yearsofuse),nanstd(yearsofuse));
+
       % anxiety diagnosis
 %     d=getCueData(subjects,'anxiety_diag');
 %     nAnx = sum(cellfun(@(x) ~isempty(strfind(x,'yes')), d));
 %     s{end+1}=sprintf('\npercent anxiety diagnosis: %.2f',nAnx./N);
 %  
-    % ptsd diagnosis
+
+% ptsd diagnosis
     d=getCueData(subjects,'ptsd_diag');
-    nPTSD = sum(cellfun(@(x) ~isempty(strfind(x,'yes')), d));
-    s{end+1}=sprintf('\npercent PTSD diagnosis: %.2f',nPTSD./N);
- 
+    s{end+1}=sprintf('\npercent PTSD diagnosis: %.2f',sum(d)./N);
+
+    % anxiety diagnosis
+    d=getCueData(subjects,'anxiety_diag');
+    s{end+1}=sprintf('\npercent anxiety diagnosis: %.2f',sum(d)./N);
+
+    % depression diagnosis
+    d=getCueData(subjects,'depression_diag');
+    s{end+1}=sprintf('\npercent depression diagnosis: %.2f',sum(d)./N);
+
    % craving measure
     craving=getCueData(subjects,'craving');
     s{end+1}=sprintf('\ncraving measure (mean/sd): %.1f/%.1f',nanmean(craving),nanstd(craving));
-
-
-    % years of use
-    yearsofuse=getCueData(subjects,'years_of_use');
-    s{end+1}=sprintf('\nyears of use (mean/sd): %.1f/%.1f',nanmean(yearsofuse),nanstd(yearsofuse));
-
-      % days in rehab
-    rehab_days=getCueData(subjects,'days_in_rehab');
-    s{end+1}=sprintf('\ndays in rehab (mean/se): %.1f/%.1f',nanmean(rehab_days),nanstd(rehab_days)./sqrt(numel(rehab_days(~isnan(rehab_days)==1))));
-
+  
 %     pm={'primary_stim','alc_dep','other_drug_dep',...
 %         'years_of_use','most_recent_use','depression_diag',...
 %         'ptsd_diag','other_diag','meds','dop_drugtest',...

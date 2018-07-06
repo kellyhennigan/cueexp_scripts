@@ -89,7 +89,9 @@ switch measure
         cj = find(strncmp(d(1,:),'other diag (VA records)',23));
     case 'meds'
         cj = find(strncmp(d(1,:),'meds (VA records)',17));
-
+   
+    case 'post_for_treatment'
+        cj = find(strncmp(d(1,:),'post FOR sober living program',29));
         
     case 'dop_drugtest'
         cj = find(strncmp(d(1,:),'results',7));
@@ -124,8 +126,14 @@ for i=1:numel(subjects)
 end
 
 % convert from cell array of strings to numeric vector for numeric vars
-if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use'}))
+if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use','post_for_treatment'}))
     data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
 end
+
+% % binarize anxiety, depression, and/or PTSD diagnosis vars
+if any(strcmpi(measure,{'anxiety_diag','ptsd_diag','depression_diag'}))
+    data=strcmp(data,'yes');
+end
+
 
 end % getPatientData

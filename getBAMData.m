@@ -40,7 +40,7 @@ catch
 end
 
 % assuming spreadsheet is loaded, get data for desired question
-cj = find(strncmp(d(1,:),qStr,numel(qStr))); % column with desired data
+cj = find(strcmp(d(1,:),qStr)); % column with desired data
 
 
 for i=1:numel(subjects)

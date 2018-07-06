@@ -39,7 +39,8 @@ useSpline = 0; % if 1, time series will be upsampled by TR*10
 % omitSubs = {'zl150930','ps151001','aa151010','al151016','jv151030',...
 %     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
 %     'gm161101'};
-omitSubs = {''}; % any subjects to omit?
+% omitSubs = {'rl170603'}; % any subjects to omit?
+omitSubs={''};
 
 plotStats = 1; % 1 to note statistical signficance on figures
 
@@ -51,9 +52,11 @@ numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 % outDir_suffix = '_nr16';
 outDir_suffix = '';
 
-plotColorSet = 'grayscale'; % 'grayscale' or 'color'
+plotColorSet = 'color'; % 'grayscale' or 'color'
 
 plotErr = 'bar'; % 'bar' or 'shaded'
+
+plotToScreen=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,11 +77,8 @@ plotErr = 'bar'; % 'bar' or 'shaded'
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
 [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
-
-% plotGroups = {'relapsers non-relapsers'};
-% plotStims = {'drugs'};
-% plotStimStrs = plotStims;
 %
+
 nFigs = numel(plotStimStrs); % number of figures to be made
 
 %% get ROI time courses
@@ -92,8 +92,6 @@ for r = 1:numel(roiNames)
     
     
     %% define time courses to plot
-    
-%     f=12;
     for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
@@ -158,7 +156,6 @@ for r = 1:numel(roiNames)
         end
         
         % x and y labels
-%         xlab = 'time (s) relative to trial onset';
         xlab = 'time (s)';
         ylab = '%\Delta BOLD';
         
@@ -217,14 +214,13 @@ for r = 1:numel(roiNames)
         
         switch plotErr
             case 'bar'
-                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,0,lspec);   
+                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);   
             case 'shaded'
-                [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,0,lspec);
+                [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
         end
         
         
         fprintf('done.\n\n');
-        
         
         
     end % figures

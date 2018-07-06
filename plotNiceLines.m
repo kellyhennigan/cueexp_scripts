@@ -33,19 +33,37 @@ function [fig,leg]=plotNiceLines(x,y,se,cols,pvals,lineLabels,xlab,ylab,figtitle
 if ~iscell(y)
     y=mat2cell(y,ones(1,size(y,1)),size(y,2));
 end
+if notDefined('se')
+    se={};
+end
 if ~iscell(se)
     se=mat2cell(se,ones(1,size(se,1)),size(se,2));
 end
-
+if notDefined('lineLabels')
+    lineLabels={};
+end
+if notDefined('xlab')
+    xlab={};
+end
+if notDefined('ylab')
+    ylab={};
+end
+if notDefined('figtitle')
+    figtitle='';
+end
+if notDefined('pvals')
+    pvals=[];
+end
 
 % deal with default values
 if notDefined('cols')
-    cols = solarizedColors(nGroups);
+    cols = solarizedColors(numel(y));
 end
 
 if ~iscell(cols)
-    cols=mat2cell(cols,[ones(1,size(cols,1))],size(cols,2));
+    cols=mat2cell(cols,[ones(1,size(cols,1))],size(cols,2));   
 end
+
 
 if notDefined('savePath')
     savePath = ''; % don't save out fig unless savePath is given
@@ -80,12 +98,14 @@ set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)
 
 % legend
+if ~isempty(lineLabels)
 leg=legend(reshape(lineLabels,1,[]),'Location','Best')
 legend(gca,'boxoff')
 % xlim([1 numel(xt)])
 % set(gca,'XTick',xt)
 xlabel(xlab)
 ylabel(ylab)
+end
 
 % plot shaded error bar
 if ~isempty(se)

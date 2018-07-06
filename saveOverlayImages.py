@@ -25,7 +25,8 @@ bmapDir = 'results_cue_afni'
 inDir = os.path.join(dataDir,bmapDir)
 
 # save out images to this directory
-outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bmapDir)
+#outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bmapDir)
+outDir = os.path.join(os.path.expanduser('~'),'cueexp','paper_figs_tables_stats','group_Zmaps','figs')
 
 underlay_file = 'TT_N27.nii' # file should be in inDir
 

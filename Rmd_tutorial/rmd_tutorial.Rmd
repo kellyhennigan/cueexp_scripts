@@ -1,0 +1,147 @@
+---
+output: html_document
+---
+
+# R markdown and Data Frame Viewer tutorial
+
+This tutorial provides an introduction to [R markdown](http://rmarkdown.rstudio.com/)
+and the [Data Frame Viewer](https://github.com/sebkopf/dfv#dfv).
+
+## Markdown
+
+**Markdown** is a very basic and easy-to-use syntax for styling written documents.
+It's very easy to make some words **bold** and other words *italic* with Markdown.
+You can even [link to NCBI](http://www.ncbi.nlm.nih.gov/)!
+
+### Headers
+
+Sometimes it's useful to have different levels of headings to structure your documents.
+Start lines with a `#` to create headings. Multiple `##` in a row denote smaller heading sizes.
+
+You can use  one `#` all the way up to `######` six for different heading sizes.
+
+If you'd like to include a quote, use the > character before the line:
+
+> My Software never has bugs. It just develops random features.
+
+### Lists
+
+Sometimes you need numbered lists (here to some useful resources for markdown):
+
+1. [Markdown Basics from R-Studio](http://rmarkdown.rstudio.com/authoring_basics.html)
+1. [Mastering Markdown from GitHub](https://guides.github.com/features/mastering-markdown/) (this is where most of the examples above come from)
+
+And sometimes you want bullet points (the kind of things you can do with R markdown
+if you want to go beyond the basics):
+
+- [Lots of options for embedded R code](http://rmarkdown.rstudio.com/authoring_rcodechunks.html) (more details below)
+- [Bibliographies and References](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
+- [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html)
+- And if you have sub points, put two spaces before:
+    - Like this
+    - And this
+
+### Equations
+
+Equation support can be very handy if you need to provide some formulas in your
+text, just use $\LaTeX$ [math](https://en.wikibooks.org/wiki/LaTeX/Mathematics): $x=\sum\beta\frac{\pi^2}{\gamma_i}$
+
+Or more complicated large ones:
+
+$$
+f(n) =
+  \begin{cases}
+    n/2       & \quad \text{if } n \text{ is even}\\
+    -(n+1)/2  & \quad \text{if } n \text{ is odd}\\
+  \end{cases}
+$$
+
+### Images
+
+If you want to embed images, this is how you do it:
+
+![Pluto loves you](http://i.space.com/images/i/000/048/999/i02/pluto-new-horizons-july-2015.jpg?1437582878)
+
+And now time for a horizontal break and off to R!
+
+------
+
+## R markdown
+
+**R markdown** is a version of Markdown that is expanded to support running R code
+in between your text. The blocks of R code are called `chunks` and you can treat
+them as individual little segments of code, you can jump back and forth between them,
+run just individual ones or run all of them when you click the **Knit** button - this
+will generate a document that includes both content as well as the output of any
+embedded R code chunks within the document. This is an R code chunk:
+
+```{r my-first-chunk}
+data <- cars # get the cars data set as an example
+summary(data) # show a summary of the data set
+```
+
+You can also print out your data in table format if you want to include it in
+your document:
+
+```{r, results="asis"}
+library(knitr)
+kable(head(data))
+```
+
+Or you can print out the value of a variable in your text, say the value of $\pi$
+with 4 significant digits: `r signif(pi, 4)` or the number of data points in
+your data set: `r nrow(data)`.
+
+And of course you can embed plots, for example:
+
+```{r my-plot, echo=FALSE, fig.width=10}
+plot(data)
+```
+
+For additional information on R and R markdown, there are lots of great resources
+on the internet and the R user community is very active and extremely helpful. Often,
+googling what you'd like to achieve will provide a good starting point but I can
+also recommend the following resources specifically:
+
+ - [R reference manual](http://cran.r-project.org/doc/contrib/Short-refcard.pdf) (a great overview of many useful R commands)
+ - [Regression analysis functions](http://cran.r-project.org/doc/contrib/Ricci-refcard-regression.pdf) (statistical analysis is one of the great strengths of R, this is a handy overview of useful functionality)
+ - [Stack Overflow](http://stackoverflow.com/) (a Q&A site for programming, searching for answers here often provides very helpful information)
+
+With that, time to jump to the last item
+
+------
+
+## Data Frame Viewer
+
+Note upfront: the approach taken in this user interface is not quite up to date with current easiest practices (i.e. more recently developed R packages make things even easier) so if you're already familiar with some basics of coding and generating plots, I recommend jumping straight to the accompanying *analysis.Rmd* file and working through it instead. However, if you'd like to start just by exploring some plotting features without any R or coding background, this is still a great way to get started.
+
+The [Data Frame Viewer](https://github.com/sebkopf/dfv#dfv) is a custom R package that provides a simple user interface to facilitate getting started with using R for data processing. The GUI illustrates how to import data from Excel, melt data frames into plottable format, add additional information to the data and plot it using ggplot. Provides an easy system to keep track of multiple plots and save them in PDF format. Always shows the actual code that is executed to process or plot the data so users can experiment with changing the code directly and copy it to make their own data processing pipeline independent of this GUI.
+
+The user interface is generated using [GTK+](http://www.gtk.org/), a cross-platform toolkit for graphical user interfaces. If GTK is not installed yet, please follow this [link](https://gist.github.com/sebkopf/9405675) for information on installing R with GTK+.
+
+### Install dfv package
+
+The **devtools** package provides a super convenient way of installing the **dfv** package directly from GitHub. To install **devtools**, run the following from the R command line:
+
+```
+install.packages('devtools', depen=T) # development tools
+```
+
+Then simply install the latest version of the Data Frame Viewer directly from GitHub by running the following code (if it is the first time you install the **dfv** package, all missing dependencies will be automatically installed as well -> **ggplot2, plyr, psych, scales, grid, gWidgets, RGtk2**, and **xlsx** as well as their respective dependencies, which might take a few minutes):
+
+
+```
+library(devtools)
+install_github("sebkopf/dfv")
+```
+
+For additional information and troubleshooting help, see the [online help](https://github.com/sebkopf/dfv#dfv).
+
+### Run dfv
+
+Once installed, you can now run the Data Frame Viewer simply by typing:
+
+```
+library(dfv)
+dfv.start()
+```

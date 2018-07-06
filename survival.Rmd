@@ -1,0 +1,247 @@
+---
+title: "Cox Regressions"
+author: "Knutson, Borg, MacNiven"
+date: "Jan 15 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, collapse=TRUE, warning=FALSE}
+
+library(survival)
+library(survminer)
+library(ggplot2)
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/relapse_data/relapse_data_180516.csv')
+
+#remove subjects without relapse data
+d1 = d1[is.na(d1$relIn3Mos) == FALSE,]
+
+#d1 <- filter(d1, subjid !='wh160130', subjid!= 'at160601', subjid!= 'lm160914', subjid!= 'jb161004',subjid!= 'se161021')
+
+
+#make relapse a factor
+d1$relapse = as.factor(d1$relapse)
+d1$relIn3Mos = as.factor(d1$relIn3Mos)
+colnames(d1)[1] = 'subject'
+d1$highlow <- factor(d1$nacc_drugs_beta > median(d1$nacc_drugs_beta), labels=c('high', 'low'), levels=c(T,F))
+
+#create survival variable
+d1$nacc_drugs_beta <- as.numeric(d1$nacc_drugs_beta)
+
+library(dplyr)
+d2 <- select(d1, censored, obstime, nacc_drugs_beta, highlow) %>%
+  filter(censored==0)
+
+d1$survival <- with(d1, Surv(obstime, censored == 0))
+d1$survival
+
+d2$survival <- with(d2, Surv(obstime, censored == 0))
+d2$survival
+```
+
+#Cox regressions
+
+NAcc response to drug cues has significant hazard ratio for relapse. </br>
+(stronger response predicts sooner relapse) -- holds after controlling for age.
+
+```{r figures, collapse=TRUE}
+
+# The cox model
+cox <- coxph(survival ~ nacc_drugs_beta, data=d1)
+summary(cox)
+
+# Visualization of the cox model for survival ~ nacc_drugs_beta
+ggsurvplot(survfit(cox, data=d1), 
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int = T,
+           conf.int.style='ribbon',
+           xlim=c(0,400),
+           ggtheme = theme_survminer()) + scale_color_grey()
+
+# Figure 1
+ggsurvplot(survfit(survival~1, type="kaplan-meier", conf.type="plain", data=d1),
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int=T,
+           conf.int.style='ribbon',
+           xlim=c(0,400),
+           ggtheme = theme_survminer()) + scale_color_grey()
+
+# Figure 1b
+ggsurvplot(survfit(survival~1, type="kaplan-meier", conf.type="plain", data=d1),            surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int=T,
+           conf.int.style='ribbon',
+           xlim=c(0,200),
+           ggtheme = theme_survminer()) + scale_color_grey()
+
+# Figure 2
+sfit <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int = T,
+           conf.int.style='step',
+           palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           xlim=c(0,400),
+           ggtheme = theme_survminer())
+
+ggsurvplot(sfit,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int=T,
+           conf.int.style='step',
+           #palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           xlim=c(0,400),
+           ggtheme = theme_survminer()) + scale_colour_grey()
+
+
+# Figure 2b (up to 200 days)
+sfit <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int = T,
+           conf.int.style='step',
+           palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           xlim=c(0,200),
+           ggtheme = theme_survminer())
+
+ggsurvplot(sfit,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int=T,
+           conf.int.style='step',
+           #palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           xlim=c(0,200),
+           ggtheme = theme_survminer()) + scale_colour_grey()
+
+
+# Figure 3 
+ggplot(data=d1, aes(x=obstime, y=nacc_drugs_beta)) + 
+  geom_point()
+
+ggplot(d1, aes(x=obstime, y=nacc_drugs_beta)) + 
+  geom_point() + 
+  geom_smooth(method='lm', se=F)
+
+```
+
+
+```{r}
+
+# without censored data
+cox <- coxph(survival~nacc_drugs_beta, data=d2)
+summary(cox)
+
+# Visualization of the Cox model for survival~nacc_drugs_beta
+ggsurvplot(survfit(cox, data=d2), 
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int = T,
+           conf.int.style='ribbon',
+           ggtheme = theme_minimal())  
+
+# Figure 1
+ggsurvplot(survfit(survival~1,  type="kaplan-meier", conf.type="plain", data=d2),            surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int = T,
+           conf.int.style='ribbon',
+           ggtheme = theme_minimal())
+
+# Figure 2
+sfit <-  survfit(survival~highlow, data=d2, type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit,
+           surv.median.line = "hv", 
+           pval=T,
+           conf.int = T,
+           conf.int.style='step',
+           palette = c("#E7B800", "#2E9FDF"),
+           legend.labs = c("High Cue Response", "Low Cue Response"),
+           ggtheme = theme_minimal()) 
+
+ggsurvplot(sfit,
+           surv.median.line = "hv", 
+           pval=T,
+           conf.int = T,
+           conf.int.style='step',
+           palette = c("#E7B800", "#2E9FDF"),
+           legend.labs = c("High Cue Response", "Low Cue Response"),
+           ggtheme = theme_minimal()) + scale_colour_grey()
+
+# Figure 3 
+ggplot(data=d2, aes(x=obstime, y=nacc_drugs_beta)) + 
+  geom_point() + 
+  xlim(0,400) + 
+  xlab("Time (days)") +
+  ylab("NAcc drug response") +
+  theme(text=element_text(size=18))
+
+ggplot(d2, aes(x=obstime, y=nacc_drugs_beta)) + 
+  geom_point() + 
+  xlim(0,400) +
+  xlab("Time (days)") +
+  ylab("NAcc drug response") +
+  geom_smooth(method='lm', formula=y ~ poly(x,2), se=F) +
+  theme(text=element_text(size=18))
+```
+
+
+```{r}
+# fit1 <- survfit(cox, data=d1)
+# fit2 <- survfit( Surv(obstime, censored==0) ~ highlow, data=d1)
+# 
+# # Combine survival curves
+# fit.list <- list(
+#   cox = fit1, hl = fit2
+#   )
+# ggsurv <- ggsurvplot(fit.list, data=lung, censor=FALSE,
+#           combine=TRUE, keep.data=TRUE)
+# ggsurv
+# cox2 <- coxph(Surv(obstime,censored==0) ~  nacc_drugs_beta + highlow, data =  d1)
+# 
+# lowmean <- mean(d1$nacc_drugs_beta[d1$highlow=='low'])
+# highmean <- mean(d1$nacc_drugs_beta[d1$highlow=='high'])
+# 
+# highlow.df <- with(d1,
+#                data.frame(highlow=c('low','high'), nacc_drugs_beta=c(lowmean, highmean)))
+#                
+# split.fit <- survfit(cox2, data=highlow.df)
+# ggsurvplot(split.fit, conf.int=TRUE)
+# highlow.df
+
+```
+
+Positive arousal drug ratings don't have a significant hazard ratio for relapse.
+
+```{r PA ratings, collapse=TRUE}
+cox2 <- coxph(survival ~ pa_drug, data=d1)
+summary(cox2)
+```
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(d1, data.frame(relapse, obstime, age, pa_drug, nacc_drugs_beta))
+pairs.panels(dp)
+```
+
+
+

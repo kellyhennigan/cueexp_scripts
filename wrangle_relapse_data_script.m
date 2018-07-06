@@ -9,8 +9,10 @@ p = getCuePaths(); dataDir = p.data; % cue exp paths
 
 task = 'cue';
 
-% subjects = getCueSubjects(task); % stim patients
-subjects = getCueSubjects(task,1); % stim patients
+group = 'patients';
+% group = 'patients_complete';
+
+subjects = getCueSubjects(task,group); 
 
 
 % filepath for saving out table of variables
@@ -24,14 +26,23 @@ outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd')
 relapse = getCueData(subjects,'relapse');
 days2relapse = getCueData(subjects,'days2relapse');
 
+earlyrelapse = getCueData(subjects,'early_relapsers');
+
+relIn3Mos = getCueData(subjects,'relapse_3months');
+
+relIn4Mos = getCueData(subjects,'relapse_4months');
+
 relIn6Mos = getCueData(subjects,'relapse_6months');
+
 
 % set nan relapse vals to zero...
 % relapse(isnan(relapse))=0;
 
 [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
-Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
+% Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
+
+Trelapse = table(relapse,days2relapse,obstime,censored,earlyrelapse,relIn3Mos,relIn4Mos,relIn6Mos);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,6 +60,7 @@ demVars = {'years_of_use',...
     'anxiety_diag',...
     'ptsd_diag',...
     'education',...
+    'post_for_treatment',...
     'age'};
 
 
@@ -57,10 +69,7 @@ for i=1:numel(demVars)
     Tdem=[Tdem array2table(getCueData(subjects,demVars{i}),'VariableNames',demVars(i))];
 end
 
-% make anxiety, ptsd, and depression diagnosis vars binary 
-Tdem.ptsd_diag=strcmp(Tdem.ptsd_diag,'yes');
-Tdem.depression_diag=strcmp(Tdem.depression_diag,'yes');
-Tdem.anxiety_diag=strcmp(Tdem.anxiety_diag,'yes');
+% get a "clinical diag" variable
 Tdem.clinical_diag = (Tdem.ptsd_diag | Tdem.depression_diag | Tdem.anxiety_diag); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -82,8 +91,28 @@ pa_cue=getCueData(subjects,'pa_cue');
 pa_drugcue = pa_cue(:,2); pa_foodcue = pa_cue(:,3); pa_neutcue = pa_cue(:,4);
 
 
+% na ratings for drugs, food, and neutral stim
+na_stim=getCueData(subjects,'na_stim');
+na_drug= na_stim(:,2); na_food = na_stim(:,3); na_neut = na_stim(:,4);
+
+
+% na ratings for drugs, food, and neutral cues
+na_cue=getCueData(subjects,'na_cue');
+na_drugcue = na_cue(:,2); na_foodcue = na_cue(:,3); na_neutcue = na_cue(:,4);
+
+
 % craving (BAM response)
 craving = getCueData(subjects,'craving');
+
+
+% BAM q1 ("In the past 30 days, would you say your physical health has
+% been?")
+bam_health = getBAMData(subjects,'q1');
+
+
+% BAM q2 ("In the past 30 days, how many nights did you have trouble
+% falling asleep or staying asleep?")
+bam_sleep = getBAMData(subjects,'q2');
 
 
 % BAM q3 ("In the past 30 days, how many days have you felt depressed,
@@ -97,30 +126,51 @@ a2 = getBAMData(subjects,'q7d');
 bam_stimuse = a1+a2;
 
 
+% confidence
+bam_confidence = getBAMData(subjects,'q9');
+
 % risky situations 
 bam_riskysituations = getBAMData(subjects,'q11');
 
+
+% bam q14
+bam_q14 = getBAMData(subjects,'q14');
+
+% bam q15
+bam_q15 = getBAMData(subjects,'q15');
+
+% bam q16
+bam_q16 = getBAMData(subjects,'q16');
+
+% bam q17
+bam_q17 = getBAMData(subjects,'q17');
 
 % BIS data
 bis = getCueData(subjects,'bis');
 
 
 % Kirby discounting 
-Kirbyk = getCueData(subjects,'discount_rate');
+Kirbyk = log(getCueData(subjects,'discount_rate'));
 
 
 % define table of behavioral predictors
 Tbeh = table(pref_drug,pref_food,pref_neut,...
     pa_drug,pa_food,pa_neut,...
     pa_drugcue,pa_foodcue,pa_neutcue,...
-    craving,bam_upset,bam_stimuse,bam_riskysituations,bis,Kirbyk);
+    na_drug,na_food,na_neut,...
+    na_drugcue,na_foodcue,na_neutcue,...
+    craving,bam_upset,bam_stimuse,bam_riskysituations,bis,Kirbyk,...
+    bam_health,bam_sleep,bam_confidence,bam_q14,bam_q15,bam_q16,bam_q17);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt'};
+
+% roiNames = {'nacc_desai','nacc'}
+% roiVarNames = {'nacc_desai','nacc'};
 
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains','pvt'};
@@ -135,8 +185,8 @@ bdNames = {};  % brain data predictor names
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
-% tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
+% tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
+tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
 
 TRs = [3:7];
 aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)

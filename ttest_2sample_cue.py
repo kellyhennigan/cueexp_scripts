@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 0 # 1 to just print, 0 to print and execute
+justPrint = 1 # 1 to just print, 0 to print and execute
 
 # set up study-specific directories and file names, etc.
 if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -39,8 +39,8 @@ doClustSim = 0 # 1 to do clustsim, otherwise 0 (it takes a while)
 
 
 # file containing covariate data 
-# cv_file = os.path.join(res_dir,'subj_age.txt')  
-# out_str = out_str+'_CVage'
+#cv_file = os.path.join(res_dir,'subj_age.txt')  
+#out_str = out_str+'_CVage'
 cv_file = ''
 
 
@@ -74,8 +74,7 @@ sub_labels2 = ['Full_R^2',
 'alcohol-neutral_GLT#0_Coef',
 'drugs-neutral_GLT#0_Coef',
 'food-neutral_GLT#0_Coef',
-'drugs-food_GLT#0_Coef',
-'drugs-foodneutral_GLT#0_Coef']
+'drugs-food_GLT#0_Coef']
 
 
 # labels for out files 
@@ -84,8 +83,7 @@ out_labels2 =  ['ZFull_R^2'+out_str,
 'Zalc-neutral'+out_str,
 'Zdrug-neutral'+out_str,
 'Zfood-neutral'+out_str,
-'Zdrug-food'+out_str,
-'Zdrug-foodneutral'+out_str]
+'Zdrug-food'+out_str]
 
 # concatenate lists 
 in_str = np.append(np.tile(in_str,len(sub_labels)),np.tile(in_str2,len(sub_labels2)))

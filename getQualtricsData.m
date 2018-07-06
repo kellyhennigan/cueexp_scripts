@@ -39,7 +39,7 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 
 
 if notDefined('filepath')
-    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey170623.csv';
+    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180319.csv';
 end
 
 
@@ -128,6 +128,7 @@ d.subjid = subjects;
 
 for i=1:numel(subjects)
     
+    subjects{i}
     % deal with subject-specific issues here:
     
     % subject ja151218's responses are coded with id, 'ja151218_actual'
@@ -150,8 +151,8 @@ for i=1:numel(subjects)
     elseif strcmp(subjects{i},'ld160918')
         si=find(strcmp('ld160914',qsubs));
         
-        % subject tj160529 and jw170330 were entered twice;
-    elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330')
+        % subjects who were entered twice: 
+    elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330') || strcmp(subjects{i},'tb171209') || strcmp(subjects{i},'kk180117')
         si=find(strcmp(subjects{i},qsubs));
         si = si(1);
         
@@ -187,8 +188,15 @@ for i=1:numel(subjects)
         d.classify2{i,1} = '';
         d.alc_morals(i,1) = nan;
         d.alc_morals2{i,1} = '';
+        
         d.smoke(i,1) = nan;
         d.smoke_perday{i,1} = '';
+        
+        % subject ds170728 does not smoke; record that here
+        if strcmp(subjects{i},'ds170728')
+            d.smoke(i,1) = 0;
+            d.smoke_perday{i,1} = 0;
+        end
         
         pa(i,:) = nan(1,72);
         na(i,:) = nan(1,72);

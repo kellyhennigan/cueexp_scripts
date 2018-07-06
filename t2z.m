@@ -21,8 +21,9 @@ end
 
 Z = norminv(tcdf(double(t),double(df)),0,1); % Z score corresponding to a t-stat with df degrees of freedom
 
-
-fprintf('\n\nWARNING:\n\n Z vals for abs(Z) vals greater than 10 or so\n will be returned as inf!!!\n\n') 
+if abs(Z)>8
+    fprintf('\n\nWARNING:\n\n Z vals for abs(Z) vals greater than 10 or so\n will be returned as inf!!!\n\n')
+end
 
 %% to get the p-val from the t or Z score, with 1 or 2 tails: 
 % 

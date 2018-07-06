@@ -26,7 +26,7 @@ if notDefined('format')
 end
 
 if notDefined('set')
-    set = 'grayscale'; % either 'grayscale' or 'color'
+    set = 'color'; % either 'grayscale' or 'color'
 end
 
 
@@ -53,7 +53,7 @@ switch set
         
         % want ratings
         strongwant_color =   [30 30 30]./255; % grayish black
-        somewhatwant_color =  [77 77 77]./255; % drak gray
+        somewhatwant_color =  [77 77 77]./255; % dark gray
         somewhatdontwant_color = [123 123 123]./255; % mid gray
         strongdontwant_color = [170 170 170]./255; % light gray
         
@@ -63,21 +63,21 @@ switch set
         
         % stims
         alcohol_color = [253 158 33]./255; % orange
-        drugs_color = [ 246 97 165]./255; % pink
+        drugs_color = [253 44 20]./255; %  fire-y red
         food_color = [2 117 180]./255; % blue
-        neutral_color = [170 170 170]./255; % light gray
+        neutral_color = [100 100 100]./255; % light gray
         
         % groups
         controls_color =  [2 117 180]./255; % blue
         patients_color = [ 253 44 20]./255; %  fire-y red
         relapsers_color = [ 253 44 20]./255; % fire-y red
-        nonrelapsers_color = [29 186 154]./255; % green
+        nonrelapsers_color = [249 192 50]./255; % yellow
         
         % want ratings
-        strongwant_color =  [219 79 106]./255;       % pink
-        somewhatwant_color =  [253 158 33]./255;      % orange
-        somewhatdontwant_color = [42 160 120]./255;  % green
-        strongdontwant_color = [2 117 180]./255;     % blue
+        strongwant_color = [2 117 180]./255;     % blue
+        somewhatwant_color = [42 160 120]./255;  % green
+        somewhatdontwant_color =  [253 158 33]./255;      % orange
+        strongdontwant_color =  [219 79 106]./255;       % pink
         
         
 end
@@ -109,10 +109,18 @@ for i=1:numel(labels)
         case 'patients'
             colors(i,:) = patients_color;
             
-        case {'relapsers_6months','relapsers'}
+        case {'relapsers_3months','relapsers 3months',...
+                'relapsers_4months','relapsers 4months',...
+                'relapsers_6months','relapsers 6months',...
+                'relapsers_8months','relapsers 8months',...
+                'relapsers'}
             colors(i,:) = relapsers_color;
             
-        case {'nonrelapsers_6months','nonrelapsers'}
+        case {'nonrelapsers_3months','nonrelapsers 3months',...
+                'nonrelapsers_4months','nonrelapsers 4months',...
+                'nonrelapsers_6months','nonrelapsers 6months',...
+                'nonrelapsers_8months','nonrelapsers 8months',...
+                'nonrelapsers'}
             colors(i,:) = nonrelapsers_color;
             
         case 'strong want'
