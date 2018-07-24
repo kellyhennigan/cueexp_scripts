@@ -46,8 +46,8 @@ step_size = ''						# define step size for tracking alg (in mm); default is .1* 
 cutoff = ''					
 #init_cutoff = '.05'				# FA cutoff for initializing tracks 
 init_cutoff = ''				
-#initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
-initdir = ''			
+initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
+#initdir = ''			
 nthreads = 8						# of threads to use for tractography
 dilateRoiStr = '_dil3' 				# if ROI is dilated, add dilation string here
 
