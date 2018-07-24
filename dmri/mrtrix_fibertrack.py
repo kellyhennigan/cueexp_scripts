@@ -126,7 +126,7 @@ if __name__ == '__main__':
 				if seedStr:
 					cmd = cmd+' -seed_image '+os.path.join(roiDir,seedStr+LorR+dilateRoiStr+'.nii.gz')
 				if roi:
-					cmd = cmd+' -include '+os.path.join(roiDir,roi+LorR+dilateRoiS'.nii.gz')
+					cmd = cmd+' -include '+os.path.join(roiDir,roi+LorR+dilateRoiStr+'.nii.gz')
 				if excPath:
 					cmd = cmd+' -exclude '+excPath
 				if number:
