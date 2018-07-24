@@ -49,7 +49,7 @@ init_cutoff = ''
 #initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
 initdir = ''			
 nthreads = 8						# of threads to use for tractography
-dilateRoiStr = '_dil3'. 			# if ROI is dilated, add dilation string here
+dilateRoiStr = '_dil3' 				# if ROI is dilated, add dilation string here
 
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
@@ -126,7 +126,7 @@ if __name__ == '__main__':
 				if seedStr:
 					cmd = cmd+' -seed_image '+os.path.join(roiDir,seedStr+LorR+dilateRoiStr+'.nii.gz')
 				if roi:
-					cmd = cmd+' -include '+os.path.join(roiDir,roi+LorR+dilateRoiStr+'.nii.gz')
+					cmd = cmd+' -include '+os.path.join(roiDir,roi+LorR+dilateRoiS'.nii.gz')
 				if excPath:
 					cmd = cmd+' -exclude '+excPath
 				if number:
