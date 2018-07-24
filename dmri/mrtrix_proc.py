@@ -38,7 +38,7 @@ doTrackWBFibers = False
 doWBFiberDensity = False
 
 # make dilated white matter mask to use for fiber tracking? 
-doWMMask = False
+doWMMask = True
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
@@ -53,7 +53,7 @@ data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data') # main data dir
 
 dwi_dir='dti96trilin'
 
-resp_alg = 'fa'		# algorithm for estimating response fxn; some options are tournier, fa, ...
+resp_alg = 'tournier'		# algorithm for estimating response fxn; some options are tournier, fa, ...
 
 mrt_dir = os.path.join(dwi_dir,'mrtrix_'+resp_alg)
 
