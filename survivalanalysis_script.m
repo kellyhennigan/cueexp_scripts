@@ -8,8 +8,8 @@ dataDir = p.data;
 figDir = p.figures;
 
 
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -26,6 +26,34 @@ Yy = eval(['T.' Y]);
  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% check everything by itself
+
+% get all variable names
+vars = T.Properties.VariableNames; 
+
+a={};
+zB=[];
+
+y = T.obstime;
+censored = T.censored;
+
+for i=10:numel(vars)
+    
+    X = table2array(T(:,i));
+    
+    [b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+   if stats.p<.05
+        a=[a vars{i}];
+        zB = [zB stats.z];
+    end
+end
+
+[zB,ti]=sort(zB'); zB
+a = a(ti)'; a
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Cox regression on relapse 
 
@@ -37,6 +65,14 @@ y = T.obstime;
 censored = T.censored;
 
 [b,logl,H,stats] = coxphfit(X,y,'Censoring',censored)
+
+
+%%
+
+hazardratio=exp(b)
+se=stats.se
+HR_CIlo=exp(b-1.96.*se)
+HR_CIhi=exp(b+1.96.*se)
 
 % only look at the first 3 months
 idx=find(T.obstime>100 & T.relapse==1);

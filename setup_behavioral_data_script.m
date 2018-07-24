@@ -116,6 +116,10 @@ outPath{1} = fullfile(rawDir,'mid','behavioral_data',[subjid '_mid_matrix.csv'])
 outPath{2} = fullfile(subjOutDir,'mid_matrix.csv');
 outPath{3} = fullfile(subjOutDir,'mid_matrix_wEnd.csv');
 
+% find inFiles
+
+
+
 % check that stim files exist
 if exist(fullfile(inDir,inFiles{1}),'file') && exist(fullfile(inDir,inFiles{2}),'file')
     
@@ -142,8 +146,10 @@ if exist(fullfile(inDir,inFiles{1}),'file') && exist(fullfile(inDir,inFiles{2}),
         
         % add extra rows to ends of blocks so that these TRs won't be
         % unnecessarily not included in the analysis
-        Tnull = readtable(fullfile(p.baseDir,'misc','mid_matrix_nan_4TRs.csv'));
-        T=[T1;Tnull;T2;Tnull];
+%         Tnull = readtable(fullfile(p.baseDir,'misc','mid_matrix_nan_4TRs.csv'));
+        Tnull=array2table(nan(4,size(T1,2)),'VariableNames',T.Properties.VariableNames);
+        Tnull.cue_value=repmat({'nan'},4,1);  Tnull.trial_gain=repmat({'nan'},4,1);  Tnull.total=repmat({'nan'},4,1);
+         T=[T1;Tnull;T2;Tnull];
         
         % check if outfile already exists
         if exist(outPath{3},'file')
@@ -216,6 +222,8 @@ clear inFile inPath outPath T i
 
 % stim timing file
 inFiles = {[subjid '_b1.csv'],[subjid '_b2.csv']};
+% inFiles = {[subjid '_b1_MIDI.csv'],[subjid '_b2_MIDI.csv']};
+
 inDir = fullfile(rawDir,'midi','task_files','MIDI','data');
 outPath{1} = fullfile(rawDir,'midi','behavioral_data',[subjid '_midi_matrix.csv']);
 outPath{2} = fullfile(subjOutDir,'midi_matrix.csv');
@@ -247,7 +255,9 @@ if exist(fullfile(inDir,inFiles{1}),'file') && exist(fullfile(inDir,inFiles{2}),
         
         % add extra rows to ends of blocks so that these TRs won't be
         % unnecessarily not included in the analysis
-        Tnull = readtable(fullfile(p.baseDir,'misc','midi_matrix_nan_4TRs.csv'));
+%         Tnull = readtable(fullfile(p.baseDir,'misc','midi_matrix_nan_4TRs.csv'));
+       Tnull=array2table(nan(4,size(T1,2)),'VariableNames',T.Properties.VariableNames);
+       Tnull.cue_value=repmat({'nan'},4,1);  Tnull.trial_gain=repmat({'nan'},4,1);  Tnull.total=repmat({'nan'},4,1);
         T=[T1;Tnull;T2;Tnull];
         
         % check if outfile already exists
@@ -276,7 +286,9 @@ clear inFiles inDir outPath T1 T2 Tnull T i
 
 
 %%%%%%%%% rating file
-inFile = [subjid '_ratings.csv'];
+% inFile = [subjid '_ratings.csv'];
+inFile = [subjid '_ratings_MIDI.csv'];
+
 inPath = fullfile(rawDir,'midi','task_files','MIDI','data',inFile);
 outPath{1} = fullfile(rawDir,'midi','behavioral_data',[subjid '_midi_ratings.csv']);
 outPath{2} = fullfile(subjOutDir,'midi_ratings.csv');

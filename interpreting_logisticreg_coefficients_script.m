@@ -225,6 +225,17 @@ fprintf(['\npercent change in odds of survival\n',...
 
 
 
+%% 
+
+% for cox regression with a continous predictor with mean=0 and sd=1, 
+% you get coefficient B from the model fit, 
+% the hazard ratio = exp(B)
+
+% e.g., if b=0.8477, 
+% hazard ratio = exp(b) = 2.3342, 
+
+% which means that for every increase of 1 SD, there's a 133% increase in
+% risk for relapse.
 
 
 

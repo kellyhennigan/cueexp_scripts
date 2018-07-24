@@ -14,7 +14,10 @@ close all
 [p,task,subjects,gi]=whichCueSubjects();
 dataDir = p.data;
 
-subjects = {'rl180205'}; 
+subjects = {'dr180715'};
+
+
+
 
 % define info that's different for our data vs claudia's data here
 % hard code # of TRs bc behavioral log file doesn't match # of actual TRs acquired

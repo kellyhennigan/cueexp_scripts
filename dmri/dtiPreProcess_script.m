@@ -24,7 +24,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % define relevant input 
-[p,task,subjects,gi]=whichCueSubjects('stim','');
+[~,~,subjects]=whichCueSubjects('stim','');
+
 
 %% do it
 

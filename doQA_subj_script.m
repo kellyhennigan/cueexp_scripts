@@ -4,7 +4,23 @@
 clear all
 close all
 
-[p,task,subjects,gi]=whichCueSubjects('stim');
+p=getCuePaths();
+task=whichCueTask(); 
+
+task_subjects = getCueSubjects(task);
+fprintf('\n');
+subj_list=cellfun(@(x) [x ' '], task_subjects, 'UniformOutput',0)';
+disp([subj_list{:}]);
+fprintf('\nwhich subjects to process? \n');
+subjects = input('enter sub ids, or hit return for all subs above: ','s');
+if isempty(subjects)
+    subjects = task_subjects;
+else
+    subjects = splitstring(subjects)';
+end
+
+
+
 dataDir = p.data;
 
 figDir = fullfile(p.figures,'QA',task);
@@ -91,12 +107,12 @@ for s = 1:numel(subjects)
     else
         
         % plot motion params & save if desired
-        fig = plotMotionParams(mp);
-        if savePlots
-            outName = [subject '_mp'];
-            print(gcf,'-dpng','-r300',fullfile(figDir,outName));
-        end
-        
+    %    fig = plotMotionParams(mp);
+%         if savePlots
+%             outName = [subject '_mp'];
+%             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
+%         end
+%         
         
         % calculate euclidean norm (head motion distance roughly in mm units)
         en = [0;sqrt(sum(diff(mp).^2,2))];
@@ -121,13 +137,13 @@ for s = 1:numel(subjects)
         
         
         % plot, if desired
-        if ~isempty(roits_file) && exist(roits_file,'file')
+        if ~isempty(roits_file) && exist(sprintf(roits_file,subject),'file')
             ts = dlmread(sprintf(roits_file,subject));
         else
             ts = zeros(numel(en),1); roi_str = '';
         end
         
-        fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
+       fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
         
         % if a time series is plotted for diffusion data, ignore the b0 volumes
         % (it messes up the plot scale)

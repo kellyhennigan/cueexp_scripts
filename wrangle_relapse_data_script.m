@@ -24,6 +24,7 @@ outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd')
 %% relapse vars
 
 relapse = getCueData(subjects,'relapse');
+
 days2relapse = getCueData(subjects,'days2relapse');
 
 earlyrelapse = getCueData(subjects,'early_relapsers');
@@ -35,10 +36,21 @@ relIn4Mos = getCueData(subjects,'relapse_4months');
 relIn6Mos = getCueData(subjects,'relapse_6months');
 
 
+
 % set nan relapse vals to zero...
 % relapse(isnan(relapse))=0;
 
 [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+
+
+% relapse(find(strcmp(subjects,'rm180316')))=1; 
+% days2relapse(find(strcmp(subjects,'rm180316')))=20; 
+% earlyrelapse(find(strcmp(subjects,'rm180316')))=1; 
+% relIn3Mos(find(strcmp(subjects,'rm180316')))=1; 
+% relIn4Mos(find(strcmp(subjects,'rm180316')))=1; 
+% relIn6Mos(find(strcmp(subjects,'rm180316')))=1; 
+% obstime(find(strcmp(subjects,'rm180316')))=20;
+% censored(find(strcmp(subjects,'rm180316')))=0;
 
 % Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
 
@@ -185,8 +197,8 @@ bdNames = {};  % brain data predictor names
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
-tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
+tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
+% tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
 
 TRs = [3:7];
 aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)

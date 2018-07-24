@@ -27,7 +27,6 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim','');
 dataDir = p.data;
 
-
 getCuePaths;
 !source $FREESURFER_HOME/SetUpFreeSurfer.sh
 fshome = getenv('FREESURFER_HOME');

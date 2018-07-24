@@ -11,7 +11,8 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
@@ -184,7 +185,7 @@ fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
 
 %% model:
 
-modelspec = [Y '~  nacc_drugs_beta'];
+modelspec = [Y '~  years_of_use bam_upset nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial');
 
 fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);

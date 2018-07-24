@@ -39,7 +39,7 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 
 
 if notDefined('filepath')
-    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180319.csv';
+    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180721.csv';
 end
 
 
@@ -128,7 +128,7 @@ d.subjid = subjects;
 
 for i=1:numel(subjects)
     
-    subjects{i}
+%     subjects{i}
     % deal with subject-specific issues here:
     
     % subject ja151218's responses are coded with id, 'ja151218_actual'
@@ -152,13 +152,19 @@ for i=1:numel(subjects)
         si=find(strcmp('ld160914',qsubs));
         
         % subjects who were entered twice: 
-    elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330') || strcmp(subjects{i},'tb171209') || strcmp(subjects{i},'kk180117')
+    elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330') ...
+            || strcmp(subjects{i},'tb171209') || strcmp(subjects{i},'kk180117') ...
+            || strcmp(subjects{i},'sh180518') || strcmp(subjects{i},'jj180618')
         si=find(strcmp(subjects{i},qsubs));
         si = si(1);
         
         % subject al170316 was incorrectly entered as al160317
     elseif strcmp(subjects{i},'al170316')
         si=find(strcmp('al160317',qsubs));
+   
+%         subject jc180212 coded by his name
+    elseif strcmp(subjects{i},'jc180212')
+        si=find(strcmp('Jonathan Contoplianos',qsubs));
         
     else
         si=find(strcmp(subjects{i},qsubs));

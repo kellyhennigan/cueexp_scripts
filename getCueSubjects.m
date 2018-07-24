@@ -92,9 +92,9 @@ if ~isempty(group)
         
         % return patients
     elseif strcmpi(group,'patients') || isequal(group,1)
-        subjects = subjects(gi==1);
-        notes = notes(gi==1);
-        gi = gi(gi==1);
+        subjects = subjects(gi>0);
+        notes = notes(gi>0);
+        gi = gi(gi>0);
         
     % return patients with complete followup data (or confirmed relapse before then) 
     elseif strcmpi(group,'patients_complete') 
