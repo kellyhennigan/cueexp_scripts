@@ -53,7 +53,8 @@ data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data') # main data dir
 
 dwi_dir='dti96trilin'
 
-resp_alg = 'tournier'		# algorithm for estimating response fxn; some options are tournier, fa, ...
+resp_alg = 'fa'		# algorithm for estimating response fxn; some options are tournier, fa, ...
+# note: FA method is WAY faster than tournier!! 
 
 mrt_dir = os.path.join(dwi_dir,'mrtrix_'+resp_alg)
 
