@@ -336,8 +336,13 @@ if __name__ == '__main__':
 
 		# make dilated white matter mask to use for fiber tracking 
 		if doWMMask:
-			cmd = 'maskfilter -npass 2 t1/wm_mask.nii.gz dilate '+mrt_dir+'/wm_mask_dil2.nii.gz'
-			doCommand(cmd)
+			wmmask_dilated_file=mrt_dir+'/wm_mask_dil2.nii.gz'
+			if os.path.exists(wmmask_dilated_file):
+				print '\ndilated WM mask already exists...\n'
+			else:	
+				print 'dilating WM mask for fiber tracking...\n'
+				cmd = 'maskfilter -npass 2 t1/wm_mask.nii.gz dilate '+wmmask_dilated_file
+				doCommand(cmd)
 
 
 		print 'FINISHED SUBJECT '+subject
