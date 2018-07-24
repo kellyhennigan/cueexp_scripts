@@ -38,7 +38,7 @@ doTrackWBFibers = False
 doWBFiberDensity = False
 
 # make dilated white matter mask to use for fiber tracking? 
-doWMMask = True
+doWMMask = False
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
