@@ -19,7 +19,7 @@ dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')	# experiment mai
 # define input directory and files relative to subject's directory 
 method = 'mrtrix_fa'
 inDir = 'dti96trilin/'+method	# directory w/in diffusion data and b-gradient file and mask
-infile = 'CSD2.mif'					# tensor or CSD file 
+infile = 'CSD8.mif'					# tensor or CSD file 
 alg = 'iFOD2'						# will do iFOD2 by default
 gradfile = 'b_file' 				# b-gradient encoding file in mrtrix format
 #maskfile = 'brainMask.nii.gz' 		# this should be included
@@ -54,7 +54,7 @@ dilateRoiStr = '_dil3' 				# if ROI is dilated, add dilation string here
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-outFileStr = '_lmax2'  # out file name suffix? Leave blank if not desired
+outFileStr = '_lmax8'  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
