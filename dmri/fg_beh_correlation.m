@@ -13,7 +13,7 @@ dataDir = pa.data; figDir = pa.figures;
 % group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
- group = {'patients'};
+ group = {'controls'};
 
 % directory & filename of fg measures
 method = 'conTrack';
@@ -27,8 +27,8 @@ scale = 'BIS'
 
 % include control variables? 
 % covars = {'age','gender'};
-covars = {'age'};
-% covars = {};
+% covars = {'age'};
+covars = {};
 
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
@@ -44,7 +44,7 @@ outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
     
 omit_subs = {
 	'jr160507'
-% 	'gm160909'
+ 	'gm160909'
  	'ld160918'
 	'gm161101'
     'cg160715'
@@ -119,7 +119,7 @@ end
 %% fig 2: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
-node = 'best'; % an integer specifying which node to plot, or 'best'
+% node = 'best'; % an integer specifying which node to plot, or 'best'
 bestWhat = 'MD'; % which fg measure(s) to test for best
 node = [50:59];
 

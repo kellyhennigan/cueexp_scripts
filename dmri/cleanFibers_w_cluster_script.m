@@ -32,11 +32,11 @@ LorR = ['L','R'];
 doPlot = 1; % 1 to plot & save out figs, otherwise 0
 
 
-method = 'conTrack';
-lmax = '';
+% method = 'conTrack';
+% lmax = '';
 
-% method = 'mrtrix_fa';
-% lmax = 'lmax8_ma1000';
+method = 'mrtrix_fa';
+lmax = 'lmax8';
 
 
 % out file name for pruned fibers

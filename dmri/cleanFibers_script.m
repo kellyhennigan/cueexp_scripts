@@ -24,18 +24,20 @@ dataDir = p.data;
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
-targets = {'nacc','caudate','putamen'}; % string for roi 
+% targets = {'nacc','caudate','putamen'}; % string for roi 
 % targets = {'PVT'};
+targets = {'nacc'}; % string for roi 
+
 
 LorR = ['L','R'];
 
 savePlots = 1; % 1 to save out plots, otherwise 0
 
-method = 'conTrack';
-lmax = '';
+% method = 'conTrack';
+% lmax = '';
 
-% method = 'mrtrix_fa';
-% lmax = 'lmax8_ma1000';
+method = 'mrtrix_fa';
+lmax = 'lmax8';
 
 % out file name for pruned fibers
 % outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR

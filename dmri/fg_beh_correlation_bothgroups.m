@@ -21,7 +21,7 @@ scale = 'BIS';
 group = {'controls','patients'};
 % group = {'nonrelapsers','relapsers'};
 
-cols=getCueExpColors(numel(group)); % plotting colors for groups
+cols=getCueExpColors(group); % plotting colors for groups
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(p.figures, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
@@ -56,7 +56,7 @@ fgMLabels=fgMLabels{1};
 %%%%%%%%%%%%%%% params for figure 1
 % node = 'best'; % an integer specifying which node to plot, or 'best'
 % bestWhat = 'MD'; % which fg measure(s) to test for best
- node = 11;
+ node = 50:59;
 
 fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
@@ -120,20 +120,20 @@ end
 %% fig 2: plot behavior-fg correlation as heatmap over trajectory of fg
 % measures
 
-%%%%%%%%%%%%%%% params for figure 2
-fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
-fgMPlot = 'FA'; % fg measure to plot as values along pathway node
-%%%%%%%%%%%%%%%
-
-% get correlation between fgMCorr & scores along pathway nodes
-[r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
-
-% plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
-fig2=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
-title([fgMCorr '-' scale ' correlation strength in color']);
-if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot '_' fgMCorr '_' scale '_corr']))
-end
+% %%%%%%%%%%%%%%% params for figure 2
+% fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+% fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+% %%%%%%%%%%%%%%%
+% 
+% % get correlation between fgMCorr & scores along pathway nodes
+% [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+% 
+% % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+% fig2=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
+% title([fgMCorr '-' scale ' correlation strength in color']);
+% if saveFigs
+%     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot '_' fgMCorr '_' scale '_corr']))
+% end
 
 
 
