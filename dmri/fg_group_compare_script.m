@@ -100,7 +100,8 @@ for g=1:numel(group)
     thisFgM{g} = fgMeasures{j}(gi==g-1,:);
 end
 
-cols = reshape(getCueExpColors(numel(group),'cell'),size(thisFgM,1),[]);
+ cols = reshape(getCueExpColors(group,'cell'),size(thisFgM,1),[]);
+% cols = reshape(getCueExpColors(numel(group),'cell'),size(thisFgM,1),[]);
 pvals=[];
 lineLabels=group;
 xlab = 'fg nodes';

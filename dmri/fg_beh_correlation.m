@@ -13,7 +13,7 @@ dataDir = pa.data; figDir = pa.figures;
 % group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
- group = {'controls'};
+ group = {'patients'};
 
 % directory & filename of fg measures
 method = 'conTrack';
@@ -82,6 +82,7 @@ end
 %%%%%%%%%%%% get fiber group measures & behavior scores
 [fgMeasures,fgMLabels,scores,subjects,gi]=loadFGBehVars(...
     fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),scale,group,omit_subs);
+
 
 
 % mid betas:

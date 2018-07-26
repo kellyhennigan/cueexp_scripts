@@ -44,6 +44,8 @@ lmax = 'lmax8';
 outFgStr = [seed '%s_' target '%s_autoclean']; %s: LorR, LorR # NOTE: '_cl1' or 2 will be appended to end
 
 
+plotToScreen = 0; % 1 to plot to screen, otherwise 0
+
 %% get pruning params based on tractography method
 
 switch method
@@ -144,8 +146,8 @@ for lr=LorR
         
         % plot, if desired
         if doPlot
-            AFQ_RenderFibers(cleanfg{2},'tubes',0,'color',[0 0 1]);
-            AFQ_RenderFibers(cleanfg{1},'tubes',0,'color',[1 0 0],'newfig',0);
+            AFQ_RenderFibers(cleanfg{2},'tubes',0,'color',[0 0 1],'plottoscreen',plotToScreen);
+            AFQ_RenderFibers(cleanfg{1},'tubes',0,'color',[1 0 0],'newfig',0,'plottoscreen',plotToScreen);
             title([subject ' fg1 in red, fg2 in blue'])
             print(gcf,'-dpng','-r300',fullfile(figDir,[subject '_clustered_fgs']));
         end

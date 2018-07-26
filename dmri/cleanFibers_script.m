@@ -43,6 +43,7 @@ lmax = 'lmax8';
 % outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR
 outFgStr = [seed '%s_%s%s_autoclean']; %s: LorR, target, LorR
 
+plotToScreen = 0; % don't plot to screen 
 
 %% get pruning params based on tractography method
 
@@ -131,7 +132,7 @@ for j=1:numel(targets)
             nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
             
             
-            AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0]);
+            AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
             title(gca,subject);
             if savePlots
                 print(gcf,'-dpng','-r300',fullfile(figDir,subject));

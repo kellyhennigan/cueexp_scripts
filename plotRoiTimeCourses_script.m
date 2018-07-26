@@ -132,7 +132,7 @@ for r = 1:numel(roiNames)
             tc
             error('\hold up - time courses for at least one stim/group weren''t loaded.')
         end
-        
+              
         mean_tc = cellfun(@nanmean, tc,'uniformoutput',0);
         se_tc = cellfun(@(x) nanstd(x,1)./sqrt(size(x,1)), tc,'uniformoutput',0);
         
