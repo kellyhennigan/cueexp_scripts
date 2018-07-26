@@ -52,12 +52,12 @@ switch method
     
     case 'conTrack'
         
-%         fgStr = ['scoredFG_' seed '%s_' target '%s_top1000.pdb']; %s: LorR, LorR
+        %         fgStr = ['scoredFG_' seed '%s_' target '%s_top1000.pdb']; %s: LorR, LorR
         fgStr = ['scoredFG_' seed '%s_' target '%s_top1000.pdb']; %s: LorR, LorR
         box_thresh = 8;
         maxIter = 5;
         
-     case {'mrtrix','mrtrix_orig','mrtrix_fa','mrtrix_tournier'}
+    case {'mrtrix','mrtrix_orig','mrtrix_fa','mrtrix_tournier'}
         
         fgStr = [seed '%s_' target '%s_' lmax '.tck']; % %s: LorR, LorR
         box_thresh = 5;
@@ -109,53 +109,62 @@ for lr=LorR
         fg = fgRead(fgName);
         
         
-        % reorient fibers so they all start in DA ROI
-        [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
-        
-        
-        % remove crazy fibers that deviate outside area defined by box_thresh
-        fg = pruneFG(fg,roi1,roi2,0,box_thresh);
-        
-        
-        % do kmeans clustering to omit fibers above the AC, if desired
-        [cluster_fgs{1},cluster_fgs{2},cl_means{i}]=clusterDANAccFibers(fg,0);
-        
-        
-        % now cycle through the 2 k-means clustered fiber groups; 1st one goes
-        % under AC, 2nd one goes above AC
-        for j=1:2
+        if numel(fg.fibers)<2
+            fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+        else
             
-            fg = cluster_fgs{j};
+            % reorient fibers so they all start in DA ROI
+            [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
             
-            % remove outliers and save out cleaned fiber group
-            %     if ~isempty(fg.fibers)
             
-            [~, keep,niter]=AFQ_removeFiberOutliers(fg,...
-                maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+            % remove crazy fibers that deviate outside area defined by box_thresh
+            fg = pruneFG(fg,roi1,roi2,0,box_thresh);
             
-            cleanfg{j} = getSubFG(fg,find(keep),[outFgName '_cl' num2str(j)]);
+            if numel(fg.fibers)<2
+                fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+            else
+                
+                
+                % do kmeans clustering to omit fibers above the AC, if desired
+                [cluster_fgs{1},cluster_fgs{2},cl_means{i}]=clusterDANAccFibers(fg,0);
+                
+                
+                % now cycle through the 2 k-means clustered fiber groups; 1st one goes
+                % under AC, 2nd one goes above AC
+                for j=1:2
+                    
+                    fg = cluster_fgs{j};
+                    
+                    % remove outliers and save out cleaned fiber group
+                    %     if ~isempty(fg.fibers)
+                    
+                    [~, keep,niter]=AFQ_removeFiberOutliers(fg,...
+                        maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                    
+                    cleanfg{j} = getSubFG(fg,find(keep),[outFgName '_cl' num2str(j)]);
+                    
+                    nFibers_clean(i,j) = numel(cleanfg{j}.fibers); % keep track of the final # of fibers
+                    
+                    fprintf('\n\n final # of %s cleaned fibers: %d\n\n',cleanfg{j}.name, nFibers_clean(i,j));
+                    
+                    mtrExportFibers(cleanfg{j},cleanfg{j}.name);  % save out cleaned fibers
+                    
+                end
+                
+                
+                % plot, if desired
+                if doPlot
+                    AFQ_RenderFibers(cleanfg{2},'tubes',0,'color',[0 0 1],'plottoscreen',plotToScreen);
+                    AFQ_RenderFibers(cleanfg{1},'tubes',0,'color',[1 0 0],'newfig',0,'plottoscreen',plotToScreen);
+                    title([subject ' fg1 in red, fg2 in blue'])
+                    print(gcf,'-dpng','-r300',fullfile(figDir,[subject '_clustered_fgs']));
+                end
+                
+                close all
+                
+            end % empty fibers
             
-            nFibers_clean(i,j) = numel(cleanfg{j}.fibers); % keep track of the final # of fibers
-            
-            fprintf('\n\n final # of %s cleaned fibers: %d\n\n',cleanfg{j}.name, nFibers_clean(i,j));
-            
-            mtrExportFibers(cleanfg{j},cleanfg{j}.name);  % save out cleaned fibers
-            
-        end
-        
-        
-        % plot, if desired
-        if doPlot
-            AFQ_RenderFibers(cleanfg{2},'tubes',0,'color',[0 0 1],'plottoscreen',plotToScreen);
-            AFQ_RenderFibers(cleanfg{1},'tubes',0,'color',[1 0 0],'newfig',0,'plottoscreen',plotToScreen);
-            title([subject ' fg1 in red, fg2 in blue'])
-            print(gcf,'-dpng','-r300',fullfile(figDir,[subject '_clustered_fgs']));
-        end
-        
-        close all
-        %     else
-        %         error('fiber group is empty');
-        %     end
+        end % empty fibers
         
     end % subjects
     

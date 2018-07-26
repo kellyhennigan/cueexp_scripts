@@ -24,9 +24,9 @@ dataDir = p.data;
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
-% targets = {'nacc','caudate','putamen'}; % string for roi 
+% targets = {'nacc','caudate','putamen'}; % string for roi
 % targets = {'PVT'};
-targets = {'nacc'}; % string for roi 
+targets = {'nacc'}; % string for roi
 
 
 LorR = ['L','R'];
@@ -43,7 +43,7 @@ lmax = 'lmax8';
 % outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR
 outFgStr = [seed '%s_%s%s_autoclean']; %s: LorR, target, LorR
 
-plotToScreen = 0; % don't plot to screen 
+plotToScreen = 0; % don't plot to screen
 
 %% get pruning params based on tractography method
 
@@ -112,39 +112,48 @@ for j=1:numel(targets)
             fg = fgRead(fgName);
             
             
-            % reorient fibers so they all start in DA ROI
-            [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
-            
-            
-            % remove crazy fibers that deviate outside area defined by box_thresh
-            fg = pruneFG(fg,roi1,roi2,0,box_thresh);
-            
-            % remove outliers and save out cleaned fiber group
-            %     if ~isempty(fg.fibers)
-            
-            [~, keep]=AFQ_removeFiberOutliers(fg,...
-                maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
-            
-            fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
-            
-            cleanfg = getSubFG(fg,find(keep),outFgName);
-            
-            nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
-            
-            
-            AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
-            title(gca,subject);
-            if savePlots
-                print(gcf,'-dpng','-r300',fullfile(figDir,subject));
-            end
-            
-            mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
-            
-            close all
-            %
-            %     else
-            %         error('fiber group is empty');
-            %     end
+            if numel(fg.fibers)<2
+                
+                fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+                
+            else
+                
+                % reorient fibers so they all start in DA ROI
+                [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
+                
+                % remove crazy fibers that deviate outside area defined by box_thresh
+                fg = pruneFG(fg,roi1,roi2,0,box_thresh);
+                
+                % remove outliers and save out cleaned fiber group
+               if numel(fg.fibers)<2
+                    
+                    fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+                    
+                else
+                    
+                    [~, keep]=AFQ_removeFiberOutliers(fg,...
+                        maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                    
+                    fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
+                    
+                    cleanfg = getSubFG(fg,find(keep),outFgName);
+                    
+                    nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
+                    
+                    
+                    AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
+                    title(gca,subject);
+                    if savePlots
+                        print(gcf,'-dpng','-r300',fullfile(figDir,subject));
+                    end
+                    
+                    mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
+                    
+                    close all
+                    
+                end % empty fibers
+                
+            end % empty fibers
             
         end % subjects
         
