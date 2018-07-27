@@ -34,25 +34,6 @@ dim = size(mask.data);
 
 % mask = niftiRead(fullfile(dataDir,'ROIs','naccR_single_vox_func.nii')); % brain mask
 
-%%  extract maps
-%     
-
-    for i=1:numel(subjects)
-% 
-subject=subjects{i};
-ni = niftiRead(sprintf(diff_file,subject));
-%         cmd = ['3dinfo -label2index ' stims{k} '#0_Coef ' subjects{i} beta_fstr]
-%         [status,cmdout]=system(cmd);
-%         si=strfind(cmdout,sprintf('\n')); % index number is between 2 line breaks
-%         
-%         outfile =  [outDir '/' subjects{i} '_' stims{k} '.nii']; % nifti filepath for saving out beta map
-%         cmd = ['3dTcat ' subjects{i} beta_fstr '[' cmdout(si(1)+1:si(2)-1) '] -output ' outfile];
-%         [status,cmdout]=system(cmd);
-%         
-%     end % subjects
-%     
-% end % stims
-
 
 %% get maps
 
