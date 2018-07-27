@@ -305,6 +305,12 @@ switch measure
         
         data = getStimPANA(subjects,measure);
         
+      
+    case 'dwimotion'
+        
+       
+        data = getDWIMotion(subjects);
+   
         
     otherwise
         
@@ -850,6 +856,32 @@ for i=1:numel(subjects)
     
 end % subj loop
 
+end % getFollowupDays
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
+function dwimotion = getDWIMotion(subjects)
+
+p = getCuePaths();
+T=readtable(fullfile(p.data,'dwimotion.csv'));
+
+% get index of dwimotion rows for desired subjects
+si=getStrIndices(subjects,T.subjid);
+
+if ~any(isnan(si))
+    dwimotion=T.dwimotion(si);
+else
+    for i=1:numel(subjects)
+        if isnan(si(i))
+            dwimotion(i)=nan;
+        else
+            dwimotion(i)=T.dwimotion(si);
+        end
+    end
 end
+
+
+end % dwimotion
+
 
 

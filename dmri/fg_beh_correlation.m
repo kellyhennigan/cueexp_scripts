@@ -10,14 +10,14 @@ dataDir = pa.data; figDir = pa.figures;
 
 
 % which group(s) to plot?
-% group = {'controls'};
+group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
- group = {'patients'};
+%  group = {'patients'};
 
 % directory & filename of fg measures
 method = 'conTrack';
-fgMatStr = 'DALR_naccLR_autoclean_cl1'; %'.mat' will be added to end
+fgMatStr = 'DAR_naccR_autoclean_cl1'; %'.mat' will be added to end
 
 
 % which scale to correlate with fiber group measures?
@@ -28,8 +28,8 @@ scale = 'BIS'
 % include control variables? 
 % covars = {'age','gender'};
 % covars = {'age'};
-covars = {};
-
+% covars = {'dwimotion'};
+covars = '';
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
@@ -124,7 +124,7 @@ end
 bestWhat = 'MD'; % which fg measure(s) to test for best
 node = [50:59];
 
-fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
+fgPlotIdx = [1:2]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
 
 % include control variables? If so, regress out effect of control vars from

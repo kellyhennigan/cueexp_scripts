@@ -29,7 +29,12 @@ seed = 'DA';  % define seed roi
 targets = {'nacc'}; % string for roi
 
 
-LorR = ['L','R'];
+% LorR = ['L','R'];
+LorR = upper(input('L, R, or both?','s'));
+if strcmp(LorR,'BOTH')
+    LorR='LR';
+end
+
 
 savePlots = 1; % 1 to save out plots, otherwise 0
 

@@ -27,7 +27,11 @@ seed = 'DA';  % define seed roi
 
 target = 'nacc';
 
-LorR = ['L','R'];
+% LorR = ['L','R'];
+LorR = upper(input('L, R, or both?','s'));
+if strcmp(LorR,'BOTH')
+    LorR='LR';
+end
 
 doPlot = 1; % 1 to plot & save out figs, otherwise 0
 
