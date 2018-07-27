@@ -26,7 +26,7 @@ seed = 'DA';  % define seed roi
 
 % targets = {'nacc','caudate','putamen'}; % string for roi
 % targets = {'PVT'};
-targets = {'nacc'}; % string for roi
+targets = {'nacc'}; % stri  ng for roi
 
 
 % LorR = ['L','R'];
