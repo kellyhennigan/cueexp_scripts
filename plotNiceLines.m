@@ -98,14 +98,17 @@ set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)
 
 % legend
+leg=[];
 if ~isempty(lineLabels)
-leg=legend(reshape(lineLabels,1,[]),'Location','Best')
-legend(gca,'boxoff')
+    leg=legend(reshape(lineLabels,1,[]),'Location','Best')
+    legend(gca,'boxoff')
+end
+
 % xlim([1 numel(xt)])
 % set(gca,'XTick',xt)
 xlabel(xlab)
 ylabel(ylab)
-end
+
 
 % plot shaded error bar
 if ~isempty(se)

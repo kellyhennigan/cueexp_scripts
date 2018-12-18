@@ -1,0 +1,29 @@
+---
+title: "Hunger and food ratings plots"
+author: "Kelly MacNiven"
+date: "10/8/2018"
+output: pdf_document
+---
+
+
+get libraries & load data
+```{r setup, collapse=TRUE, warning=FALSE}
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/relapse_data/relapse_data_181008.csv')
+
+```
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+#dp = with(d1, data.frame(relIn3Mos,years_of_use,first_use_age,days_sober,days_in_rehab,primary_meth,primary_cocaine,primary_crack,auditscore4orgreater,opioidusedisorder,cannabisuse,poly_drug_dep,smoke,depression_diag,bdi,anxiety_diag,ptsd_diag,education,post_for_treatment,age,clinical_diag,,pref_drug,,pref_food,,pref_neut,pa_drug,pa_food,pa_neut,pa_drugcue,pa_foodcue,pa_neutcue,na_drug,na_food,na_neut,na_drugcue,na_foodcue,na_neutcue,craving,bam_upset,bam_stimuse,bam_riskysituations,bis,Kirbyk,bam_health,bam_sleep,bam_confidence,bam_q14,bam_q15,bam_q16,bam_q17,nacc_drugs_beta,nacc_food_beta,nacc_neutral_beta))
+#dp = with(d1, data.frame(relIn3Mos,years_of_use,auditscore4orgreater,depression_diag,bdi,anxiety_diag,ptsd_diag,age,nacc_drugs_beta))
+#dp = with(d1, data.frame(relIn3Mos,age,years_of_use,age,depression_diag,bdi,anxiety_diag,ptsd_diag,age,nacc_drugs_beta))
+
+dp = with(d1, data.frame(relIn3Mos,age,pref_drug,craving,bam_upset,nacc_drugs_beta,vta_drugs_beta,mpfc_drugs_beta))
+
+pairs.panels(dp)
+
+```

@@ -18,27 +18,34 @@ import os,sys,glob
 dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 # directory (*RELATIVE TO DATADIR*) where brain map files are located
-bmapDir = 'results_cue_afni'
+#bmapDir = 'results_cue_afni'
 # bmapDir = 'results_cue_afni/survival_analysis'
+bmapDir = 'results_mid_afni/threshmaps_cl5_Z3.2905'
 
 # full path to inDir
 inDir = os.path.join(dataDir,bmapDir)
 
 # save out images to this directory
 #outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','brainmaps',bmapDir)
-outDir = os.path.join(os.path.expanduser('~'),'cueexp','paper_figs_tables_stats','group_Zmaps','figs')
+#outDir = os.path.join(os.path.expanduser('~'),'cueexp','paper_figs_tables_stats','group_Zmaps','figs')
+outDir = os.path.join(os.path.expanduser('~'),'cueexp','figures','mid',bmapDir)
+
 
 underlay_file = 'TT_N27.nii' # file should be in inDir
 
 # overlays = ['Zdrugs_p.001_clthresh'] # overlays
-overlays = ['Zdrug-neutral','Zdrug-food','Zfood-neutral'] # overlays
+# overlays = ['Zdrug-neutral','Zdrug-food','Zfood-neutral'] # overlays
+overlays = ['Zgvnant'] # overlays
 
-#overlay_file_suffix  = '.nii.gz' # either '+tlrc', '.nii', or '.nii.gz'
-overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
 
+overlay_file_suffix  = '.nii' # either '+tlrc', '.nii', or '.nii.gz'
+#overlay_file_suffix  = '+tlrc' # either '+tlrc', '.nii', or '.nii.gz'
+	
 # sub_vols = [0] # maps of interest to plot
 # sub_volnames = ['cox_relapse'] # corresponding labels for maps of interest
-sub_vols = [1,3,5] # maps of interest to plot
+# sub_vols = [1,3,5] # maps of interest to plot
+# sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
+sub_vols = [0,1,2] # maps of interest to plot
 sub_volnames = ['pvc','patients','controls'] # corresponding labels for maps of interest
 
 

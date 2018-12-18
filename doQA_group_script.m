@@ -31,7 +31,7 @@ switch task
         
         % what percentage of bad volumes should lead to excluding a subject for
         % motion?
-        percent_bad_thresh = 2;
+        percent_bad_thresh = 1;
         
         
     otherwise % for fmri tasks

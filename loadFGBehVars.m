@@ -1,5 +1,8 @@
-function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
+function [fgMeasures,fgMLabels,scores,subjects,gi] = ...
     loadFGBehVars(fgMFile,scale,group,omit_subs)
+% % 
+% function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
+%     loadFGBehVars(fgMFile,scale,group,omit_subs)
 
 % [fgMeasures,fgMLabels,scores,subjects,gi] = loadFGBehVars(fullfile(fgMDir,[fgMatStr '.mat']),scale,group,omit_subs);
 % -------------------------------------------------------------------------
@@ -54,8 +57,10 @@ load(fgMFile);
 
 
 %% define a "keep index" of desired subjects to return data for
+
 keep_idx = ones(numel(subjects),1);
 
+% if a specific group is desired: 
 if strcmpi(group,'controls') || isequal(group,0)
     keep_idx=gi==0;
 elseif strcmpi(group,'patients') || isequal(group,1)
@@ -73,11 +78,20 @@ end
 keep_idx(ismember(subjects,getCueSubjects('dti'))==0)=0;
 
 
-% remove omit_subs from keep index
+% exclude omit_subs from keep index
 keep_idx=logical(keep_idx.*~ismember(subjects,omit_subs));
 
 
+% exclude any additional subjects that don't have diffusion data 
+keep_idx(isnan(fgMeasures{1}(:,1)))=0;
+
+
+% exclude any subjects that don't have scale data
+keep_idx(isnan(getCueData(subjects,scale)))=0;
+
+
 %%  get fg data for just the desired subjects
+
 subjects = subjects(keep_idx);
 gi = gi(keep_idx);
 fgMeasures = cellfun(@(x) x(keep_idx,:), fgMeasures,'uniformoutput',0);
@@ -89,12 +103,12 @@ else
 eigVals=eigVals(keep_idx,:,:);
 end
 
-if size(SuperFibers,2)==2 % means l and r are saved separately
-    SuperFibers=SuperFibers(keep_idx,:);
-else
-    SuperFibers=SuperFibers(keep_idx);
-end
-
+% if size(SuperFibers,2)==2 % means l and r are saved separately
+%     SuperFibers=SuperFibers(keep_idx,:);
+% else
+%     SuperFibers=SuperFibers(keep_idx);
+% end
+% 
 % get scores 
 scores = getCueData(subjects,scale);
 

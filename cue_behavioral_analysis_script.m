@@ -12,12 +12,17 @@ dataDir = p.data; % main data directory
 task = 'cue';
 [subjects,gi] = getCueSubjects(task); 
 
+% subjects=subjects(gi==0);
+% gi=gi(gi==0);
 
 conds = {'alcohol','drugs','food','neutral'};
 
 
 %%%%%%%%%%%%%%% define groups to plot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-groups = {'controls','patients'};
+% groups = {'controls','patients'};
+% groupStr = '';
+
+groups = {'controls'};
 groupStr = '';
 
 % % uncomment to use plot relapse and nonrelapse groups: 
@@ -29,7 +34,7 @@ groupStr = '';
 % gi(gi==1)=ri; 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-cols = getCueExpColors(numel(groups));
+cols = getCueExpColors(groups);
 % if numel(groups)==2
 %     cols=[   0.1294    0.4118    0.8157
 %     0.9922    0.1725    0.0784];
@@ -83,8 +88,7 @@ fp2s = cellfun(@(x) sprintf(fp2,x), subjects, 'uniformoutput',0);
  
 
 %%%%%%%%%%%%%%%%%%%%% load qualtrics survey data %%%%%%%%%%%%%%%%%%%%%%%%%%
-[qd,pa,na,famil,qimage_type]=getQualtricsData(fp3,subjects);
-
+[qd,pa,na,famil,qimage_type]=getQualtricsData([],subjects);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% pref ratings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,7 +178,7 @@ fig = plotNiceBars(dg,dName,conds(idx),strrep(groups,'_',' '),cols,plotSig,title
 % [h,p,~,stats]=ttest2(dg{2}(:,1),dg{1}(:,1))
 
 % % ttest for pref ratings difference in relapsers vs nonrelapsers
-[h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
+% [h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
 
 %% Q: differences in pos arousal across trial types and groups? 
 
@@ -202,7 +206,7 @@ savePath = fullfile(outDir,[saveStr groupStr ' no alc.png']);
 fig = plotNiceBars(dg,dName,conds(idx),strrep(groups,'_',' '),cols,plotSig,titleStr,1,savePath);
 
 % ttest for pref ratings difference in relapsers vs nonrelapsers
-[h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
+% [h,p,~,stats]=ttest2(dg{2}(:,1),dg{3}(:,1))
 
 
 
@@ -372,14 +376,42 @@ print(gcf,'-dpng','-r300',savePath);
 
 %% are people's hunger levels related to their food ratings? 
 
-r = corr(qd.hungry(~isnan(qd.hungry)),mean_pref(~isnan(qd.hungry),3));
+fidx=find(strcmp(conds,'food')); % food column index for mean pref, mean PA, etc.
+
+% hunger x mean want for food
+vi=find(~isnan(qd.hungry)); % vals idx (NOT nan)
+% vi=find(qd.hungry>3); % vals idx (NOT nan)
+
+r = corr(qd.hungry(vi),mean_pref(vi,fidx));
 fprintf(['\ncorrelation between hunger & food preference ratings:\n' ...
     'r=%4.2f\n'], r);
 
+plotCorr([],qd.hungry(vi),mean_pref(vi,fidx),'hunger','food wanting','rp')
+savePath = fullfile(outDir,'hunger_pref_corr.png');
+print(gcf,'-dpng','-r300',savePath);
 
-r = corr(qd.hungry(~isnan(qd.hungry)),mean_pa(~isnan(qd.hungry),3));
+% hunger by mean PA for food
+vi=find(~isnan(qd.hungry)); % vals idx (NOT nan)
+% vi=find(qd.hungry>3); % vals idx (NOT nan)
+
+r = corr(qd.hungry(vi),mean_pa(vi,fidx));
 fprintf(['\ncorrelation between hunger & food PA ratings:\n' ...
     'r=%4.2f\n'], r);
+
+plotCorr([],qd.hungry(vi),mean_pa(vi,fidx),'hunger','food PA','rp')
+savePath = fullfile(outDir,'hunger_pa_corr.png');
+print(gcf,'-dpng','-r300',savePath);
+
+% hunger by cue PA
+vi=find(~isnan(qd.hungry) & ~isnan(cue_pa(:,fidx))); % vals idx (NOT nan)
+
+r = corr(qd.hungry(vi),cue_pa(vi,fidx));
+fprintf(['\ncorrelation between hunger & food cue PA ratings:\n' ...
+    'r=%4.2f\n'], r);
+
+plotCorr([],qd.hungry(vi),cue_pa(vi,fidx),'hunger','food cue PA','rp')
+savePath = fullfile(outDir,'hunger_cuepa_corr.png');
+print(gcf,'-dpng','-r300',savePath);
 
 % nope...
 

@@ -8,7 +8,7 @@ dataDir = p.data;
 figDir = p.figures;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_181009.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
 
 % load data
@@ -37,7 +37,7 @@ zB=[];
 y = T.obstime;
 censored = T.censored;
 
-for i=10:numel(vars)
+for i=9:numel(vars)
     
     X = table2array(T(:,i));
     

@@ -1,6 +1,6 @@
 function [p, table] = anova_rm(X, displayopt)
 %   [p, table] = anova_rm(X, displayopt)
-%   Single factor, tepeated measures ANOVA.
+%   Single factor, repeated measures ANOVA.
 %
 %   [p, table] = anova_rm(X, displayopt) performs a repeated measures ANOVA
 %   for comparing the means of two or more columns (time) in one or more

@@ -1,4 +1,4 @@
-function [cue_type,pa,na] = getCueVARatings(filepath)
+function [cue_type,pa,na,valence,arousal] = getCueVARatings(filepath)
 %% Import data from text file.
 % Script for importing data from the following text file:
 %
@@ -12,13 +12,23 @@ function [cue_type,pa,na] = getCueVARatings(filepath)
 
 %% Initialize variables.
 
+if ~isempty(strfind(filepath,'mid_'))
+    
+    cue_type=cell(1,6);
+    pa=nan(1,6);
+    na=nan(1,6);
+    arousal=nan(1,6);
+    valence=nan(1,6);
+else
+    cue_type=cell(1,4);
+    pa=nan(1,4);
+    na=nan(1,4);
+    arousal=nan(1,4);
+    valence=nan(1,4);
+end
+
 delimiter = ',';
 startRow = 2;
-
-% output variables
-cue_type=cell(1,4);
-pa=nan(1,4);
-na=nan(1,4);
 
 %% Format string for each line of text:
 %   column1: text (%s)
@@ -41,17 +51,15 @@ end
 % from the Import Tool.
 dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'HeaderLines' ,startRow-1, 'ReturnOnError', false);
 
+
 %% Close the text file.
 fclose(fileID);
 
-%% Post processing for unimportable data.
-% No unimportable data rules were applied during the import, so no post
-% processing code is included. To generate code which works for
-% unimportable data, select unimportable cells in a file and regenerate the
-% script.
-
 %% Allocate imported array to column variable names
 
+
+
+% output variables
 cue_type = dataArray{:, 1}';
 arousal = dataArray{:, 2}';
 valence = dataArray{:, 3}';

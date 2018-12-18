@@ -1,4 +1,4 @@
-%% cross validation script
+ %% cross validation script
 
 clear all
 close all
@@ -10,10 +10,13 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_180510.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_181014.csv');
 
 % load data
 T = readtable(dataPath);
+
+% define outcome variable
+DV = 'relIn3Mos';
 
 nIter = 1; % number of tests performed on a given test subject
 
@@ -26,12 +29,9 @@ doUndersample = 0;
 
 %% omit subjects that have no followup data
 
-% subjects with no followup data
-nanidx=find(isnan(T.relIn3Mos));
 
-
-% remove data for subjects with no followup data
-T(nanidx,:)=[];
+eval(['T(isnan(T.' DV '),:)=[];']);
+y = eval(['T.' DV]); % outcome variable
 
 
 %% DEFINE MODEL
@@ -45,13 +45,12 @@ X = [T.nacc_drugs_beta];    % predictors
 % X = [T.age];
 % X = [T.pref_drug T.craving T.bam_upset];
 % X = [T.nacc_drugs_beta T.nacc_food_beta];    % predictors
-% X = [T.nacc_drugs_beta T.age];    % predictors
+% X = [T.age T.nacc_drugs_beta];    % predictors
 % X = [T.nacc_drugs_beta T.nacc_food_beta];    % predictors
 
 
 X=(X-nanmean(X))./nanstd(X);      % standardized
 
-y = T.relIn3Mos;            % outcome variable
 
 n=numel(y); % sample size
 
@@ -71,8 +70,8 @@ for i=1:n
         Xtrain = X; Xtrain(i,:) = [];
         ytrain = y; ytrain(i) = [];
         
-        %         undersample so that there's an even number of instances of both 0 and
-        %         1 outcomes:
+        %         undersample or oversample so that there's an even number of instances of both 0 and
+        %         1 outcomes in the training set:
         if doUndersample
             
             idx0 = find(ytrain==0);

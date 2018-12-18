@@ -6,10 +6,13 @@ close all
 inDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/data';
 outDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/figs';
 
+% 
+% measures = {'want','familiar','PA','NA',...
+%     'cueRT','ratingRT'};
+% measureStrs = {'Wanting','Familiarity','Positive Arousal','Negative Arousal','Shape reaction time (s)','Rating reaction time (s)'};
 
-measures = {'want','familiar','PA','NA',...
-    'cueRT','ratingRT'};
-measureStrs = {'Wanting','Familiarity','Positive Arousal','Negative Arousal','Shape reaction time (s)','Rating reaction time (s)'};
+measures = {'want'};
+measureStrs = {'Wanting'};
 
 YL = {[-3 3],[1 7],[-3 3],[-3 3],[0 1],[0 1.8]}; % y limits
 
@@ -41,8 +44,8 @@ for pg=1:numel(plotGroups)
     cols=getCueExpColors(groups,[],colorSet);
     
     
-%     for i=1:numel(measures)
-for i=5
+    for i=1:numel(measures)
+% for i=5
         
         measure = measures{i};
         measureStr = measureStrs{i};
@@ -80,7 +83,7 @@ for i=5
         savePath = fullfile(outDir,[measure groupStr '_sig']);
         plotSig = [1 0];
         plotLeg = 0;
-        fontSize = 18;
+        fontSize = 22;
         fig = plotBehFigBars(d,measureStr,conds,strrep(groups,'_',' '),cols,...
             plotSig,'',plotLeg,savePath,1,yl,fontSize);
 %           plotSig,titleStr,plotLeg,savePath,plotToScreen,YL,fontSize,saveFormat,figWidth)
@@ -90,9 +93,10 @@ for i=5
         savePath = fullfile(outDir,[measure groupStr '_stats_leg']);
         plotSig = [1 1];
         plotLeg = 1;
-        fontSize=18;
-        fig = plotBehFigBars(d,measureStr,conds,strrep(groups,'_',' '),cols,...
-            plotSig,'',plotLeg,savePath,1,yl,fontSize);
+        fontSize=22;
+        saveFormat='pdf';
+        [fig,leg] = plotBehFigBars(d,measureStr,conds,strrep(groups,'_',' '),cols,...
+            plotSig,'',plotLeg,savePath,1,yl,fontSize,saveFormat);
         
         
         % save out sized for publication
@@ -104,8 +108,10 @@ for i=5
         plotSig = [1 0];
         plotLeg = 0;
         fontSize=12;
-        saveFormat = '-depsc';
-        figWidth = 3.5;
+%         saveFormat = '-depsc';
+% figWidth = 3.5;
+saveFormat='pdf';
+        figWidth = 5;
         fig = plotBehFigBars(d,measureStr,conds,strrep(groups,'_',' '),cols,...
             plotSig,'',plotLeg,savePath,1,yl,fontSize,saveFormat,figWidth);
         

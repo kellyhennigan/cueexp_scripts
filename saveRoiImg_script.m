@@ -39,5 +39,7 @@ for i=1:3
     [imgRgbs,~,~,h,acpcSlices{i}] = plotOverlayImage(roi,t1,col,[0 1],i,sl(i));
     outPath = fullfile(outDir,[roiName '_' saveViews{i} num2str(sl(i))]);
     print(h,'-dpng','-r300',outPath)
+    saveas(h{1},[outPath '.tif'])
+%     imwrite(,'myMultipageFile.tif')
 end
 

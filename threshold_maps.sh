@@ -23,17 +23,18 @@
 ########################## DEFINE VARIABLES 
 
 #results_dir='/Users/kelly/cueexp/data/results_cue_afni' # results directory
-results_dir='/Users/kelly/cueexp/data/results_cue_afni' # results directory
+results_dir='/Users/kelly/cueexp/data/results_mid_afni' # results directory
 
 Z_thresh='3.2905'   # desired voxelwise Z-score threshold
 
 #cl_thresh='23'		# desired cluster size threshold
-cl_thresh='16'		# desired cluster size threshold
+cl_thresh='5'		# desired cluster size threshold
 
 NNx='1' # nearest neighbor cluster connectivity: 1 means voxels must have faces touching, 2 for edges touching, 3 for corners touching
 
-flist='Zdrug-neutral Zfood-neutral Zdrug-food Zdrugs Zfood Zneutral' # names of files to threshold, minus the file suffix
+#flist='Zdrug-neutral Zfood-neutral Zdrug-food Zdrugs Zfood Zneutral' # names of files to threshold, minus the file suffix
 #flist='Zdrugs Zfood Zneutral' # names of files to threshold 
+flist='Zgvnant Zgvnout Zlvnant Znvlout' # names of files to threshold 
 
 fsuffix='+tlrc'. # (if files end in "+tlrc")
 #fsuffix='.nii.gz' # (if files end in ".nii.gz")
@@ -41,9 +42,9 @@ fsuffix='+tlrc'. # (if files end in "+tlrc")
 vols='1 3 5' 	# volume indices that contain Z-scores in the above files; note that this should be zero indexed (i.e., first volume is 0, etc.)
 #vols='0' 		
 
-afnistartfile='/Users/kelly/cueexp/data/results_cue_afni/.afni.startup_script' # path to afni startup script to copy into new dir
+afnistartfile='/Users/kelly/cueexp/data/results_mid_afni/.afni.startup_script' # path to afni startup script to copy into new dir
 
-underlayfile='/Users/kelly/cueexp/data/results_cue_afni/TT_N27.nii' # path to underlay file to copy into new dir
+underlayfile='/Users/kelly/cueexp/data/results_mid_afni/TT_N27.nii' # path to underlay file to copy into new dir
 
 ############################################################################## 
 ############################# DO IT

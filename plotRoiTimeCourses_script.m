@@ -54,9 +54,9 @@ outDir_suffix = '';
 
 plotColorSet = 'color'; % 'grayscale' or 'color'
 
-plotErr = 'bar'; % 'bar' or 'shaded'
+plotErr = 'shaded'; % 'bar' or 'shaded'
 
-plotToScreen=1;
+plotToScreen=0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,20 +79,37 @@ plotToScreen=1;
 [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 %
 
+% plotStims = {'healthyfood unhealthyfood';
+%     'healthyfood unhealthyfood';
+%     'healthyfood';
+%     'unhealthyfood'};
+% 
+% plotGroups = {'controls';
+%     'patients';
+%     'controls patients';
+%     'controls patients'};
+% 
+% plotStimStrs={'foodbyhealth';
+%     'foodbyhealth';
+%     'healthyfood'
+%     'unhealthyfood'};
+    
+
 nFigs = numel(plotStimStrs); % number of figures to be made
 
 %% get ROI time courses
 
-% r=1;
+r=1;
 for r = 1:numel(roiNames)
     
     roiName = roiNames{r};
     
     inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
     
-    
+%     f=1
     %% define time courses to plot
-    for f = 1:nFigs
+% for f=1:6
+        for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f});
@@ -175,7 +192,6 @@ for r = 1:numel(roiNames)
         % line colors & line specs
         cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
         lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
-        
         
         % get stats, if plotting
         p=[];

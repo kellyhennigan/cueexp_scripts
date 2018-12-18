@@ -14,34 +14,39 @@ figDir = p.figures;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%% EDIT AS DESIRED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-task = 'cue';
+task = 'mid';
 
-group = 'relapsers_3months';
+% group = 'relapsers_3months';
+group = 'controls';
+
 
 [subjects,gi]=getCueSubjects(task,group);
 % subjects(10:end)=[];
 % gi(10:end)=[];
 
-stim = 'drugs'; % stim to plot
+% stim = 'food-neutral'; % stim to plot
+stim = 'loss5'; % stim to plot
 
 stimStr = stim; % stim name 
 
-roiName = 'PVT'; % roi to process
+roiName = 'caudate'; % roi to process
 
 tcDir = ['timecourses_' task '_afni' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
-colorScheme = 'rand'; 
+colorScheme = 'mean'; 
 % colorScheme = 'relapse'; 
 
 
 omitSubs = {''}; % any subjects to omit?
 
+plotLegend=0; % 1 to include plot legend, otherwise 0
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-nTRs = 10; % # of TRs to plot
+nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
@@ -66,7 +71,11 @@ else
     stimFile = fullfile(inDir,[stim '.csv']);
     tc=loadRoiTimeCourses(stimFile,subjects,1:nTRs);
 end
- 
+
+% calculate mean and se of time courses
+mean_tc = nanmean(tc);
+se_tc = nanstd(tc)./sqrt(size(tc,1));
+   
 %%%%%%
 % put each subjects time course into its own cell in an array 
 tc=mat2cell(tc,[ones(size(tc,1),1)],[size(tc,2)]); 
@@ -87,27 +96,36 @@ n = numel(subjects);
 figtitle = [strrep(roiName,'_',' ') ' response to ' stim ' by subject'];
 
 % x and y labels
-xlab = 'time (in seconds) relative to cue onset';
+xlab = 'time (s) relative to cue onset';
 ylab = '%\Delta BOLD';
 
 
 % labels for each line plot (goes in the legend)
-pLabels = subjects;
-
+if plotLegend
+lineLabels = subjects;
+else
+    lineLabels='';
+end
 
 %%%%%% colors: 
-cols = solarizedColors(n); % line colors - Nx3 matrix of rgb vals (1 row/subject)
-
 if strcmp(colorScheme,'rand') % random colors
+    cols = solarizedColors(n); % line colors - Nx3 matrix of rgb vals (1 row/subject)
     cols = cols(randperm(n),:);
+
 elseif strcmp(colorScheme,'relapse') % to do colors by relapse
     [ri,~]=getCueRelapseData(subjects); % get relapse data
     cols3 = getCueExpColors(3); % get 3 colors
     cols = repmat(cols3(3,:),numel(subjects),1); % nan vals are green
     cols(ri==1,:)=repmat(cols3(2,:),numel(ri(ri==1)),1); %relapse vals is red
     cols(ri==0,:)=repmat(cols3(1,:),numel(ri(ri==0)),1); % non-relapse is blue
-end
 
+elseif strcmp(colorScheme,'mean') % each line is gray and mean is blue
+    cols=repmat([.6 .6 .6],n,1);
+    mean_col= [0.1490    0.5451    0.8235]; % color to plot mean timecourse
+    
+else
+    cols = solarizedColors(n); % line colors - Nx3 matrix of rgb vals (1 row/subject)
+end
 
 
 % filename, if saving
@@ -129,8 +147,13 @@ end
 fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
 
    
-[fig,leg]=plotNiceLines(t,tc,{},cols,[],pLabels,xlab,ylab,figtitle,savePath);
+[fig,leg]=plotNiceLines(t,tc,{},cols,[],lineLabels,xlab,ylab,figtitle,savePath);
 set(leg,'Location','EastOutside')
+
+if strcmp(colorScheme,'mean')
+    plot(t,mean_tc,'color',mean_col,'Linewidth',5)
+end
+
 if savePath
     print(gcf,'-dpng','-r300',savePath);
 end

@@ -27,14 +27,11 @@ relapse = getCueData(subjects,'relapse');
 
 days2relapse = getCueData(subjects,'days2relapse');
 
-earlyrelapse = getCueData(subjects,'early_relapsers');
+relIn1Mos = getCueData(subjects,'relapse_1month');
 
 relIn3Mos = getCueData(subjects,'relapse_3months');
 
-relIn4Mos = getCueData(subjects,'relapse_4months');
-
 relIn6Mos = getCueData(subjects,'relapse_6months');
-
 
 
 % set nan relapse vals to zero...
@@ -43,19 +40,47 @@ relIn6Mos = getCueData(subjects,'relapse_6months');
 [obstime,censored,notes]=getCueRelapseSurvival(subjects);
 
 
-% relapse(find(strcmp(subjects,'rm180316')))=1; 
-% days2relapse(find(strcmp(subjects,'rm180316')))=20; 
-% earlyrelapse(find(strcmp(subjects,'rm180316')))=1; 
-% relIn3Mos(find(strcmp(subjects,'rm180316')))=1; 
-% relIn4Mos(find(strcmp(subjects,'rm180316')))=1; 
-% relIn6Mos(find(strcmp(subjects,'rm180316')))=1; 
-% obstime(find(strcmp(subjects,'rm180316')))=20;
-% censored(find(strcmp(subjects,'rm180316')))=0;
-
 % Trelapse = table(relapse,days2relapse,obstime,censored,relIn6Mos);
 
-Trelapse = table(relapse,days2relapse,obstime,censored,earlyrelapse,relIn3Mos,relIn4Mos,relIn6Mos);
+Trelapse = table(relapse,days2relapse,obstime,censored,relIn1Mos,relIn3Mos,relIn6Mos);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% other non-stimulant drug use (alcohol, cannabis, etc.)
+
+% responses from followup BAM(s) regarding past month use (yes or no) of 
+% substances other than stimulants
+
+duVarStrs = {'alcuse','bingealcuse','thcuse','sedativeuse','opiateuse',...
+    'inhalantuse','otherdruguse'};
+qStrs = {'q4','q5','q7a','q7b','q7e','q7f','q7g'}; % question numbers corresponding to above variables
+
+du = zeros(numel(subjects),numel(duVarStrs)); % drug use matrix
+
+d=getBAMFollowupData(); % BAM from followups 
+header=d(1,:);
+d(1,:)=[];
+subjs=d(:,1);
+
+% omit responses from last follow-up (only look at responses from 1-month
+% and 3 months post-treatment)
+% ci = find(strcmp('Followup number',header)); % column index
+% thisd=str2num(cell2mat(d(:,ci)));
+% omitidx=find(thisd>2)
+% d(omitidx,:)=[];
+% subjs(omitidx)=[];
+
+for q=1:numel(qStrs)
+    ci = find(strcmp(qStrs{q},header)); % column index
+    thisd=str2num(cell2mat(d(:,ci)));
+    thesesubjs=unique(subjs(find(thisd>1)));
+    for s=1:numel(thesesubjs)
+        du(ismember(subjects,thesesubjs{s}),q)=1;
+    end
+end
+
+duVarStrs=cellfun(@(x) ['post3mos_' x], duVarStrs,'uniformoutput',0);
+Totherdruguse = array2table(du,'VariableNames',duVarStrs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% demographic & clinical vars
@@ -64,7 +89,12 @@ demVars = {'years_of_use',...
     'first_use_age',...
     'days_sober',...
     'days_in_rehab',...
-    'alc_dep',...
+    'primary_meth',...
+    'primary_cocaine',...
+    'primary_crack',...
+    'auditscore4orgreater',...
+    'opioidusedisorder',...
+    'cannabisuse',...
     'poly_drug_dep',...
     'smoke',...
     'depression_diag',...
@@ -91,6 +121,14 @@ Tdem.clinical_diag = (Tdem.ptsd_diag | Tdem.depression_diag | Tdem.anxiety_diag)
 % pref ratings for drugs, food, and neutral stim
 pref_stim = getCueData(subjects,'pref_stim');
 pref_drug = pref_stim(:,2); pref_food = pref_stim(:,3); pref_neut = pref_stim(:,4);
+
+% pref ratings for drugs, food, and neutral stim
+choicert_stim = getCueData(subjects,'choicert_stim');
+choicert_drug = choicert_stim(:,2); choicert_food = choicert_stim(:,3); choicert_neut = choicert_stim(:,4);
+
+% cuert ratings for drugs, food, and neutral stim
+cuert_stim = getCueData(subjects,'cuert_stim');
+cuert_drug = cuert_stim(:,2); cuert_food = cuert_stim(:,3); cuert_neut = cuert_stim(:,4);
 
 
 % PA ratings for drugs, food, and neutral stim
@@ -167,6 +205,8 @@ Kirbyk = log(getCueData(subjects,'discount_rate'));
 
 % define table of behavioral predictors
 Tbeh = table(pref_drug,pref_food,pref_neut,...
+    choicert_drug,choicert_food,choicert_neut,...
+    cuert_drug,cuert_food,cuert_neut,...
     pa_drug,pa_food,pa_neut,...
     pa_drugcue,pa_foodcue,pa_neutcue,...
     na_drug,na_food,na_neut,...
@@ -178,8 +218,8 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
 
 % roiNames = {'nacc_desai','nacc'}
 % roiVarNames = {'nacc_desai','nacc'};
@@ -188,7 +228,7 @@ roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains','pvt'};
 
 % stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
-stims = {'drugs','food','neutral'};
+stims = {'alcohol','drugs','food','neutral'};
 
 
 bd = [];  % array of brain data values
@@ -271,7 +311,7 @@ Tsubj = table(subjid);
 
 % concatenate all data into 1 table
 T=table();
-T = [Tsubj Trelapse Tdem Tbeh Tbrain];
+T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
 
 
 % save out

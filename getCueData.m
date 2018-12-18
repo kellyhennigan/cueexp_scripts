@@ -102,47 +102,71 @@ switch measure
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         data = ri;
         
-    case 'early_relapsers'
+%     case 'early_relapsers'
+%         
+%         [ri,days2relapse,notes]=getCueRelapseData(subjects);
+%         ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >220 days after participation
+%         data = ri;
+   
+    case 'relapse_1month'
+        
+        daythresh=40; 
+        lost_daythresh=10; % patients not followed up for this much time will be set to nan
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
-        ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >220 days after participation
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        
+        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >90 days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
         data = ri;
         
     case 'relapse_3months'
         
-       
+        daythresh=100;
+        lost_daythresh=90; % patients not followed up for this much time will be set to nan
+      
         [ri,days2relapse,notes]=getCueRelapseData(subjects); 
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         
-        ri(days2relapse>90) = 0; % set relapse to 0 if it occurred >90 days after participation
-        ri(ri==0 & obstime < 90)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
+        ri(days2relapse > daythresh) = 0; % set relapse to 0 if it occurred >90 days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
         data = ri;
         
     case 'relapse_4months'
         
+        daythresh=130;
+        lost_daythresh=90; % patients not followed up for this much time will be set to nan
+      
+        
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
                  
-        ri(days2relapse>120) = 0; % set relapse to 0 if it occurred >120 days after participation
-          ri(ri==0 & obstime < 90)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >120 days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
         
     case 'relapse_6months'
-        
+       
+        daythresh=220;
+        lost_daythresh=160; % patients not followed up for this much time will be set to nan
+      
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
          [obstime,censored,notes]=getCueRelapseSurvival(subjects);
          
-        ri(days2relapse>200) = 0; % set relapse to 0 if it occurred >200 days after participation
-        ri(ri==0 & obstime < 160)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >200 days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
   
    case 'relapse_8months'
-        
-        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+       
+         daythresh=240;
+        lost_daythresh=160; % patients not followed up for this much time will be set to nan
+      
+       [ri,days2relapse,notes]=getCueRelapseData(subjects);
          [obstime,censored,notes]=getCueRelapseSurvival(subjects);
          
-        ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >160 days after participation
-        ri(ri==0 & obstime < 160)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >160 days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
   
         
@@ -168,7 +192,10 @@ switch measure
             'alc_dep','other_drug_dep',...
             'depression_diag','anxiety_diag','ptsd_diag','other_diag',...
             'post_for_treatment','meds','dop_drugtest',...
-            'days_sober','days_in_rehab','years_of_use'}
+            'days_sober','days_in_rehab','years_of_use',...
+            'auditscore4orgreater','courtmandated',...
+         'opioidusedisorder','cannabisuse'}
+    
         
         data = getPatientData(subjects,measure);
         
@@ -278,15 +305,117 @@ switch measure
         end
         
         
-    case {'pa_cue','na_cue'}
+    case {'choicert_stim','choicert_alcohol','choicert_drugs','choicert_food','choicert_neutral',...
+            'choicert_stim_trials','choicert_alcohol_trials','choicert_drugs_trials','choicert_food_trials','choicert_neutral_trials'}
+        
+        % define path to subject stim file(s)
+        p = getCuePaths();
+        stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/cue_matrix.csv'),x), subjects, 'uniformoutput',0);
+        
+        % load rt ratings
+        [Trial,TR,StartTime,Clock,Trial_Onset,Trial_Type,Cue_RT,Choice,Choice_Num,...
+            Choice_Type,Choice_RT,ITI,Drift,Image_Names]=cellfun(@(x) getCueTaskBehData(x,'short'),...
+            stimfilepath, 'uniformoutput',0);
+        ci=Trial_Type{1}; % index of each trial's condition (alc=1, drug=2, food=3, neutral=4)
+        
+        % get matrix of rt ratings by trial type w/subjects in rows
+        rt = cell2mat(Choice_RT')';  % rt ratings for each item
+        
+        % get matrix of mean rt ratings w/subjects in rows
+        mean_rt = [];
+        for j=1:4 % # of trial types
+            mean_rt(:,j) =  nanmean(rt(:,ci==j),2);
+        end
+        
+        
+        % return desired output
+        switch measure
+            
+            case 'choicert_stim'
+                data = mean_rt;   % return mean rt ratings for all stim
+            case 'choicert_alcohol'
+                data = mean_rt(:,1); % alcohol is 1st col
+            case 'choicert_drugs'
+                data = mean_rt(:,2); % drugs are 2nd col
+            case 'choicert_food'
+                data = mean_rt(:,3); % food is 3rd col
+            case 'choicert_neutral'
+                data = mean_rt(:,4); % neutral is 4th col
+            case 'choicert_stim_trials'
+                data = rt;   % return rt ratings for all stim/all trials
+            case 'choicert_alcohol_trials'
+                data = rt(:,ci==1); % alcohol is 1st col
+            case 'choicert_drugs_trials'
+                data = rt(:,ci==2); % drugs are 2nd col
+            case 'choicert_food_trials'
+                data = rt(:,ci==3);  % food is 3rd col
+            case 'choicert_neutral_trials'
+                data = rt(:,ci==4);  % neutral is 4th col
+        end
+        
+        
+     case {'cuert_stim','cuert_alcohol','cuert_drugs','cuert_food','cuert_neutral',...
+            'cuert_stim_trials','cuert_alcohol_trials','cuert_drugs_trials','cuert_food_trials','cuert_neutral_trials'}
+        
+        % define path to subject stim file(s)
+        p = getCuePaths();
+        stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/cue_matrix.csv'),x), subjects, 'uniformoutput',0);
+        
+        % load rt ratings
+        [Trial,TR,StartTime,Clock,Trial_Onset,Trial_Type,Cue_RT,Choice,Choice_Num,...
+            Choice_Type,Choice_RT,ITI,Drift,Image_Names]=cellfun(@(x) getCueTaskBehData(x,'short'),...
+            stimfilepath, 'uniformoutput',0);
+        ci=Trial_Type{1}; % index of each trial's condition (alc=1, drug=2, food=3, neutral=4)
+        
+        % get matrix of rt ratings by trial type w/subjects in rows
+        rt = cell2mat(Cue_RT')';  % rt ratings for each item
+        
+        % get matrix of mean rt ratings w/subjects in rows
+        mean_rt = [];
+        for j=1:4 % # of trial types
+            mean_rt(:,j) =  nanmean(rt(:,ci==j),2);
+        end
+        
+        
+        % return desired output
+        switch measure
+            
+            case 'cuert_stim'
+                data = mean_rt;   % return mean rt ratings for all stim
+            case 'cuert_alcohol'
+                data = mean_rt(:,1); % alcohol is 1st col
+            case 'cuert_drugs'
+                data = mean_rt(:,2); % drugs are 2nd col
+            case 'cuert_food'
+                data = mean_rt(:,3); % food is 3rd col
+            case 'cuert_neutral'
+                data = mean_rt(:,4); % neutral is 4th col
+            case 'cuert_stim_trials'
+                data = rt;   % return rt ratings for all stim/all trials
+            case 'cuert_alcohol_trials'
+                data = rt(:,ci==1); % alcohol is 1st col
+            case 'cuert_drugs_trials'
+                data = rt(:,ci==2); % drugs are 2nd col
+            case 'cuert_food_trials'
+                data = rt(:,ci==3);  % food is 3rd col
+            case 'cuert_neutral_trials'
+                data = rt(:,ci==4);  % neutral is 4th col
+        end
+            
+        
+        
+    case {'pa_cue','na_cue','valence_cue','arousal_cue'}
         
         % define path to stim file(s)
         p = getCuePaths();
         stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/cue_ratings.csv'),x), subjects, 'uniformoutput',0);
         
         % load cue pa and na ratings
-        [cue_type,pa,na] = cellfun(@(x) getCueVARatings(x), stimfilepath,'uniformoutput',0);
-        pa = cell2mat(pa); na = cell2mat(na);
+        [cue_type,pa,na,valence,arousal] = cellfun(@(x) getCueVARatings(x), stimfilepath,'uniformoutput',0);
+        pa = cell2mat(pa); 
+        na = cell2mat(na); 
+        valence=cell2mat(valence);
+        arousal=cell2mat(arousal);
         
         % return mean pref ratings for all stim or a specific condition
         switch measure
@@ -294,8 +423,37 @@ switch measure
                 data = pa;
             case 'na_cue'
                 data = na;
+            case 'valence_cue'
+                data = valence;
+            case 'arousal_cue'
+                data = arousal;
         end
         
+        
+    case {'pa_cue_mid','na_cue_mid','valence_cue_mid','arousal_cue_mid'}
+        
+        % define path to stim file(s)
+        p = getCuePaths();
+        stimfilepath = cellfun(@(x) sprintf(fullfile(p.data, '%s/behavior/mid_ratings.csv'),x), subjects, 'uniformoutput',0);
+        
+        % load cue pa and na ratings
+        [cue_type,pa,na,valence,arousal] = cellfun(@(x) getCueVARatings(x), stimfilepath,'uniformoutput',0);
+        pa = cell2mat(pa);
+        na = cell2mat(na);
+        valence=cell2mat(valence);
+        arousal=cell2mat(arousal);
+        
+        % return mean pref ratings for all stim or a specific condition
+        switch measure
+            case 'pa_cue_mid'
+                data = pa;
+            case 'na_cue_mid'
+                data = na;
+            case 'valence_cue_mid'
+                data = valence;
+            case 'arousal_cue_mid'
+                data = arousal;
+        end
         
         
     case {'pa_stim','pa_alcohol','pa_drugs','pa_food','pa_neutral','pa_stim_trials',...
@@ -306,6 +464,10 @@ switch measure
         data = getStimPANA(subjects,measure);
         
       
+    case {'famil_stim','famil_alcohol','famil_drugs','famil_food','famil_neutral'}
+        
+        data = getStimFamil(subjects,measure);
+        
     case 'dwimotion'
         
        
@@ -742,7 +904,40 @@ end
 
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get PA and NA ratings
+function data = getStimFamil(subjects,measure)
 
+
+% define path to stim file(s)
+p = getCuePaths();
+a = dir(fullfile(p.data,'qualtrics_data','Post_Scan_Survey_*.csv'));
+fp = fullfile(p.data,'qualtrics_data',a(end).name); % most recent q data file
+
+[~,~,~,famil,ci]=getQualtricsData(fp,subjects);
+
+mean_famil = [];
+for j=1:4 % # of trial types
+    mean_famil(:,j) = nanmean(famil(:,ci==j),2);
+end
+
+% return desired output
+switch measure
+    
+    case 'famil_stim'
+        data = mean_famil;   % return mean famil ratings for all stim
+    case 'famil_alcohol'
+        data = mean_famil(:,1); % alcohol is 1st col
+    case 'famil_drugs'
+        data = mean_famil(:,2); % drugs are 2nd col
+    case 'famil_food'
+        data = mean_famil(:,3); % food is 3rd col
+    case 'famil_neutral'
+        data = mean_famil(:,4); % neutral is 4th col
+        
+end
+
+
+end % familiarity
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data (from SAFE)
 function educ_years = getEducation(subjects)
@@ -882,6 +1077,4 @@ end
 
 
 end % dwimotion
-
-
 

@@ -12,7 +12,7 @@ task = 'cue';
 p = getCuePaths();
 dataDir = p.data;
 figDir = '/Users/kelly/cueexp/paper_figs_tables_stats/timecourses/figs';
-
+% figDir='/Users/kelly/cueexp/writeup/SUBMISSION_JAMA/revisions/FIGURES/fig3';
 
 % tcDir = ['timecourses_' task ];
 % tcDir = ['timecourses_' task '_woOutliers' ];
@@ -24,7 +24,7 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which roi to process?
-roiName = 'mpfc';
+roiName = 'VTA';
 
 
 nTRs = 10; % # of TRs to plot
@@ -34,7 +34,7 @@ xt = t; %  xticks on the plotted x axis
 
 useSpline = 0; % if 1, time series will be upsampled by TR*10
 
-omitSubs = {''}; % any subjects to omit?
+omitSubs = {'cd171130','ab171208','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715'}; % any subjects to omit?
 
 plotStats = 1; % 1 to note statistical signficance on figures
 
@@ -86,8 +86,8 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
-% for f=1:9
-f=6
+for f=6
+% for f=[1 3 6]
 %     for f = 1:nFigs
     
     % get the plot name and stims & groups to plot for this figure
@@ -174,10 +174,16 @@ f=6
     cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
     lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
     
-    % color drug lines red
+    %%%%%%%%%% color drug lines red
+%     if f==6
+%         cols{1}=[170 170 170]./255; % light gray
+%     end
+     %%%%%%%%%% for patient vs control drugs, have both lines red w/controls dotted line
     if f==6
         cols{1}=cols{2};
+        lspec{1}='--';
     end
+   
     
     % get stats, if plotting
     p=[];
@@ -320,7 +326,8 @@ f=6
     %%%%%%%%%% save a version that has the title and outside legend
     set(leg,'Location','EastOutside')
     print(gcf,'-dpng','-r300',[savePath '_leg']);
-    
+%       print(gcf,'-depsc','-r300',[savePath '_leg']);
+%     saveas(gcf,[savePath '_leg'],'pdf');
     
     % title and legend off
     legend(gca,'off')
@@ -341,8 +348,9 @@ f=6
     
     
     % re-save fig
-    print(gcf,'-dpng','-r300',savePath);
-    
+%     print(gcf,'-dpng','-r300',savePath);
+saveas(gcf,savePath,'pdf');
+%       print(gcf,'-depsc','-r300',savePath);
     
     fprintf('done.\n\n')
     

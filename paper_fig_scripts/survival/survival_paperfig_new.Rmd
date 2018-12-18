@@ -1,0 +1,172 @@
+---
+title: "survival_analysis_paperfig.Rmd"
+author: "K MacNiven & B Knutson"
+date: "5/17/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+get libraries & load data
+```{r setup, collapse=TRUE, warning=FALSE}
+
+library(survival)
+library(survminer)
+library(ggplot2)
+library(dplyr)
+
+# path to the directory for saving out figures
+figDir='Users/kelly/cueexp/paper_figs_tables_stats/survival'
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/relapse_data/relapse_data_180516.csv')
+
+#remove subjects without relapse data
+d1 = d1[is.na(d1$relIn3Mos) == FALSE,]
+
+
+#make relapse a factor
+d1$relapse = as.factor(d1$relapse)
+d1$relIn3Mos = as.factor(d1$relIn3Mos)
+colnames(d1)[1] = 'subject'
+d1$highlow <- factor(d1$nacc_drugs_beta > median(d1$nacc_drugs_beta), labels=c('high', 'low'), levels=c(T,F))
+
+#create survival variable
+d1$nacc_drugs_beta <- as.numeric(d1$nacc_drugs_beta)
+
+d2 <- select(d1, censored, obstime, nacc_drugs_beta, highlow) %>%
+  filter(censored==0)
+
+d1$survival <- with(d1, Surv(obstime, censored == 0))
+d1$survival
+
+d2$survival <- with(d2, Surv(obstime, censored == 0))
+d2$survival
+```
+
+
+#Kaplan-Meier survival plots
+```{r KM plots, collapse=TRUE, warning=FALSE}
+
+# Figure 1 - all data
+sfit_fig1 <- survfit(survival~1, type="kaplan-meier", conf.type="plain", data=d1)
+#png(filename="KMcurve.png")
+fig1=ggsurvplot(sfit_fig1,
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int=T,
+           conf.int.style='ribbon',
+           xlim=c(0,320),
+          # xlim=c(0,240),
+           risk.table = TRUE,
+           tables.height = 0.2,
+           tables.theme = theme_cleantable(),
+    #       break.time.by = 30,
+           risk.table.y.text = FALSE,
+           surv.plot.height=1,
+     #ggtheme = theme_survminer(),
+          font.main = c(24, "plain","black"),
+          font.x = c(16, "plain", "black"),
+          font.y = c(16, "plain", "black"),
+          font.tickslab = c(16, "plain", "black")) + scale_color_grey()
+#ggsave(paste(figDir,"KMcurve_wtable.pdf",sep=""),sfit_fig1,height=5,width=5,units='in') # this doesn't work for whatever reason...
+#ggsave("KMcurve_wtable.eps",fig1,path=paste(figDir,sep=""),height=5,width=5,units='in') # this doesn't work for whatever reason...
+
+# Figure 1b - all data but no table underneath
+sfit_fig1b <- survfit(survival~1, type="kaplan-meier", conf.type="plain", data=d1)
+#png(filename="KMcurve.png")
+ggsurvplot(sfit_fig1,
+           surv.median.line = "hv", 
+           pval=F,
+           censor=F,
+           conf.int=T,
+           conf.int.style='ribbon',
+           xlim=c(0,320),
+          # xlim=c(0,240),
+           risk.table = FALSE,
+           tables.height = 0.2,
+           tables.theme = theme_cleantable(),
+    #       break.time.by = 30,
+           risk.table.y.text = FALSE,
+     #ggtheme = theme_survminer(),
+          font.main = c(24, "plain","black"),
+          font.x = c(16, "plain", "black"),
+          font.y = c(16, "plain", "black"),
+          font.tickslab = c(16, "plain", "black")) + scale_color_grey()
+
+
+
+# Figure 2 - median split based on NAcc responses to drugs
+sfit_fig2 <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit_fig2,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int=T,
+           conf.int.style='step',
+           #palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           #xlim=c(0,240),
+            xlim=c(0,320),
+           risk.table = TRUE,
+           tables.height = 0.2,
+           tables.theme = theme_cleantable(),
+         #  break.time.by = 30,
+           risk.table.y.text = FALSE,
+         font.main = c(24, "plain","black"),
+          font.x = c(16, "plain", "black"),
+          font.y = c(16, "plain", "black"),
+          font.tickslab = c(16, "plain", "black")) + scale_color_grey()
+  
+         #ggtheme = theme_survminer()) + scale_colour_grey()
+
+# Figure 2b - median split based on NAcc responses to drugs
+sfit_fig2b <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
+
+ggsurvplot(sfit_fig2,
+           surv.median.line = "none", 
+           pval=F,
+           conf.int=T,
+           conf.int.style='step',
+           #palette = c("#E7B800","#2E9FDF"),
+           legend.labs = c("High Cue Response","Low Cue Response"), 
+           #xlim=c(0,240),
+            xlim=c(0,320),
+           risk.table = FALSE,
+           tables.height = 0.2,
+           tables.theme = theme_cleantable(),
+         #  break.time.by = 30,
+           risk.table.y.text = FALSE,
+         font.main = c(24, "plain","black"),
+          font.x = c(16, "plain", "black"),
+          font.y = c(16, "plain", "black"),
+          font.tickslab = c(16, "plain", "black")) + scale_color_grey()
+ 
+```
+
+#scatter plot of days to relapse by nacc drug betas
+```{r scatterplot, collapse=TRUE, warning=FALSE}
+
+# Figure 3 
+ggplot(data=d2, aes(x=obstime, y=nacc_drugs_beta)) + 
+  #geom_point() + 
+  geom_point(aes(size=2)) + 
+  xlim(0,320) + 
+  xlab("Time (days)") +
+  ylab("NAcc drug response") +
+  theme(text=element_text(size=18))
+
+```
+
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(d1, data.frame(relapse, age, pa_drug, nacc_drugs_beta,nacc_food_beta))
+pairs.panels(dp)
+
+
+
+```

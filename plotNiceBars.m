@@ -112,7 +112,7 @@ se_d = cell2mat(cellfun(@(x) nanstd(x)./sqrt(size(x,1)), d,'uniformoutput',0)')'
 
 fontName = 'Helvetica';
 % fontSize = 12;
-fontSize = 18;
+fontSize = 20;
 
 if plotToScreen
     fig=figure;
@@ -229,7 +229,7 @@ if numel(groupNames)==1
         df_c = tab{strcmp(tab(:,1),'Time'),strcmp(tab(1,:),'df')};
         df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
         
-        anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f; p = %.3f\n\n',1,1),...
+        anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f\np = %.3f\n\n',1,1),...
             'condition',df_c,df_e,Fc,p(1));
         
         text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',fontSize,'FontName',fontName,'VerticalAlignment','top')
@@ -278,11 +278,11 @@ else
         
         df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
         
-        anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f; p = %.3f\n\n',1,3),...
+        anova_res = sprintf(repmat('%s:\nF(%d,%d) = %.1f;\np = %.3f\n\n',1,3),...
             'condition',df_c,df_e,Fc,p(1),...
             'group',df_g,df_e,Fg,p(2),...
             'group x cond interaction',df_i,df_e,Fi,p(4));
-        
+        anova_res
         statFontSize = 12;
         text(max(xlim)+.1,mean(ylim),anova_res,'FontSize',statFontSize,'FontName',fontName,'VerticalAlignment','top')
     end
@@ -297,7 +297,8 @@ title(titleStr,'fontName',fontName,'fontSize',fontSize)
 
 % save figure if desired
 if savePath
-    print(fig,'-dpng','-r300',savePath)
+%     print(fig,'-dpng','-r300',savePath)
+      saveas(fig,savePath,'pdf');
 end
 
 

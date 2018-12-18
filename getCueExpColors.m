@@ -135,6 +135,33 @@ for i=1:numel(labels)
         case 'strong dontwant'
             colors(i,:) = strongdontwant_color;
             
+            
+        %%%%%%%% MIDI conditions
+        case {'gain5go','gain5go-gain0go'}
+           colors(i,:)=[253 158 33]./255; % orange
+            
+        case 'gain0go'
+            colors(i,:)=[253 158 33]./255; % orange
+            
+        case {'gain5nogo','gain5nogo-gain0nogo'}
+                colors(i,:)=[2 117 180]./255; % blue
+               
+        case 'gain0nogo'
+              colors(i,:)=[2 117 180]./255; % blue
+            
+        case {'loss5go','loss5go-loss0go'}
+            colors(i,:)=[29 186 154]./255; % green
+            
+        case 'loss0go'
+            colors(i,:)=[29 186 154]./255; % green
+            
+        case {'loss5nogo','loss5nogo-loss0nogo'}
+              colors(i,:)=[246 97 165]./255;  % pink
+            
+        case 'loss0nogo'
+             colors(i,:)=[246 97 165]./255;  % pink
+           
+            
         otherwise
             colors(i,:) = [30 30 30]./255; % return grayish black
             

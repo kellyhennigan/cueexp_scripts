@@ -101,6 +101,19 @@ switch measure
         cj = find(strncmp(d(1,:),'days in rehab prior to DOP',26));
     case 'years_of_use'
         cj = find(strncmp(d(1,:),'years of use',12)); % column with desired data
+   
+    
+    %% data from Claudia (10/1/18)
+    
+    case 'auditscore4orgreater'
+        cj = find(strncmp(d(1,:),'AUDIT-C >/= 4',13)); % column with desired data
+    case 'courtmandated'
+        cj = find(strncmp(d(1,:),'Court mandated?',15)); % column with desired data
+    case 'opioidusedisorder'
+        cj = find(strncmp(d(1,:),'opioid use disorder?',20)); % column with desired data
+    case 'cannabisuse'
+        cj = find(strncmp(d(1,:),'cannabis use?',13)); % column with desired data
+    
     otherwise
         fprintf(['\ndesired measure input: ' measure ' isnt recognized...\n'])
         
@@ -124,9 +137,10 @@ for i=1:numel(subjects)
     end
     
 end
-
+  
 % convert from cell array of strings to numeric vector for numeric vars
-if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use','post_for_treatment'}))
+if any(strcmpi(measure,{'alc_dep','days_sober','days_in_rehab','years_of_use','post_for_treatment',...
+        'auditscore4orgreater','courtmandated','opioidusedisorder','cannabisuse'}))
     data=cell2mat(cellfun(@(x) str2double(x), data,'uniformoutput',0));
 end
 

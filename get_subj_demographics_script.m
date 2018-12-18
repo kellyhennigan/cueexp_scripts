@@ -6,15 +6,15 @@ close all
 p = getCuePaths(); 
 dataDir = p.data;
 
-task = 'cue'; 
+task = 'dti'; 
 
 %  group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
 % group = 'patients';
-% group = 'controls';
-group = 'relapsers_3months';
+group = 'controls';
+% group = 'nonrelapsers_3months';
    
 [subjects,gi,notes] = getCueSubjects(task,group);
-
+% subjects(22:end)=[]; gi(22:end)=[];
 % 
 % omit_subs = {'at160601','lm160914'};
 % % omit_subs = {'ja160416'};
@@ -143,7 +143,20 @@ if ~strcmp(group,'controls')
     % dependence on alc?
     d=getCueData(subjects,'alc_dep');
     s{end+1} = sprintf('\npercent alc dep: %.2f',numel(find(d==1))./N);
-    
+ 
+       % dependence on alc?
+    d=getCueData(subjects,'auditscore4orgreater');
+    s{end+1} = sprintf('\npercent audit score 4 or greater: %.2f',numel(find(d==1))./N);
+ 
+         % dependence on cannabis?
+    d=getCueData(subjects,'cannabisuse');
+    s{end+1} = sprintf('\npercent cannabis dep: %.2f',numel(find(d==1))./N);
+
+        % dependence on opioid?
+    d=getCueData(subjects,'opioidusedisorder');
+    s{end+1} = sprintf('\npercent opioid dep: %.2f',numel(find(d==1))./N);
+
+
     % poly-drug dependence?
     d=getCueData(subjects,'poly_drug_dep');
     s{end+1} = sprintf('\npercent poly drug dep: %.2f',numel(find(d==1))./N);
@@ -162,6 +175,7 @@ if ~strcmp(group,'controls')
     yearsofuse=getCueData(subjects,'years_of_use');
     s{end+1}=sprintf('\nyears of use (mean/sd): %.1f/%.1f',nanmean(yearsofuse),nanstd(yearsofuse));
 
+  
       % anxiety diagnosis
 %     d=getCueData(subjects,'anxiety_diag');
 %     nAnx = sum(cellfun(@(x) ~isempty(strfind(x,'yes')), d));

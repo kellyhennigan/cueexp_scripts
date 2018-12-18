@@ -11,17 +11,17 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_181109.csv');
+% dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
 
-T.relIn6Mos(4)=1; % set ja151218 to be relapsed in 6 months 
+% T.relIn6Mos(4)=1; % set ja151218 to be relapsed in 6 months 
+
 
 % define outcome variable
 Y = 'relIn3Mos';
-
 
 
 %% omit subjects that have no outcome data 
@@ -38,7 +38,7 @@ vars = T.Properties.VariableNames;
 a={};
 tB=[];
 
-for i=10:numel(vars)
+for i=9:numel(vars)
      i
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = [Y ' ~ ' vars{i}];
@@ -52,6 +52,27 @@ end
 [tB,ti]=sort(tB'); tB
 a = a(ti)'; a
 
+%% check all demographics including age
+% 
+% a={};
+% tB=[];
+% 
+% for i=9:56
+%     i
+%     %     modelspec = ['relapse ~ ' vars{i}];
+%     if ~strcmp(vars(i),'age')
+%         modelspec = [Y ' ~ age + ' vars{i}];
+%         res=fitglm(T,modelspec,'Distribution','binomial');
+%         bi=find(strcmp(res.CoefficientNames,vars{i}));
+%         if res.Coefficients.pValue(bi)<.10
+%             a=[a vars{i}];
+%             tB = [tB res.Coefficients.tStat(bi)];
+%         end
+%     end
+% end
+% 
+% [tB,ti]=sort(tB'); tB
+% a = a(ti)'; a
 
 
 %% model : demographic predictors
@@ -67,25 +88,14 @@ fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 X=[T.age]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
 
-for ii=2:numel(res_standard.Coefficients.Estimate)
+for ii=1:numel(res_standard.Coefficients.Estimate)
     fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.pValue(ii));
 end
-
-
-
-fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
-fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
-    res_standard.Coefficients.Estimate(1),...
-    res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.pValue(1));
-
-
 
 
 
@@ -103,21 +113,15 @@ fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 % standardized coefficients: 
 X=[T.pref_drug T.craving T.bam_upset]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
-for ii=2:numel(res_standard.Coefficients.Estimate)
+for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.pValue(ii));
 end
 
-fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
-fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
-    res_standard.Coefficients.Estimate(1),...
-    res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.pValue(1));
 
 
 %% model : brain predictors
@@ -136,21 +140,15 @@ fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 % X=[T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 X=[T.nacc_drugs_beta T.mpfc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
-for ii=2:numel(res_standard.Coefficients.Estimate)
+for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.pValue(ii));
 end
 
-fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
-fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
-    res_standard.Coefficients.Estimate(1),...
-    res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.pValue(1));
 
 
 
@@ -165,38 +163,9 @@ fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 % standardized coefficients: 
 X=[T.age T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
-for ii=2:numel(res_standard.Coefficients.Estimate)
+for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
-        res_standard.Coefficients.Estimate(ii),...
-        res_standard.Coefficients.SE(ii),...
-        res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
-        res_standard.Coefficients.pValue(ii));
-end
-
-fprintf('\n\nstandard estimate, SE, Z, and p value for INTERCEPT:\n');
-fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
-    res_standard.Coefficients.Estimate(1),...
-    res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.Estimate(1)./res_standard.Coefficients.SE(1),...
-    res_standard.Coefficients.pValue(1));
-
-
-
-%% model:
-
-modelspec = [Y '~  years_of_use bam_upset nacc_drugs_beta'];
-res=fitglm(T,modelspec,'Distribution','binomial');
-
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
-fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
-
-% standardized coefficients: 
-X=[T.years_of_use T.bam_upset T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
-res_standard = fitglm(X,T.relIn3Mos,'Distribution','binomial');
-for ii=2:numel(res_standard.Coefficients.Estimate)
-  fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
@@ -205,7 +174,7 @@ end
 
 
 
-%% model:  
+%% model: just NAcc drugs response
 
 modelspec = [Y ' ~ nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
@@ -216,14 +185,15 @@ fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 % standardized coefficients: 
 X=[T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
-for ii=2:numel(res_standard.Coefficients.Estimate)
-  fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.3f (%.3f) , Z=%.3f, p=%.3f\n',...
+for ii=1:numel(res_standard.Coefficients.Estimate)
+   fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
+    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.pValue(ii));
 end
+
 
 
 

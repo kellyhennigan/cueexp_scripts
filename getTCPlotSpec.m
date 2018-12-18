@@ -116,10 +116,12 @@ switch task
             'controls patients';
             'controls patients';
             'controls patients';
-            'controls relapsers nonrelapsers';
-            'controls relapsers nonrelapsers';
-            'controls relapsers nonrelapsers';
-            'controls relapsers nonrelapsers'};
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months';
+            'controls relapsers_3months nonrelapsers_3months'
+            'relapsers_3months nonrelapsers_3months'};
+      
         
         % corresponding stims:
         stims =  {'gain0 gain5 loss0 loss5';
@@ -135,7 +137,8 @@ switch task
             'gain5-gain0';
             'loss5-loss0'
             'gainwin-gainmiss';
-            'losswin-lossmiss'};
+            'losswin-lossmiss'
+            'loss5-loss0'};
         
         
         % corresponding stim strings to use in figure and file name
@@ -152,13 +155,18 @@ switch task
             'gain5-0 anticipation';
             'loss5-0 anticipation';
             'gain win-miss outcome';
-            'loss win-miss outcome'};
+            'loss win-miss outcome'
+            'loss5-0 anticipation';};
         
         
     case 'midi'  % mid fmri task
         
         % corresponding groups:
         groups =  {'controls';
+            'controls';
+            'controls';
+            'controls';
+            'controls';
             'controls';
             'patients';
             'patients';
@@ -170,6 +178,10 @@ switch task
         % corresponding stims:
         stims =  {'gain5GO gain0GO gain5NOGO gain0NOGO';
             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+            'loss5GO loss0GO loss5NOGO loss0NOGO';
+            'loss5GO-loss0GO loss5NOGO-loss0NOGO';
+            'gain5GO gain5NOGO loss5GO loss5NOGO';
+            'gain5GO-gain0GO gain5NOGO-gain0NOGO loss5GO-loss0GO loss5NOGO-loss0NOGO';
             'gain5GO gain0GO gain5NOGO gain0NOGO';
             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
             'gain5NOGO';
@@ -180,6 +192,10 @@ switch task
         % corresponding stim strings to use in figure and file name
         stimStrs =  {'gain trials';
             'Incentivized GO vs NOGO';
+            'loss trials';
+            'incentivized GO vs NOGO LOSS';
+            'high incentive trials';
+            'incentivized go,nogo,gain, loss';
             'gain trials';
             'Incentivized GO vs NOGO';
             'high incentive NOGO trials';

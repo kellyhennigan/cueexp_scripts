@@ -26,7 +26,7 @@ conds = {'food','drugs','neutral'};
 
 roi = 'nacc_desai';
 
-groups = {'controls','patients'};
+groups = {'Controls','Patients'};
 
 
 %% 

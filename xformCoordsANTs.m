@@ -5,6 +5,8 @@ function outCoords = xformCoordsANTs(inCoords,xform_aff,xform_invWarp)
 % 
 % INPUT:
 %   inCoords - Mx3 matrix of coordinates in real space; each row is a 3d coord
+%              OR a filepath that contains coords in rows (i.e., each row
+%              has an x,y,z coordinate)
 %   xform_aff - filename of affine xform from inCoords to outCoords space
 %   xform_invWarp (optional) - filename of inverse warp xform from inCoords to outCoords space
 % 
@@ -26,6 +28,11 @@ function outCoords = xformCoordsANTs(inCoords,xform_aff,xform_invWarp)
 
 if notDefined('xform_invWarp')
     xform_invWarp = '';
+end
+
+% if inCoords is a file name, load it
+if isstr(inCoords)
+    inCoords=dlmread(inCoords);
 end
 
 % in case coords appear to be listed in columns, flip them to be in rows

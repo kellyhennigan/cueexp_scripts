@@ -107,12 +107,12 @@ for s = 1:numel(subjects)
     else
         
         % plot motion params & save if desired
-    %    fig = plotMotionParams(mp);
-%         if savePlots
-%             outName = [subject '_mp'];
-%             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
-%         end
-%         
+       fig = plotMotionParams(mp);
+        if savePlots
+            outName = [subject '_mp'];
+            print(gcf,'-dpng','-r300',fullfile(figDir,outName));
+        end
+        
         
         % calculate euclidean norm (head motion distance roughly in mm units)
         en = [0;sqrt(sum(diff(mp).^2,2))];

@@ -6,9 +6,9 @@ close all
 inDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/data';
 outDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/figs';
 
-% measures = {'ratingRT'};
+measures = {'cueRT'};
 % measures={'familiar'};
-measures = {'want','familiar','PA','NA'};
+% measures = {'want','familiar','PA','NA'};
 
 
 conds = {'food','drugs','neutral'};

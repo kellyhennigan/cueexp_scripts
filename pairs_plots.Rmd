@@ -1,0 +1,24 @@
+---
+title: "Hunger and food ratings plots"
+author: "Kelly MacNiven"
+date: "8/2/2018"
+output: pdf_document
+---
+
+
+get libraries & load data
+```{r setup, collapse=TRUE, warning=FALSE}
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/controls_hunger.csv')
+
+```
+
+#pairs plots
+
+```{r pairs plot, collapse=TRUE, warning=FALSE}
+require(psych)
+dp = with(d1, data.frame(hunger,food_want,food_cue_pa,food_pa,nacc_food_betas,nacc_fvn_betas,nacc_food_TR45,nacc_fvn_TR45))
+pairs.panels(dp)
+
+```
