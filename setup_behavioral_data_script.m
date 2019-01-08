@@ -29,7 +29,8 @@ doOverwrite=1; % 1 to overwrite files while copying stim files, 0 to not overwri
 %% CUE TASK
 
 %%%%%%%%%%%% stim timing file
-inFile = [subjid '_m.csv'];
+% inFile = [subjid '_m.csv'];
+inFile = [subjid '_m_cue.csv'];
 inPath = fullfile(rawDir,'cue','task_files','data',inFile);
 outPath{1} = fullfile(rawDir,'cue','behavioral_data',[subjid '_cue_matrix.csv']);
 outPath{2} = fullfile(subjOutDir,'cue_matrix.csv');
@@ -68,7 +69,8 @@ end
 clear inFile inPath outPath T
 
 %%%%%%%%% rating file
-inFile = [subjid '_ratings.csv'];
+% inFile = [subjid '_ratings.csv'];
+inFile = [subjid '_ratings_cue.csv'];
 inPath = fullfile(rawDir,'cue','task_files','data',inFile);
 outPath{1} = fullfile(rawDir,'cue','behavioral_data',[subjid '_cue_ratings.csv']);
 outPath{2} = fullfile(subjOutDir,'cue_ratings.csv');
@@ -286,8 +288,8 @@ clear inFiles inDir outPath T1 T2 Tnull T i
 
 
 %%%%%%%%% rating file
-% inFile = [subjid '_ratings.csv'];
-inFile = [subjid '_ratings_MIDI.csv'];
+inFile = [subjid '_ratings.csv'];
+% inFile = [subjid '_ratings_MIDI.csv'];
 
 inPath = fullfile(rawDir,'midi','task_files','MIDI','data',inFile);
 outPath{1} = fullfile(rawDir,'midi','behavioral_data',[subjid '_midi_ratings.csv']);
