@@ -65,5 +65,10 @@ for i=1:numel(subjects)
         %     print(h,'-dpng','-r300',outPath)
         saveas(h,[outPath '.png'])
         %     imwrite(,'myMultipageFile.tif')
-    end
+        
+    end % roiNames
     
+    fprintf(['done.\n']);
+    
+end % subjects
+
