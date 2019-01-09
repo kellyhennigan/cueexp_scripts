@@ -57,15 +57,16 @@ for i=1:numel(subjects)
         % save it
         switch plane
             case 1      % sagittal
-                outPath = fullfile(outDir,[subject '_X' num2str(sl(plane))]);
+                outName=[subject '_X' num2str(sl(plane))];
             case 2      % coronal
-                outPath = fullfile(outDir,[subject '_Y' num2str(sl(plane))]);
+                outName=[subject '_Y' num2str(sl(plane))];
             case 3      % axial
-                outPath = fullfile(outDir,[subject '_Z' num2str(sl(plane))]);
+                outName=[subject '_Z' num2str(sl(plane))];
         end
-        %     print(h,'-dpng','-r300',outPath)
-        saveas(h{1},[outPath '.png'])
-        %     imwrite(,'myMultipageFile.tif')
+        
+        %     print(h{1},'-dpng','-r300',outPath)
+        saveas(h{1},fullfile(this_outDir,[outName '.png']));
+        
         
     end % roiNames
     
