@@ -55,7 +55,6 @@ load(fgMFile);
     % SuperFibers
     % target
 
-
 %% define a "keep index" of desired subjects to return data for
 
 keep_idx = ones(numel(subjects),1);
@@ -87,7 +86,9 @@ keep_idx(isnan(fgMeasures{1}(:,1)))=0;
 
 
 % exclude any subjects that don't have scale data
-keep_idx(isnan(getCueData(subjects,scale)))=0;
+if ~isempty(scale)
+    keep_idx(isnan(getCueData(subjects,scale)))=0;
+end
 
 
 %%  get fg data for just the desired subjects

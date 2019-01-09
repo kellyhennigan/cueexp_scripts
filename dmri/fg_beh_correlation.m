@@ -20,8 +20,8 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_dil2_autoclean'; %'.mat' will be added to end
-fgStr='VTA/SN - Caudate pathway'
+fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgStr='MFB'
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'

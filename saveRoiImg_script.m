@@ -8,9 +8,8 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-roiName = 'mpfc';
+roiName = 'DA';
 roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);
-
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');
 
 outDir = fullfile(figDir,'ROIs');
@@ -39,7 +38,7 @@ for i=1:3
     [imgRgbs,~,~,h,acpcSlices{i}] = plotOverlayImage(roi,t1,col,[0 1],i,sl(i));
     outPath = fullfile(outDir,[roiName '_' saveViews{i} num2str(sl(i))]);
     print(h,'-dpng','-r300',outPath)
-    saveas(h{1},[outPath '.tif'])
+    saveas(h{1},[outPath '.png'])
 %     imwrite(,'myMultipageFile.tif')
 end
 

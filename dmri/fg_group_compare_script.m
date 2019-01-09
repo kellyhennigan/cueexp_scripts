@@ -11,9 +11,9 @@ dataDir = pa.data; figDir = pa.figures;
 group = {'controls','patients'};
 
 % directory & filename of fg measures
-method = 'conTrack';
+method = 'mrtrix_fa';
 
-fgMatStr = 'DALR_naccLR_autoclean_cl1'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 
 saveFigs = 1;   % 1 to save figs to outDir otherwise 0
 
@@ -21,15 +21,15 @@ outDir = fullfile(figDir,fgMatStr,[group{:} '_comparisons']);
 
 % include control variables? 
 % covars = {'age','gender'};
-covars = {'age'};
-% covars = {};
+% covars = {'age'};
+covars = {};
 
 omit_subs = {
-    'jr160507'
-    % 	'gm160909'
-    'ld160918'
-    'gm161101'
-    'cg160715'
+%     'jr160507'
+%     % 	'gm160909'
+%     'ld160918'
+%     'gm161101'
+%     'cg160715'
     % 	'jn160403'
     % 	'sr151031'
     };
@@ -46,7 +46,7 @@ end
 %% load data
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
-[fgMeasures,fgMLabels,~,subjects,gi,SF]=loadFGBehVars(...
+[fgMeasures,fgMLabels,~,subjects,gi]=loadFGBehVars(...
     fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),'','all',omit_subs);
 
 % ADD LINES HERE TO UPDATE GI IF STRCMP(GROUP)=='relapsers' or

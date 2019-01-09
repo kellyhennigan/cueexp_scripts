@@ -15,13 +15,13 @@ method = 'mrtrix_fa';
 fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS';
+scale = 'age';
 
 % include control variables? 
 % covars = {'age','dwimotion'};
-covars = {'age'};
+% covars = {''};
 % covars = {'dwimotion'};
-% covars = '';
+covars = '';
 
 % plot both groups
 group = {'controls','patients'};
@@ -44,7 +44,7 @@ omit_subs = {};
 %% load data
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
-[fgMeasures,fgMLabels,scores,subjects,gi]=cellfun(@(x) loadFGBehVars(...
+[fgMeasures,fgMLabels,scores,subjects]=cellfun(@(x) loadFGBehVars(...
     fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),scale,x,omit_subs), ...
     group, 'uniformoutput',0);
 fgMLabels=fgMLabels{1};
@@ -63,30 +63,34 @@ fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
 
 if exist('covars','var') && ~isempty(covars)
 
-    % have to put measures together for all subjects then
-%     put them back into cell arrays
+    
+    % have to put regress out covariates from fgMeasures & scores across ALL subjects
+[all_fgMeasures,~,all_scores,all_subjects,gi]=loadFGBehVars(...
+    fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),scale,'all',omit_subs);
 
-n1=numel(subjects{1}); n2=numel(subjects{2});
 
-% cell array for ALL subjects
-all_subs=[subjects{1};subjects{2}];
- all_scores=[scores{1};scores{2}];
-    {[fgMeasures{1}{3};fgMeasures{2}{3}]} 
-%    % design matrix w/control vars and a vector of ones for intercept
-   X = [ones(numel(all_subs),1),cell2mat(cellfun(@(x) getCueData(all_subs,x), covars, 'uniformoutput',0))];
+%    % design matrix w/covariates and a vector of ones for intercept
+   X = [ones(numel(all_subjects),1),cell2mat(cellfun(@(x) zscore(getCueData(all_subjects,x)), covars, 'uniformoutput',0))];
 
-%    % regress control variables out of scores and fgMeasures
+%    % regress covariates out of scores and fgMeasures
    all_scores = glm_fmri_fit(all_scores,X,[],'err_ts');
-%    
-%    fgMeasures = cellfun(@(y) glm_fmri_fit(y,X,[],'err_ts'), fgMeasures,'uniformoutput',0);
-%    
-%    cvStr = '_wCVs';
-%    
-% else
-%     
-%     cvStr = '';
-%    
-% end
+   all_fgMeasures = cellfun(@(y) glm_fmri_fit(y,X,[],'err_ts'), all_fgMeasures,'uniformoutput',0);
+   
+   % now replace fgMeasures and scores with those that have covariates
+   % regressed out
+   scores{1}=all_scores(gi==0); scores{2}=all_scores(gi>0);
+   for j=1:numel(all_fgMeasures)
+       fgMeasures{1}{j}=all_fgMeasures{j}(gi==0,:);
+       fgMeasures{2}{j}=all_fgMeasures{j}(gi>0,:);
+   end
+   
+   cvStr = '_wCVs';
+   
+else
+    
+    cvStr = '';
+   
+end
 
 
 % if node is 'best', determine which node is best

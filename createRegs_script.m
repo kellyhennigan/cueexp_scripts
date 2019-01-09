@@ -14,7 +14,16 @@ close all
 [p,task,subjects,gi]=whichCueSubjects();
 dataDir = p.data;
 
-% subjects = {'dr180715'};
+subjects = {  'md181018'
+    'tv181019'
+    'gd181026'
+    'lh181030'
+    'td181116'
+    'kd181119'
+    'tm181129'
+    'zg181207'
+    'lm181213'
+    'wa181217'};
 
 
 % define info that's different for our data vs claudia's data here
