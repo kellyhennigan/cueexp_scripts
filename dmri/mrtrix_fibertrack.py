@@ -28,7 +28,7 @@ maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
 seedStr = 'DA'						# if false, will use the mask as seed ROI by default
-#seedStr = 'nacc'						# if false, will use the mask as seed ROI by default
+#seedStr = 'nacc'					# if false, will use the mask as seed ROI by default
 
 targetStrs = ['caudate','putamen','nacc']		# can be many or none; if not defined, fibers will just be tracked from the seed ROI
 #targetStrs = ['PVT']		

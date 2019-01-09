@@ -1,4 +1,4 @@
-%% quick and dirty script to plot and save out *single subject* ROI masks 
+%% quick and dirty script to plot and save out *single subject* ROI masks
 % in x,y, and z planes with a subject loop
 
 
@@ -9,53 +9,60 @@ close all
 subjects={'jh160702'};
 dataDir = p.data;
 
-roiFilePath = fullfile(dataDir,'%s','%s.nii'); % directory with tlrc space ROIs
+roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
 roiNames = {'DA','nacc','caudate','putamen'};
-
 
 figDir = p.figures;
 
 t1Path = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject ID
 
 outDir = fullfile(figDir,'ROIs_subject','%s'); %s is roiName
-    
-saveViews = {'x','y','z'}; % x y z for sagittal, coronal, and axial views
+
+
+plane=2; % 1 for sagittal, 2 for coronal, 3 for axial view
 
 col = [1 0 0]; % color for ROI mask
 
 
 %% do it
-
-
-for j=1:numel(roiNames)
+i=1
+for i=1:numel(subjects)
     
-    this_inRoiFile = sprintf(inRoiFile,roiNames{j});
+    subject = subjects{i};
     
-    for i=1:numel(subjects)
+    fprintf(['\n\nworking on subject ' subject '...\n\n']);
+    
+    t1 = niftiRead(sprintf(t1Path,subject));
+    
+    j=1
+    for j=1:numel(roiNames)
         
-        subject = subjects{i};
+        this_outDir=sprintf(outDir,roiNames{j});
+        if ~exist(this_outDir,'dir')
+            mkdir(this_outDir)
+        end
         
-        fprintf(['\n\nworking on subject ' subject '...\n\n']);
-
-if ~exist(outDir,'dir')
-    mkdir(outDir)
-end
-
-roi = niftiRead(roiPath);
-t1 = niftiRead(t1Path);
-
-
-% determine x,y,z slices with the most roi coords
-[i j k]=ind2sub(size(roi.data),find(roi.data));
-sl = mode(round(mrAnatXformCoords(roi.qto_xyz,[i j k]))); % x,y and z slices to plot
-
-
-
-for i=1:3
-    [imgRgbs,~,~,h,acpcSlices{i}] = plotOverlayImage(roi,t1,col,[0 1],i,sl(i));
-    outPath = fullfile(outDir,[roiName '_' saveViews{i} num2str(sl(i))]);
-    print(h,'-dpng','-r300',outPath)
-    saveas(h{1},[outPath '.png'])
-%     imwrite(,'myMultipageFile.tif')
-end
-
+        roi = niftiRead(sprintf(roiFilePath,subject,roiNames{j}));
+        
+        
+        % determine x,y,z slices with the most roi coords
+        [i j k]=ind2sub(size(roi.data),find(roi.data));
+        sl = mode(round(mrAnatXformCoords(roi.qto_xyz,[i j k]))); % x,y and/or z slices to plot
+        
+        % plot ROI overlaid on subject's T1
+        [imgRgbs,~,~,h] = plotOverlayImage(roi,t1,col,[0 1],plane,sl(plane));
+        
+        % save it
+        switch plane
+            case 1      % sagittal
+                outPath = fullfile(outDir,[subject '_X' num2str(sl(plane))]);
+            case 2      % coronal
+                outPath = fullfile(outDir,[subject '_Y' num2str(sl(plane))]);
+            case 3      % axial
+                outPath = fullfile(outDir,[subject '_Z' num2str(sl(plane))]);
+        end
+        %     print(h,'-dpng','-r300',outPath)
+        saveas(h,[outPath '.png'])
+        %     imwrite(,'myMultipageFile.tif')
+    end
+    
