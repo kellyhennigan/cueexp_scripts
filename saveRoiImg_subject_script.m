@@ -10,8 +10,8 @@ close all
 dataDir = p.data;
 
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
-% roiNames = {'nacc','caudate','putamen'};
-roiNames = {'DA'};
+roiNames = {'nacc','caudate','putamen'};
+% roiNames = {'DA'};
 
 figDir = p.figures;
 
