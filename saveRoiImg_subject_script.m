@@ -6,11 +6,12 @@ clear all
 close all
 
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
-subjects={'jh160702'};
+% subjects={'jh160702'};
 dataDir = p.data;
 
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
-roiNames = {'DA','nacc','caudate','putamen'};
+% roiNames = {'nacc','caudate','putamen'};
+roiNames = {'DA'};
 
 figDir = p.figures;
 
