@@ -69,7 +69,7 @@ tensorfile = mrt_dir+'/dt.nii' 		# file name for tensor map nifti
 fafile = mrt_dir+'/fa.nii'				# file name for fa map nifti
 
 # variables necessary for estimating the response function and FOD
-lmax = '2'									# max harmonic degree of the response fxn (must have at least 45 directions for lmax=8)
+lmax = '8'									# max harmonic degree of the response fxn (must have at least 45 directions for lmax=8)
 sf_file = mrt_dir+'/sf'+str(lmax)+'.mif'	# this will output a mask file showing the voxels used to estimate the single fiber response
 respfile = mrt_dir+'/response'+str(lmax)	# name for response file
 fod_alg = 'csd'								# algorithm to use for estimating fiber orientaion distribution
