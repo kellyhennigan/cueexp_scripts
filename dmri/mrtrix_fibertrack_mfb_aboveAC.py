@@ -31,7 +31,7 @@ seedStr = 'DA'						# if false, will use the mask as seed ROI by default
 
 targetStrs = ['nacc']		
 #excPath = ''
-excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
+excPath = '/home/hennigan/cueexp/data/ROIs/ACbelow_mask.nii.gz'
 
 LR = ['L','R'] # 'L' for left and/or 'R' for right
 
@@ -56,7 +56,7 @@ force = True						# if true, the command will save over a pre-existing output fi
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-outFileStr = '_belowAC_dil2'  # out file name suffix? Leave blank if not desired
+outFileStr = '_aboveAC_dil2'  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
