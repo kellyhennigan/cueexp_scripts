@@ -50,8 +50,9 @@ for i=1:numel(subjects)
         [i j k]=ind2sub(size(roi.data),find(roi.data));
         sl = mode(round(mrAnatXformCoords(roi.qto_xyz,[i j k]))); % x,y and/or z slices to plot
         
+        
         % plot ROI overlaid on subject's T1
-        [imgRgbs,~,~,h] = plotOverlayImage(roi,t1,col,[0 1],plane,sl(plane));
+        [imgRgbs,~,~,h] = plotOverlayImage(roi,t1,col,[0 1],plane,sl(plane),[],[],[],0);
         
         % save it
         switch plane
@@ -63,7 +64,7 @@ for i=1:numel(subjects)
                 outPath = fullfile(outDir,[subject '_Z' num2str(sl(plane))]);
         end
         %     print(h,'-dpng','-r300',outPath)
-        saveas(h,[outPath '.png'])
+        saveas(h{1},[outPath '.png'])
         %     imwrite(,'myMultipageFile.tif')
         
     end % roiNames
