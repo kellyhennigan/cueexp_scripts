@@ -17,46 +17,32 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
-p=getCuePaths;
+[p,task,subjects,gi]=whichCueSubjects('stim','dti');
 
 dataDir = p.data;
 % subjects = getCueSubjects('dti');
-subjects={'vm151031'};
-
-% subjects={'cg160715','wh160130','rp160205','ms170424','vm151031'};
-
-% subjects={'aa151010'};
-% subjects(1:9)=[];
 
 seed = 'DA';  % define seed roi
-% seed = 'nacc';
 
-% targets = {'putamen'}; % string for roi
 targets = {'nacc'};
-% targets = {'caudate','putamen'}; % stri  ng for roi
-% targets = {'nacc','caudate','putamen'};
 
-LorR = ['R'];
-% LorR = upper(input('L, R, or both?','s'));
-% if strcmp(LorR,'BOTH')
-%     LorR='LR';
-% end
+% LorR = ['R'];
+LorR = upper(input('L, R, or both? ','s'));
+if strcmp(LorR,'BOTH')
+    LorR='LR';
+end
 
 
 savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
-% lmax = '';
-
 method = 'mrtrix_fa';
 fstr = 'aboveAC_dil2';
 
 % out file name for pruned fibers
-% outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR
-% outFgStr = [seed '%s_%s%s_autoclean']; %s: LorR, target, LorR
 outFgStr = [seed '%s_%s%s_' fstr '_autoclean']; %s: LorR, target, LorR
 
-plotToScreen = 1; % don't plot to screen
+plotToScreen = 0; % don't plot to screen
 
 saveOutFGMeasures=1; % 1 to compute and save out fiber group measures (fa,md,etc.), otherwise, 0
 dt6file = 'dti96trilin/dt6.mat'; % filepath relative to subject's directory
