@@ -29,7 +29,7 @@ seed = 'DA';  % define seed roi
 % targets = {'putamen'}; % string for roi
 % targets = {'nacc'};
 % targets = {'caudate','putamen'}; % stri  ng for roi
-targets = {'caudate','putamen'};
+targets = {'putamen'};
 
 % LorR = ['L'];
 LorR = upper(input('L, R, or both? ','s'));
