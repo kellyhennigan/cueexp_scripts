@@ -32,7 +32,7 @@ seed = 'DA';  % define seed roi
 targets = {'nacc','caudate','putamen'};
 
 % LorR = ['L'];
-LorR = upper(input('L, R, or both?','s'));
+LorR = upper(input('L, R, or both? ','s'));
 if strcmp(LorR,'BOTH')
     LorR='LR';
 end
