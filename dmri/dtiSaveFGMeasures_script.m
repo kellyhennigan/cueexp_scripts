@@ -25,11 +25,11 @@ LorR = ['L','R'];
 
 combineLR = 1; % 1 to combine L and R, otherwise, 0
 
-seeds = {'DA'};
+seeds = {'DA','DA','DA','DA','DA'};
 
-targets = {'nacc'};
+targets = {'nacc','nacc','nacc','caudate','putamen'};
 
-versionStrs = {'aboveAC_dil2_autoclean'};
+versionStrs = {'belowAC_dil2_autoclean','aboveAC_dil2_autoclean','dil2_autoclean','dil2_autoclean','dil2_autoclean'};
 
 % fiber group file strings
 inDir = fullfile(dataDir,'%s','fibers',method); %s: subject
