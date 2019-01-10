@@ -44,7 +44,7 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 % lmax = '';
 
 method = 'mrtrix_fa';
-lmax = '_dil2';
+lmax = 'dil2';
 
 % out file name for pruned fibers
 % outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR
