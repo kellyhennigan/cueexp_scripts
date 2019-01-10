@@ -19,8 +19,6 @@ close all
 % get experiment-specific paths and cd to main data directory
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 
-subjects = getCueSubjects('dti',1);
-subjects(1:13)=[];
 
 seed = 'DA';  % define seed roi
 
