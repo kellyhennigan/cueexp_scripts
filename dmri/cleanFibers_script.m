@@ -17,10 +17,9 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
-p=getCuePaths;
+[p,task,subjects,gi]=whichCueSubjects('stim','');
 
 dataDir = p.data;
-subjects = getCueSubjects('dti');
 % subjects={'as160129','wh160130','jw160316'};
 % subjects(1:9)=[];
 
