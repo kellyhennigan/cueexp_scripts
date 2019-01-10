@@ -21,22 +21,22 @@ p=getCuePaths;
 
 dataDir = p.data;
 subjects = getCueSubjects('dti');
-subjects={'as160129','wh160130','jw160316'};
+% subjects={'as160129','wh160130','jw160316'};
 % subjects(1:9)=[];
 
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
 % targets = {'putamen'}; % string for roi
-targets = {'nacc'};
+% targets = {'nacc'};
 % targets = {'caudate','putamen'}; % stri  ng for roi
-% targets = {'nacc','caudate','putamen'};
+targets = {'nacc','caudate','putamen'};
 
-LorR = ['L'];
-% LorR = upper(input('L, R, or both?','s'));
-% if strcmp(LorR,'BOTH')
-%     LorR='LR';
-% end
+% LorR = ['L'];
+LorR = upper(input('L, R, or both?','s'));
+if strcmp(LorR,'BOTH')
+    LorR='LR';
+end
 
 
 savePlots = 1; % 1 to save out plots, otherwise 0
@@ -45,12 +45,12 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 % lmax = '';
 
 method = 'mrtrix_fa';
-lmax = 'aboveAC_dil2';
+lmax = '_dil2';
 
 % out file name for pruned fibers
 % outFgStr = [seed '%s_%s%s_' lmax '_autoclean']; %s: LorR, target, LorR
 % outFgStr = [seed '%s_%s%s_autoclean']; %s: LorR, target, LorR
-outFgStr = [seed '%s_%s%s_aboveAC_dil2_autoclean']; %s: LorR, target, LorR
+outFgStr = [seed '%s_%s%s_dil2_autoclean']; %s: LorR, target, LorR
 
 plotToScreen = 0; % don't plot to screen
 
