@@ -218,22 +218,22 @@ if __name__ == '__main__':
 		
 	##################### ANTS COREG & NORMALIZATION PIPELINE ######################
 
-			#### transform to group space using ANTS non-linear xform
-			if doCoreg:
-				xf1 = 'xfs/'+task+'2t1_xform_Affine.txt' # %s is task
-			else:
-				xf1 = ''
-			xf2 = 'xfs/t12tlrc_xform_Affine.txt' # affine xform from t1 native space to tlrc template
-			xf3 = 'xfs/t12tlrc_xform_Warp.nii.gz' # non-linear warp from t1 native space to tlrc
-			func_template = os.path.join(data_dir,'templates','TT_N27_func_dim.nii')
+			# #### transform to group space using ANTS non-linear xform
+			# if doCoreg:
+			# 	xf1 = 'xfs/'+task+'2t1_xform_Affine.txt' # %s is task
+			# else:
+			# 	xf1 = ''
+			# xf2 = 'xfs/t12tlrc_xform_Affine.txt' # affine xform from t1 native space to tlrc template
+			# xf3 = 'xfs/t12tlrc_xform_Warp.nii.gz' # non-linear warp from t1 native space to tlrc
+			# func_template = os.path.join(data_dir,'templates','TT_N27_func_dim.nii')
 
-	 		tlrcFile = normalizeANTSFunc(funcFile,func_template,xf1,xf2,xf3) # leave xf1 as '' to skip coreg step 
+	 	# 	tlrcFile = normalizeANTSFunc(funcFile,func_template,xf1,xf2,xf3) # leave xf1 as '' to skip coreg step 
 
-	 		#### save out roi time series 
-	 		for r in roiNames:
-	 			this_roiPath = roiPath % (r)
-	 			outTsName = task+'_'+r+'.1D'
-				extractRoiTS(tlrcFile,this_roiPath,outTsName)
+	 	# 	#### save out roi time series 
+	 	# 	for r in roiNames:
+	 	# 		this_roiPath = roiPath % (r)
+	 	# 		outTsName = task+'_'+r+'.1D'
+			# 	extractRoiTS(tlrcFile,this_roiPath,outTsName)
 
 
 
