@@ -235,7 +235,7 @@ if __name__ == '__main__':
 	 	# 		outTsName = task+'_'+r+'.1D'
 			# 	extractRoiTS(tlrcFile,this_roiPath,outTsName)
 
-
+		#	print '\n\nSAVED OUT AS '+tlrcFile+'\n\n'
 
 ####################### FILES/PARAMS FOR AFNI METHOD  ##########################
 
@@ -260,7 +260,7 @@ if __name__ == '__main__':
 			doCommand(cmd)
 
 
-			print '\n\nDONE WITH '+task+' TASK DATA, SAVED OUT AS '+tlrcFile+' and '+afni_tlrcFile+'\n\n'
+			print '\n\nDONE WITH '+task+' TASK DATA, SAVED OUT AS '+afni_tlrcFile+'\n\n'
 
 
 		print 'FINISHED SUBJECT '+subject
