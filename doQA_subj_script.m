@@ -41,8 +41,10 @@ switch task
         en_thresh = 5; % euclidean norm threshold for calling a TR "bad"
         
         % what percentage of bad volumes should lead to excluding a subject for
-        % motion?
-        percent_bad_thresh = .9;
+        % motion? 
+%         1% threshold means excluding for 2 bad volumes or more (there are
+%         105 vols)
+        percent_bad_thresh = 1;
         
         roi_str = 'wmMask';
         roits_file = [dataDir '/%s/dti96trilin/' roi_str '_ts'];
