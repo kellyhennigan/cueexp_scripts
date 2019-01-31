@@ -154,7 +154,7 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
     end
     
     mean_tc = cellfun(@nanmean, tc,'uniformoutput',0);
-    se_tc = cellfun(@(x) nanstd(x,1)./sqrt(size(x,1)), tc,'uniformoutput',0);
+    se_tc = cellfun(@(x) nanstd(x)./sqrt(size(x,1)), tc,'uniformoutput',0);
     
     %  upsample time courses
     if (useSpline)

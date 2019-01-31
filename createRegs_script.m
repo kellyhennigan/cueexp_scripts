@@ -12,6 +12,7 @@ close all
 
 
 [p,task,subjects,gi]=whichCueSubjects();
+p=getFmrieatPaths;
 dataDir = p.data;
 
 % subjects = {  'md181018'

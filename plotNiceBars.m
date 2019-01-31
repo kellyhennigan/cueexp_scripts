@@ -111,8 +111,8 @@ se_d = cell2mat(cellfun(@(x) nanstd(x)./sqrt(size(x,1)), d,'uniformoutput',0)')'
 %% plot it
 
 fontName = 'Helvetica';
-% fontSize = 12;
-fontSize = 20;
+fontSize = 12;
+% fontSize = 20;
 
 if plotToScreen
     fig=figure;
