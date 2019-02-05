@@ -25,13 +25,14 @@ LorR = ['L','R'];
 
 combineLR = 1; % 1 to combine L and R, otherwise, 0
 
-seeds = {'DA','DA','DA','DA','DA'};
-targets = {'nacc','nacc','nacc','caudate','putamen'};
-versionStrs = {'belowAC_dil2_autoclean','aboveAC_dil2_autoclean','dil2_autoclean','dil2_autoclean','dil2_autoclean'};
+% seeds = {'DA','DA','DA','DA','DA'};
+% targets = {'nacc','nacc','nacc','caudate','putamen'};
+% versionStrs = {'belowAC_dil2_autoclean','aboveAC_dil2_autoclean','dil2_autoclean','dil2_autoclean','dil2_autoclean'};
 
-% seeds = {'DA'};
-% targets = {'putamen'};
-% versionStrs = {'dil2_autoclean'};
+
+seeds = {'DA','DA'};
+targets = {'caudate','putamen'};
+versionStrs = {'dil2_autoclean','dil2_autoclean'};
 
 % fiber group file strings
 inDir = fullfile(dataDir,'%s','fibers',method); %s: subject
@@ -71,6 +72,8 @@ for j=1:numel(targets) % target rois loop
             fgPath = fullfile(sprintf(inDir,subject),fgName);
             
             if ~exist(fgPath,'file')
+                
+                fprintf(['\nno fiber group found for subject ' subject '\n\n']);
                 
                 err_subs=[err_subs {subject}];
                 eigVals(i,:,:) = nan(1,nNodes,3);
