@@ -20,16 +20,14 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 
 dataDir = p.data;
-% subjects={'as160129','wh160130','jw160316'};
-% subjects(1:9)=[];
 
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
 % targets = {'putamen'}; % string for roi
 % targets = {'nacc'};
-targets = {'nacc','caudate','putamen'}; % stri  ng for roi
-targets = {'putamen'};
+targets = {'caudate','putamen'}; % stri  ng for roi
+% targets = {'putamen'};
 
 % LorR = ['L'];
 LorR = upper(input('L, R, or both? ','s'));
