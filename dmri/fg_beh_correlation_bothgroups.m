@@ -12,10 +12,10 @@ dataDir = p.data;
 
 % directory & filename of fg measures
 method = 'mrtrix_fa';
-fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_aboveAC_dil2_autoclean'; %'.mat' will be added to end
 
 % which scale to correlate with fiber group measures?
-scale = 'age';
+scale = 'BIS';
 
 % include control variables? 
 % covars = {'age','dwimotion'};
@@ -28,6 +28,7 @@ group = {'controls','patients'};
 % group = {'nonrelapsers','relapsers'};
 
 cols=getCueExpColors(group); % plotting colors for groups
+cols(1,:)=[0 0 0];
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(p.figures, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
@@ -37,9 +38,9 @@ if saveFigs
     end
 end
 
-omit_subs = {};
+omit_subs = {'as170730'};
     
-
+plotLeg=0;
 
 %% load data
 
@@ -56,7 +57,7 @@ fgMLabels=fgMLabels{1};
 % bestWhat = 'MD'; % which fg measure(s) to test for best
  node = 26:75;
 
-fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
+fgPlotIdx = [1:2]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
 
 %% this is messy but gets the job done...
@@ -101,7 +102,7 @@ end
 
 % get a string describing node(s)
 if numel(node)>1
-    nodeStr = sprintf('%d_%d',node(1),node(end));
+    nodeStr = sprintf('%d:%d',node(1),node(end));
 else
     nodeStr = num2str(node);
 end
@@ -140,11 +141,16 @@ if saveFigs
 end
 
 % legend
+if plotLeg
 lh=get(axH,'Children')
 legend(axH,[lh(3) lh(1)],group,'Location','EastOutside','FontSize',12)
 legend('boxoff')
+legStr='_w_leg';
+else
+    legStr='';
+end
 if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr '_w_legend']))
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr legStr]));
 end
 
 

@@ -23,8 +23,8 @@ method = 'mrtrix_fa';
 % directory with fiber density files
 fdDir = fullfile(dataDir,'fg_densities',method);
 
-% smoothstr='_smooth3';
-smoothstr='';
+smoothstr='_smooth3';
+% smoothstr='';
 
 % filenames of fiber density files; %s is target
 % NOTE: this should be in a cell array with L and R fd maps from the same
@@ -34,17 +34,18 @@ smoothstr='';
 %     ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz']};
-% fdFileStrs = {
-%     ['DA_%s_belowAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
-%     };
+
 fdFileStrs = {
-    ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+    ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
     };
+% fdFileStrs = {
+%     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+%     };
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-targets={'putamen'};
-% targets={'caudate'};
+% targets={'putamen'};
+targets={'nacc'};
 
 thresh=0.05; % value to threshold maps; otherwise 0 to not threshold
 
@@ -52,13 +53,14 @@ scale = 0; % 1 to scale, otherwise 0
 
 q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
-plane=2; % which plane to plot
-
-% acpcSlices=[-16:-12]; % which acpc slices to plot
-% acpcSlices=[-17]; % which acpc slices to plot
+% plane=2; % which plane to plot
+% acpcSlices=[-20:-9]; % which acpc slices to plot
 
 
-cols=getDTIFDColors(targets); % colors for fiber density maps
+plane=3;
+acpcSlices=-14:-6;
+
+cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
 % cols=cellfun(@flipud, cols,'uniformoutput',0)
 
 ac=[]; % auto-crop images? inf means no cropping
@@ -67,9 +69,9 @@ plotCBar = 0;
 
 saveFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
 
-figDir = [p.figures '/fg_densities'];
+figDir = [p.figures '/fg_densities/' method];
 
-figPrefix = ['NNCP' smoothstr];
+figPrefix = [targets{:} '_aboveAC' smoothstr];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it

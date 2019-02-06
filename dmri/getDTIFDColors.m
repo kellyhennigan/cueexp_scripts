@@ -1,4 +1,4 @@
-function colors = getDTIFDColors(labels)
+function colors = getDTIFDColors(targets,fgFileStrs)
 % -------------------------------------------------------------------------
 % usage: returns colors for fiber density maps for the cue fmri project.
 % 
@@ -18,12 +18,20 @@ function colors = getDTIFDColors(labels)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-if notDefined('labels')
-    labels = {'nacc'};
+if notDefined('targets')
+    targets = {'nacc'};
 end
 
-if ~iscell(labels)
-    labels = {labels};
+if ~iscell(targets)
+    targets = {targets};
+end
+
+
+if notDefined('fgFileStrs')
+    fgFileStrs=cell(size(targets));
+end
+if ~iscell(fgFileStrs)
+    fgFileStrs={fgFileStrs};
 end
 
 %%
@@ -56,6 +64,14 @@ fd_putamen = [247,252,253
 136,65,157
 110,1,107]./255; 
   
+fd_nacc_aboveac=[255,255,229
+255,247,188
+254,227,145
+254,196,79
+254,153,41
+236,112,20
+204,76,2
+140,45,4]./255;
 
 % yellow=[10 30 100]./255;
 yellow=[230 171 2]./255;
@@ -68,15 +84,20 @@ junglegreen=[27 158 119]./255;
 
 
 
-colors = cell(size(labels));
-for i=1:numel(labels)
+colors = cell(size(targets));
+for i=1:numel(targets)
         
-    switch lower(labels{i})
+    switch lower(targets{i})
         
         case 'caudate'
             colors{i} = fd_caudate;
         case 'nacc'
-            colors{i} = fd_nacc;
+              if strfind(lower(fgFileStrs{i}),'aboveac')
+                colors{i}=fd_nacc_aboveac;
+            else
+               colors{i} = fd_nacc;
+            end
+            
         case 'putamen'
             colors{i} = fd_putamen;
             

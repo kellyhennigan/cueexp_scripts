@@ -63,13 +63,13 @@ keep_idx = ones(numel(subjects),1);
 if strcmpi(group,'controls') || isequal(group,0)
     keep_idx=gi==0;
 elseif strcmpi(group,'patients') || isequal(group,1)
-    keep_idx=gi==1;
+    keep_idx=gi>0;
 elseif strcmpi(group,'relapsers') 
     rel = getCueData(subjects,'relapse');
     keep_idx=rel==1;
 elseif strcmpi(group,'nonrelapsers') 
     rel = getCueData(subjects,'relapse');
-    keep_idx=rel==0;
+    keep_idx=rel==0;    
 end
     
 % remove any subjects from keep index that arent returned in

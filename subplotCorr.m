@@ -99,6 +99,7 @@ if ~iscell(col)
     col = repmat({col},1,nP);
 end
 
+
 %% do it
 
 [nRow,nCol] = getNiceSPConfig(nP);
@@ -106,6 +107,18 @@ end
 for i=1:nP
     
     axH=subplot(nRow,nCol,i);
-    [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i});
+    [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i},[],[],14);
 
 end
+
+
+% adjust fig size so that plots are square-shaped
+    pos=get(figH,'Position');
+    crr=nCol./nRow; %  column to row ratio
+    newpos=[pos(1), pos(2), pos(3).*crr, pos(4)]
+    set(figH,'Position',newpos)
+    %     ss = get(0,'Screensize'); % screen size
+    %     set(fig,'Position',[ss(3)-800 ss(4)-420 800 420]) % make figure 800 x 420 pixels
+end
+
+

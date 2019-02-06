@@ -664,7 +664,7 @@ else
         
         if ~isempty(idx)
             
-            item_scores = str2double(d(idx,2:end));
+            item_scores = str2double(d(idx,4:end));
             item_scores(reverseArr) = 5-item_scores(reverseArr); % reverse score for certain items
             
             % occasionally, a subject will leave 1 question blank. If

@@ -9,7 +9,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures '/dti/group_diffs'];
+outDir = [p.figures '/dti/fgm_trajectories'];
 
 
 % directory & filename of fg measures
@@ -29,15 +29,19 @@ fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
-covars = {'dwimotion'};
+covars = {};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
 
 % plot groups
-group = {'controls','patients'};
-groupStr = '_bygroup';
-lspec = {'-','--'};
+% group = {'controls','patients'};
+% groupStr = '_bygroup';
+% lspec = {'-','--'};
+
+group = {'controls'};
+groupStr = 'controls';
+lspec = {'-'};
 
 % group = {'controls','relapsers','nonrelapsers'};
 % groupStr = '_byrelapse';
@@ -50,7 +54,7 @@ omit_subs = {'as170730'}; % as170730 is too old for this sample
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
 fgMPlots={'FA','MD'};
 
-
+doStats=0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -69,7 +73,7 @@ for j=1:numel(fgMatStrs)
     
     %%%%%%%%%%%% get fiber group measures
     [fgMeasures,fgMLabels,~,subjects,gi]=loadFGBehVars(...
-        fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),'','all',omit_subs);
+        fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),'',[group{:}],omit_subs);
     nNodes = size(fgMeasures{1},2);
     
     %%%%%%%%%%%% hack so that epiphany patients are in the same
@@ -114,27 +118,29 @@ for j=1:numel(fgMatStrs)
         % get desired diff measure to plot
         thisfgm=fgMeasures{strcmp(fgMPlot,fgMLabels)};
         
-        % averge across mid 50% of the pathway and test for group diffs
-        mid50 = mean(thisfgm(:,round(nNodes./4)+1:round(nNodes./4).*3),2);
-        
-        groupindices=unique(gi);
-        
-        % if there's 2 groups, do a ttest. Otherwise do a one-way anova
-        if numel(groupindices)==2
-            [h,thisp,~,stats]=ttest2(mid50(gi==groupindices(1)),mid50(gi==groupindices(2)))
-            test_res = sprintf('t(%d) = %.1f; p = %.3f\n',stats.df,stats.tstat,thisp);
-        else
-            %           thisp=getPValsGroup(mid50); % one-way ANOVA
-            [thisp,tab]=anova1(mid50,gi,'off'); % get stats
-            F=tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'F')}; % F stat
-            df_g = tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'df')}; % group
-            df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
-            test_res = sprintf('F(%d,%d) = %.1f; p = %.3f\n',df_g,df_e,F,thisp);
-        end
-        
-        % only plot p-value for mid 50% comparison
+        % average across mid 50% of the pathway and test for group diffs
         p=nan(1,nNodes);
-        p(round(nNodes./2)) = thisp;
+        if doStats
+            mid50 = mean(thisfgm(:,round(nNodes./4)+1:round(nNodes./4).*3),2);
+            
+            groupindices=unique(gi);
+            
+            % if there's 2 groups, do a ttest. Otherwise do a one-way anova
+            if numel(groupindices)==2
+                [h,thisp,~,stats]=ttest2(mid50(gi==groupindices(1)),mid50(gi==groupindices(2)))
+                test_res = sprintf('t(%d) = %.1f; p = %.3f\n',stats.df,stats.tstat,thisp);
+            else
+                %           thisp=getPValsGroup(mid50); % one-way ANOVA
+                [thisp,tab]=anova1(mid50,gi,'off'); % get stats
+                F=tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'F')}; % F stat
+                df_g = tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'df')}; % group
+                df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
+                test_res = sprintf('F(%d,%d) = %.1f; p = %.3f\n',df_g,df_e,F,thisp);
+            end
+            
+            % only plot p-value for mid 50% comparison
+            p(round(nNodes./2)) = thisp;
+        end
         
         
         % get cell for each group's diff measure
@@ -154,8 +160,11 @@ for j=1:numel(fgMatStrs)
         xlab = 'fiber group node';
         ylab = fgMPlot;
         cols=repmat({getDTIColors(targets{j},fgMatStr)},size(group)); % plot groups as same color
-        lspec = {'-','--'};
-        figtitle = [strrep(fgMatLabel,'_',' ') ' by group; ' strrep(cvStr,'_',' ') test_res];
+        if doStats
+            figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') '; ' strrep(cvStr,'_',' ') test_res];
+        else
+            figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') ];
+        end
         savePath = fullfile(outDir,[fgMatLabel '_' fgMPlot groupStr cvStr]);
         plotToScreen=1;
         lineLabels=strcat(group,repmat({' n='},1,numel(group)),cellfun(@(x) num2str(size(x,1)), groupfgm, 'uniformoutput',0));

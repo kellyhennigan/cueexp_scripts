@@ -1,4 +1,4 @@
-function [axH,rpStr] = plotCorr(axH,x,y,xlab,ylab,titleStr,col)
+function [axH,rpStr] = plotCorr(axH,x,y,xlab,ylab,titleStr,col,mspec,msize,fsize)
 % -------------------------------------------------------------------------
 % usage: function to nicely plot a correlation between 2 variables x and y
 %
@@ -29,6 +29,12 @@ if notDefined('axH')
     fig=setupFig;
     axH = gca;
 end
+
+if notDefined('fsize')
+    fsize=12;
+end
+set(gca,'fontName','Helvetica','fontSize',fsize);
+
 if notDefined('x')
     x=randn(20,1);
 end
@@ -47,6 +53,12 @@ end
 if notDefined('col')
     col = [0 0 0];
 end
+if notDefined('mspec')
+    mspec = '.';
+end
+if notDefined('msize')
+    msize = 30;
+end
 
 %% do it
 
@@ -60,7 +72,7 @@ end
 hold on
 
 % plot data points as dots
-plot(axH,x,y,'.','MarkerSize',30,'color',col);
+plot(axH,x,y,mspec,'MarkerSize',msize,'color',col);
 
 
 % plot correlation/best fit line

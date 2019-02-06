@@ -20,8 +20,8 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
-fgStr='MFB'
+fgMatStr = 'DALR_naccLR_aboveAC_dil2_autoclean'; %'.mat' will be added to end
+fgStr=fgMatStr;
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'
@@ -36,7 +36,7 @@ scale = 'BIS'
 covars = {};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method,fgMatStr);
+outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
 
 
 omit_subs={''};
@@ -90,14 +90,14 @@ n = numel(subjects);
 %% fig 1: plot behavior-fg correlation as heatmap over trajectory of fg
 % measures
 
-%%%%%%%%%%%%%% params for figure 1
-fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
-fgMPlot = 'FA'; % fg measure to plot as values along pathway node
-%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%% params for figure 1
+% fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+% fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+% %%%%%%%%%%%%%%%
 
-% get correlation between fgMCorr & scores along pathway nodes
-[r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
-
+% % get correlation between fgMCorr & scores along pathway nodes
+% [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+% 
 % % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
 % fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
 % title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
@@ -114,7 +114,7 @@ fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 % bestWhat = 'MD'; % which fg measure(s) to test for best
 node = [26:75];
 
-fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
+fgPlotIdx = [1:2]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
 
 % include control variables? If so, regress out effect of control vars from
@@ -157,10 +157,11 @@ end
 % plot it
 fig2 = subplotCorr([],scores,cellfun(@(x) mean(x(:,node),2), fgMeasures(fgPlotIdx),'uniformoutput',0),...
     strrep(scale,'_',''),fgMLabels(fgPlotIdx),'rp');
-% suptitle([strrep(fgMatStr,'_',' ') ' node ' nodeStr])
-suptitle(fgStr)
+suptitle([strrep(fgStr,'_',' ')])
+% suptitle(fgStr)
 if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_node' nodeStr cvStr]))
+    outName = [fgMatStr '_' group{:} '_node' nodeStr cvStr];
+    print(gcf,'-dpng','-r300',fullfile(outDir,outName))
 end
 
 %%%% NOTE: if control variables are included, the p-values need to be 
@@ -168,7 +169,6 @@ end
 % degree of freedom per covariate)
 
 nSubs = numel(subjects);
-
 
 
 
