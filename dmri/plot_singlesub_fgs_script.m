@@ -5,7 +5,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p=getCuePaths();
 subjects=getCueSubjects('dti',0);
-subjects={'jh160702'};
+% subjects={'jh160702'};
 dataDir = p.data; cd(dataDir)
 % figDir = fullfile(p.figures,'dmri','fgs_single_subs');
 figDir = fullfile(p.figures,'dmri','MFBfgs_single_subs');
