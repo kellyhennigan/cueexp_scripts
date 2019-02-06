@@ -41,8 +41,8 @@ fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
 nfibers=100;
 
 
-cols=cellfun(@(x) getDTIColors_test(x), targets, 'uniformoutput',0);
-cols{3}=[217 95 2]./255;
+cols=cellfun(@(x) getDTIColors(x), targets, 'uniformoutput',0);
+
 
 plotToScreen=0; % 1 to plot to screen, otherwise 0
 
