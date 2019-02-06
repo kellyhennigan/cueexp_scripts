@@ -1,4 +1,4 @@
-function colors = getDTIColors_test(targets,fgFileStrs)
+function colors = getDTIColors(targets,fgFileStrs)
 % -------------------------------------------------------------------------
 % usage: returns rgb color values for plotting cue experiment results. The
 % idea of having this is to keep plot colors for each stimulus consistent.
@@ -22,6 +22,9 @@ end
 if notDefined('fgFileStrs')
     fgFileStrs=cell(size(targets));
 end
+if ~iscell(fgFileStrs)
+    fgFileStrs={fgFileStrs};
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%% define colors for all possible stims/groups here %%%%%%%%%%%%%%%%
@@ -35,6 +38,8 @@ pink=[231 41 138]./255;
 purple=[117 112 179]./255;
 orange=[217 95 2]./255;
 junglegreen=[27 158 119]./255;
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

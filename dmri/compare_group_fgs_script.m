@@ -15,16 +15,21 @@ outDir = [p.figures '/dti/group_diffs'];
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
+targets={'nacc';
+    'nacc';
+    'nacc';
+    'caudate';
+    'putamen'};
 
-fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean';
-    'DALR_naccLR_aboveAC_dil2_autoclean';
-    'DALR_naccLR_dil2_autoclean';
-    'DALR_putamenLR_dil2_autoclean'};
-    'DALR_caudateLR_dil2_autoclean';
+fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
+    'DALR_%sLR_aboveAC_dil2_autoclean';
+    'DALR_%sLR_dil2_autoclean';
+    'DALR_%sLR_dil2_autoclean';
+    'DALR_%sLR_dil2_autoclean'};
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
-covars = {};
+covars = {'dwimotion'};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
@@ -32,12 +37,13 @@ fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
 % plot groups
 group = {'controls','patients'};
 groupStr = '_bygroup';
+lspec = {'-','--'};
 
 % group = {'controls','relapsers','nonrelapsers'};
 % groupStr = '_byrelapse';
 
 
-cols=cellfun(@(x) getCueExpColors(x), group, 'uniformoutput',0); % plotting colors for groups
+cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
 omit_subs = {'as170730'}; % as170730 is too old for this sample
 
@@ -57,8 +63,8 @@ end
 j=1;
 for j=1:numel(fgMatStrs)
     
-    fgMatStr=fgMatStrs{j};
-    fgMatLabel=fgMatLabels{j};
+    fgMatStr=sprintf(fgMatStrs{j},targets{j});
+    fgMatLabel=sprintf(fgMatLabels{j},targets{j});
     
     
     %%%%%%%%%%%% get fiber group measures
@@ -108,14 +114,23 @@ for j=1:numel(fgMatStrs)
         % get desired diff measure to plot
         thisfgm=fgMeasures{strcmp(fgMPlot,fgMLabels)};
         
-        % get stats for mid 50% of the pathway
+        % averge across mid 50% of the pathway and test for group diffs
         mid50 = mean(thisfgm(:,round(nNodes./4)+1:round(nNodes./4).*3),2);
-        %           thisp=getPValsGroup(mid50); % one-way ANOVA
-        [thisp,tab]=anova1(mid50,gi,'off'); % get stats
-        F=tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'F')}; % F stat
-        df_g = tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'df')}; % group
-        df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
-        anova_res = sprintf('F(%d,%d) = %.1f; p = %.3f\n',df_g,df_e,F,thisp);
+        
+        groupindices=unique(gi);
+        
+        % if there's 2 groups, do a ttest. Otherwise do a one-way anova
+        if numel(groupindices)==2
+            [h,thisp,~,stats]=ttest2(mid50(gi==groupindices(1)),mid50(gi==groupindices(2)))
+            test_res = sprintf('t(%d) = %.1f; p = %.3f\n',stats.df,stats.tstat,thisp);
+        else
+            %           thisp=getPValsGroup(mid50); % one-way ANOVA
+            [thisp,tab]=anova1(mid50,gi,'off'); % get stats
+            F=tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'F')}; % F stat
+            df_g = tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'df')}; % group
+            df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
+            test_res = sprintf('F(%d,%d) = %.1f; p = %.3f\n',df_g,df_e,F,thisp);
+        end
         
         % only plot p-value for mid 50% comparison
         p=nan(1,nNodes);
@@ -136,9 +151,11 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-        xlab = 'fiber group nodes';
+        xlab = 'fiber group node';
         ylab = fgMPlot;
-        figtitle = [strrep(fgMatLabel,'_',' ') ' by group; ' strrep(cvStr,'_',' ') anova_res];
+        cols=repmat({getDTIColors(targets{j},fgMatStr)},size(group)); % plot groups as same color
+        lspec = {'-','--'};
+        figtitle = [strrep(fgMatLabel,'_',' ') ' by group; ' strrep(cvStr,'_',' ') test_res];
         savePath = fullfile(outDir,[fgMatLabel '_' fgMPlot groupStr cvStr]);
         plotToScreen=1;
         lineLabels=strcat(group,repmat({' n='},1,numel(group)),cellfun(@(x) num2str(size(x,1)), groupfgm, 'uniformoutput',0));
@@ -147,9 +164,14 @@ for j=1:numel(fgMatStrs)
         
         %%%%%%%%%%% finally, plot the thing!
         [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols,p,lineLabels,...
-            xlab,ylab,figtitle,savePath,plotToScreen);
-        
-        % print(gcf,'-dpng','-r300',[fgMPlot '_bygroup']);
+            xlab,ylab,figtitle,[],plotToScreen,lspec);
+        hold on
+        yl=ylim
+        plot([26 26],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
+        plot([75 75],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
+        ylim(yl)
+        legend HIDE
+        print(gcf,'-dpng','-r300',savePath);
         
     end % fg measures (fgMPlots)
     

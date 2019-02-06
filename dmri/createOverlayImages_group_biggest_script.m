@@ -45,7 +45,7 @@ scale = 0; % 1 to scale, otherwise 0
 
 crange=[1 numel(targets)]; % min/max quantiles of data values to determine color range
 
-plane=3; % 1 for sagittal, 2 for coronal, 3 for axial
+plane=2; % 1 for sagittal, 2 for coronal, 3 for axial
 
 % acpcSlices=[]; % which acpc slices to plot
 
@@ -113,7 +113,7 @@ fd.data=win_idx;
 
 % plot overlay of voxels w/biggest connectivity
 doPlot=0;
-[slImgs,~,~,~,acpcSlicesOut] = plotOverlayImage(fd,bg,cell2mat(cols),[1 numel(fdImgs)],plane,acpcSlices,doPlot,ac);
+[slImgs,~,~,~,acpcSlicesOut] = plotOverlayImage(fd,bg,cols,[1 numel(fdImgs)],plane,acpcSlices,doPlot,ac);
 
 
 % plot overlay and save new figure

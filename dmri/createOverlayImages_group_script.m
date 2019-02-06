@@ -34,13 +34,16 @@ smoothstr='';
 %     ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz']};
+% fdFileStrs = {
+%     ['DA_%s_belowAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+%     };
 fdFileStrs = {
     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
     };
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-targets={'caudate'};
+targets={'putamen'};
 % targets={'caudate'};
 
 thresh=0.05; % value to threshold maps; otherwise 0 to not threshold
@@ -49,14 +52,14 @@ scale = 0; % 1 to scale, otherwise 0
 
 q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
-plane=3; % which plane to plot
+plane=2; % which plane to plot
 
 % acpcSlices=[-16:-12]; % which acpc slices to plot
 % acpcSlices=[-17]; % which acpc slices to plot
 
 
 cols=getDTIFDColors(targets); % colors for fiber density maps
-
+% cols=cellfun(@flipud, cols,'uniformoutput',0)
 
 ac=[]; % auto-crop images? inf means no cropping
 
