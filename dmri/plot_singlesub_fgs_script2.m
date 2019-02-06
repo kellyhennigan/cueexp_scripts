@@ -17,9 +17,7 @@ method = 'mrtrix_fa';
 
 fgDir = fullfile(dataDir,'%s','fibers',method);
 % 
-fgNameStrs = { '%s%s_%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s_aboveAC_dil2_autoclean.pdb',...
+fgNameStrs = { '%s%s_%s%s_aboveAC_dil2_autoclean.pdb',...
     '%s%s_%s%s_belowAC_dil2_autoclean.pdb'};
    
 
@@ -29,10 +27,10 @@ fgNameStrs = { '%s%s_%s%s_dil2_autoclean.pdb',...
 
 seed = 'DA';
 
-targets = {'caudate','putamen','nacc','nacc'};
+targets = {'nacc','nacc'};
 % targets = {'nacc','nacc'};
 
-outStr = '_4';
+outStr = '_2';
 
 % get some useful plot params
 scsz=get(0,'Screensize');
@@ -42,7 +40,7 @@ nfibers=100;
 
 
 cols=cellfun(@(x) getDTIColors_test(x), targets, 'uniformoutput',0);
-cols{3}=[217 95 2]./255;
+cols{1}=[217 95 2]./255;
 
 plotToScreen=0; % 1 to plot to screen, otherwise 0
 
