@@ -19,9 +19,12 @@ method = 'mrtrix_fa';
 fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean';
     'DALR_naccLR_aboveAC_dil2_autoclean';
     'DALR_naccLR_dil2_autoclean';
-    'DALR_caudateLR_dil2_autoclean';
     'DALR_putamenLR_dil2_autoclean'};
+    'DALR_caudateLR_dil2_autoclean';
 
+% fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
+
+covars = {};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
@@ -37,17 +40,11 @@ groupStr = '_bygroup';
 cols=cellfun(@(x) getCueExpColors(x), group, 'uniformoutput',0); % plotting colors for groups
 
 omit_subs = {'as170730'}; % as170730 is too old for this sample
-    %     'jr160507'
-    %     % 	'gm160909'
-    %     'ld160918'
-    %     'gm161101'
-    %     %     'cg160715'
-    %     % 	'jn160403'
-    %     % 	'sr151031'
-%     };
 
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
 fgMPlots={'FA','MD'};
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -65,58 +62,87 @@ for j=1:numel(fgMatStrs)
     
     
     %%%%%%%%%%%% get fiber group measures
-    load(fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']))
-    
+    [fgMeasures,fgMLabels,~,subjects,gi]=loadFGBehVars(...
+        fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']),'','all',omit_subs);
+    nNodes = size(fgMeasures{1},2);
     
     %%%%%%%%%%%% hack so that epiphany patients are in the same
     %%%%%%%%%%%% patient group as VA patients
     gi(gi>0)=1;
+    % ADD LINES HERE TO UPDATE GI IF STRCMP(GROUP)=='relapsers' or
+    % 'nonrelapsers'; e.g.,
+    % if strcmp(group, 'relapsers')
+    % ri=getCueData(subjects,'relapse')
+    % gi(ri==1) = 2;
+    % end
     
-    %%%%%%%%%%%% any subjects to exclude?
-    keep_idx = ones(numel(subjects),1);
-    keep_idx=logical(keep_idx.*~ismember(subjects,omit_subs));
-    subjects = subjects(keep_idx);
-    gi = gi(keep_idx);
-    fgMeasures = cellfun(@(x) x(keep_idx,:), fgMeasures,'uniformoutput',0);
+    
+    %%%%%%%%%%%%% control variables/covariates?
     
     
-    %%%%%%%%%%% get desired fg measure broken down by group
+    % include control variables? If so, regress out effect of control vars from
+    % fgMeasures
+    if exist('covars','var') && ~isempty(covars)
+        
+        % design matrix w/control vars and a vector of ones for intercept
+        X = [ones(numel(subjects),1),cell2mat(cellfun(@(x) getCueData(subjects,x), covars, 'uniformoutput',0))];
+        
+        % regress control variables out of fgMeasures
+        fgMeasures = cellfun(@(y) glm_fmri_fit(y,X,[],'err_ts'), fgMeasures,'uniformoutput',0);
+        
+        cvStr = ['_wCV_' covars{:}];
+        
+    else
+        
+        cvStr = '';
+        
+    end
+    
+    
+    %%%%%%%%%%% loop through diff measures to plot
     k=1;
     for k=1:numel(fgMPlots)
         
         fgMPlot=fgMPlots{k};
         
-        for g=1:2
-            groupfgm{g} = fgMeasures{find(strcmp(fgMPlot,fgMLabels))}(gi==g-1,:);
+        % get desired diff measure to plot
+        thisfgm=fgMeasures{strcmp(fgMPlot,fgMLabels)};
+        
+        % get stats for mid 50% of the pathway
+        mid50 = mean(thisfgm(:,round(nNodes./4)+1:round(nNodes./4).*3),2);
+        %           thisp=getPValsGroup(mid50); % one-way ANOVA
+        [thisp,tab]=anova1(mid50,gi,'off'); % get stats
+        F=tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'F')}; % F stat
+        df_g = tab{strcmp(tab(:,1),'Groups'),strcmp(tab(1,:),'df')}; % group
+        df_e = tab{strcmpi(tab(:,1),'Error'),strcmpi(tab(1,:),'df')}; % error df
+        anova_res = sprintf('F(%d,%d) = %.1f; p = %.3f\n',df_g,df_e,F,thisp);
+        
+        % only plot p-value for mid 50% comparison
+        p=nan(1,nNodes);
+        p(round(nNodes./2)) = thisp;
+        
+        
+        % get cell for each group's diff measure
+        for g=1:numel(unique(gi))
+            groupfgm{g} = thisfgm(gi==g-1,:);
             n(g)=numel(gi(gi==g-1));
         end
-      
-        % check for NaN values 
-        if any(cell2mat(cellfun(@(x) any(isnan(x(:))), groupfgm,'uniformoutput',0)))
-            error('hold up - NaN values found for fiber group measures...');
-        end
+        
         
         mean_fg = cellfun(@mean, groupfgm,'uniformoutput',0);
         se_fg = cellfun(@(x) std(x)./sqrt(size(x,1)), groupfgm,'uniformoutput',0);
-%         mean_fg = cellfun(@nanmean, groupfgm,'uniformoutput',0);
-%         se_fg = cellfun(@(x) nanstd(x)./sqrt(size(x,1)), groupfgm,'uniformoutput',0);
+        %         mean_fg = cellfun(@nanmean, groupfgm,'uniformoutput',0);
+        %         se_fg = cellfun(@(x) nanstd(x)./sqrt(size(x,1)), groupfgm,'uniformoutput',0);
         
-        
-        %%%%%%%%%%% test for group differences averaging over mid 50% of the pathway
-        mid50_groupfg = cellfun(@(x) nanmean(x(:,round(nNodes./4)+1:round(nNodes./4).*3),2), groupfgm,'uniformoutput',0);
-        p=nan(1,nNodes);
-        stat=getPValsGroup(mid50_groupfg); % one-way ANOVA
-        p(round(nNodes./2)) = stat; 
-%         pvals(j)=stat;
         
         %%%%%%%%%% plotting params
         xlab = 'fiber group nodes';
         ylab = fgMPlot;
-        figtitle = [strrep(fgMatLabel,'_',' ') ' by group'];
-        savePath = fullfile(outDir,[fgMatLabel '_' fgMPlot groupStr]);
+        figtitle = [strrep(fgMatLabel,'_',' ') ' by group; ' strrep(cvStr,'_',' ') anova_res];
+        savePath = fullfile(outDir,[fgMatLabel '_' fgMPlot groupStr cvStr]);
         plotToScreen=1;
         lineLabels=strcat(group,repmat({' n='},1,numel(group)),cellfun(@(x) num2str(size(x,1)), groupfgm, 'uniformoutput',0));
-%         cols = {[0 0 1];[1 0 0] }';
+        %         cols = {[0 0 1];[1 0 0] }';
         
         
         %%%%%%%%%%% finally, plot the thing!

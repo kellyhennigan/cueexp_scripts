@@ -17,10 +17,11 @@ method = 'mrtrix_fa';
 
 fgDir = fullfile(dataDir,'%s','fibers',method);
 % 
-fgNameStrs = {'%s%s_%s%s_belowAC_dil2_autoclean.pdb',...
-    '%s%s_%s%s_aboveAC_dil2_autoclean.pdb',...
+fgNameStrs = { '%s%s_%s%s_dil2_autoclean.pdb',...
     '%s%s_%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s_dil2_autoclean.pdb'};
+    '%s%s_%s%s_aboveAC_dil2_autoclean.pdb',...
+    '%s%s_%s%s_belowAC_dil2_autoclean.pdb'};
+   
 
 % fgNameStrs = {'%s%s_%s%s_belowAC_dil2_autoclean.pdb',...
 %     '%s%s_%s%s_aboveAC_dil2_autoclean.pdb'};
@@ -28,20 +29,19 @@ fgNameStrs = {'%s%s_%s%s_belowAC_dil2_autoclean.pdb',...
 
 seed = 'DA';
 
-targets = {'nacc','nacc','caudate','putamen'};
+targets = {'caudate','putamen','nacc','nacc'};
 % targets = {'nacc','nacc'};
 
 
 % get some useful plot params
 scsz=get(0,'Screensize');
 plotTubes = 1;  % plot fiber pathways as tubes or lines?
-fg_rad = 1;   % radius of fiber pathway tubes (only matters if plotTubes=1)
+fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
 nfibers=100;
 
-cols{1}=[ 0.8275    0.2118    0.5098];
-cols{2}= [0.9569    0.3961    0.0275];
-cols{3}=[ 0.9333    0.6980    0.1373];
-cols{4}=[0.1294    0.4431    0.7098];
+
+cols=cellfun(@(x) getDTIColors_test(x), targets, 'uniformoutput',0);
+cols{3}=[217 95 2]./255;
 
 plotToScreen=1; % 1 to plot to screen, otherwise 0
 

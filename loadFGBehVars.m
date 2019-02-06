@@ -111,8 +111,11 @@ end
 % end
 % 
 % get scores 
-scores = getCueData(subjects,scale);
-
+if ~isempty(scale)
+    scores = getCueData(subjects,scale);
+else
+    scores='';
+end
 
 
 
