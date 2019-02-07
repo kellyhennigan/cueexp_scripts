@@ -20,7 +20,7 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_aboveAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
 % which scale to correlate with fiber group measures?
@@ -33,13 +33,13 @@ scale = 'BIS'
 % covars = {'age'};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {};
+covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
 
 
-omit_subs={''};
+omit_subs={'kj180621'};
 % omit_subs={'as160129'};
 % omit_subs={'nd150921','dd170610','li160927'};
 % omit_subs={'nd150921','dd170610'};
@@ -110,8 +110,6 @@ n = numel(subjects);
 %% fig 2: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
-% node = 'best'; % an integer specifying which node to plot, or 'best'
-% bestWhat = 'MD'; % which fg measure(s) to test for best
 node = [26:75];
 
 fgPlotIdx = [1:2]; % index of which fg measures to include in corr plots
@@ -147,13 +145,6 @@ else
 end
 
 
-% if node is 'best', determine which node is best
-if strcmp(node,'best') % find node with highest correlation 
-    [r,p]=corr(fgMeasures{strcmp(bestWhat,fgMLabels)},scores);
-    [~,node] = min(p);
-end
-
-
 % plot it
 fig2 = subplotCorr([],scores,cellfun(@(x) mean(x(:,node),2), fgMeasures(fgPlotIdx),'uniformoutput',0),...
     strrep(scale,'_',''),fgMLabels(fgPlotIdx),'rp');
@@ -168,10 +159,11 @@ end
 % adjusted to account for the difference in degrees of freedom!! (1 less
 % degree of freedom per covariate)
 
-nSubs = numel(subjects);
+% nSubs = numel(subjects);
 
 
-
+fa=mean(fgMeasures{1}(:,26:75),2)
+md=mean(fgMeasures{2}(:,26:75),2)
 
 
 

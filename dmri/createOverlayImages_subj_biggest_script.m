@@ -10,7 +10,7 @@ cd(dataDir);
 
 % cell array of subject ids to process
 subjects=getCueSubjects('dti',0);
-subjects = {'zl150930','tm160117'};
+subjects = {'ph161104','tm160117'};
 
 bgFilePath = fullfile(dataDir,'%s','t1','t1_tlrc.nii.gz');
 
