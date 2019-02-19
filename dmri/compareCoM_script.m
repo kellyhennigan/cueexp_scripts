@@ -18,16 +18,16 @@ seed = 'DA';
 
 targets = {'nacc','caudate','putamen'};
 
-CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_CoM_tlrc.txt'];
-    [seed '%s_%s%s_dil2_CoM_tlrc.txt'];
-    [seed '%s_%s%s_dil2_CoM_tlrc.txt']}; % %s's are: L/R, target, L/R
+CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt'];
+    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt'];
+    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt']}; % %s's are: L/R, target, L/R
 
 LorR = ['L','R']; % if ['L','R'], script shold loop over l/r sides;
 
 
 %%
 
-lr='L'
+lr='R'
 % for lr=LorR
     
     for j=1:numel(targets)

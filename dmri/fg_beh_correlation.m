@@ -24,36 +24,26 @@ fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS'
+scale = 'BDI'
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
 
 
 % include control variables? 
-% covars = {'age'};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
 
 
-omit_subs={'kj180621'};
-% omit_subs={'as160129'};
+% omit_subs={'kj180621'};
+% omit_subs={'al151016','as160129','ph161104'};
 % omit_subs={'nd150921','dd170610','li160927'};
 % omit_subs={'nd150921','dd170610'};
-% for mrtrix data:
-
-% for cue data:
-% omit_subs = [omit_subs;{'ie151020';'bb160402';'ps160508';'am160914'}]
- 
-% for cue data patients: 
-% omit_subs = [omit_subs;{'as160317';
-%     'rt160420';
-%     'ms170424';
-%     'hp170601';
-%     'cs170816'}];
+omit_subs={};
 
 %% load data & create out directory, if needed
 

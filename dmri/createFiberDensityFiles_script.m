@@ -33,11 +33,12 @@ method = 'mrtrix_fa';
 
 seed = 'DA';
 % targets = {'caudate','putamen'};
-targets = {'nacc','caudate','putamen'};
+targets = {'nacc','nacc','caudate','putamen'};
 
 
 % string to identify fiber group files (must correspond to targets cell array) 
-fgFileStrs = {'aboveAC_dil2_autoclean',...
+fgFileStrs = {'belowAC_dil2_autoclean',...
+    'aboveAC_dil2_autoclean',...
     'dil2_autoclean',...
     'dil2_autoclean'};
     % files are named [target fgFileStr '.pdb']
