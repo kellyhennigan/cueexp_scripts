@@ -24,7 +24,7 @@ fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
 % which scale to correlate with fiber group measures?
-scale = 'BDI'
+scale = 'BIS'
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
 
