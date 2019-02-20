@@ -32,9 +32,6 @@ if strcmp(LorR,'BOTH')
     LorR='LR';
 end
 
-
-savePlots = 1; % 1 to save out plots, otherwise 0
-
 savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
@@ -141,8 +138,7 @@ for lr=LorR
                 
                 nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
                 
-%                 AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0])
-                                    AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
+                AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
                 title(gca,subject);
                 if savePlots
                     print(gcf,'-dpng','-r300',fullfile(figDir,subject));

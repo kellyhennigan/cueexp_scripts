@@ -35,17 +35,23 @@ fdDir = fullfile(dataDir,'%s','fg_densities',method);
 % filenames of fiber density files; %s is target
 % NOTE: this should be in a cell array with L and R fd maps from the same
 % ROIs in the same row, and different paths in different columns, e.g.:
-fdFileStrs = {['DA_%s_belowAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
-    ['DA_%s_aboveAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']
+% fdFileStrs = {['DA_%s_belowAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
+%     ['DA_%s_aboveAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']
+%     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
+%     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']};
+% 
+fdFileStrs = {
     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
-    ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']};
+    };
 
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-targets={'nacc';
-    'nacc';
-    'caudate';
+% targets={'nacc';
+%     'nacc';
+%     'caudate';
+%     'putamen'};
+targets={
     'putamen'};
 
 thresh=.1; % value to threshold maps; otherwise 0 to not threshold
@@ -56,7 +62,7 @@ c_range=[.1 .9]; % min/max quantiles of data values to determine color range
 
 plane=2; % which plane to plot
 
-acpcSlices=[-16:-5]; % which acpc slices to plot
+acpcSlices=[-18]; % which acpc slices to plot
 % acpcSlices=[]; % which acpc slices to plot
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps

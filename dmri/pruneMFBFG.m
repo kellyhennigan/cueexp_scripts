@@ -52,6 +52,8 @@ if strcmp(lr,'L')
         max_thresh(3)=0;
     elseif strcmp(subject,'jd170330')
         max_thresh(3)=3;
+    elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622')
+        max_thresh(2)=5;
         
     end
     
@@ -59,11 +61,10 @@ if strcmp(lr,'L')
     %%%%%%%%%%% RIGHT SIDE %%%%%%%%%%%
 elseif strcmp(lr,'R')
     if strcmp(subject,'er170121') || strcmp(subject,'jh160702') ||  strcmp(subject,'lm160914') ||  strcmp(subject,'rc161007') ||  strcmp(subject,'vb170914') || strcmp(subject,'zm160627')
-        max_thresh(3)=0;
-        
+        max_thresh(3)=0;    
     elseif strcmp(subject,'dd170610')
         max_thresh(3)=-1;
-    elseif strcmp(subject,'rl170603') || strcmp(subject,'ts170927')
+    elseif strcmp(subject,'rl170603') || strcmp(subject,'ts170927') || strcmp(subject,'md181018')
         max_thresh(2)=5;
     end
     

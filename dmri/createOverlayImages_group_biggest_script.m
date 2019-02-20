@@ -20,8 +20,8 @@ maskFilePath = fullfile(dataDir,'ROIs','DA.nii');
 % tracking method
 method = 'mrtrix_fa';
 
-smoothstr='_smooth3';
-% smoothstr='';
+% smoothstr='_smooth3';
+smoothstr='';
 
 % directory with fiber density files
 fdDir = fullfile(dataDir,'fg_densities',method);
@@ -50,7 +50,7 @@ crange=[1 numel(targets)]; % min/max quantiles of data values to determine color
 % acpcSlices=[]; % which acpc slices to plot
 
 plane=2; % which plane to plot
-acpcSlices=[-20:-9]; % which acpc slices to plot
+acpcSlices=[-18:-12]; % which acpc slices to plot
 
 
 % plane=3;

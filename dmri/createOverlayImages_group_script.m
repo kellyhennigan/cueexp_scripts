@@ -35,19 +35,19 @@ smoothstr='_smooth3';
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz']};
 
-fdFileStrs = {
-    ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
-    };
 % fdFileStrs = {
-%     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+%     ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     };
+fdFileStrs = {
+    ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+    };
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-% targets={'putamen'};
-targets={'nacc'};
+targets={'putamen'};
+% targets={'nacc'};
 
-thresh=0.05; % value to threshold maps; otherwise 0 to not threshold
+thresh=0.01; % value to threshold maps; otherwise 0 to not threshold
 
 scale = 0; % 1 to scale, otherwise 0
 
@@ -58,7 +58,7 @@ q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
 
 plane=3;
-acpcSlices=-14:-6;
+acpcSlices=-8;
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
 % cols=cellfun(@flipud, cols,'uniformoutput',0)
