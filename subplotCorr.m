@@ -87,7 +87,7 @@ end
 if notDefined('titleStr')
     titleStr = '';
 end
-if ~iscell('titleStr')
+if ~iscell(titleStr)
     titleStr = repmat({titleStr},1,nP);
 end
 
@@ -99,6 +99,7 @@ if ~iscell(col)
     col = repmat({col},1,nP);
 end
 
+titleStr
 
 %% do it
 

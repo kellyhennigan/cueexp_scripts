@@ -86,13 +86,13 @@ if plotToScreen
 else
     fig = figure('Visible','off');
 end
-
 hold on
 ss = get(0,'Screensize'); % screen size
 set(fig,'Position',[ss(3)-700 ss(4)-525 700 525]) % make figure 700 x 525 pixels
 set(gca,'fontName','Helvetica','fontSize',16)
 set(gca,'box','off');
 set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
+get(gcf,'renderer')
 
 % plot lines
 cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)
@@ -114,6 +114,7 @@ ylabel(ylab)
 if ~isempty(se)
 %     h=cellfun(@(a,b,c) shadedErrorBar(x,a,b,{'color',c},.5), y, se, cols, 'uniformoutput',0);
   h=cellfun(@(a,b,c,d) shadedErrorBar(x,a,b,{c,'color',d},.5), y, se, lspec, cols, 'uniformoutput',0);
+  
     cellfun(@(a) set(a.edge(1), 'Visible','off'), h)
     cellfun(@(a) set(a.edge(2), 'Visible','off'), h)
     hc = get(gca,'Children');

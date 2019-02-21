@@ -23,8 +23,8 @@ method = 'mrtrix_fa';
 % directory with fiber density files
 fdDir = fullfile(dataDir,'fg_densities',method);
 
-smoothstr='_smooth3';
-% smoothstr='';
+% smoothstr='_smooth3';
+smoothstr='';
 
 % filenames of fiber density files; %s is target
 % NOTE: this should be in a cell array with L and R fd maps from the same
@@ -35,17 +35,17 @@ smoothstr='_smooth3';
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz']};
 
-% fdFileStrs = {
-%     ['DA_%s_aboveAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
-%     };
 fdFileStrs = {
-    ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+    ['DA_%s_belowAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
     };
+% fdFileStrs = {
+%     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+%     };
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-targets={'putamen'};
-% targets={'nacc'};
+% targets={'caudate'};
+targets={'nacc'};
 
 thresh=0.01; % value to threshold maps; otherwise 0 to not threshold
 
@@ -58,7 +58,7 @@ q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
 
 plane=3;
-acpcSlices=-8;
+acpcSlices=-10;
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
 % cols=cellfun(@flipud, cols,'uniformoutput',0)
@@ -69,9 +69,9 @@ plotCBar = 0;
 
 saveFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
 
-figDir = [p.figures '/fg_densities/' method];
+figDir = [p.figures_dti '/fg_densities'];
 
-figPrefix = [targets{:} '_aboveAC' smoothstr];
+figPrefix = [targets{:} '_belowAC' smoothstr];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it

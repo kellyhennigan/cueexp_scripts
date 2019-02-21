@@ -119,7 +119,7 @@ if plotToScreen
 else
     fig = figure('Visible','off');
 end
-
+% set(fig,'renderer','Painters')
 %hold on
 
 % if there are a lot of bars to plot, make the figure wider

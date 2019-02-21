@@ -27,6 +27,7 @@ p = struct();
 p.baseDir = baseDir;
 p.data = fullfile(p.baseDir, 'data');
 p.figures = fullfile(p.baseDir, 'figures');
+p.figures_dti = fullfile(p.baseDir, 'figures_dti');
 p.scripts = fullfile(p.baseDir, 'scripts');
 
 % place scripts directory at the top of the search path

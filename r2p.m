@@ -1,11 +1,11 @@
-function p=r2p(r,N)
+function p=r2p(r,df)
 
 % according to this set: http://vassarstats.net/tabs_r.html
 % you get p values for a correlation coefficient by transforming 
 % coefficient r to a t-statistic. Then you get the p value for a % 
 % 2-sided test. 
 
-df = N-2; 
+% df should be n-2 for a regular correlation 
 
 t = r ./ sqrt( (1 - r.^2)./df ); 
 

@@ -4,12 +4,13 @@ close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p=getCuePaths();
-% subjects=getCueSubjects('dti',0);
-subjects={'al151016','hw161104','jh160702','jw160316','ph161104','pk160319','rp160205'};
-% subjects={'jh160702'};
-dataDir = p.data; cd(dataDir)
-% figDir = fullfile(p.figures,'dmri','fgs_single_subs');
-figDir = fullfile(p.figures,'dmri','MFBfgs_single_subs');
+dataDir = p.data; 
+outDir = fullfile(p.figures_dti,'fgs_single_subs');
+
+% subjects={'al151016','hw161104','jh160702','jw160316','ph161104','pk160319','rp160205'};
+subjects={'ph161104'};
+
+
 % paths and directories are relative to subject specific dir
 t1Path = fullfile(dataDir,'%s','t1','t1_fs.nii.gz'); % %s is subject id
 
@@ -17,23 +18,54 @@ t1Path = fullfile(dataDir,'%s','t1','t1_fs.nii.gz'); % %s is subject id
 method = 'mrtrix_fa';
 
 fgDir = fullfile(dataDir,'%s','fibers',method);
-% 
-fgNameStrs = { '%s%s_%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s_aboveAC_dil2_autoclean.pdb',...
-    '%s%s_%s%s_belowAC_dil2_autoclean.pdb'};
-   
-
-% fgNameStrs = {'%s%s_%s%s_belowAC_dil2_autoclean.pdb',...
-%     '%s%s_%s%s_aboveAC_dil2_autoclean.pdb'};
-
 
 seed = 'DA';
 
-targets = {'caudate','putamen','nacc','nacc'};
-% targets = {'nacc','nacc'};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% params for plotting all 4 fiber groups %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% targets={
+%     'caudate';
+%     'putamen';
+%     'nacc';
+%     'nacc'};
+% 
+% fgStrs = {
+%     '';
+%     '';
+%     '_belowAC';
+%     '_aboveAC'};
+% 
+% fgNameStrs = { '%s%s_%s%s%s_dil2_autoclean.pdb',...
+%     '%s%s_%s%s%s_dil2_autoclean.pdb',...
+%     '%s%s_%s%s%s_dil2_autoclean.pdb',...
+%     '%s%s_%s%s%s_dil2_autoclean.pdb'};
+%    
+% outStr = '_4';
 
-outStr = '_4';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% params for plotting just 2 MFB fiber groups %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+targets={
+    'nacc';
+    'nacc'};
+
+fgStrs = {
+    '_belowAC';
+    '_aboveAC'};
+
+fgNameStrs = { 
+    '%s%s_%s%s%s_dil2_autoclean.pdb',...
+    '%s%s_%s%s%s_dil2_autoclean.pdb'};
+   
+outStr = '_2';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 % get some useful plot params
 scsz=get(0,'Screensize');
@@ -42,18 +74,18 @@ fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
 nfibers=100;
 
 
-cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgNameStrs,'uniformoutput',0);
+cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgStrs,'uniformoutput',0);
 
 
 plotToScreen=0; % 1 to plot to screen, otherwise 0
 
-% cols{1}=[212 41 47]./255;
-% cols{2}=[253 127 40]./255;
 %%
 
-if ~exist('figDir','dir')
-    mkdir(figDir)
+if ~exist(outDir,'dir')
+    mkdir(outDir)
 end
+
+cd(dataDir);
 
 i=1;
 for i = 1:numel(subjects)
@@ -66,7 +98,7 @@ for i = 1:numel(subjects)
     fprintf('\n\nworking on subject %s...\n',subject);
     
     %load t1
-    t1        = niftiRead(sprintf(t1Path,subject));
+    t1 = niftiRead(sprintf(t1Path,subject));
     % Rescale image values to get better gary/white/CSF contrast
     img = mrAnatHistogramClip(double(t1.data),0.3,0.99);
     t1.data=img;
@@ -75,8 +107,8 @@ for i = 1:numel(subjects)
     for j=1:numel(targets)
         
         % load L and R pathways
-        fg{j,1} = fgRead([sprintf(fgDir,subject) '/' sprintf(fgNameStrs{j},seed,'L',targets{j},'L')]);
-        fg{j,2} = fgRead([sprintf(fgDir,subject) '/' sprintf(fgNameStrs{j},seed,'R',targets{j},'R')]);
+        fg{j,1} = fgRead([sprintf(fgDir,subject) '/' sprintf(fgNameStrs{j},seed,'L',targets{j},'L',fgStrs{j})]);
+        fg{j,2} = fgRead([sprintf(fgDir,subject) '/' sprintf(fgNameStrs{j},seed,'R',targets{j},'R',fgStrs{j})]);
     end
     
     
@@ -120,13 +152,13 @@ for i = 1:numel(subjects)
     view(vwL);
     
     % save out left fibers whole-brain figure
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_wb_sagittalL']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalL']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
     
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_sagittalL']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalL']));
     
     delete(h) % delete that slice
     
@@ -137,12 +169,12 @@ for i = 1:numel(subjects)
     
     %%% save out right side
     view(vwR)
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_wb_sagittalR']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalR']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_sagittalR']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalR']));
     
     delete(h) % delete that slice
     
@@ -161,13 +193,13 @@ for i = 1:numel(subjects)
     
     set(gca,'fontName','Helvetica','fontSize',12)
     
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_wb_coronal']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_coronal']));
     
     % change axis on x and zlims
     xlim(gca,[-40,40])
     zlim(gca,[-40,40])
     
-    print(gcf,'-dpng','-r300',fullfile(figDir,[subject outStr '_coronal']));
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_coronal']));
     
     fprintf('done.\n\n');
     
