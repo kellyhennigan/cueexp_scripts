@@ -24,6 +24,7 @@ p=getCuePaths();
 dataDir = p.data;
 
 [subjects,gi]=getCueSubjects('dti',0);
+subjects=subjects(26:end);
 % subjects = {'jh160702'};
 
 
