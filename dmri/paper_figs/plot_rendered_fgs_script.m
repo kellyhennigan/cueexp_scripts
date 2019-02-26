@@ -18,8 +18,8 @@ method = 'mrtrix_fa';
 fgDir = fullfile(dataDir,'%s','fibers',method);
 
 seed = 'DA';
-targets = {'caudate','putamen','nacc','nacc'};
-fgStrs={'','','_aboveAC','_belowAC'}; % just for figure name
+targets = {'nacc','nacc','caudate','putamen'};
+fgStrs={'_aboveAC','_belowAC','',''}; % just for figure name
 
 fgNameStrs = { '%s%s_%s%s%s_dil2_autoclean.pdb',...
     '%s%s_%s%s%s_dil2_autoclean.pdb',...
@@ -64,6 +64,7 @@ for j=1:numel(targets)
         sh=AFQ_RenderFibers(fg,'color',cols{j},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'plottoscreen',plotToScreen);
         
         set(gca,'GridlineStyle','none')
+        axis off
         ylim([-32  25])
         zlim([-20 25])
         print(gcf,'-dpng','-r300',[targets{j} lr fgStrs{j}]);

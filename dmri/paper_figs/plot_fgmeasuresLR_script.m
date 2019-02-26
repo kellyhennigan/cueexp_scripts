@@ -54,7 +54,7 @@ lspec = {'-','--'};
 % groupStr = '_byrelapse';
 
 
-cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
+cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgStrs, 'uniformoutput',0); % plotting colors for groups
 cols(:,2)=cols; % plot L and R as the same color
 
 omit_subs = {}; % as170730 is too old for this sample
@@ -81,7 +81,7 @@ for j=1:numel(fgMatStrs)
     
     
     %%%%%%%%%%%% get fiber group measures
-    [fgMeasuresL,fgMLabels,~,subjects,gi]=loadFGBehVars(...
+    fgMeasuresL=loadFGBehVars(...
         fullfile(dataDir,'fgMeasures',method,[fgMatStrL '.mat']),'',[group{:}],omit_subs);
     nNodes = size(fgMeasuresL{1},2);
     
@@ -102,13 +102,13 @@ for j=1:numel(fgMatStrs)
         
         % average across mid 50% of the pathway and test for L vs R diffs
         [h,p,~,stats]=ttest(mean(groupfgm{1}(:,26:75),2),mean(groupfgm{2}(:,26:75),2));
-           fprintf('\nttest for %s differences in L vs R %s:\nt(%d)=%.2f, p=%.3f\n\n\n',fgMPlot,fgMatLabel,stats.df,stats.tstat,p);
+        fprintf('\nttest for %s differences in L vs R %s:\nt(%d)=%.2f, p=%.3f\n\n\n',fgMPlot,fgMatLabel,stats.df,stats.tstat,p);
         
-           % if desired, plot p-value from ttest
-           pp=nan(1,nNodes);
-           if plotStats
-               pp(50)=p;
-           end
+        % if desired, plot p-value from ttest
+        pp=nan(1,nNodes);
+        if plotStats
+            pp(50)=p;
+        end
         
         mean_fg = cellfun(@mean, groupfgm,'uniformoutput',0);
         se_fg = cellfun(@(x) std(x)./sqrt(size(x,1)), groupfgm,'uniformoutput',0);
@@ -127,7 +127,7 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%%% finally, plot the thing!
-        [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols(j,:),p,lineLabels,...
+        [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols(j,:),pp,lineLabels,...
             xlab,ylab,figtitle,[],plotToScreen,lspec);
         hold on
         yl=ylim
@@ -135,8 +135,8 @@ for j=1:numel(fgMatStrs)
         plot([75 75],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
         ylim(yl)
         legend HIDE
-%         print(fig,savePath,'-depsc')
-%         print(fig,savePath,'-dpdf')
+        %         print(fig,savePath,'-depsc')
+        %         print(fig,savePath,'-dpdf')
         print(gcf,'-dpng','-r300',savePath);
         
     end % fg measures (fgMPlots)
@@ -151,12 +151,12 @@ end % fiber groups (fgMatStrs)
 %    print(gcf,'-dpng','-r300',savePath);
 %     print(gcf,'-dpng','-r300',savePath);
 %      print(gcf,'-dpng','-r300',savePath);
-% % 
+% %
 % print(fig,savePath,'-depsc')
 % print(fig,savePath,'-depsc')
 % print(fig,savePath,'-depsc')
 % print(fig,savePath,'-depsc')
 % print(fig,savePath,'-depsc')
 % toc
-    
+
 

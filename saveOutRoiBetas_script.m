@@ -43,11 +43,11 @@ switch task
     case 'cue'
         
         fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
-%         volIdx = [15,16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-%         bNames = {'alcohol','drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
+        volIdx = [15,16,17,18]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+        bNames = {'alcohol','drugs','food','neutral'}; % bNames should correspond to volumes in index volIdx
 
-        volIdx = [15]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-        bNames = {'alcohol'}; % bNames should correspond to volumes in index volIdx
+%         volIdx = [15]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+%         bNames = {'alcohol'}; % bNames should correspond to volumes in index volIdx
 
 %                 fileStr = 'glm+tlrc.HEAD'; % string identifying files w/single subject beta maps
 %                 volIdx = [29,32,35]; % index of which volumes are the beta maps of interest (first vol=0, etc.)

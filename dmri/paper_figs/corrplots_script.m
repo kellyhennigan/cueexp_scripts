@@ -36,10 +36,10 @@ scale = 'BIS'
 
 
 % include control variables?
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -80,8 +80,11 @@ for f=1:numel(fgMatStrs)
     
     %%%%%%%%%%%%%%%
     
+    % THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
     fa = mean(fgMeasures{1}(:,26:75),2);
     md = mean(fgMeasures{2}(:,26:75),2);
+    rd = mean(fgMeasures{3}(:,26:75),2);
+    ad = mean(fgMeasures{4}(:,26:75),2);
     
     % include control variables? If so, regress out effect of control vars from
     % fgMeasures and scores
@@ -91,6 +94,9 @@ for f=1:numel(fgMatStrs)
         
         [rfa,pfa]=partialcorr(fa,scores,cvs);
         [rmd,pmd]=partialcorr(md,scores,cvs);
+        [rrd,prd]=partialcorr(rd,scores,cvs);
+        [rad,pad]=partialcorr(ad,scores,cvs);
+        
         cvStr = ['_wCV_' covars{:}];
         
         
@@ -98,6 +104,9 @@ for f=1:numel(fgMatStrs)
         
         [rfa,pfa]=corr(fa,scores);
         [rmd,pmd]=corr(md,scores);
+        [rrd,prd]=corr(rd,scores);
+        [rad,pad]=corr(ad,scores);
+        
         cvStr = '';
         
     end
@@ -105,9 +114,11 @@ for f=1:numel(fgMatStrs)
     % strings of corr coefficients and p values for plots
     corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
     corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
+    corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
+    corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
     
     % plot it
-    fig{f} = subplotCorr([],scores,{fa,1-md},scale,{'FA','1-MD'},corrStr);
+    fig{f} = subplotCorr([],scores,{fa,1-md,rd,ad},scale,{'FA','1-MD','RD','AD'},corrStr);
     ti=suptitle(titleStr);
     set(ti,'FontSize',18)
     
