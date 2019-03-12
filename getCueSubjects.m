@@ -188,8 +188,19 @@ if ~isempty(group)
         subjects = subjects(ri==0);
         notes = notes(ri==0);
         gi = gi(ri==0);
+      
+     % return only 2nd sample of patients
+    elseif strcmpi(group,'patients_sample2') 
+        subjects = subjects(gi>0);
+        notes = notes(gi>0);
+        gi = gi(gi>0);
+        idx=find(strcmp(subjects,'cd171130'));
+        subjects=subjects(idx:end);
+        notes=notes(idx:end);
+        gi=gi(idx:end);
         
-%         % return the first 15 to have relapsed
+        
+        % return the first 15 to have relapsed
 %     elseif any(strcmpi(group,{'early_relapse','early_relapsers'}))
 %         ri=getCueData(subjects,'early_relapsers');
 %         subjects = subjects(ri==1);

@@ -14,10 +14,10 @@ figDir = p.figures;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%% EDIT AS DESIRED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-task = 'mid';
+task = 'cue';
 
 % group = 'relapsers_3months';
-group = 'controls';
+group = 'patients';
 
 
 [subjects,gi]=getCueSubjects(task,group);
@@ -25,18 +25,18 @@ group = 'controls';
 % gi(10:end)=[];
 
 % stim = 'food-neutral'; % stim to plot
-stim = 'loss5'; % stim to plot
+stim = 'drugs'; % stim to plot
 
 stimStr = stim; % stim name 
 
-roiName = 'caudate'; % roi to process
+roiName = 'nacc_desai'; % roi to process
 
 tcDir = ['timecourses_' task '_afni' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
 colorScheme = 'mean'; 
-% colorScheme = 'relapse'; 
+colorScheme = 'relapse'; 
 
 
 omitSubs = {''}; % any subjects to omit?
