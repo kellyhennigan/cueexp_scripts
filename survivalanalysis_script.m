@@ -8,7 +8,7 @@ dataDir = p.data;
 figDir = p.figures;
 
 
-dataPath = fullfile(dataDir,'relapse_data','relapse_data_181009.csv');
+dataPath = fullfile(dataDir,'relapse_data','relapse_data_190225.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180516.csv');
 
 % load data
@@ -16,7 +16,7 @@ T = readtable(dataPath);
 
 
 % define outcome variable
-Y = 'relIn3Mos';
+Y = 'relIn1Mos';
 
 
 %% omit subjects that have no outcome data 

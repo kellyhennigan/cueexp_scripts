@@ -11,13 +11,11 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_181109.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_190312.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
-
-% T.relIn6Mos(4)=1; % set ja151218 to be relapsed in 6 months 
 
 
 % define outcome variable
@@ -127,7 +125,8 @@ end
 %% model : brain predictors
 
 % modelspec = 'relIn3Mos ~ nacc_drugs_beta';
-modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
+% modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
+modelspec = [Y ' ~ nacc_desai_drugs_beta + mpfc_drugs_beta + VTA_drugs_beta'];
 
 
 res=fitglm(T,modelspec,'Distribution','binomial')

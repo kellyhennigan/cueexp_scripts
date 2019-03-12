@@ -1,0 +1,57 @@
+---
+title: "pairs plots"
+author: "Kelly MacNiven"
+date: "3/11/2019"
+output: pdf_document
+---
+
+
+get libraries & load data
+```{r setup, collapse=TRUE, warning=FALSE}
+require(psych)
+
+#load data
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190311.csv')
+
+```
+
+#pairs plots 1
+
+```{r pairs plot1, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(putamen_fa,putamen_md,age,dwimotion,BIS))
+          
+pairs.panels(dp)
+
+```
+
+#pairs plots 2
+
+```{r pairs plot2, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
+
+pairs.panels(dp)
+
+```       
+
+#pairs plots 3
+
+```{r pairs plot3, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis))
+
+pairs.panels(dp)
+
+```       
+
+
+#pairs plots 4
+
+```{r pairs plot4, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,d1$nacc_gain5_TR3,d1$nacc_gain5_TR4,d1$nacc_gvnant_beta))
+
+pairs.panels(dp)
+
+```       

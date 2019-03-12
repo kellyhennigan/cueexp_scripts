@@ -92,7 +92,7 @@ set(fig,'Position',[ss(3)-700 ss(4)-525 700 525]) % make figure 700 x 525 pixels
 set(gca,'fontName','Helvetica','fontSize',16)
 set(gca,'box','off');
 set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
-get(gcf,'renderer')
+
 
 % plot lines
 cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)

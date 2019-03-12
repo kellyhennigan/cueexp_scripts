@@ -6,11 +6,12 @@ close all
 
 % get experiment-specific paths and cd to main data directory
 pa = getCuePaths;
-dataDir = pa.data; figDir = pa.figures_dti;
+dataDir = pa.data; 
+figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'controls'};
+group = {'all'};
 
 
 % directory & filename of fg measures
@@ -36,10 +37,10 @@ scale = 'BIS'
 
 
 % include control variables?
-% covars = {};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -127,9 +128,6 @@ for f=1:numel(fgMatStrs)
         print(fig{f},fullfile(outDir,outName),'-depsc')
     end
     
-    %%%% NOTE: if control variables are included, the p-values need to be
-    % adjusted to account for the difference in degrees of freedom!! (1 less
-    % degree of freedom per covariate)
     
     
 end % fiber group loop

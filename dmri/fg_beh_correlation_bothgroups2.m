@@ -9,51 +9,43 @@ close all
 % get experiment-specific paths and cd to main data directory
 p = getCuePaths;
 dataDir = p.data;
-figDir=p.figures_dti;
-
-% plot both groups
-group = {'controls','patients'};
-% group = {'nonrelapsers','relapsers'};
-
 
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-
-fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
-
-titleStr = 'NAcc pathway (inferior)';
-
+target='nacc';
+fgMatStr = ['DALR_' target 'LR_belowAC_dil2_autoclean']; %'.mat' will be added to end
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS';
 
 % include control variables? 
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 % covars = {''};
 % covars = {'dwimotion'};
-% covars = '';
+covars = '';
 
-cols=getCueExpColors(group); % plotting colors for groups
-cols(1,:)=[0 0 0];
+% plot both groups
+group = {'controls','patients'};
+% group = {'nonrelapsers','relapsers'};
+mspec = {'.','o'};
+msize=[30 10];
+
+cols=repmat(getDTIColors(target,fgMatStr),numel(group),1); % plotting colors for groups
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(p.figures_dti, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
-
-omit_subs = {};
-    
-plotLeg=1;
-
-%% do it
-
+outDir = fullfile(p.figures, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
 if saveFigs
     if ~exist(outDir,'dir')
         mkdir(outDir)
     end
 end
 
+omit_subs = {};
+    
 
-%% fg loop
+
+%% load data
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
 [fgMeasures,fgMLabels,scores,subjects]=cellfun(@(x) loadFGBehVars(...
@@ -61,12 +53,14 @@ end
     group, 'uniformoutput',0);
 fgMLabels=fgMLabels{1};
 
-
 %% fig 1: plot correlations with fg measures
 
-node = 26:75; % nodes to average over
+%%%%%%%%%%%%%%% params for figure 1
+% node = 'best'; % an integer specifying which node to plot, or 'best'
+% bestWhat = 'MD'; % which fg measure(s) to test for best
+ node = 26:75;
 
-fgPlotIdx = [1:4]; % index of which fg measures to include in corr plots
+fgPlotIdx = [1:3]; % index of which fg measures to include in corr plots
 %%%%%%%%%%%%%%%
 
 %% this is messy but gets the job done...
@@ -94,7 +88,7 @@ if exist('covars','var') && ~isempty(covars)
        fgMeasures{2}{j}=all_fgMeasures{j}(gi>0,:);
    end
    
-    cvStr = ['_wCV_' covars{:}];
+   cvStr = '_wCVs';
    
 else
     
@@ -102,6 +96,19 @@ else
    
 end
 
+
+% if node is 'best', determine which node is best
+if strcmp(node,'best') % find node with highest correlation with FA or MD
+   [~,np]=cellfun(@(x,y) corr(x{strcmp(fgMLabels,bestWhat)},y), fgMeasures,scores,'uniformoutput',0);
+    [minp,ri]=min(cell2mat(np)); [~,ci]=min(minp); node = ri(ci);
+end
+
+% get a string describing node(s)
+if numel(node)>1
+    nodeStr = sprintf('%d_%d',node(1),node(end));
+else
+    nodeStr = num2str(node);
+end
 
 % plot it
 % figH = subplotCorr(figH,x,y,xlab,ylab,titleStr,col)
@@ -115,8 +122,10 @@ for i=1:nP
     
     axH=subplot(nRow,nCol,i);
     hold on
+    titleStr = [];
     for j=1:numel(group)
-        [axH,rpStr] = plotCorr(axH,scores{j},mean(fgMeasures{j}{i}(:,node),2),scale,fgMLabels(i),'',cols(j,:));
+        cols(j,:)=[0 0 0];
+        [axH,rpStr] = plotCorr(axH,scores{j},mean(fgMeasures{j}{i}(:,node),2),scale,fgMLabels(i),'',cols(j,:),mspec{j},msize(j));
         tStr{j} = ['\fontsize{10}{\color[rgb]{' num2str(cols(j,:)) '}' rpStr '} ']; % title strings
     end
     
@@ -130,24 +139,40 @@ for i=1:nP
 end
 
 % super title 
-suptitle(titleStr)
+suptitle([strrep(fgMatStr,'_',' ') ' node ' nodeStr])
 if saveFigs
-    outName = [fgMatStr '_bothgroups' cvStr]; 
-    print(figH,fullfile(outDir,outName),'-depsc')
-    
-%     print(figH,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr]))
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr]))
 end
 
 % legend
-if plotLeg
 lh=get(axH,'Children')
 legend(axH,[lh(3) lh(1)],group,'Location','EastOutside','FontSize',12)
 legend('boxoff')
-legStr='_w_leg';
-else
-    legStr='';
-end
 if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[outName '_w_leg']))
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr '_w_legend']))
 end
+
+
+
+%% fig 2: plot behavior-fg correlation as heatmap over trajectory of fg
+% measures
+
+% %%%%%%%%%%%%%%% params for figure 2
+% fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+% fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+% %%%%%%%%%%%%%%%
+% 
+% % get correlation between fgMCorr & scores along pathway nodes
+% [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+% 
+% % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+% fig2=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
+% title([fgMCorr '-' scale ' correlation strength in color']);
+% if saveFigs
+%     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot '_' fgMCorr '_' scale '_corr']))
+% end
+
+
+
+
 

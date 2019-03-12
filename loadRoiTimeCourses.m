@@ -1,4 +1,4 @@
-function tc=loadRoiTimeCourses(filepath,subjects,TRs)
+function [tc,subjects]=loadRoiTimeCourses(filepath,subjects,TRs)
 % usage: import time course data for cuefmri experiment
 %
 % INPUT:

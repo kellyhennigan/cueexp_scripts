@@ -41,13 +41,14 @@ hold on
 for i=1:numel(d)
     
     hh(i) = histogram(d{i});
-    % hh{i}.Normalization = 'probability';
+    hh(i).Normalization = 'probability';
     hh(i).EdgeColor = [1 1 1];
     hh(i).FaceColor = cols(i,:);
     
 end
 
 % give them all equal # of bins and bin widths
+hh(:).BinWidth
 bwidth=min([hh(:).BinWidth]); % SET BIN WIDTH
 nbins=max([hh(:).NumBins]);   % SET # OF BINS
 for i=1:numel(d)

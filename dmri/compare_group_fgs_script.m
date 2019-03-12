@@ -9,7 +9,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures '/dti/fgm_trajectories'];
+outDir = [p.figures_dti '/fgm_trajectories'];
 
 
 % directory & filename of fg measures
@@ -29,19 +29,20 @@ fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
-covars = {};
+% covars = {'age'};
+covars={'dwimotion'};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
 
 % plot groups
-% group = {'controls','patients'};
-% groupStr = '_bygroup';
-% lspec = {'-','--'};
+group = {'controls','patients'};
+groupStr = '_bygroup';
+lspec = {'-','--'};
 
-group = {'controls'};
-groupStr = 'controls';
-lspec = {'-'};
+% group = {'controls'};
+% groupStr = 'controls';
+% lspec = {'-'};
 
 % group = {'controls','relapsers','nonrelapsers'};
 % groupStr = '_byrelapse';
@@ -54,7 +55,7 @@ omit_subs = {'as170730'}; % as170730 is too old for this sample
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
 fgMPlots={'FA','MD'};
 
-doStats=0;
+doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it

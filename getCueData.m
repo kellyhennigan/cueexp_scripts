@@ -69,7 +69,22 @@ switch measure
         %  fitk_method = 'MLE';
         
         data = getDiscountingK(subjects,fitk_method); % returns discounting param, k
+    
         
+   case {'tipi','tipi_extra','tipi_agree','tipi_consci','tipi_emostab','tipi_open'}
+      
+        
+        data = getTIPIScores(subjects,measure); 
+      
+    case {'digitspan','forwarddigitspan','backwarddigitspan'}
+        
+        data=getDigitSpan(subjects,measure);
+        
+        
+   case {'bisbas','basdrive','basfunseek','basrewardresp','bisbas_bis'}
+      
+        data = getBISBASScores(subjects,measure); 
+
         
     case {'race','ethnicity'}
         
@@ -734,13 +749,16 @@ end
 if isempty(d)
     choice = [];
 else
+    
+    i=1
     for i=1:numel(subjects)
+        
         idx=find(strncmp(d(:,1),subjects{i},8));
         if isempty(idx)
             data(i,1) = nan;
         else
             
-            choice = str2double(d(idx,2:end))';
+            choice = str2double(d(idx,4:end))';
             
             % if all choices are nan, set k to nan for this subject
             if all(isnan(choice))
@@ -957,28 +975,29 @@ if isempty(d)
     educ_years=[];
 else
     for i=1:numel(subjects)
+        
         idx=find(strncmp(d(:,1),subjects{i},8));
         if isempty(idx)
             educ_str{i,1} = nan;
             educ_years(i,1)=nan;
         else
             educ_str{i,1} = d{idx,strcmp(d(1,:),'Q90')};
-            switch educ_str{i,1}(1:4)
-                case 'Prim'                 % primary school, 6 years
+            switch educ_str{i,1}(1:3)
+                case 'Pri'                 % primary school, 6 years
                     educ_years(i,1)=6;
-                case 'High'                 % High school, 12 years
+                case 'Hig'                 % High school, 12 years
                     educ_years(i,1)=12;
-                case 'Asso'                 % Associate's, 14 years
+                case 'Ass'                 % Associate's, 14 years
                     educ_years(i,1)=14;
-                case 'Bach'                 % Bachelor's, 16 years
+                case 'Bac'                 % Bachelor's, 16 years
                     educ_years(i,1)=16;
-                case 'Mast'                 % master's, 18 years
+                case 'Mas'                 % master's, 18 years
                     educ_years(i,1)=18;
-                case 'MBA '                 % MBA/JD, 18 years
+                case 'MBA'                 % MBA/JD, 18 years
                     educ_years(i,1)=18;
-                case 'Doct'                 % PhD, 21+ years
+                case 'Doc'                 % PhD, 21+ years
                     educ_years(i,1)=21;
-                case 'Medi'                 % Medical/MD, 21+ years
+                case 'Med'                 % Medical/MD, 21+ years
                     educ_years(i,1)=21;
                 otherwise
                     educ_years(i,1)=nan;
@@ -1068,9 +1087,9 @@ if ~any(isnan(si))
 else
     for i=1:numel(subjects)
         if isnan(si(i))
-            dwimotion(i)=nan;
+            dwimotion(i,1)=nan;
         else
-            dwimotion(i)=T.dwimotion(si);
+            dwimotion(i,1)=T.dwimotion(si(i));
         end
     end
 end
@@ -1078,3 +1097,185 @@ end
 
 end % dwimotion
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get TIPI scores
+function scores = getTIPIScores(subjects,measure)
+
+% reference: ??
+
+docid = '1AHsrB7-sNIjMEKjKIMwexX0qR3VGKXk1x1hk4UtGafo'; % doc id for google sheet w/relapse data
+
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using offline values that may not be the most updated...'])
+    d={}; % ADD OFFLINE VALS HERE...
+end
+
+% if data is loaded, compute scores
+if isempty(d)
+    scores = [];
+else
+    
+    % find columns containing various TIPI scores
+    extra_ci = find(strcmp(d(1,:),'tipiextra')); % column with extraversion scores
+    agree_ci = find(strcmp(d(1,:),'tipiagree')); % column with agreeableness scores
+    consci_ci = find(strcmp(d(1,:),'tipiconsci')); % column with conscientiousness scores
+    emostab_ci = find(strcmp(d(1,:),'tipiemostab')); % column with emotional stability scores
+    open_ci = find(strcmp(d(1,:),'tipiopen')); % column with openness scores 
+    
+    for i=1:numel(subjects)
+        idx=find(strncmp(d(:,1),subjects{i},8));
+        if isempty(idx)
+            scores(i,:) = nan(1,5);
+        else
+            scores(i,1) = str2double(d{idx,extra_ci}); 
+            scores(i,2) = str2double(d{idx,agree_ci}); 
+            scores(i,3) = str2double(d{idx,consci_ci}); 
+            scores(i,4) = str2double(d{idx,emostab_ci}); 
+            scores(i,5) = str2double(d{idx,open_ci}); 
+        end
+        
+    end % subjects
+end
+
+switch measure
+    case 'tipi'
+        scores=scores;
+    case 'tipi_extra'
+        scores=scores(:,1);
+    case 'tipi_agree'
+        scores=scores(:,2);
+    case'tipi_consci'
+        scores=scores(:,3);
+    case 'tipi_emostab'
+        scores=scores(:,4);
+    case 'tipi_open'
+        scores=scores(:,5);
+end
+  
+end % getTIPIscores
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BISBAS scores
+function scores = getBISBASScores(subjects,measure)
+
+% reference: 
+% Carver, C. S., & White, T. L. (1994). Behavioral inhibition, behavioral activation, and affective responses to impending reward and punishment: The BIS/BAS Scales. Journal of Personality and Social Psychology, 67(2), 319-333. doi: 10.1037/0022-3514.67.2.319
+% Scale and scoring instructions available for research and teaching purposes at:
+% http://www.psy.miami.edu/faculty/ccarver/sclBISBAS.html
+% 
+
+% for whatever reason, our version of BISBAS has a different order and
+% doesnt have the "filler" questions that appear at the reference above.
+% So, the correspondence between our order of items and each sub-scale is
+% manually coded by Kelly. Someone should double-check that its correct!! 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+docid = '11zOEPtsRmuW9WWJ0zxMnqhbtzV0X_CciitLGw5hCmMo'; % doc id for google sheet w/relapse data
+
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using offline values that may not be the most updated...'])
+    d={}; % ADD OFFLINE VALS HERE...
+end
+
+% if data is loaded, compute scores
+if isempty(d)
+    scores = [];
+else
+    
+    % find columns containing various TIPI scores
+    basdrive_ci = find(strcmpi(d(1,:),'BASDrive')); 
+    basfun_ci = find(strcmpi(d(1,:),'BASFunSeeking')); 
+    basrewardresp_ci = find(strcmpi(d(1,:),'BASRewardResponse')); 
+    bis_ci = find(strcmpi(d(1,:),'BIS')); 
+    
+    
+    i=1
+    for i=1:numel(subjects)
+        idx=find(strncmp(d(:,1),subjects{i},8));
+        if isempty(idx)
+            scores(i,:) = nan(1,4);
+        else
+            scores(i,1) = str2double(d{idx,basdrive_ci}); % 
+            scores(i,2) = str2double(d{idx,basfun_ci}); % 
+            scores(i,3) = str2double(d{idx,basrewardresp_ci}); % 
+            scores(i,4) = str2double(d{idx,bis_ci}); % 
+        end
+    end % subjects
+end % isempty
+
+switch measure
+    
+    case 'basdrive'
+        scores=scores(:,1);
+    case 'basfunseek'
+        scores=scores(:,2);
+    case 'basrewardresp'
+        scores=scores(:,3);
+    case 'bisbas_bis'
+        scores=scores(:,4);
+    otherwise
+        % if bisbas, return all subscores
+end
+
+      
+end % getScores
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get digit span scores
+function scores = getDigitSpan(subjects,measure)
+
+% reference: 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+docid = '195Ok0yiM4da-XstCKA03XDGiOSwbpa1u3LnsTeh3SbQ'; % doc id for google sheet w/relapse data
+
+try
+    d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
+catch
+    warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
+        'Using offline values that may not be the most updated...'])
+    d={}; % ADD OFFLINE VALS HERE...
+end
+
+% if data is loaded, compute scores
+if isempty(d)
+    scores = [];
+else
+    
+    % find columns containing various TIPI scores
+    dstotal_ci = find(strcmpi(d(1,:),'digtotal')); 
+    dsforward_ci = find(strcmpi(d(1,:),'digfortotal'));
+    dsback_ci = find(strcmpi(d(1,:),'digbacktotal'));
+    
+    i=1
+    for i=1:numel(subjects)
+        idx=find(strncmp(d(:,1),subjects{i},8));
+        if isempty(idx)
+            scores(i,:) = nan(1,3);
+        else
+            scores(i,1) = str2double(d{idx,dstotal_ci}); 
+            scores(i,2) = str2double(d{idx,dsforward_ci});
+            scores(i,3) = str2double(d{idx,dsback_ci});
+        end
+    end % subjects
+end % isempty
+
+switch measure  
+    case 'digitspan'
+        scores=scores(:,1);
+    case 'forwarddigitspan'
+        scores=scores(:,2);
+    case 'backwarddigitspan'
+        scores=scores(:,3);
+end
+    
+end % getScores

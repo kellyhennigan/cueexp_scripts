@@ -1,7 +1,7 @@
 ---
-title: "Hunger and food ratings plots"
+title: "pairs plots"
 author: "Kelly MacNiven"
-date: "10/8/2018"
+date: "3/7/2019"
 output: pdf_document
 ---
 
@@ -10,7 +10,7 @@ get libraries & load data
 ```{r setup, collapse=TRUE, warning=FALSE}
 
 #load data
-d1 = read.csv('/Users/kelly/cueexp/data/relapse_data/relapse_data_181008.csv')
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_190307.csv')
 
 ```
 

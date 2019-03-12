@@ -23,9 +23,9 @@ CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt']
     [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt'];
     [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt']}; % %s's are: L/R, target, L/R
 
-LorR = ['L','R']; % if ['L','R'], script shold loop over l/r sides;
+lr='R';
 
-mergeLR=1; 
+mergeLR=0; 
 
 %%
 
@@ -59,7 +59,6 @@ if mergeLR
 % to NOT merge L and R: 
 else 
 
-lr='L'
     
     for j=1:numel(targets)
         

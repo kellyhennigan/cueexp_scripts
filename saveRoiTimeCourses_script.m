@@ -97,7 +97,6 @@ for i=1:numel(subjects) % subject loop
     % censor due to motion
     censorVols = find(dlmread(sprintf(censorFilePath,subject,task))==0);
     
-    
     % get stim onset times
     onsetTRs = cellfun(@(x) find(dlmread(fullfile(sprintf(stimDir,subject),x))), stimFiles, 'uniformoutput',0);
     
@@ -106,18 +105,20 @@ for i=1:numel(subjects) % subject loop
         % this roi time series
         roi_ts = roi_mean_ts(func.data,rois{j}.data);
         
-        
-        % nan pad the end in case there aren't enough TRs for the last
-        % trial
-        roi_ts = [roi_ts;nan(nTRs,1)];
-        
         % set vols with abs(zscore > 4) to nan (assume this is due to
         % some non-bio noise)
         if omitOTs
+            
             % temporarily assign censored vols due to head motion to nan
             temp = roi_ts; temp(censorVols)=nan;
-            censorVols=[censorVols;find(abs(zscore(temp(~isnan(temp))))>4)];
+            Z=(roi_ts-nanmean(roi_ts))./nanstd(roi_ts); % Zscore
+            censorVols=[censorVols;find(abs(Z)>4)];
+        
         end
+         
+        % nan pad the end in case there aren't enough TRs for the last
+        % trial
+        roi_ts = [roi_ts;nan(nTRs,1)];
         
         
         for k=1:numel(stims)
@@ -142,8 +143,7 @@ for i=1:numel(subjects) % subject loop
 %                 this_stim_tc(censor_idx)=nan;
                 
                 %%%%%% TO OMIT ENTIRE TRIALS FROM AVERAGING THAT HAVE
-                %%%%%% CENSORED TRS:
-                  
+                %%%%%% CENSORED TRS: 
                 % identify & omit trials w/censored TRs
                 [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
                 censor_idx = unique(censor_idx);
@@ -152,7 +152,6 @@ for i=1:numel(subjects) % subject loop
 %                 
 %                 % keep count of the # of censored & outlier trials
                 nBadTrials{j}(i,k) = numel(censor_idx);
-%                 
 %                 %
 %                 
 %                 % plot single trials
