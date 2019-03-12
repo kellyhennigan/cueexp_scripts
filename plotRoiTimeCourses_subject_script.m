@@ -38,8 +38,8 @@ outDir_suffix = '_sample2';
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
 % colorScheme = 'mean'; 
-colorScheme = 'relapse'; 
-% colorScheme = 'rand'; 
+% colorScheme = 'relapse'; 
+colorScheme = 'rand'; 
 
 omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
 

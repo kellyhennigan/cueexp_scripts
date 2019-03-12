@@ -111,9 +111,9 @@ for i=1:numel(subjects) % subject loop
             
             % temporarily assign censored vols due to head motion to nan
             temp = roi_ts; temp(censorVols)=nan;
-            Z=(roi_ts-nanmean(roi_ts))./nanstd(roi_ts); % Zscore
+            Z=(temp-nanmean(temp))./nanstd(temp); % Z-score
             censorVols=[censorVols;find(abs(Z)>4)];
-        
+       
         end
          
         % nan pad the end in case there aren't enough TRs for the last
