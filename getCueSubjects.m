@@ -189,6 +189,17 @@ if ~isempty(group)
         notes = notes(ri==0);
         gi = gi(ri==0);
       
+        
+        % return only 1st sample of patients
+    elseif strcmpi(group,'patients_sample1')
+        subjects = subjects(gi>0);
+        notes = notes(gi>0);
+        gi = gi(gi>0);
+        idx=find(strcmp(subjects,'cd171130'));
+        subjects(idx:end)=[];
+        notes(idx:end)=[];
+        gi(idx:end)=[];
+        
      % return only 2nd sample of patients
     elseif strcmpi(group,'patients_sample2') 
         subjects = subjects(gi>0);
@@ -198,6 +209,43 @@ if ~isempty(group)
         subjects=subjects(idx:end);
         notes=notes(idx:end);
         gi=gi(idx:end);
+        
+        
+      % return those who relapsed within 3 mos in sample 1
+    elseif any(strcmpi(group,{'relapsers_3months_sample1','relapse_3months_sample1'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return those who did not relapse within 3 mos in sample 1
+    elseif any(strcmpi(group,{'nonrelapsers_3months_sample1','nonrelapse_3months_sample1'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+        
+      
+        % return those who relapsed within 3 mos in sample 2
+    elseif any(strcmpi(group,{'relapsers_3months_sample2','relapse_3months_sample2'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+       
+        % return those who did not relapse within 3 mos in sample 2
+    elseif any(strcmpi(group,{'nonrelapsers_3months_sample2','nonrelapse_3months_sample2'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
         
         
         % return the first 15 to have relapsed

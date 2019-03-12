@@ -23,7 +23,7 @@ else:
 from getCueSubjects import getsubs
 #subjsA,_ = getsubs('cue',1)	# patients
 subjsB,_ = getsubs('cue',0) # controls
-subjsA=['cd171130','ab171208','tb171209','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715','md181018','tv181019','lh181030','td181116','kd181119','zg181207','lm181213','wa181217']
+subjsA=['cd171130','ab171208','tb171209','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715','md181018','lh181030','td181116','kd181119','zg181207','lm181213','wa181217']
 
 print(subjsA)
 print(subjsB)
