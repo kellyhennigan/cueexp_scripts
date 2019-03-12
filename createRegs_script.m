@@ -12,19 +12,12 @@ close all
 
 
 [p,task,subjects,gi]=whichCueSubjects();
-p=getFmrieatPaths;
 dataDir = p.data;
 
-% subjects = {  'md181018'
-%     'tv181019'
-%     'gd181026'
-%     'lh181030'
-%     'td181116'
-%     'kd181119'
-%     'tm181129'
-%     'zg181207'
-%     'lm181213'
-%     'wa181217'};
+subjects = { 
+    'tv181019'
+    'tb171209'
+  };
 
 
 % define info that's different for our data vs claudia's data here
