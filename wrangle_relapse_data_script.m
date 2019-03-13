@@ -44,67 +44,9 @@ relIn6Mos = getCueData(subjects,'relapse_6months');
 
 Trelapse = table(relapse,days2relapse,obstime,censored,relIn1Mos,relIn3Mos,relIn6Mos);
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% other non-stimulant drug use (alcohol, cannabis, etc.)
-
-% responses from followup BAM(s) regarding past month use (yes or no) of 
-% substances other than stimulants
-
-duVarStrs = {'alcuse','bingealcuse','thcuse','sedativeuse','opiateuse',...
-    'inhalantuse','otherdruguse'};
-qStrs = {'q4','q5','q7a','q7b','q7e','q7f','q7g'}; % question numbers corresponding to above variables
-
-du = zeros(numel(subjects),numel(duVarStrs)); % drug use matrix
-
-d=getBAMFollowupData(); % BAM from followups 
-header=d(1,:);
-d(1,:)=[];
-subjs=d(:,1);
-
-% omit responses from last follow-up (only look at responses from 1-month
-% and 3 months post-treatment)
-% ci = find(strcmp('Followup number',header)); % column index
-% thisd=str2num(cell2mat(d(:,ci)));
-% omitidx=find(thisd>2)
-% d(omitidx,:)=[];
-% subjs(omitidx)=[];
-
-for q=1:numel(qStrs)
-    ci = find(strcmp(qStrs{q},header)); % column index
-    thisd=str2num(cell2mat(d(:,ci)));
-    thesesubjs=unique(subjs(find(thisd>1)));
-    for s=1:numel(thesesubjs)
-        du(ismember(subjects,thesesubjs{s}),q)=1;
-    end
-end
-
-duVarStrs=cellfun(@(x) ['post3mos_' x], duVarStrs,'uniformoutput',0);
-Totherdruguse = array2table(du,'VariableNames',duVarStrs);
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% demographic & clinical vars
 % 
-% demVars = {'years_of_use',...
-%     'first_use_age',...
-%     'days_sober',...
-%     'days_in_rehab',...
-%     'primary_meth',...
-%     'primary_cocaine',...
-%     'primary_crack',...
-%     'auditscore4orgreater',...
-%     'opioidusedisorder',...
-%     'cannabisuse',...
-%     'poly_drug_dep',...
-%     'smoke',...
-%     'depression_diag',...
-%     'bdi',...
-%     'anxiety_diag',...
-%     'ptsd_diag',...
-%    'education',...
-%     'post_for_treatment',...
-%     'age'};
-
 
 demVars = {'years_of_use',...
     'first_use_age',...
@@ -123,6 +65,7 @@ demVars = {'years_of_use',...
     'anxiety_diag',...
     'ptsd_diag',...
     'post_for_treatment',...
+    'education',...
     'age',...
     'gender'};
 
@@ -236,6 +179,46 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
     bam_health,bam_sleep,bam_confidence,bam_q14,bam_q15,bam_q16,bam_q17);
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% other non-stimulant drug use (alcohol, cannabis, etc.)
+
+% responses from followup BAM(s) regarding past month use (yes or no) of 
+% substances other than stimulants
+% 
+% duVarStrs = {'alcuse','bingealcuse','thcuse','sedativeuse','opiateuse',...
+%     'inhalantuse','otherdruguse'};
+% qStrs = {'q4','q5','q7a','q7b','q7e','q7f','q7g'}; % question numbers corresponding to above variables
+% 
+% du = zeros(numel(subjects),numel(duVarStrs)); % drug use matrix
+% 
+% d=getBAMFollowupData(); % BAM from followups 
+% header=d(1,:);
+% d(1,:)=[];
+% subjs=d(:,1);
+
+% % omit responses from last follow-up (only look at responses from 1-month
+% and 3 months post-treatment)
+% ci = find(strcmp('Followup number',header)); % column index
+% thisd=str2num(cell2mat(d(:,ci)));
+% omitidx=find(thisd>2)
+% d(omitidx,:)=[];
+% subjs(omitidx)=[];
+
+% for q=1:numel(qStrs)
+%     ci = find(strcmp(qStrs{q},header)); % column index
+%     thisd=str2num(cell2mat(d(:,ci)));
+%     thesesubjs=unique(subjs(find(thisd>1)));
+%     for s=1:numel(thesesubjs)
+%         du(ismember(subjects,thesesubjs{s}),q)=1;
+%     end
+% end
+% 
+% duVarStrs=cellfun(@(x) ['post3mos_' x], duVarStrs,'uniformoutput',0);
+% Totherdruguse = array2table(du,'VariableNames',duVarStrs);
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
 
@@ -332,8 +315,8 @@ Tsubj = table(subjid);
 
 % concatenate all data into 1 table
 T=table();
-T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
-
+% T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
+T = [Tsubj Trelapse Tdem Tbeh Tbrain];
 
 % save out
 writetable(T,outPath); 

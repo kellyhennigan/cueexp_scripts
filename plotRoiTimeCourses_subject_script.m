@@ -31,8 +31,8 @@ stimStr = stim; % stim name
 
 roiName = 'nacc_desai'; % roi to process
 
-% tcDir = ['timecourses_' task '_afni' ];
-tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 outDir_suffix = '_sample2';
 

@@ -113,12 +113,8 @@ for i=1:numel(subjects) % subject loop
             temp = roi_ts; temp(censorVols)=nan;
             Z=(temp-nanmean(temp))./nanstd(temp); % Z-score
             censorVols=[censorVols;find(abs(Z)>4)];
-       
+            
         end
-         
-        % nan pad the end in case there aren't enough TRs for the last
-        % trial
-        roi_ts = [roi_ts;nan(nTRs,1)];
         
         
         for k=1:numel(stims)
@@ -137,33 +133,40 @@ for i=1:numel(subjects) % subject loop
                 
                 % single trial time courses for this stim
                 this_stim_tc=roi_ts(this_stim_TRs);
-               
-                %%%%% TO ONLY OMIT CENSORED TRS: 
-%                 censor_idx=find(ismember(this_stim_TRs,censorVols));
-%                 this_stim_tc(censor_idx)=nan;
                 
-                %%%%%% TO OMIT ENTIRE TRIALS FROM AVERAGING THAT HAVE
-                %%%%%% CENSORED TRS: 
-                % identify & omit trials w/censored TRs
-                [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
-                censor_idx = unique(censor_idx);
-                censored_tc = this_stim_tc(censor_idx,:);
-                this_stim_tc(censor_idx,:) = [];
-%                 
-%                 % keep count of the # of censored & outlier trials
-                nBadTrials{j}(i,k) = numel(censor_idx);
-%                 %
-%                 
-%                 % plot single trials
+                
+                %%%%% TO ONLY OMIT CENSORED TRS:
+                censor_idx=find(ismember(this_stim_TRs,censorVols));
+                [~,cc]=ind2sub(size(this_stim_TRs),censor_idx);
+                censored_trs = this_stim_tc(censor_idx);
+                this_stim_tc(censor_idx)=nan;
+                
+                
+                %%%%%% TO OMIT ENTIRE TRIALS THAT CONTAIN CENSORED TRS:
+                %                 [censor_idx,~]=find(ismember(this_stim_TRs,censorVols));
+                %                 censor_idx = unique(censor_idx);
+                %                 censored_trs = this_stim_tc(censor_idx,:);
+                %                 this_stim_tc(censor_idx,:) = [];
+                
+                
+                % keep count of the # of censored & outlier TRs
+                nBadTRs{j}(i,k) = numel(censor_idx);
+                
+                % plot single trials
                 if plotSingleTrials
                     h = figure;
-                    set(gcf, 'Visible', 'off');
+                    %                     set(gcf, 'Visible', 'off');
                     hold on
                     set(gca,'fontName','Arial','fontSize',12)
                     % plot good and bad (censored) single trials
                     plot(t,this_stim_tc','linewidth',1.5,'color',[.15 .55 .82])
-                    if ~isempty(censored_tc)
-                        plot(t,censored_tc','linewidth',1.5,'color',[1 0 0])
+                    if ~isempty(censored_trs)
+                        
+                        % IF OMITTING JUST CENSORED TRS:
+                        plot(t(cc),censored_trs,'*','color',[1 0 0],'markersize',20,'Linewidth',1.5)
+                        
+                        % IF OMITTING ENTIRE TRIALS THAT HAVE A CENSORED TR:
+                        % plot(t,censored_trs','linewidth',1.5,'color',[1 0 0])
                     end
                     xlim([t(1) t(end)])
                     set(gca,'XTick',t)
@@ -171,7 +174,6 @@ for i=1:numel(subjects) % subject loop
                     ylabel('%\Delta BOLD')
                     set(gca,'box','off');
                     set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
-                    
                     title(gca,[subject ' ' stims{k}])
                     
                     % save out plot
