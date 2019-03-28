@@ -11,7 +11,7 @@ figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'all'};
+group = {'controls'};
 
 
 % directory & filename of fg measures
@@ -37,10 +37,10 @@ scale = 'BIS'
 
 
 % include control variables?
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -61,8 +61,8 @@ end
 
 %% fiber group loop
 
-% f=1;
-for f=1:numel(fgMatStrs)
+for f=1
+% for f=1:numel(fgMatStrs)
     
     fgMatStr = fgMatStrs{f};
     titleStr = titleStrs{f};

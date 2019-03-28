@@ -30,10 +30,10 @@ scale = 'BIS'
 
 
 % include control variables? 
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
@@ -80,20 +80,20 @@ n = numel(subjects);
 %% fig 1: plot behavior-fg correlation as heatmap over trajectory of fg
 % measures
 
-% %%%%%%%%%%%%%% params for figure 1
-% fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
-% fgMPlot = 'FA'; % fg measure to plot as values along pathway node
-% %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% params for figure 1
+fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+%%%%%%%%%%%%%%%
 
-% % get correlation between fgMCorr & scores along pathway nodes
-% [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
-% 
-% % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
-% fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
-% title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
-% if saveFigs
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr']))
-% end
+% get correlation between fgMCorr & scores along pathway nodes
+[r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+
+% plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
+title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
+if saveFigs
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr']))
+end
 
 
 

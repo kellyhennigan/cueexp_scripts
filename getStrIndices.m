@@ -1,7 +1,9 @@
 function ind=getStrIndices(c1,c2)
 % -------------------------------------------------------------------------
 % usage: for a cell of strings c1, return index for where they are located
-% (if at all) in cell array c2. 
+% (if at all) in cell array c2. Note this only returns the index for the
+% first index of a given string found. I.e., if a string in c1 appears more
+% than once in c2, only the index for its first instance will be returned.
 
 % for example: 
 
@@ -34,11 +36,11 @@ ind=[];
 for i=1:numel(a)
 
     if a(i)
-        ind(i,1) = find(ismember(c2,c1(i)));
+        this_ind=find(ismember(c2,c1(i)));
+        ind(i,1) = this_ind(1);
     else
         ind(i,1) = nan;
     end
     
 end
-
 

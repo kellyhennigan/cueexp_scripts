@@ -24,7 +24,7 @@ p=getCuePaths();
 dataDir = p.data;
 
 [subjects,gi]=getCueSubjects('dti',0);
-subjects=subjects(26:end);
+% subjects=subjects(26:end);
 % subjects = {'jh160702'};
 
 
@@ -33,17 +33,17 @@ method = 'mrtrix_fa';
 
 
 seed = 'DA';
-% targets = {'caudate','putamen'};
+targets = {'caudate','putamen'};
 % targets = {'nacc','nacc','caudate','putamen'};
-targets = {'nacc','nacc'};
+% targets = {'nacc','nacc'};
 
 % string to identify fiber group files (must correspond to targets cell array) 
 % fgFileStrs = {'belowAC_dil2_autoclean',...
 %     'aboveAC_dil2_autoclean',...
 %     'dil2_autoclean',...
 %     'dil2_autoclean'};
-fgFileStrs = {'belowAC_dil2_autoclean',...
-    'aboveAC_dil2_autoclean'};
+fgFileStrs = {'autoclean',...
+    'autoclean'};
 
     % files are named [target fgFileStr '.pdb']
 
