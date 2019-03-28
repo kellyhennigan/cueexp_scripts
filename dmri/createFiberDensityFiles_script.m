@@ -70,7 +70,7 @@ xform_warp=fullfile(dataDir,'%s','t1','t12tlrc_xform_Warp.nii.gz');
 
 
 % options
-only_seed_endpts = 0; % create density maps of only seed endpoints?
+only_seed_endpts = 1; % create density maps of only seed endpoints?
 only_endpts = 0; % create density maps of only seed/target endpoints?
 smooth = 0; % 0 or empty to not smooth, otherwise this defines the smoothing kernel
 
