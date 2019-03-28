@@ -30,30 +30,38 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 
 
 % script will loop over these
-% inNiiFileStrs = {'DA_nacc_belowAC_dil2_autoclean_DAendpts_tlrc';
-%     'DA_nacc_aboveAC_dil2_autoclean_DAendpts_tlrc';
-%     'DA_caudate_dil2_autoclean_DAendpts_tlrc';
-%     'DA_putamen_belowAC_dil2_autoclean_DAendpts_tlrc'
-%     };
-% inNiiFileStrs = {'DA_putamen_dil2_autoclean_DAendpts_tlrc'
-%     };
-inNiiFileStrs = {'DAL_naccL_belowAC_dil2_autoclean_tlrc';
-    'DAR_naccR_belowAC_dil2_autoclean_tlrc';
-    'DAL_naccL_aboveAC_dil2_autoclean_tlrc';
-    'DAR_naccR_aboveAC_dil2_autoclean_tlrc';
-    'DA_nacc_belowAC_dil2_autoclean_tlrc';
-    'DA_nacc_aboveAC_dil2_autoclean_tlrc'
+inNiiFileStrs = {
+    'DAL_caudateL_autoclean_DAendpts_tlrc';
+    'DAR_caudateR_autoclean_DAendpts_tlrc';
+    'DA_caudate_autoclean_DAendpts_tlrc';
+    'DAL_putamenL_autoclean_DAendpts_tlrc';
+    'DAR_putamenR_autoclean_DAendpts_tlrc';
+    'DA_putamen_autoclean_DAendpts_tlrc'
     };
 
+
+% inNiiFileStrs = {'DAL_naccL_belowAC_dil2_autoclean_tlrc';
+%     'DAR_naccR_belowAC_dil2_autoclean_tlrc';
+%     'DAL_naccL_aboveAC_dil2_autoclean_tlrc';
+%     'DAR_naccR_aboveAC_dil2_autoclean_tlrc';
+%     'DA_nacc_belowAC_dil2_autoclean_tlrc';
+%     'DA_nacc_aboveAC_dil2_autoclean_tlrc'
+%     };
+
 % script will independently loop over these CoM files
-inCoMFiles = {'DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAR_naccR_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAL_naccL_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAR_naccR_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAL_caudateL_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAR_caudateR_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAL_putamenL_dil2_autoclean_DAendpts_CoM_tlrc';
-    'DAR_putamenR_dil2_autoclean_DAendpts_CoM_tlrc'};
+% inCoMFiles = {'DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAR_naccR_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAL_naccL_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAR_naccR_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAL_caudateL_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAR_caudateR_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAL_putamenL_dil2_autoclean_DAendpts_CoM_tlrc';
+%     'DAR_putamenR_dil2_autoclean_DAendpts_CoM_tlrc'};
+inCoMFiles = {
+    'DAL_caudateL_autoclean_DAendpts_CoM_tlrc';
+    'DAR_caudateR_autoclean_DAendpts_CoM_tlrc';
+    'DAL_putamenL_autoclean_DAendpts_CoM_tlrc';
+    'DAR_putamenR_autoclean_DAendpts_CoM_tlrc'};
 
 
 % directory to save out group files
@@ -96,19 +104,19 @@ end % for fd densities nifti files
 
 
 %% center of mass files
-% 
+%
 % for j=1:numel(inCoMFiles)
-%     
+%
 %     CoMfile = inCoMFiles{j};
-%     
+%
 %     % load subjects' CoM files & concatenate the coords with subjects in rows
 %     CoMs=cellfun(@(x) dlmread(fullfile(sprintf(inDir,x),CoMfile)), subjects,'uniformoutput',0)
 %     CoMs=cell2mat(CoMs);
-%     
+%
 %     % save out concatenated data w/subject ids
 %     T = table([subjects],CoMs);
 %     writetable(T,fullfile(outDir,[CoMfile '_ALL']),'WriteVariableNames',0);
-%     
-%     
+%
+%
 % end
 
