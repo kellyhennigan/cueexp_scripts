@@ -41,9 +41,12 @@ for lr=LorR
         
         target = targets{j};
         
-        fgMName = ['DA' lr '_' target lr fgMStr];
         
-        load(fullfile(fgMDir,[fgMName '.mat']));
+        fgMFile=fullfile(fgMDir,['DA' lr '_' target lr fgMStr '.mat']);
+        
+        [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
+            fgMFile,'',group);
+
         
         ol = createNewNii(t1,[fgMName '_node' num2str(node)]); % create overlay with all zeros for data
         
