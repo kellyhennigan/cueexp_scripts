@@ -3,10 +3,10 @@ clear all
 close all
 
 
-[p,task,subjects,gi]=whichCueSubjects('stim','dti');
+% [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p=getCuePaths();
 task='dti';
-[subjects,gi]=getCueSubjects(task,0);
+[subjects,gi]=getCueSubjects('dti',0);
 dataDir = p.data;
 
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');
