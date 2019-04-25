@@ -30,7 +30,8 @@ fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % covars = {'age'};
-covars={'dwimotion'};
+covars={'age','dwimotion'};
+% covars={''};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
@@ -52,8 +53,8 @@ cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % 
 
 omit_subs = {'as170730'}; % as170730 is too old for this sample
 
-% fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
-fgMPlots={'FA','MD'};
+fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
+% fgMPlots={'FA','MD'};
 
 doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

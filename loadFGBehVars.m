@@ -1,4 +1,4 @@
-function [fgMeasures,fgMLabels,scores,subjects,gi] = ...
+function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
     loadFGBehVars(fgMFile,scale,group,omit_subs)
 % % 
 % function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
@@ -104,12 +104,12 @@ else
 eigVals=eigVals(keep_idx,:,:);
 end
 
-% if size(SuperFibers,2)==2 % means l and r are saved separately
-%     SuperFibers=SuperFibers(keep_idx,:);
-% else
-%     SuperFibers=SuperFibers(keep_idx);
-% end
-% 
+if size(SuperFibers,2)==2 % means l and r are saved separately
+    SuperFibers=SuperFibers(keep_idx,:);
+else
+    SuperFibers=SuperFibers(keep_idx);
+end
+
 % get scores 
 if ~isempty(scale)
     scores = getCueData(subjects,scale);

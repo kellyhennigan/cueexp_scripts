@@ -18,16 +18,22 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean';...
-    'DALR_naccLR_aboveAC_dil2_autoclean';...
-    'DALR_caudateLR_dil2_autoclean';...
-    'DALR_putamenLR_dil2_autoclean'};
+% fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean';...
+%     'DALR_naccLR_aboveAC_dil2_autoclean';...
+%     'DALR_caudateLR_dil2_autoclean';...
+%     'DALR_putamenLR_dil2_autoclean'};
+% 
+% 
+% titleStrs = {'NAcc pathway (inferior)';...
+%     'NAcc pathway (superior)';...
+%     'Caudate pathway';...
+%     'Putamen pathway'};
+% fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean';...
+%     'DAR_naccR_belowAC_dil2_autoclean'};
+fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean'};
 
 
-titleStrs = {'NAcc pathway (inferior)';...
-    'NAcc pathway (superior)';...
-    'Caudate pathway';...
-    'Putamen pathway'};
+titleStrs = {'left inferior MFB'};
 
 
 % which scale to correlate with fiber group measures?
@@ -40,7 +46,7 @@ scale = 'BIS'
 % covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -61,8 +67,8 @@ end
 
 %% fiber group loop
 
-for f=1
-% for f=1:numel(fgMatStrs)
+% for f=1
+for f=1:numel(fgMatStrs)
     
     fgMatStr = fgMatStrs{f};
     titleStr = titleStrs{f};

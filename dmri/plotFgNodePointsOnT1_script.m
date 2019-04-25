@@ -11,20 +11,20 @@ dataDir = p.data;
 
 t1Path = fullfile(dataDir,'templates','mean_t1_tlrc.nii.gz');
 
-method = 'conTrack';
+method = 'mrtrix_fa';
 fgMDir = fullfile(dataDir,'fgMeasures',method);
 fgMStr = '_autoclean';
 
-LorR = ['L','R'];
+LorR = ['L'];
 
-targets = {'nacc','caudate','putamen'};
-% targets = {'nacc'};
+% targets = {'nacc','caudate','putamen'};
+targets = {'nacc'};
 
 % define subject-specific filepaths for affine & warp xforms from native to tlrc space
 xform_aff=fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt');
 xform_invWarp=fullfile(dataDir,'%s','t1','t12tlrc_xform_InverseWarp.nii.gz');
 
-node = 55;
+node = 65;
 
 outDir = fullfile(dataDir,'fg_densities',method);
 if ~exist(outDir,'dir')

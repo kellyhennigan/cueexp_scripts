@@ -75,7 +75,7 @@ t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 % get stim names and corresponding stim file names depending on task
 [stims,stimFiles]=getCueExpStims(task);
 
-TC = cell(numel(roiNames),numel(stims)); % out data cell array
+TC = cell(numel(roiNames),numel(stims)); % cell array that will contain 
 
 
 % get roi masks
@@ -152,7 +152,11 @@ for i=1:numel(subjects) % subject loop
                 % keep count of the # of censored & outlier TRs
                 nBadTRs{j}(i,k) = numel(censor_idx);
                 
-                % plot single trials
+                % fill in timecourses cell array
+                   TC{j,k}(i,:) = nanmean(this_stim_tc,1);
+                
+                   
+                % plot single trials if desired
                 if plotSingleTrials
                     h = figure;
                     %                     set(gcf, 'Visible', 'off');
@@ -185,7 +189,6 @@ for i=1:numel(subjects) % subject loop
                     print(gcf,'-dpng','-r600',fullfile(thisOutDir,outName));
                 end
                 
-                TC{j,k}(i,:) = nanmean(this_stim_tc);
                 
             end % isempty(onsetTRs)
             

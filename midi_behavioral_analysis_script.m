@@ -9,10 +9,11 @@ dataDir = p.data; % main data directory
 
 % subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
 task = 'midi';
-[subjects,gi] = getCueSubjects(task);
 
 groups = {'controls','patients'}; % group names
 % groups = {'controls','relapsers','nonrelapsers'}; % group names
+
+[subjects,gi] = getCueSubjects(task,groups);
 
 %% if groups are relapsers/nonrelapsers
 
@@ -69,6 +70,10 @@ end
 %   7 = -$5 GO
 %   8 = -$5 NOGO
 
+nogottype=[2 4 6 8];
+nogo5ttype=[6 8];
+nogoplus5ttype=[6];
+
 % names for trial types
 ttypeNames = {'+0 GO','+0 NOGO','-0 GO','-0 NOGO','+5 GO','+5 NOGO','-5 GO','-5 NOGO'};
 go_idx = [1:2:8]; nogo_idx = [2:2:8];
@@ -89,6 +94,11 @@ for i=1:N
     
     [trial,TR,trialonset,trialtype,target_ms,rt,cue_value,win,trial_gain,...
         total,iti,drift,total_winpercent,binned_winpercent]=loadMidBehData(sprintf(filepath,subjects{i}),'short');
+    
+    
+    nogofalsehits(i,1)=numel(find(win(ismember(trialtype,nogottype))==0));
+   nogo5falsehits(i,1)=numel(find(win(ismember(trialtype,nogo5ttype))==0));
+   nogoplus5falsehits(i,1)=numel(find(win(ismember(trialtype,nogoplus5ttype))==0));
     
     for j=1:numel(unique(trialtype))
         

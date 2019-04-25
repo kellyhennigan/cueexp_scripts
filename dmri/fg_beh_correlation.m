@@ -6,7 +6,7 @@ close all
 
 % get experiment-specific paths and cd to main data directory
 pa = getCuePaths;
-dataDir = pa.data; figDir = pa.figures;
+dataDir = pa.data; figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
@@ -20,8 +20,10 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAL_naccL_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
+
+titleStr = 'NAcc pathway (inferior)';
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'
@@ -30,10 +32,10 @@ scale = 'BIS'
 
 
 % include control variables? 
-% covars = {};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
@@ -57,10 +59,9 @@ end
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
 fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
-[fgMeasures,fgMLabels,scores,subjects,gi]=loadFGBehVars(...
+[fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
-
-
+    
 
 % midi betas:
 % scale = 'gvnant';
@@ -89,6 +90,7 @@ fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
 
 % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+crange=[0 .45];
 fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
 title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
 if saveFigs
@@ -100,48 +102,52 @@ end
 %% fig 2: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
-node = [26:75];
+nodes=26:75; % middle 50% of tract
+% nodes=41:90;
 
-fgPlotIdx = [1:2]; % index of which fg measures to include in corr plots
-%%%%%%%%%%%%%%%
-
-% include control variables? If so, regress out effect of control vars from
-% fgMeasures and scores
-if exist('covars','var') && ~isempty(covars)
+ % THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
+    fa = mean(fgMeasures{1}(:,nodes),2);
+    md = mean(fgMeasures{2}(:,nodes),2);
+    rd = mean(fgMeasures{3}(:,nodes),2);
+    ad = mean(fgMeasures{4}(:,nodes),2);
     
-   % design matrix w/control vars and a vector of ones for intercept
-   X = [ones(n,1),cell2mat(cellfun(@(x) getCueData(subjects,x), covars, 'uniformoutput',0))];
-   
-   % regress control variables out of scores and fgMeasures
-   scores = glm_fmri_fit(scores,X,[],'err_ts');
-   fgMeasures = cellfun(@(y) glm_fmri_fit(y,X,[],'err_ts'), fgMeasures,'uniformoutput',0);
-   
-   cvStr = '_wCVs';
-   
-   %%% note: determine adjusted p-values with: 
-%     p = r2p(r,N-(2+numel(covars))
-   
-else
+    % include control variables? If so, regress out effect of control vars from
+    % fgMeasures and scores
+    if exist('covars','var') && ~isempty(covars)
+        
+        
+        [rfa,pfa]=partialcorr(fa,scores,cvs);
+        [rmd,pmd]=partialcorr(1-md,scores,cvs);
+        [rrd,prd]=partialcorr(rd,scores,cvs);
+        [rad,pad]=partialcorr(ad,scores,cvs);
+        
+        cvStr = ['_wCV_' covars{:}];
+        
+        
+    else
+        
+        [rfa,pfa]=corr(fa,scores);
+        [rmd,pmd]=corr(1-md,scores);
+        [rrd,prd]=corr(rd,scores);
+        [rad,pad]=corr(ad,scores);
+        
+        cvStr = '';
+        
+    end
     
-    cvStr = '';
-   
-end
-
-% get a string describing node(s)
-if numel(node)>1 && ~ischar(node)
-    nodeStr = sprintf('%d_%d',node(1),node(end));
-else
-    nodeStr = num2str(node);
-end
-
-
-% plot it
-fig2 = subplotCorr([],scores,cellfun(@(x) mean(x(:,node),2), fgMeasures(fgPlotIdx),'uniformoutput',0),...
-    strrep(scale,'_',''),fgMLabels(fgPlotIdx),'rp');
-suptitle([strrep(fgStr,'_',' ')])
-% suptitle(fgStr)
+    % strings of corr coefficients and p values for plots
+    corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
+    corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
+    corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
+    corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
+    
+    % plot it
+    fig = subplotCorr([],scores,{fa,1-md,rd,ad},scale,{'FA','1-MD','RD','AD'},corrStr);
+    ti=suptitle(titleStr);
+    set(ti,'FontSize',18)
+    
 if saveFigs
-    outName = [fgMatStr '_' group{:} '_node' nodeStr cvStr];
+    outName = [fgMatStr '_' group{:} cvStr];
     print(gcf,'-dpng','-r300',fullfile(outDir,outName))
 end
 

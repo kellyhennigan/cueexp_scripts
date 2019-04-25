@@ -11,46 +11,77 @@ get libraries & load data
 require(psych)
 
 #load data
-d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190311.csv')
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190326.csv')
+
 
 ```
 
-#pairs plots 1
+#pairs plots 1: age and motion
 
 ```{r pairs plot1, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(putamen_fa,putamen_md,age,dwimotion,BIS))
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,age,dwimotion))
           
 pairs.panels(dp)
 
 ```
 
-#pairs plots 2
+#pairs plots 2: TIPI
 
 ```{r pairs plot2, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
 
 pairs.panels(dp)
 
 ```       
 
-#pairs plots 3
+#pairs plots 3: discount BIS/BAS, and BDI
 
 ```{r pairs plot3, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis))
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
+
+pairs.panels(dp)
+
+```       
+
+#pairs plots 4: BIS subscales
+
+```{r pairs plot4, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,BIS_attn,BIS_motor,BIS_nonplan))
+
+pairs.panels(dp)
+
+```       
+
+#pairs plots 5: MID fMRI measures
+
+```{r pairs plot5, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,d1$nacc_gain5_TR3,d1$nacc_gain5_TR4,d1$nacc_gvnant_beta))
 
 pairs.panels(dp)
 
 ```       
 
 
-#pairs plots 4
+#pairs plots 6: supp fig for manuscript: BIS/BAS, kirby, BDI
 
-```{r pairs plot4, collapse=TRUE, warning=FALSE}
+```{r pairs plot6, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(putamen_fa,putamen_md,BIS,d1$nacc_gain5_TR3,d1$nacc_gain5_TR4,d1$nacc_gvnant_beta))
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
+
+pairs.panels(dp)
+
+```       
+
+#pairs plots 7: supp fig for manuscript: TIPI
+
+```{r pairs plot7, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
 
 pairs.panels(dp)
 

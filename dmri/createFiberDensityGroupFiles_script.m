@@ -105,18 +105,18 @@ end % for fd densities nifti files
 
 %% center of mass files
 %
-% for j=1:numel(inCoMFiles)
-%
-%     CoMfile = inCoMFiles{j};
-%
-%     % load subjects' CoM files & concatenate the coords with subjects in rows
-%     CoMs=cellfun(@(x) dlmread(fullfile(sprintf(inDir,x),CoMfile)), subjects,'uniformoutput',0)
-%     CoMs=cell2mat(CoMs);
-%
-%     % save out concatenated data w/subject ids
-%     T = table([subjects],CoMs);
-%     writetable(T,fullfile(outDir,[CoMfile '_ALL']),'WriteVariableNames',0);
-%
-%
-% end
+for j=1:numel(inCoMFiles)
+
+    CoMfile = inCoMFiles{j};
+
+    % load subjects' CoM files & concatenate the coords with subjects in rows
+    CoMs=cellfun(@(x) dlmread(fullfile(sprintf(inDir,x),CoMfile)), subjects,'uniformoutput',0)
+    CoMs=cell2mat(CoMs);
+
+    % save out concatenated data w/subject ids
+    T = table([subjects],CoMs);
+    writetable(T,fullfile(outDir,[CoMfile '_ALL']),'WriteVariableNames',0);
+
+
+end
 

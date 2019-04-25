@@ -11,18 +11,21 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_190312.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_181115.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
 
+% to do just the published sample:
+idx=find(strcmp(T.subjid,'er171009'));
+T(idx+1:end,:)=[];
 
 % define outcome variable
 Y = 'relIn3Mos';
 
 
-%% omit subjects that have no outcome data 
+%% omit subjects that dont have outcome data as defined above
 
 eval(['T(isnan(T.' Y '),:)=[];']);
 Yy = eval(['T.' Y]);
@@ -126,7 +129,7 @@ end
 
 % modelspec = 'relIn3Mos ~ nacc_drugs_beta';
 % modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
-modelspec = [Y ' ~ nacc_desai_drugs_beta + mpfc_drugs_beta + VTA_drugs_beta'];
+modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
 
 
 res=fitglm(T,modelspec,'Distribution','binomial')

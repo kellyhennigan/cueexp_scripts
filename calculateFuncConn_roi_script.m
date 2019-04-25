@@ -58,6 +58,11 @@ for i=1:numel(subjects)  % subject loop
             % load in roi timecourses for this stim
             roi = dlmread(sprintf(inFile,subject,roiNames{j},stims{k})); roi = mean(roi(:,TRi),2);
             
+            % omit any TRs that have nan values 
+            [oi,~]=ind2sub([numel(roi),2],find(isnan([roi,seed])));
+            seed(unique(oi))=[]; roi(unique(oi))=[];
+            
+            
             % correlate per-trial seed-roi activity
             r{j}(i,k) = corr(seed,roi); 
             

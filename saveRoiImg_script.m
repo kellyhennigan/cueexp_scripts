@@ -6,7 +6,7 @@ close all
 
 p = getCuePaths();
 dataDir = p.data;
-figDir = p.figures;
+figDir = p.figures_dti;
 
 roiName = 'DA';
 roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);

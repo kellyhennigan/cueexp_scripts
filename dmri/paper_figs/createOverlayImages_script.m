@@ -118,7 +118,7 @@ for j = 1:numel(fdImgs)
     
     % plot fiber density overlay
     % [imgRgbs,olMasks,olVals,h,acpcSlices] = plotOverlayImage(nii,t1,cmap,c_range,plane,acpcSlices,doPlot,autoCrop,plotCBar)
-    doPlot=0;
+    doPlot=1;
     [imgRgbs, olMasks,olVals(j,:),~,acpcSlicesOut] = plotOverlayImage(fd,bg,cols{j},c_range{j},plane,acpcSlices,...
         doPlot,ac,plotCBar);
     
