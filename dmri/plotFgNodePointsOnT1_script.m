@@ -6,8 +6,9 @@ close all
 % [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p=getCuePaths();
 task='dti';
-[subjects,gi]=getCueSubjects('dti',0);
 dataDir = p.data;
+
+group='controls';
 
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');
 
