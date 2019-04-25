@@ -42,8 +42,9 @@ for lr=LorR
         
         target = targets{j};
         
+        fgMName = ['DA' lr '_' target lr fgMStr];
         
-        fgMFile=fullfile(fgMDir,['DA' lr '_' target lr fgMStr '.mat']);
+        fgMFile=fullfile(fgMDir,[fgMName '.mat']);
         
         [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
             fgMFile,'',group);
