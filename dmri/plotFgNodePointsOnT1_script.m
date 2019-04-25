@@ -9,11 +9,11 @@ task='dti';
 [subjects,gi]=getCueSubjects(task,0);
 dataDir = p.data;
 
-t1Path = fullfile(dataDir,'templates','mean_t1_tlrc.nii.gz');
+t1Path = fullfile(dataDir,'templates','TT_N27.nii');
 
 method = 'mrtrix_fa';
 fgMDir = fullfile(dataDir,'fgMeasures',method);
-fgMStr = '_autoclean';
+fgMStr = '_belowAC_dil2_autoclean';
 
 LorR = ['L'];
 
