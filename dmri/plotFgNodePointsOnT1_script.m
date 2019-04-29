@@ -85,6 +85,7 @@ for lr=LorR
         writeFileNifti(ol);
         dlmwrite([fgMName '_node' num2str(node) '_subjtlrccoords'],node_coords_tlrc);
         
+        
     end % targets
     
 end % LorR
