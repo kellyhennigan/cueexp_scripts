@@ -8,9 +8,16 @@ p=getCuePaths();
 task='dti';
 dataDir = p.data;
 
+doHiRes=1; 
+
 group='controls';
 
-t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+
+if doHiRes
+    t1Path = fullfile(dataDir,'templates','TT_N27_halfmm.nii.gz');
+else
+    t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+end
 
 method = 'mrtrix_fa';
 fgMDir = fullfile(dataDir,'fgMeasures',method);
@@ -49,8 +56,13 @@ for lr=LorR
         [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
             fgMFile,'',group);
 
+        if doHiRes
+            olName=[fgMName '_node' num2str(node) '_hiRes'];
+        else
+            olName=[fgMName '_node' num2str(node)];
+        end
         
-        ol = createNewNii(t1,[fgMName '_node' num2str(node)]); % create overlay with all zeros for data
+        ol = createNewNii(t1,olName); % create overlay with all zeros for data
         
         % node_coords_tlrc=dlmread('/Users/Kelly/cueexp/data/fgMeasures/DA_naccR_node11_coords_tlrc');
         % node_coords_tlrc=dlmread('/Users/Kelly/cueexp/data/fgMeasures/DA_naccL_node11_coords_tlrc');
@@ -83,7 +95,7 @@ for lr=LorR
         
         cd(outDir)
         writeFileNifti(ol);
-        dlmwrite([fgMName '_node' num2str(node) '_subjtlrccoords'],node_coords_tlrc);
+        dlmwrite([olName '_subjtlrccoords'],node_coords_tlrc);
         
         
     end % targets
