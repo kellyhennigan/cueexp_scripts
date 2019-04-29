@@ -83,6 +83,7 @@ for lr=LorR
         
         cd(outDir)
         writeFileNifti(ol);
+        dlmwrite([fgMName '_node' num2str(node) '_subjtlrccoords'],node_coords_tlrc);
         
     end % targets
     
@@ -90,6 +91,7 @@ end % LorR
 
 %% plot overlay
 
+ 
 % 
 % caud = [238,178,35]./255;       % yellow
 % nacc = [250 24 29]./255;        % red

@@ -30,10 +30,10 @@ fgMatStrs = {'DA%s_%s%s%s_dil2_autoclean';
     'DA%s_%s%s%s_dil2_autoclean';
     'DA%s_%s%s%s_dil2_autoclean'};
 
-titleStrs = {'NAcc pathway (inferior)';...
-    'NAcc pathway (superior)';...
-    'Caudate pathway';...
-    'Putamen pathway'};
+titleStrs = {'Inferior NAcc tract';...
+    'Superior NAcc tract';...
+    'Caudate tract';...
+    'Putamen tract'};
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
@@ -115,11 +115,11 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-        xlab = 'fiber group node';
-        ylab = fgMPlot;
-        %         cols=repmat({getDTIColors(targets{j},fgMatStr)},size(group)); % plot groups as same color
-        
-        figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') ];
+        xlab = 'Location';
+        %         ylab = fgMPlot;
+        %         figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') ];
+        ylab = '';
+        figtitle='';
         
         savePath = fullfile(outDir,[fgMatLabel '_' fgMPlot groupStr]);
         plotToScreen=1;
@@ -129,7 +129,34 @@ for j=1:numel(fgMatStrs)
         %%%%%%%%%%% finally, plot the thing!
         [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols(j,:),pp,lineLabels,...
             xlab,ylab,figtitle,[],plotToScreen,lspec);
+        set(gca,'fontName','Helvetica','fontSize',30)
         hold on
+        
+        %% set ylims based on target
+        
+        % nacc pathways
+        if strcmp(targets{j},'nacc')
+            if k==1 % FA
+                ylim([.2 .37])
+                set(gca,'YTick',[.2:.05:.35])
+            elseif k==2 % MD
+                ylim([.5 .7])
+                set(gca,'YTick',[.5:.05:.7])
+            end
+            
+            % caudate and putamen
+        else
+            if k==1 % FA
+                ylim([.35 .62])
+                set(gca,'YTick',[.35:.05:.6])
+            elseif k==2 % MD
+                ylim([.45 .57])
+                set(gca,'YTick',[.5:.05:.7])
+            end
+            
+        end
+        
+        
         yl=ylim
         plot([26 26],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
         plot([75 75],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
@@ -137,12 +164,32 @@ for j=1:numel(fgMatStrs)
         legend HIDE
         %         print(fig,savePath,'-depsc')
         %         print(fig,savePath,'-dpdf')
+          set(gcf,'Renderer','opengl')
         print(gcf,'-dpng','-r300',savePath);
+         set(gcf,'Renderer','Painters')
+    print(gcf,'-dsvg',savePath)
         
     end % fg measures (fgMPlots)
     
+    
 end % fiber groups (fgMatStrs)
 
+
+%% plot 1 for a legend
+
+%%%%%%%%%%% finally, plot the thing!
+[fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,{[.1 .1 .1],[.1 .1 .1]},pp,lineLabels,...
+    xlab,ylab,figtitle,[],plotToScreen,lspec);
+set(gca,'fontName','Helvetica','fontSize',24)
+legend('location','EastOutside')
+legend('boxoff')
+%         print(fig,savePath,'-depsc')
+%         print(fig,savePath,'-dpdf')
+savePath = fullfile(outDir,['legend']);
+print(gcf,'-dpng','-r300',savePath);
+       set(gcf,'Renderer','Painters')
+    print(gcf,'-dsvg',fullfile(outDir,'legend'))
+  
 
 
 % tic

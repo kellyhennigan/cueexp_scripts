@@ -170,7 +170,9 @@ xlim([x(1) x(end)])
 %% save figure?
 
 if savePath
+%     set(gcf,'Renderer','opengl')
     print(gcf,'-dpng','-r300',savePath);
+   
 end
 
 fprintf('done.\n\n')

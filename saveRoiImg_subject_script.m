@@ -5,15 +5,16 @@
 clear all
 close all
 
-[p,task,subjects,gi]=whichCueSubjects('stim','dti');
-% subjects={'jh160702'};
+% [p,task,subjects,gi]=whichCueSubjects('stim','dti');
+p=getCuePaths;
+subjects={'jh160702','ph161104'};
 dataDir = p.data;
 
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
 roiNames = {'nacc','caudate','putamen'};
 % roiNames = {'DA'};
 
-figDir = p.figures;
+figDir = p.figures_dti;
 
 t1Path = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject ID
 

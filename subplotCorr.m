@@ -72,7 +72,10 @@ if notDefined('xlab')
     xlab = '';
 end
 if ~iscell(xlab)
-    xlab = repmat({xlab},1,nP);
+    xlab={xlab};
+end
+if numel(xlab)==1
+    xlab = repmat(xlab,1,nP);
 end
 
 % y label
@@ -80,7 +83,10 @@ if notDefined('ylab')
     ylab = '';
 end
 if ~iscell(ylab)
-    xlab = repmat({ylab},1,nP);
+    ylab={ylab};
+end
+if numel(ylab)==1
+    ylab = repmat(ylab,1,nP);
 end
 
 % titleStr
@@ -88,7 +94,10 @@ if notDefined('titleStr')
     titleStr = '';
 end
 if ~iscell(titleStr)
-    titleStr = repmat({titleStr},1,nP);
+    titleStr = {titleStr};
+end
+if numel(titleStr)==1
+    titleStr = repmat(titleStr,1,nP);
 end
 
 % col
@@ -109,7 +118,18 @@ for i=1:nP
     
     axH=subplot(nRow,nCol,i);
     [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i},[],[],14);
-
+% 
+%     % FA xlim
+%     if i==1
+%         xlim([.2 .8])
+%         set(gca,'XTick',[.2:.2:.8])
+%     end
+% 
+%     % MD
+%     if i==2
+%         xlim([.3 .6])
+%         set(gca,'XTick',[.3:.1:.6])
+%     end
 end
 
 

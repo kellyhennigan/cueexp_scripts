@@ -20,10 +20,10 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DAL_naccL_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAR_naccR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
-titleStr = 'NAcc pathway (inferior)';
+titleStr = 'right inferior NAcc tract';
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'
@@ -102,14 +102,25 @@ end
 %% fig 2: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
-nodes=26:75; % middle 50% of tract
-% nodes=41:90;
+node=26:75; % middle 50% of tract
+
+
+% get a string describing node(s)
+if isequal(26:75,node)
+    nodeStr = 'mid50';
+elseif numel(node)>1
+    nodeStr = sprintf('%d_%d',node(1),node(end));
+else
+    nodeStr = num2str(node);
+end
+
+% node=41:90;
 
  % THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
-    fa = mean(fgMeasures{1}(:,nodes),2);
-    md = mean(fgMeasures{2}(:,nodes),2);
-    rd = mean(fgMeasures{3}(:,nodes),2);
-    ad = mean(fgMeasures{4}(:,nodes),2);
+    fa = mean(fgMeasures{1}(:,node),2);
+    md = mean(fgMeasures{2}(:,node),2);
+    rd = mean(fgMeasures{3}(:,node),2);
+    ad = mean(fgMeasures{4}(:,node),2);
     
     % include control variables? If so, regress out effect of control vars from
     % fgMeasures and scores
@@ -147,7 +158,7 @@ nodes=26:75; % middle 50% of tract
     set(ti,'FontSize',18)
     
 if saveFigs
-    outName = [fgMatStr '_' group{:} cvStr];
+    outName = [fgMatStr '_' group{:} cvStr nodeStr];
     print(gcf,'-dpng','-r300',fullfile(outDir,outName))
 end
 
