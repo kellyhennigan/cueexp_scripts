@@ -14,7 +14,9 @@ interpN=200;
 cmap_interp = interp1(1:nNodes,cmap_vals,linspace(1,nNodes,interpN));
 
 % Set the colormap
-c = jet(256);
+% c = jet(256);
+c = autumn(256);
+
 lm = linspace(cmap_range(1), cmap_range(2),256);
 
 % Compute the apropriate color for each point on the tract profile

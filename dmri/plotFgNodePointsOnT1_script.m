@@ -10,7 +10,7 @@ dataDir = p.data;
 
 group='controls';
 
-t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+t1Path = fullfile(dataDir,'templates','TT_N27_halfmm.nii.gz');
 
 method = 'mrtrix_fa';
 fgMDir = fullfile(dataDir,'fgMeasures',method);

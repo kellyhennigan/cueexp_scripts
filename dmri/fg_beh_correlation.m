@@ -20,10 +20,10 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DAR_naccR_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAL_naccL_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
-titleStr = 'right inferior NAcc tract';
+titleStr = 'left inferior NAcc tract';
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'
@@ -38,7 +38,7 @@ covars = {};
 % covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr'],method);
+outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
 % omit_subs={'kj180621'};
@@ -83,15 +83,16 @@ n = numel(subjects);
 
 %%%%%%%%%%%%%% params for figure 1
 fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
-fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+fgMPlot = 'MD'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 
 % get correlation between fgMCorr & scores along pathway nodes
 [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
 
 % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
-crange=[0 .45];
-fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,[min(r) max(r)],fgMPlot);
+% crange=[min(r) max(r)];
+crange=[0 .5];
+fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
 title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
 if saveFigs
     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr']))

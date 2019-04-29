@@ -43,9 +43,9 @@ method = 'mrtrix_fa';
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean';...
 %     'DAR_naccR_belowAC_dil2_autoclean'};
-fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean'};
+fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean'};
 
-titleStrs = {'left inferior MFB'};
+titleStrs = {'left inferior NAcc tract'};
 
 
 % which scale to correlate with fiber group measures?
