@@ -79,8 +79,13 @@ for lr=LorR
                 sprintf(xform_aff,subject),...
                 sprintf(xform_invWarp,subject)));
             
-            % get img coords for a sphere around mean coord w/2 voxel radius
-            a=dtiBuildSphereCoords(mrAnatXformCoords(ol.qto_ijk,node_coords_tlrc(i,:)),2);
+            % get img coords for a sphere around mean coord w/2 voxel
+            % radius (or 4 if doing high res)
+            if doHiRes
+                a=dtiBuildSphereCoords(mrAnatXformCoords(ol.qto_ijk,node_coords_tlrc(i,:)),4);
+            else
+                a=dtiBuildSphereCoords(mrAnatXformCoords(ol.qto_ijk,node_coords_tlrc(i,:)),2);
+            end
             
             % get index for those sphere coords
             idx=sub2ind(size(t1.data),a(:,1),a(:,2),a(:,3));
