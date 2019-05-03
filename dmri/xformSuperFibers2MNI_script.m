@@ -77,6 +77,6 @@ ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
 writeFileNifti(ni);
 
 % save out coords as .mat file
-save(fullfile(outDir,[outName '.mat'],fgcoords_mni));
+save(fullfile(outDir,[outName '.mat']),'fgcoords_mni');
 
 
