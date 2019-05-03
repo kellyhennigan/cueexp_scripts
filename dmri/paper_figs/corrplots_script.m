@@ -55,10 +55,10 @@ scale = 'BIS'
 
 
 % include control variables?
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-%  covars = {'age','dwimotion'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -98,8 +98,9 @@ for f=1:numel(fgMatStrs)
     %% figure: plot correlations with fg measures
     
     %%%%%%%%%%%%%%%
-    node=26:75; % middle 50% of tract
+%     node=26:75; % middle 50% of tract
 % node=65;
+node=43:72;
 
 % get a string describing node(s)
 if isequal(26:75,node)

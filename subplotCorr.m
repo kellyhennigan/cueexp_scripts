@@ -121,14 +121,14 @@ for i=1:nP
 % 
 %     % FA xlim
 %     if i==1
-%         xlim([.2 .8])
-%         set(gca,'XTick',[.2:.2:.8])
+%         xlim([.1 .4])
+%         set(gca,'XTick',[.1:.1:.4])
 %     end
-% 
+% % 
 %     % MD
 %     if i==2
-%         xlim([.3 .6])
-%         set(gca,'XTick',[.3:.1:.6])
+%         xlim([.21 .55])
+%         set(gca,'XTick',[.3:.1:.5])
 %     end
 end
 

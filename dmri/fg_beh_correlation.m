@@ -31,21 +31,19 @@ scale = 'BIS'
 % scale = 'nacc_nvlout_betas';
 
 
-% include control variables? 
-covars = {};
+% include control variables?
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
-% omit_subs={'kj180621'};
-% omit_subs={'al151016','as160129','ph161104'};
-% omit_subs={'nd150921','dd170610','li160927'};
-% omit_subs={'nd150921','dd170610'};
 omit_subs={};
+
+
 
 %% load data & create out directory, if needed
 
@@ -61,7 +59,7 @@ end
 fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 [fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
-    
+
 
 % midi betas:
 % scale = 'gvnant';
@@ -70,12 +68,22 @@ fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 % scores0 = loadRoiTimeCourses('gain0.csv',subjects,4);
 % scores=scores5-scores0;
 
-% cue betas: 
+% cue betas:
 % scale = 'vta_drug_betas';
 % scores = loadRoiTimeCourses('/Users/kelly/cueexp/data/results_cue_afni/roi_betas/VTA/drugs.csv',subjects);
 
 
-n = numel(subjects); 
+n = numel(subjects);
+
+
+%% covars:
+
+if ~notDefined('covars')
+    cvs=cell2mat(cellfun(@(x) getCueData(subjects,x), covars, 'uniformoutput',0));
+    cvStr = ['_wCV_' covars{:}];
+else
+    cvStr = '';
+end
 
 
 %% fig 1: plot behavior-fg correlation as heatmap over trajectory of fg
@@ -87,7 +95,11 @@ fgMPlot = 'MD'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 
 % get correlation between fgMCorr & scores along pathway nodes
-[r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+if ~notDefined('covars')
+    [r,p]=partialcorr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))},cvs);
+else
+    [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+end
 
 % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
 % crange=[min(r) max(r)];
@@ -95,7 +107,7 @@ crange=[0 .5];
 fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
 title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
 if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr']))
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr' cvStr]))
 end
 
 
@@ -117,53 +129,47 @@ end
 
 % node=41:90;
 
- % THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
-    fa = mean(fgMeasures{1}(:,node),2);
-    md = mean(fgMeasures{2}(:,node),2);
-    rd = mean(fgMeasures{3}(:,node),2);
-    ad = mean(fgMeasures{4}(:,node),2);
+% THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
+fa = mean(fgMeasures{1}(:,node),2);
+md = mean(fgMeasures{2}(:,node),2);
+rd = mean(fgMeasures{3}(:,node),2);
+ad = mean(fgMeasures{4}(:,node),2);
+
+% include control variables? If so, regress out effect of control vars from
+% fgMeasures and scores
+if ~notDefined('covars')
     
-    % include control variables? If so, regress out effect of control vars from
-    % fgMeasures and scores
-    if exist('covars','var') && ~isempty(covars)
-        
-        
-        [rfa,pfa]=partialcorr(fa,scores,cvs);
-        [rmd,pmd]=partialcorr(1-md,scores,cvs);
-        [rrd,prd]=partialcorr(rd,scores,cvs);
-        [rad,pad]=partialcorr(ad,scores,cvs);
-        
-        cvStr = ['_wCV_' covars{:}];
-        
-        
-    else
-        
-        [rfa,pfa]=corr(fa,scores);
-        [rmd,pmd]=corr(1-md,scores);
-        [rrd,prd]=corr(rd,scores);
-        [rad,pad]=corr(ad,scores);
-        
-        cvStr = '';
-        
-    end
+    [rfa,pfa]=partialcorr(fa,scores,cvs);
+    [rmd,pmd]=partialcorr(1-md,scores,cvs);
+    [rrd,prd]=partialcorr(rd,scores,cvs);
+    [rad,pad]=partialcorr(ad,scores,cvs);
     
-    % strings of corr coefficients and p values for plots
-    corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
-    corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
-    corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
-    corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
+else
     
-    % plot it
-    fig = subplotCorr([],scores,{fa,1-md,rd,ad},scale,{'FA','1-MD','RD','AD'},corrStr);
-    ti=suptitle(titleStr);
-    set(ti,'FontSize',18)
+    [rfa,pfa]=corr(fa,scores);
+    [rmd,pmd]=corr(1-md,scores);
+    [rrd,prd]=corr(rd,scores);
+    [rad,pad]=corr(ad,scores);
     
+end
+
+% strings of corr coefficients and p values for plots
+corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
+corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
+corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
+corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
+
+% plot it
+fig = subplotCorr([],scores,{fa,1-md,rd,ad},scale,{'FA','1-MD','RD','AD'},corrStr);
+ti=suptitle(titleStr);
+set(ti,'FontSize',18)
+
 if saveFigs
     outName = [fgMatStr '_' group{:} cvStr nodeStr];
     print(gcf,'-dpng','-r300',fullfile(outDir,outName))
 end
 
-%%%% NOTE: if control variables are included, the p-values need to be 
+%%%% NOTE: if control variables are included, the p-values need to be
 % adjusted to account for the difference in degrees of freedom!! (1 less
 % degree of freedom per covariate)
 

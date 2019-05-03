@@ -15,17 +15,28 @@ outDir = [p.figures_dti '/fgm_trajectories'];
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
+% targets={'nacc';
+%     'nacc';
+%     'nacc';
+%     'caudate';
+%     'putamen'};
+% 
+% fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
+%     'DALR_%sLR_aboveAC_dil2_autoclean';
+%     'DALR_%sLR_dil2_autoclean';
+%     'DALR_%sLR_dil2_autoclean';
+%     'DALR_%sLR_dil2_autoclean'};
 targets={'nacc';
     'nacc';
     'nacc';
-    'caudate';
-    'putamen'};
+    'nacc'};
 
-fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
-    'DALR_%sLR_aboveAC_dil2_autoclean';
-    'DALR_%sLR_dil2_autoclean';
-    'DALR_%sLR_dil2_autoclean';
-    'DALR_%sLR_dil2_autoclean'};
+fgMatStrs = {'DAL_%sL_belowAC_dil2_autoclean';
+    'DAR_%sR_belowAC_dil2_autoclean';
+    'DAL_%sL_aboveAC_dil2_autoclean';
+    'DAR_%sR_aboveAC_dil2_autoclean'};
+   
+
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
