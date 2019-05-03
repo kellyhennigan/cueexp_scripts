@@ -66,7 +66,7 @@ end % subject loop
 
 % save out as fiber group
 fg = dtiNewFiberGroup(outName, [],[],1,fgcoords_mni);
-mtrExportFibers(fg,fullfile(outDir,outName);
+mtrExportFibers(fg,fullfile(outDir,outName));
 
 % save out as density map
 %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
