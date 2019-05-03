@@ -42,42 +42,41 @@ t1=niftiRead(t1Path); % load background image
 [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
     fgMFile,'',group);
 
-      
-            olName=[fgMName '_group_mni' ];
-     
-        
-        ol = createNewNii(t1,olName); % create overlay with all zeros for data
-        
-         
-        % node_coords_tlrc=dlmread('/Users/Kelly/cueexp/data/fgMeasures/DA_naccR_node11_coords_tlrc');
-        % node_coords_tlrc=dlmread('/Users/Kelly/cueexp/data/fgMeasures/DA_naccL_node11_coords_tlrc');
-  
-        i=1
-        for i=1:size(subjects)
-            
-            subject = subjects{i};
-            
-            fprintf('\nworking on subject %s...\n',subject)
-            
-            % % get subject's node coords in tlrc space
-            fgcoords_tlrc = xformCoordsANTs(SuperFibers(i).fibers{1},...
-                sprintf(xform_aff,subject),...
-                sprintf(xform_invWarp,subject))';
-            
-            fgcoords_mni{i,1} = xformCoordsANTs(fgcoords_tlrc,xform_aff2,xform_invWarp2)';
-              
-            
-            fprintf('\ndone.\n')
-            
-        end % subject loop
-        
-        fg = dtiNewFiberGroup(olName, [],[],1,fibers
-        
-        cd(outDir)
-        writeFileNifti(ol);
-        dlmwrite([olName '_subjtlrccoords'],node_coords_tlrc);
-        
-        
-    end % targets
+
+outName=[fgMName '_group_mni' ];
+
+i=1
+for i=1:size(subjects)
     
-end % LorR
+    subject = subjects{i};
+    
+    fprintf('\nworking on subject %s...\n',subject)
+    
+    % % get subject's node coords in tlrc space
+    fgcoords_tlrc = xformCoordsANTs(SuperFibers(i).fibers{1},...
+        sprintf(xform_aff,subject),...
+        sprintf(xform_invWarp,subject))';
+    
+    fgcoords_mni{i,1} = xformCoordsANTs(fgcoords_tlrc,xform_aff2,xform_invWarp2)';
+    
+    
+    fprintf('\ndone.\n')
+    
+end % subject loop
+
+% save out as fiber group
+fg = dtiNewFiberGroup(outName, [],[],1,fgcoords_mni);
+mtrExportFibers(fg,fullfile(outDir,outName);
+
+% save out as density map
+%fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
+fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
+
+% save new fiber density file
+ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+writeFileNifti(ni);
+
+% save out coords as .mat file
+save(fullfile(outDir,[outName '.mat'],fgcoords_mni);
+
+
