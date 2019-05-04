@@ -68,7 +68,7 @@ dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
 xform_aff=fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt');
 xform_warp=fullfile(dataDir,'%s','t1','t12tlrc_xform_Warp.nii.gz');
 xform_aff2=fullfile(dataDir,'templates','tlrc2mni_xform_Affine.txt');
-xform_invWarp2=fullfile(dataDir,'templates','tlrc2mni_xform_InverseWarp.nii.gz');
+xform_warp2=fullfile(dataDir,'templates','tlrc2mni_xform_Warp.nii.gz');
 
 
 % options
