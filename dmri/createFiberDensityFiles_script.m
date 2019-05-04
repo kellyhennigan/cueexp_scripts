@@ -33,17 +33,17 @@ method = 'mrtrix_fa';
 
 
 seed = 'DA';
-targets = {'caudate','putamen'};
-% targets = {'nacc','nacc','caudate','putamen'};
+% targets = {'caudate','putamen'};
+targets = {'nacc','nacc','caudate','putamen'};
 % targets = {'nacc','nacc'};
 
 % string to identify fiber group files (must correspond to targets cell array) 
-% fgFileStrs = {'belowAC_dil2_autoclean',...
-%     'aboveAC_dil2_autoclean',...
-%     'dil2_autoclean',...
-%     'dil2_autoclean'};
-fgFileStrs = {'autoclean',...
-    'autoclean'};
+fgFileStrs = {'belowAC_dil2_autoclean',...
+    'aboveAC_dil2_autoclean',...
+    'dil2_autoclean',...
+    'dil2_autoclean'};
+% fgFileStrs = {'autoclean',...
+%     'autoclean'};
 
     % files are named [target fgFileStr '.pdb']
 
@@ -67,10 +67,12 @@ dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
 % subject-specific xforms for native > tlrc space
 xform_aff=fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt');
 xform_warp=fullfile(dataDir,'%s','t1','t12tlrc_xform_Warp.nii.gz');
+xform_aff2=fullfile(dataDir,'templates','tlrc2mni_xform_Affine.txt');
+xform_invWarp2=fullfile(dataDir,'templates','tlrc2mni_xform_InverseWarp.nii.gz');
 
 
 % options
-only_seed_endpts = 1; % create density maps of only seed endpoints?
+only_seed_endpts = 0; % create density maps of only seed endpoints?
 only_endpts = 0; % create density maps of only seed/target endpoints?
 smooth = 0; % 0 or empty to not smooth, otherwise this defines the smoothing kernel
 
@@ -141,16 +143,20 @@ for i=1:numel(subjects)
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
             
-            % save out center of mass coords
-            imgCoM = centerofmass(nii.data);
-            CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
-            dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
+%             % save out center of mass coords
+%             imgCoM = centerofmass(nii.data);
+%             CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
+%             dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
             
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
-            outFile=[outPath '_tlrc.nii.gz'];
-            outNii=xformANTs(inFile,outFile,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
+            outFileTLRC=[outPath '_tlrc.nii.gz'];
+            outNiiTLRC=xformANTs(inFile,outFileTLRC,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
+            
+            outFile=[outPath '_mni.nii.gz'];
+            outNii=xformANTs(outFileTLRC,outFile,xform_aff2,xform_warp2);
             outNii.data=outNii.data./max(outNii.data(:));
+            
             
             % Smooth the image?
             if smooth
@@ -160,10 +166,10 @@ for i=1:numel(subjects)
             writeFileNifti(outNii);
             
             % save out center of mass coords for tlrc space
-            imgCoM = centerofmass(outNii.data);
-            CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
-            dlmwrite(fullfile(thisFdDir,[outName '_CoM_tlrc']),CoM);
-       
+%             imgCoM = centerofmass(outNii.data);
+%             CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
+%             dlmwrite(fullfile(thisFdDir,[outName '_CoM_tlrc']),CoM);
+%        
             if mergeLR
                 lrFileNames{end+1}=outNii.fname;
             end
