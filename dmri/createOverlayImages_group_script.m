@@ -12,7 +12,8 @@ dataDir=p.data;
 cd(dataDir);
 
 % filepath to background image
-bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
+% bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
+bg = niftiRead(fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii'));
 
 % filepath to mask, if desired
 % maskFilePath = fullfile(dataDir,'ROIs','DA.nii');
@@ -35,12 +36,15 @@ smoothstr='';
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz']};
 
-fdFileStrs = {
-    ['DA_%s_belowAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
-    };
+% fdFileStrs = {
+%     ['DA_%s_belowAC_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
+%     };
 % fdFileStrs = {
 %     ['DA_%s_dil2_autoclean_DAendpts_tlrc' smoothstr '_MEAN.nii.gz'];
 %     };
+fdFileStrs = {
+    ['DA_%s_belowAC_dil2_autoclean_mni' smoothstr '_MEAN.nii.gz'];
+    };
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
@@ -60,8 +64,9 @@ q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 plane=3;
 acpcSlices=-10;
 
-cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
+% cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
 % cols=cellfun(@flipud, cols,'uniformoutput',0)
+cols=autumn(64);
 
 ac=[]; % auto-crop images? inf means no cropping
 
@@ -126,7 +131,7 @@ for j = 1:numel(fdImgs)
     % plot fiber density overlay
     % [imgRgbs,olMasks,olVals,h,acpcSlices] = plotOverlayImage(nii,t1,cmap,c_range,plane,acpcSlices,doPlot,autoCrop,plotCBar)
     doPlot=0;
-    [imgRgbs, olMasks,olVals(j,:),~,acpcSlicesOut] = plotOverlayImage(fd,bg,cols{j},c_range{j},plane,acpcSlices,...
+    [imgRgbs, olMasks,olVals(j,:),~,acpcSlicesOut] = plotOverlayImage(fd,bg,{cols},c_range{j},plane,acpcSlices,...
         doPlot,ac,plotCBar);
     
     
