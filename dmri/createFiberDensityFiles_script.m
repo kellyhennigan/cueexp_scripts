@@ -146,7 +146,7 @@ for i=1:numel(subjects)
             writeFileNifti(nii);
             
             %             % save out center of mass coords
-            if only_seed_enpts
+            if only_seed_endpts
                 imgCoM = centerofmass(nii.data);
                 CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
                 dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
