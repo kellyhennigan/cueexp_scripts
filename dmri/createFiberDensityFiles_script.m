@@ -6,7 +6,7 @@
 % saves out niftis that contain a count of the number of fibers in each
 % voxel
 
-% 
+%
 % NOTE: this script first saves out the L and R fiber density maps, then
 % xforms them to tlrc space and normalizes them so that they each have a
 % max value of 1, combines L and R sides. Also saves out center of mass
@@ -34,18 +34,20 @@ method = 'mrtrix_fa';
 
 seed = 'DA';
 % targets = {'caudate','putamen'};
-targets = {'nacc','nacc','caudate','putamen'};
+% targets = {'nacc','nacc','caudate','putamen'};
 % targets = {'nacc','nacc'};
+targets = {'nacc'};
 
-% string to identify fiber group files (must correspond to targets cell array) 
-fgFileStrs = {'belowAC_dil2_autoclean',...
-    'aboveAC_dil2_autoclean',...
-    'dil2_autoclean',...
-    'dil2_autoclean'};
+% string to identify fiber group files (must correspond to targets cell array)
+% fgFileStrs = {'belowAC_dil2_autoclean',...
+%     'aboveAC_dil2_autoclean',...
+%     'dil2_autoclean',...
+%     'dil2_autoclean'};
 % fgFileStrs = {'autoclean',...
 %     'autoclean'};
+fgFileStrs = {'belowAC_dil2_autoclean'};
 
-    % files are named [target fgFileStr '.pdb']
+% files are named [target fgFileStr '.pdb']
 
 
 % string to include on outfile?
@@ -143,10 +145,12 @@ for i=1:numel(subjects)
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
             
-%             % save out center of mass coords
-%             imgCoM = centerofmass(nii.data);
-%             CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
-%             dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
+            %             % save out center of mass coords
+            if only_seed_enpts
+                imgCoM = centerofmass(nii.data);
+                CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
+                dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
+            end
             
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
@@ -166,10 +170,12 @@ for i=1:numel(subjects)
             writeFileNifti(outNii);
             
             % save out center of mass coords for tlrc space
-%             imgCoM = centerofmass(outNii.data);
-%             CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
-%             dlmwrite(fullfile(thisFdDir,[outName '_CoM_tlrc']),CoM);
-%        
+            if only_seed_endpts
+                imgCoM = centerofmass(outNii.data);
+                CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
+                dlmwrite(fullfile(thisFdDir,[outName '_CoM_mni']),CoM);
+            end
+            
             if mergeLR
                 lrFileNames{end+1}=outNii.fname;
             end
@@ -179,7 +185,7 @@ for i=1:numel(subjects)
         end % lr
         
         if mergeLR
-            outPathLR = fullfile(thisFdDir,[strrep(strrep(outName,'R',''),'L','') '_tlrc.nii.gz']);
+            outPathLR = fullfile(thisFdDir,[strrep(strrep(outName,'R',''),'L','') '_mni.nii.gz']);
             niiLR=mergeNiis({lrFileNames{1},lrFileNames{2}},outPathLR);
             writeFileNifti(niiLR);
         end

@@ -41,7 +41,7 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 inNiiFileStrs = {
     'DAL_naccL_belowAC_dil2_autoclean_mni';
     'DAR_naccR_belowAC_dil2_autoclean_mni';
-    'DALR_naccLR_belowAC_dil2_autoclean_mni';
+    'DA_nacc_belowAC_dil2_autoclean_mni';
     'DAL_naccL_aboveAC_dil2_autoclean_mni';
     'DAR_naccR_aboveAC_dil2_autoclean_mni';
     'DALR_naccLR_aboveAC_dil2_autoclean_mni';
