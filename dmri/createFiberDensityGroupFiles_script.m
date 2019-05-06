@@ -38,23 +38,29 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 %     'DAR_putamenR_autoclean_DAendpts_tlrc';
 %     'DA_putamen_autoclean_DAendpts_tlrc'
 %     };
+% inNiiFileStrs = {
+%     'DAL_naccL_belowAC_dil2_autoclean_mni';
+%     'DAR_naccR_belowAC_dil2_autoclean_mni';
+%     'DA_nacc_belowAC_dil2_autoclean_mni';
+%     'DAL_naccL_aboveAC_dil2_autoclean_mni';
+%     'DAR_naccR_aboveAC_dil2_autoclean_mni';
+%     'DALR_naccLR_aboveAC_dil2_autoclean_mni';
+%     'DAL_caudateL_dil2_autoclean_mni';
+%     'DAR_caudateR_dil2_autoclean_mni';
+%     'DALR_caudateLR_dil2_autoclean_mni';
+%     'DA_caudate_dil2_autoclean_mni';
+%     'DAL_putamenL_dil2_autoclean_mni';
+%     'DAR_putamenR_adil2_utoclean_mni';
+%     'DA_putamen_autoclean_mni'
+%     };
+% 
 inNiiFileStrs = {
     'DAL_naccL_belowAC_dil2_autoclean_mni';
     'DAR_naccR_belowAC_dil2_autoclean_mni';
-    'DA_nacc_belowAC_dil2_autoclean_mni';
-    'DAL_naccL_aboveAC_dil2_autoclean_mni';
-    'DAR_naccR_aboveAC_dil2_autoclean_mni';
-    'DALR_naccLR_aboveAC_dil2_autoclean_mni';
-    'DAL_caudateL_dil2_autoclean_mni';
-    'DAR_caudateR_dil2_autoclean_mni';
-    'DALR_caudateLR_dil2_autoclean_mni';
-    'DA_caudate_dil2_autoclean_mni';
-    'DAL_putamenL_dil2_autoclean_mni';
-    'DAR_putamenR_adil2_utoclean_mni';
-    'DA_putamen_autoclean_mni'
-    };
+    'DA_nacc_belowAC_dil2_autoclean_mni'};
 
 
+inCoMFiles={};
 % inNiiFileStrs = {'DAL_naccL_belowAC_dil2_autoclean_tlrc';
 %     'DAR_naccR_belowAC_dil2_autoclean_tlrc';
 %     'DAL_naccL_aboveAC_dil2_autoclean_tlrc';
@@ -102,7 +108,7 @@ for j=1:numel(inNiiFileStrs)
     writeFileNifti(outNii);
     
     % play nice in afni
-    cmd = sprintf(['3drefit -view tlrc -space tlrc ' outNii.fname]);
+    cmd = sprintf(['3drefit -view tlrc -space mni ' outNii.fname]);
     system(cmd);
     
     % save out nifti file of the mean across subjects
@@ -111,7 +117,7 @@ for j=1:numel(inNiiFileStrs)
     writeFileNifti(outNii);
     
     % play nice in afni
-    cmd = sprintf(['3drefit -view tlrc -space tlrc ' outNii.fname]);
+    cmd = sprintf(['3drefit -view tlrc -space mni ' outNii.fname]);
     system(cmd);
     
 end % for fd densities nifti files
