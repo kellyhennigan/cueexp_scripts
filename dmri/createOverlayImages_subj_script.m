@@ -13,11 +13,12 @@ cd(dataDir);
 
 
 % cell array of subject ids to process
-subjects=getCueSubjects('dti',0);
+% subjects=getCueSubjects('dti',0);
 % subjects = {'zl150930','tm160117'};
-subjects = {'tm160117'};
+% subjects = {'tm160117'};
+subjects={'controls'};
 
-bgFilePath = fullfile(dataDir,'%s','t1','t1_tlrc.nii.gz');
+bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
 
 
 % filepath to mask, if desired
@@ -29,40 +30,47 @@ method = 'mrtrix_fa';
 smoothstr='';
 
 % directory with fiber density files
-fdDir = fullfile(dataDir,'%s','fg_densities',method);
+fdDir = fullfile(dataDir,'fg_densities',method);
 
 
 % filenames of fiber density files; %s is target
 % NOTE: this should be in a cell array with L and R fd maps from the same
 % ROIs in the same row, and different paths in different columns, e.g.:
-% fdFileStrs = {['DA_%s_belowAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
-%     ['DA_%s_aboveAC_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']
-%     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
-%     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz']};
-% 
-fdFileStrs = {
-    ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc.nii.gz'];
-    };
+if strcmp(subjects{1},'controls')
+    fdFileStrs = {['DA_%s_belowAC_dil2' smoothstr '_autoclean_DAendpts_tlrc_MEAN'];
+        ['DA_%s_aboveAC_dil2' smoothstr '_autoclean_DAendpts_tlrc_MEAN']
+        ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc_MEAN'];
+        ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc_MEAN']};
+else
+    fdFileStrs = {['DA_%s_belowAC_dil2' smoothstr '_autoclean_DAendpts_tlrc_ALL'];
+        ['DA_%s_aboveAC_dil2' smoothstr '_autoclean_DAendpts_tlrc_ALL']
+        ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc_ALL'];
+        ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc_ALL']};
+end
+%
+% fdFileStrs = {
+%     ['DA_%s_dil2' smoothstr '_autoclean_DAendpts_tlrc_ALL.nii.gz'];
+%     };
 
 
 % NOTE: this should be a cell array that matches the dimensions of
 % fdFileStrs above
-% targets={'nacc';
-%     'nacc';
-%     'caudate';
-%     'putamen'};
-targets={
+targets={'nacc';
+    'nacc';
+    'caudate';
     'putamen'};
+% targets={
+%     'putamen'};
 
-thresh=.1; % value to threshold maps; otherwise 0 to not threshold
+thresh=.05; % value to threshold maps; otherwise 0 to not threshold
 
 scale = 0; % 1 to scale, otherwise 0
 
-c_range=[.1 .9]; % min/max quantiles of data values to determine color range
+q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
-plane=2; % which plane to plot
+plane=3; % which plane to plot
 
-acpcSlices=[-18]; % which acpc slices to plot
+acpcSlices=[-10]; % which acpc slices to plot
 % acpcSlices=[]; % which acpc slices to plot
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
@@ -71,27 +79,20 @@ ac=[]; % auto-crop images? inf means no cropping
 
 plotCBar = 0;
 
-saveFigs = 0; % [1/0 to save out slice image, 1/0 to save out cropped image]
+saveSingleFDFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
+saveCombinedFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
 
-figDir = [p.figures '/fg_densities'];
+figDir = [p.figures_dti '/fg_densities'];
 
-figPrefix = ['NCP' smoothstr];
+figPrefix = ['NCP_tlrc_' smoothstr];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
 
-s=1
-for s=1:numel(subjects)
-    
-    subject=subjects{s};
-    
-    % load background image
-    bg = niftiRead(sprintf(bgFilePath,subject));
-    
     
     % load fiber density files
-    fd = cellfun(@(x,y) niftiRead(fullfile(sprintf(fdDir,subject),sprintf(x,y))), fdFileStrs, targets);
+    fd = cellfun(@(x,y) niftiRead(fullfile(sprintf(fdDir),sprintf([x '.nii.gz'],y))), fdFileStrs, targets);
     fdImgs ={fd(:).data}; fdImgs=reshape(fdImgs,size(targets));
     fd = fd(1);  fdXform = fd.qto_xyz;
     
@@ -120,6 +121,12 @@ for s=1:numel(subjects)
     end
     
     
+    % determine c_range for each overlay
+    if ~notDefined('q_crange')
+        c_range=cellfun(@(x) quantile(x(x~=0),[q_crange]), fdImgs,'UniformOutput',0);
+    end
+    
+           
     % if acpcSlices isn't defined, plot center of mass coords
     if notDefined('acpcSlices') || isempty('acpcSlices')
         coords = round(cell2mat(reshape(cellfun(@(x) getNiiVolStat(x,fd.qto_xyz,'com'), fdImgs, 'UniformOutput',0), [], 1)));
@@ -132,26 +139,40 @@ for s=1:numel(subjects)
     
     %% plot overlay(s)
     
+    s=1
+for s=1:numel(subjects)
     
+    subject=subjects{s};
+    
+
     j=1;
     for j = 1:nOls
         
-        
+ 
         % put L/R density maps into nifti structure for its header info
-        fd.data = fdImgs{j};
+        fd.data = fdImgs{j}(:,:,:,s);
         
         
         % plot fiber density overlay
-        doPlot=0;
-        [imgRgbs, olMasks,olVals(j,:),~,acpcSlicesOut] = plotOverlayImage(fd,bg,cols{j},c_range,plane,acpcSlices,doPlot,ac,plotCBar);
-        
+        doPlot=1;
+        [imgRgbs, olMasks,olVals(j,:),h,acpcSlicesOut] = plotOverlayImage(fd,bg,cols{j},c_range{j},plane,acpcSlices,doPlot,ac,plotCBar);
+       
+        % save out single 
+        if saveSingleFDFigs
+            outDir = fullfile(figDir,sprintf(fdFileStrs{j},targets{j}));
+            if ~exist(outDir,'dir')
+                mkdir(outDir)
+            end
+            for k=1:numel(acpcSlicesOut)
+                print(h(k),'-dpng','-r300',fullfile(outDir,[subject '_plane' num2str(plane) '_' num2str(acpcSlicesOut)]));
+            end
+        end
         
         % cell array of just rgb values for overlays
         olRgb(j,:) = cellfun(@(x,y) x.*y, imgRgbs, olMasks,'UniformOutput',0);
         
         
     end % nOls
-    
     
     
     %% now combine fiber density overlays for each slice
@@ -179,26 +200,19 @@ for s=1:numel(subjects)
         thisImg(isnan(thisImg))=bgImg(isnan(thisImg)); thisImg(thisImg==0)=bgImg(thisImg==0);
         
         
-        % cell array w/all combined overlays to plot
-        slImgs{k} = thisImg;
-        
+%         % cell array w/all combined overlays to plot
+%         slImgs{k} = thisImg;
+%         
+%         
+        % plot overlay and save new figure
+        [h,figNames]= plotFDMaps(thisImg,plane,acpcSlicesOut(k),saveFigs,figDir,[figPrefix '_' subject]);
+    
         
     end % acpcSlices
     
     
-    
-    %% now plot and (if desired) save images
-    
-    % put acpcSlices into cell array for cellfun
-    acpcSlicesOut = num2cell(acpcSlicesOut);
-    
-    
-    % plot overlay and save new figure
-    [h,figNames]= cellfun(@(x,y) plotFDMaps(x,plane,y,saveFigs,figDir,[figPrefix '_' subject]), slImgs, acpcSlicesOut, 'UniformOutput',0);
-    
-    %     close all
-    
     clear olVals olRgb slImgs
+    
     
 end % subjects
 

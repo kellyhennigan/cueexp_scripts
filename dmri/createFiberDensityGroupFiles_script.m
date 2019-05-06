@@ -62,13 +62,12 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 inNiiFileStrs = {
     'DAL_naccL_aboveAC_dil2_autoclean_mni';
     'DAR_naccR_aboveAC_dil2_autoclean_mni';
-    'DALR_naccLR_aboveAC_dil2_autoclean_mni';
+    'DA_nacc_aboveAC_dil2_autoclean_mni';
     'DAL_caudateL_dil2_autoclean_mni';
     'DAR_caudateR_dil2_autoclean_mni';
-    'DALR_caudateLR_dil2_autoclean_mni';
     'DA_caudate_dil2_autoclean_mni';
     'DAL_putamenL_dil2_autoclean_mni';
-    'DAR_putamenR_adil2_utoclean_mni';
+    'DAR_putamenR_dil2_utoclean_mni';
     'DA_putamen_autoclean_mni'
     };
 
