@@ -36,7 +36,8 @@ seed = 'DA';
 % targets = {'caudate','putamen'};
 % targets = {'nacc','nacc','caudate','putamen'};
 % targets = {'nacc','nacc'};
-targets = {'nacc'};
+% targets = {'nacc'};
+targets = {'nacc','caudate','putamen'};
 
 % string to identify fiber group files (must correspond to targets cell array)
 % fgFileStrs = {'belowAC_dil2_autoclean',...
@@ -45,7 +46,10 @@ targets = {'nacc'};
 %     'dil2_autoclean'};
 % fgFileStrs = {'autoclean',...
 %     'autoclean'};
-fgFileStrs = {'belowAC_dil2_autoclean'};
+% fgFileStrs = {'belowAC_dil2_autoclean'};
+fgFileStrs = {'aboveAC_dil2_autoclean',...
+    'dil2_autoclean',...
+    'dil2_autoclean'};
 
 % files are named [target fgFileStr '.pdb']
 
