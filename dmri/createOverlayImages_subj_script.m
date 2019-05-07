@@ -16,9 +16,6 @@ cd(dataDir);
 % subjects=getCueSubjects('dti',0);
 subjects={'controls'};
 
-bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
-
-
 % filepath to mask, if desired
 % maskFilePath = fullfile(dataDir,'ROIs','DA.nii');
 
@@ -51,7 +48,11 @@ else
         ['DA_%s_dil2' smoothstr '_autoclean' endptStr '_' gspace '_ALL']};
 end
 
-
+if strcmp(gspace,'tlrc')
+    bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
+elseif strcmp(gspace,'mni')
+    bg = niftiRead(fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii'));
+end
 
 %
 % fdFileStrs = {
@@ -68,15 +69,17 @@ targets={'nacc';
 % targets={
 %     'putamen'};
 
-thresh=.05; % value to threshold maps; otherwise 0 to not threshold
+thresh=.1; % value to threshold maps; otherwise 0 to not threshold
 
 scale = 0; % 1 to scale, otherwise 0
 
-q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
+q_crange=[.1 .6]; % min/max quantiles of data values to determine color range
+
+plane=2; % which plane to plot
+acpcSlices=[-20:2:10]; % which acpc slices to plot
 
 plane=3; % which plane to plot
-
-acpcSlices=[-1]; % which acpc slices to plot
+acpcSlices=[-18:2:-12]; % which acpc slices to plot
 % acpcSlices=[]; % which acpc slices to plot
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
@@ -85,12 +88,15 @@ ac=[]; % auto-crop images? inf means no cropping
 
 plotCBar = 0;
 
-saveSingleFDFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
-saveCombinedFigs = 1; % [1/0 to save out slice image, 1/0 to save out cropped image]
+saveSingleFDFigs = 0; % [1/0 to save out slice image, 1/0 to save out cropped image]
+
+plotCombinedOverlays = 1; % 1 to plot combined fiber density overlays, otherwise 0
+
+saveCombinedFigs = 1; % 1 to save otherwise 0 (if plotCombineOverlays=0, these wont save)
 
 figDir = [p.figures_dti '/fg_densities'];
 
-figPrefix = ['NCP_tlrc_' smoothstr];
+figPrefix = ['NCP_' gspace '_' smoothstr];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,8 +175,16 @@ for s=1:numel(subjects)
             if ~exist(outDir,'dir')
                 mkdir(outDir)
             end
+            switch plane
+                    case 1
+                        planeStr = 'X=';
+                    case 2
+                        planeStr = 'Y=';
+                    case 3
+                        planeStr = 'Z=';
+            end
             for k=1:numel(acpcSlicesOut)
-                print(h(k),'-dpng','-r300',fullfile(outDir,[subject '_plane' num2str(plane) '_' num2str(acpcSlicesOut)]));
+                print(h{k},'-dpng','-r300',fullfile(outDir,[subject '_' planeStr num2str(acpcSlicesOut(k)) '_' gspace smoothstr ]));
             end
         end
         
@@ -183,37 +197,41 @@ for s=1:numel(subjects)
     
     %% now combine fiber density overlays for each slice
     
-    
-    for k=1:numel(acpcSlicesOut)
+    if plotCombinedOverlays
         
         
-        bgImg = imgRgbs{k}; % this is the background image (w/some overlay values for the last fd)
+        for k=1:numel(acpcSlicesOut)
+            
+            
+            bgImg = imgRgbs{k}; % this is the background image (w/some overlay values for the last fd)
+            
+            
+            % get overlay values for this slice
+            sl=cell2mat(permute(olVals(:,k),[3 2 1]));
+            
+            
+            % get fiber density overlay rgb values for this slice
+            rgbOverlays = cell2mat(reshape(olRgb(:,k),1,1,1,nOls));
+            
+            
+            % combine rgb overlay images w/nan values for voxels w/no overlay
+            thisImg = combineRgbOverlays(rgbOverlays,sl);
+            
+            
+            % add gray scaled background to pixels without an overlay value
+            thisImg(isnan(thisImg))=bgImg(isnan(thisImg)); thisImg(thisImg==0)=bgImg(thisImg==0);
+            
+            
+            % plot overlay and save new figure
+            [h,figNames]= plotFDMaps(thisImg,plane,acpcSlicesOut(k),saveCombinedFigs,figDir,[figPrefix subject]);
+            
+            
+        end % acpcSlices
         
-        
-        % get overlay values for this slice
-        sl=cell2mat(permute(olVals(:,k),[3 2 1]));
-        
-        
-        % get fiber density overlay rgb values for this slice
-        rgbOverlays = cell2mat(reshape(olRgb(:,k),1,1,1,nOls));
-        
-        
-        % combine rgb overlay images w/nan values for voxels w/no overlay
-        thisImg = combineRgbOverlays(rgbOverlays,sl);
-        
-        
-        % add gray scaled background to pixels without an overlay value
-        thisImg(isnan(thisImg))=bgImg(isnan(thisImg)); thisImg(thisImg==0)=bgImg(thisImg==0);
-   
-        
-        % plot overlay and save new figure
-        [h,figNames]= plotFDMaps(thisImg,plane,acpcSlicesOut(k),saveCombinedFigs,figDir,[figPrefix '_' subject]);
-        
-        
-    end % acpcSlices
-    
+    end % plotCombinedOverlays
     
     clear olVals olRgb slImgs
+    
     
     
 end % subjects
