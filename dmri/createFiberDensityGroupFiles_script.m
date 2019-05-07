@@ -28,6 +28,7 @@ method = 'mrtrix_fa';
 
 inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 
+gspace='mni'; % tlrc or mni
 
 % script will loop over these
 % inNiiFileStrs = {
@@ -44,35 +45,44 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 %     'DA_nacc_belowAC_dil2_autoclean_mni';
 %     'DAL_naccL_aboveAC_dil2_autoclean_mni';
 %     'DAR_naccR_aboveAC_dil2_autoclean_mni';
-%     'DALR_naccLR_aboveAC_dil2_autoclean_mni';
+%     'DA_nacc_aboveAC_dil2_autoclean_mni';
 %     'DAL_caudateL_dil2_autoclean_mni';
 %     'DAR_caudateR_dil2_autoclean_mni';
-%     'DALR_caudateLR_dil2_autoclean_mni';
 %     'DA_caudate_dil2_autoclean_mni';
 %     'DAL_putamenL_dil2_autoclean_mni';
-%     'DAR_putamenR_adil2_utoclean_mni';
-%     'DA_putamen_autoclean_mni'
+%     'DAR_putamenR_dil2_autoclean_mni';
+%     'DA_putamen_dil2_autoclean_mni'
 %     };
+
+
+inNiiFileStrs = {
+    ['DAL_naccL_belowAC_dil2_autoclean_DAendpts_' gspace];
+    ['DAR_naccR_belowAC_dil2_autoclean_DAendpts_' gspace];
+    ['DA_nacc_belowAC_dil2_autoclean_DAendpts_' gspace];
+    ['DAL_naccL_aboveAC_dil2_autoclean_DAendpts_' gspace];
+    ['DAR_naccR_aboveAC_dil2_autoclean_DAendpts_' gspace];
+    ['DA_nacc_aboveAC_dil2_autoclean_DAendpts_' gspace];
+    ['DAL_caudateL_dil2_autoclean_DAendpts_' gspace];
+    ['DAR_caudateR_dil2_autoclean_DAendpts_' gspace];
+    ['DA_caudate_dil2_autoclean_DAendpts_' gspace];
+    ['DAL_putamenL_dil2_autoclean_DAendpts_' gspace];
+    ['DAR_putamenR_dil2_autoclean_DAendpts_' gspace];
+    ['DA_putamen_dil2_autoclean_DAendpts_' gspace];
+    };
+
 % 
 % inNiiFileStrs = {
 %     'DAL_naccL_belowAC_dil2_autoclean_mni';
 %     'DAR_naccR_belowAC_dil2_autoclean_mni';
 %     'DA_nacc_belowAC_dil2_autoclean_mni'};
 
-inNiiFileStrs = {
-    'DA_putamen_dil2_autoclean_mni'
-    };
-
-
-
-inCoMFiles={};
-% inNiiFileStrs = {'DAL_naccL_belowAC_dil2_autoclean_tlrc';
-%     'DAR_naccR_belowAC_dil2_autoclean_tlrc';
-%     'DAL_naccL_aboveAC_dil2_autoclean_tlrc';
-%     'DAR_naccR_aboveAC_dil2_autoclean_tlrc';
-%     'DA_nacc_belowAC_dil2_autoclean_tlrc';
-%     'DA_nacc_aboveAC_dil2_autoclean_tlrc'
+% inNiiFileStrs = {
+%     'DA_putamen_dil2_autoclean_mni'
 %     };
+
+
+
+% inCoMFiles={};
 
 % script will independently loop over these CoM files
 % inCoMFiles = {'DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
@@ -89,6 +99,14 @@ inCoMFiles={};
 %     'DAL_putamenL_autoclean_DAendpts_CoM_tlrc';
 %     'DAR_putamenR_autoclean_DAendpts_CoM_tlrc'};
 
+inCoMFiles = {['DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_naccR_belowAC_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_naccL_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_naccR_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_caudateL_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_caudateR_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_putamenL_dil2_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_putamenR_dil2_autoclean_DAendpts_CoM_' gspace]};
 
 % directory to save out group files
 outDir = fullfile(dataDir,'fg_densities',method);
@@ -113,7 +131,7 @@ for j=1:numel(inNiiFileStrs)
     writeFileNifti(outNii);
     
     % play nice in afni
-    cmd = sprintf(['3drefit -view tlrc -space mni ' outNii.fname]);
+    cmd = sprintf(['3drefit -view tlrc -space ' gspace ' ' outNii.fname]);
     system(cmd);
     
     % save out nifti file of the mean across subjects
@@ -122,7 +140,7 @@ for j=1:numel(inNiiFileStrs)
     writeFileNifti(outNii);
     
     % play nice in afni
-    cmd = sprintf(['3drefit -view tlrc -space mni ' outNii.fname]);
+    cmd = sprintf(['3drefit -view tlrc -space ' gspace ' ' outNii.fname]);
     system(cmd);
     
 end % for fd densities nifti files
