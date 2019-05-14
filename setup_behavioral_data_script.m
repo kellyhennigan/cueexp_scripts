@@ -30,7 +30,7 @@ doOverwrite=1; % 1 to overwrite files while copying stim files, 0 to not overwri
 
 %%%%%%%%%%%% stim timing file
 % inFile = [subjid '_m.csv'];
-inFile = [subjid '_m_cue.csv'];
+inFile = [subjid '_m.csv'];
 inPath = fullfile(rawDir,'cue','task_files','data',inFile);
 outPath{1} = fullfile(rawDir,'cue','behavioral_data',[subjid '_cue_matrix.csv']);
 outPath{2} = fullfile(subjOutDir,'cue_matrix.csv');
@@ -70,7 +70,7 @@ clear inFile inPath outPath T
 
 %%%%%%%%% rating file
 % inFile = [subjid '_ratings.csv'];
-inFile = [subjid '_ratings_cue.csv'];
+inFile = [subjid '_ratings.csv'];
 inPath = fullfile(rawDir,'cue','task_files','data',inFile);
 outPath{1} = fullfile(rawDir,'cue','behavioral_data',[subjid '_cue_ratings.csv']);
 outPath{2} = fullfile(subjOutDir,'cue_ratings.csv');
