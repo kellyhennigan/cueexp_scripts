@@ -25,7 +25,14 @@ import os,sys,glob
 # EDIT AS NEEDED:
 
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')  
+os.chdir('../')
+main_dir=os.getcwd()
+os.chdir('scripts')
+
+# data directory
+data_dir=main_dir+'/'+this_dir
+
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')  
 
 in_dir = os.path.join(data_dir,'%s','func_proc') # %s' are data_dir and subject 
 

@@ -18,10 +18,12 @@ seed = 'DA';
 
 targets = {'nacc','nacc','caudate','putamen'};
 
-CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt'];
-    [seed '%s_%s%s_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt']
-    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt'];
-    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_tlrc_ALL.txt']}; % %s's are: L/R, target, L/R
+gspace = 'mni';
+
+CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
+    [seed '%s_%s%s_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt']
+    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
+    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt']}; % %s's are: L/R, target, L/R
 
 lr='LR';
 
@@ -189,3 +191,4 @@ fprintf('\n\n%%%%%%%%% %s SIDE: %%%%%%%%%%%%%\n\n',lr)
    
 %     fprintf(['\nfor %d out of %d subjects, %s endpoints for \n%s pathways '...
 %         'are more %s than %s pathways\n'],sum(res),numel(res),seed,targets{ti(1)},teststr,targets{ti(2)});
+

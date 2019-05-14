@@ -9,7 +9,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures_dti '/fgm_trajectories'];
+outDir = [p.figures_dti '/fgm_trajectories/bygroup'];
 
 
 % directory & filename of fg measures
@@ -41,8 +41,8 @@ fgMatStrs = {'DAL_%sL_belowAC_dil2_autoclean';
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % covars = {'age'};
-covars={'age','dwimotion'};
-% covars={''};
+% covars={'age','dwimotion'};
+cocovars={''};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');

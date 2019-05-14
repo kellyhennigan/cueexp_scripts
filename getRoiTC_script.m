@@ -30,7 +30,7 @@ subjectStr = 'patients'; %controls, patients, or all
 
 
 % filepath to pre-processed functional data where %s is subject
-baseDir = fullfile(getHomeDir,'cueexp');
+baseDir = getCueBaseDir;
 funcFilePath = fullfile(baseDir,'data','%s','func_proc_cue','cue_mbnf.nii');
 
 

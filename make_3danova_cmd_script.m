@@ -109,14 +109,16 @@ cmd2 = sprintf(['-fa group -fb cond -fab groupByCond %s\n',...
 
 %% put it all together
 
-% get afni bin dir (there's surely a better way to do this)
-homeDir = getHomeDir;
-if strcmp(homeDir,'/home/hennigan')  % CNI VM server
-    afniDir = '/usr/lib/afni/bin/';
-else
-    afniDir = '~/abin/';
-end
-
+   % get afni bin dir (there's surely a better way to do this)
+   cName=getComputerName;
+   if strcmp(cName,'cnic2')               % cni server
+       afniDir = '/usr/lib/afni/bin/';
+   elseif strcmp(cName,'vta')               % vta server
+       afniDir = '/home/span/abin/';
+   else                                   % assume its my laptop
+       afniDir = '/Users/kelly/abin/';
+   end
+        
 anova_cmd = [anova_cmd cmd cmd2];
 anova_cmd2= [afniDir anova_cmd];
 

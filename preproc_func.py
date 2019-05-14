@@ -29,7 +29,14 @@ import os,sys,glob
 ##################### define global variables ##################################
 # EDIT AS NEEDED:
 
-dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+os.chdir('../')
+main_dir=os.getcwd()
+os.chdir('scripts')
+
+# data directory
+data_dir=main_dir+'/'+this_dir
+
+#dataDir = main_diros.path.join(os.path.expanduser('~'),'cueexp','data')
 
 
 rawFile = os.path.join(dataDir,'%s','raw','%s%d.nii.gz') # %s for subject,

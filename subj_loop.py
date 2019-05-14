@@ -66,13 +66,31 @@ def performSubCommands(data_dir,subjects,cmd_list):
 			else:
 				os.system(cmd)
 			
+
+#########  get main data directory and subjects to process	
+def getMainDir():
+
+	# get full path for main project directory & return to current dir
+	os.chdir('../')
+	main_dir=os.getcwd()
+	os.chdir('scripts')
+
+	return main_dir
+
 		
 def main(): 
+	
 	printDirections()						# print directions
 	
-	# data directory
-	data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+	
+	# main directory
+	main_dir=getMainDir()
 
+	
+	# data directory
+	data_dir=main_dir+'/'+this_dir
+
+	
 	# get subject ids
 	subjects = whichSubs()
 	

@@ -22,7 +22,14 @@ import os,sys,glob
 # EDIT AS NEEDED:
 
 
-data_dir = os.path.join(os.path.expanduser('~'),'%s','data')
+os.chdir('../')
+main_dir=os.getcwd()
+os.chdir('scripts')
+
+# data directory
+data_dir=main_dir+'/'+this_dir
+
+#data_dir = os.path.join(os.path.expanduser('~'),'%s','data')
 
 in_dir = os.path.join(data_dir,'%s','raw')  # first %s is data_dir & 2nd is subject id
 

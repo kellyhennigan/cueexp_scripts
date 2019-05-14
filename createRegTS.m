@@ -78,11 +78,13 @@ if convolve
     elseif strcmp(convolve,'waver')
         
         % get afni bin dir (there's surely a better way to do this)
-        homeDir = getHomeDir;
-        if strcmp(homeDir,'/home/hennigan')  % CNI VM server
+        cName=getComputerName;
+        if strcmp(cName,'cnic2')               % cni server
             afniDir = '/usr/lib/afni/bin/';
-        else
-            afniDir = '~/abin/';
+        elseif strcmp(cName,'vta')               % vta server
+            afniDir = '/home/span/abin/';
+        else                                   % assume its my laptop
+            afniDir = '/Users/kelly/abin/';
         end
         
       

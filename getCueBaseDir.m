@@ -13,6 +13,8 @@ cName=getComputerName;
 
 if strcmp(cName,'cnic2')               % cni server
     baseDir = '/home/hennigan/cueexp';
+elseif strcmp(cName,'vta')               % vta server
+    baseDir = '/home/span/lvta/cueexp';
 else                                   % assume its my laptop
     baseDir = '/Users/kelly/cueexp';
 end

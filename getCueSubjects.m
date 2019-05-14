@@ -41,7 +41,7 @@ if notDefined('group')
 end
 
 % get subjects_list directory
-subjListDir = fullfile(getHomeDir,'cueexp', 'data','subjects_list');
+subjListDir = fullfile(getCueBaseDir,'data','subjects_list');
 
 % filename that contains a list of subjects and a group index number
 subject_filename = fullfile(subjListDir,'subjects');
