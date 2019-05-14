@@ -61,18 +61,6 @@ def doCommand(cmd):
 		os.system(cmd)
 
 
-#########  get subjects to process	
-def whichBaseDir():
-	
-	base_dirs = ['','cueexp','cueexp_claudia']
-	print 'Which project directory?\n'
-	print '\t1) '+base_dirs[1]
-	print '\t2) '+base_dirs[2]+'\n'
-	i = input('enter 1 or 2: ') # get directory index
-
-	return base_dirs[i]
-	
-
 
 #########  get task 
 def whichTask():
@@ -158,8 +146,8 @@ if __name__ == '__main__':
 		
 			
 		# define subject's raw & pre-processed directories 
-		this_inDir = in_dir % (base_dir,subject)
-		this_outDir =  out_dir % (base_dir,subject)
+		this_inDir = in_dir % (subject)
+		this_outDir =  out_dir % (subject)
 		
 		
 		# make out & xf directories if doesn't already exist 
