@@ -33,7 +33,7 @@ def getsubs(task='',group='all'):
 	main_dir=getMainDir()
 
 	# data directory
-	data_dir=main_dir+'/'+this_dir
+	data_dir=main_dir+'/data'
 
 	# define path to subject file
 	subjFile = os.path.join(data_dir,'subjects_list','subjects')
