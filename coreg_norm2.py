@@ -30,7 +30,7 @@ main_dir=os.getcwd()
 os.chdir('scripts')
 
 # data directory
-data_dir=main_dir+'/'+this_dir
+data_dir=main_dir+'/data'
 
 #data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')  
 
