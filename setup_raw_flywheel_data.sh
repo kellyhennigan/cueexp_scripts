@@ -68,124 +68,33 @@ subjDir=$dataDir/$subject
 if [ ! -d "$subjDir" ]; then
 	mkdir $subjDir
 fi 
-
-# raw subdirectories
 cd $subjDir
-mkdir qt1 anat func dwi
 
+# raw, ROI, and t1 directories
+if [ ! -d "raw" ]; then
+	mkdir raw
+fi 
+if [ ! -d "ROIs" ]; then
+	mkdir ROIs
+fi 
+if [ ! -d "t1" ]; then
+	mkdir t1
+fi 
+
+# cd to subject's raw dir
+cd raw
 
 ################################################################################
 
 
-############# quant t1 calibration file
-if [ "$cal_qt1num" != "0" ]; then
-
-	# check how many files there are: 
-	scanStr='SS-SMS T1 2mm pe1 CAL'
-	outFilePath='qt1/qt1_cal.nii.gz'
-	outPhaseFilePath='qt1/qt1_cal_phase.nii.gz'
-	
-	cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | wc -l"
-	nscans=$(eval $cmd)
-
-	# if no scans are found with that string, skip the scan 
-	if [ "$nscans" -lt "1" ]; then
-		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
-	else 	
-
-		# if 1 scans is found, great! continue
-		if [ "$nscans" -eq "1" ]; then
-			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}'"
-			scanID=$(eval $cmd | awk '{print $1}')
-		
-		# if >1 scans are found, take the last one (this assumes its the right one to take)
-		elif [ "$nscans" -gt "1" ]; then
-			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
-			scanID=$(eval $cmd | awk '{print $1}')
-		fi 	
-		
-		# cal file
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep '1.nii'" 
-		fileName=$(eval $cmd | awk '{print $5}')
-		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
-		echo $cmd
-		eval $cmd	# execute the command
-
-		# phase file
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'phase.nii'" 
-		fileName=$(eval $cmd | awk '{print $5}')
-		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outPhaseFilePath}"
-		echo $cmd
-		eval $cmd	# execute the command
-	fi
-
-fi
-
-echo done with $scanStr
-
-
-############# quant t1 file
-if [ "$qt1num" != "0" ]; then
-
-	# check how many files there are: 
-	scanStr='SS-SMS T1 2mm pe0'
-	outFilePath='qt1/qt1.nii.gz'
-	outPhaseFilePath='qt1/qt1_phase.nii.gz'
-
-	cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | wc -l"
-	nscans=$(eval $cmd)
-
-	# if no scans are found with that string, skip the scan 
-	if [ "$nscans" -lt "1" ]; then
-		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
-	else 	
-
-		# if 1 scans is found, great! continue
-		if [ "$nscans" -eq "1" ]; then
-			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}'"
-			scanID=$(eval $cmd | awk '{print $1}')
-		
-		# if >1 scans are found, take the last one (this assumes its the right one to take)
-		elif [ "$nscans" -gt "1" ]; then
-			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
-			scanID=$(eval $cmd | awk '{print $1}')
-		fi 	
-		
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep '1.nii'" 
-		fileName=$(eval $cmd | awk '{print $5}')
-		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
-		echo $cmd
-		eval $cmd	# execute the command
-
-		# phase file
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'phase.nii'" 
-		fileName=$(eval $cmd | awk '{print $5}')
-		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outPhaseFilePath}"
-		echo $cmd
-		eval $cmd	# execute the command
-	fi
-
-fi
-
-echo done with $scanStr
-
-
 ########### t1-weighted file
-if [ "$t1wnum" != "0" ]; then
+if [ "$gett1w" != "0" ]; then
 
 	# check how many files there are: 
 	scanStr='T1w .9mm BRAVO'
-	outFilePath='anat/t1w.nii.gz'
+	outFilePath='t1w_raw.nii.gz'
 	
-	cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
 	nscans=$(eval $cmd)
 
 	# if no scans are found with that string, skip the scan 
@@ -196,20 +105,20 @@ if [ "$t1wnum" != "0" ]; then
 		# if 1 scans is found, great! continue
 		if [ "$nscans" -eq "1" ]; then
 			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}'"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
 			scanID=$(eval $cmd | awk '{print $1}')
 		
 		# if >1 scans are found, take the last one (this assumes its the right one to take)
 		elif [ "$nscans" -gt "1" ]; then
 			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
 			scanID=$(eval $cmd | awk '{print $1}')
 		fi 	
 		
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'nii'" 
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
 		fileName=$(eval $cmd | awk '{print $5}')
 		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
 		echo $cmd
 		eval $cmd	# execute the command
 	fi
@@ -221,13 +130,13 @@ echo done with $scanStr
 
 
 ######### cue data file
-if [ "$cuenum" != "0" ]; then
+if [ "$getcue" != "0" ]; then
 
 	# check how many files there are: 
 	scanStr='BOLD EPI 2.9mm 2sec CUE'
-	outFilePath='func/cue1.nii.gz'
+	outFilePath='cue1.nii.gz'
 	
-	cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
 	nscans=$(eval $cmd)
 
 	# if no scans are found with that string, skip the scan 
@@ -238,20 +147,20 @@ if [ "$cuenum" != "0" ]; then
 		# if 1 scans is found, great! continue
 		if [ "$nscans" -eq "1" ]; then
 			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}'"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
 			scanID=$(eval $cmd | awk '{print $1}')
 		
 		# if >1 scans are found, take the last one (this assumes its the right one to take)
 		elif [ "$nscans" -gt "1" ]; then
 			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
 			scanID=$(eval $cmd | awk '{print $1}')
 		fi 	
 		
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'nii'" 
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
 		fileName=$(eval $cmd | awk '{print $5}')
 		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
 		echo $cmd
 		eval $cmd	# execute the command
 	fi
@@ -259,6 +168,182 @@ if [ "$cuenum" != "0" ]; then
 fi
 
 echo done with $scanStr
+
+
+
+
+
+######### mid1 data file
+if [ "$getmid1" != "0" ]; then
+
+	# check how many files there are: 
+	scanStr='BOLD EPI 2.9mm 2sec MID_1'
+	outFilePath='mid1.nii.gz'
+	
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	nscans=$(eval $cmd)
+
+	# if no scans are found with that string, skip the scan 
+	if [ "$nscans" -lt "1" ]; then
+		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
+	else 	
+
+		# if 1 scans is found, great! continue
+		if [ "$nscans" -eq "1" ]; then
+			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
+			scanID=$(eval $cmd | awk '{print $1}')
+		
+		# if >1 scans are found, take the last one (this assumes its the right one to take)
+		elif [ "$nscans" -gt "1" ]; then
+			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			scanID=$(eval $cmd | awk '{print $1}')
+		fi 	
+		
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
+		fileName=$(eval $cmd | awk '{print $5}')
+		echo fileName: $fileName
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		echo $cmd
+		eval $cmd	# execute the command
+	fi
+
+fi
+
+echo done with $scanStr
+
+
+
+
+######### mid2 data file
+if [ "$getmid2" != "0" ]; then
+
+	# check how many files there are: 
+	scanStr='BOLD EPI 2.9mm 2sec MID_2'
+	outFilePath='mid2.nii.gz'
+	
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	nscans=$(eval $cmd)
+
+	# if no scans are found with that string, skip the scan 
+	if [ "$nscans" -lt "1" ]; then
+		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
+	else 	
+
+		# if 1 scans is found, great! continue
+		if [ "$nscans" -eq "1" ]; then
+			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
+			scanID=$(eval $cmd | awk '{print $1}')
+		
+		# if >1 scans are found, take the last one (this assumes its the right one to take)
+		elif [ "$nscans" -gt "1" ]; then
+			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			scanID=$(eval $cmd | awk '{print $1}')
+		fi 	
+		
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
+		fileName=$(eval $cmd | awk '{print $5}')
+		echo fileName: $fileName
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		echo $cmd
+		eval $cmd	# execute the command
+	fi
+
+fi
+
+echo done with $scanStr
+
+
+
+
+
+######### midi1 data file
+if [ "$getmidi1" != "0" ]; then
+
+	# check how many files there are: 
+	scanStr='BOLD EPI 2.9mm 2sec MIDI_1'
+	outFilePath='midi1.nii.gz'
+	
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	nscans=$(eval $cmd)
+
+	# if no scans are found with that string, skip the scan 
+	if [ "$nscans" -lt "1" ]; then
+		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
+	else 	
+
+		# if 1 scans is found, great! continue
+		if [ "$nscans" -eq "1" ]; then
+			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
+			scanID=$(eval $cmd | awk '{print $1}')
+		
+		# if >1 scans are found, take the last one (this assumes its the right one to take)
+		elif [ "$nscans" -gt "1" ]; then
+			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			scanID=$(eval $cmd | awk '{print $1}')
+		fi 	
+		
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
+		fileName=$(eval $cmd | awk '{print $5}')
+		echo fileName: $fileName
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		echo $cmd
+		eval $cmd	# execute the command
+	fi
+
+fi
+
+echo done with $scanStr
+
+
+
+
+######### midi2 data file
+if [ "$getmidi2" != "0" ]; then
+
+	# check how many files there are: 
+	scanStr='BOLD EPI 2.9mm 2sec MIDI_2'
+	outFilePath='midi2.nii.gz'
+	
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	nscans=$(eval $cmd)
+
+	# if no scans are found with that string, skip the scan 
+	if [ "$nscans" -lt "1" ]; then
+		printf "\n\n\nCOULDNT FIND SCAN ID FOR ${scanStr}, SO SKIPPING...\n\n"
+	else 	
+
+		# if 1 scans is found, great! continue
+		if [ "$nscans" -eq "1" ]; then
+			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
+			scanID=$(eval $cmd | awk '{print $1}')
+		
+		# if >1 scans are found, take the last one (this assumes its the right one to take)
+		elif [ "$nscans" -gt "1" ]; then
+			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			scanID=$(eval $cmd | awk '{print $1}')
+		fi 	
+		
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
+		fileName=$(eval $cmd | awk '{print $5}')
+		echo fileName: $fileName
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		echo $cmd
+		eval $cmd	# execute the command
+	fi
+
+fi
+
+echo done with $scanStr
+
+
 
 
 ############# DWI files
@@ -266,10 +351,9 @@ if [ "$dwinum" != "0" ]; then
 
 	# check how many files there are: 
 	scanStr='DTI 2mm b2500 96dir1'
-	outDir='dwi'
-	outFilePath=$outDir/dwi.nii.gz
+	outFilePath=dwi.nii.gz
 	
-	cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | wc -l"
+	cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
 	nscans=$(eval $cmd)
 
 	# if no scans are found with that string, skip the scan 
@@ -280,37 +364,37 @@ if [ "$dwinum" != "0" ]; then
 		# if 1 scans is found, great! continue
 		if [ "$nscans" -eq "1" ]; then
 			printf "\n\n\n1 SCAN FOUND FOR ${scanStr} SO ALL IS GOOD...\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}'"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}'"
 			scanID=$(eval $cmd | awk '{print $1}')
 		
 		# if >1 scans are found, take the last one (this assumes its the right one to take)
 		elif [ "$nscans" -gt "1" ]; then
 			printf "\n\n\nMORE THAN 1 SCAN FOUND FOR ${scanStr};\nCONFIRM THAT THE LAST ONE IS THE CORRECT ONE\n\n\n"
-			cmd="fw ls \"knutson/fmrieat/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
+			cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | tail -n 1"
 			scanID=$(eval $cmd | awk '{print $1}')
 		fi 	
 		
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'nii'" 
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'nii'" 
 		fileName=$(eval $cmd | awk '{print $5}')
 		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
 		echo $cmd
 		eval $cmd	# execute the command
 
 		# get bval and bvec files too:
-		outFilePath=$outDir/bval
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'bval'" 
+		outFilePath=bval
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'bval'" 
 		fileName=$(eval $cmd | awk '{print $5}')
 		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
 		echo $cmd
 		eval $cmd	# execute the command
 
-		outFilePath=$outDir/bvec
-		cmd="fw ls \"knutson/fmrieat/${cniID}/${scanID}/files\" | grep 'bvec'" 
+		outFilePath=bvec
+		cmd="fw ls \"knutson/cuefmri/${cniID}/${scanID}/files\" | grep 'bvec'" 
 		fileName=$(eval $cmd | awk '{print $5}')
 		echo fileName: $fileName
-		cmd="fw download \"knutson/fmrieat/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
+		cmd="fw download \"knutson/cuefmri/${cniID}/${scanID}/${fileName}\" -o ${outFilePath}"
 		echo $cmd
 		eval $cmd	# execute the command
 
@@ -321,10 +405,7 @@ fi
 echo done with $scanStr
 	
 
-ls qt1/*
-ls anat/*
-ls func/*
-ls dwi/*
+ls *
 
 
 
