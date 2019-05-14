@@ -12,14 +12,31 @@
 import os,sys
 
 
+#########  get main data directory and subjects to process	
+def getMainDir():
+
+	# get full path for main project directory & return to current dir
+	os.chdir('../')
+	main_dir=os.getcwd()
+	os.chdir('scripts')
+
+	return main_dir
+
+
 def getsubs(task='',group='all'):
+
 
 	# define subjects and gi lists
 	subjects = [] # list of subject ids
 	gi = []			# list of corresponding group indices
 
+	main_dir=getMainDir()
+
+	# data directory
+	data_dir=main_dir+'/'+this_dir
+
 	# define path to subject file
-	subjFile = os.path.join(os.path.expanduser('~'),'cueexp','data','subjects_list','subjects')
+	subjFile = os.path.join(data_dir,'subjects_list','subjects')
 	
 	with open(subjFile, 'r') as f:
 		next(f) # omit header line
