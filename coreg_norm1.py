@@ -178,7 +178,7 @@ if __name__ == '__main__':
 		if os.path.isfile('t1_ns.nii.gz'):
 			print '\n skull stripped t1 file '+t1_ns_file+' already exists...\n'
 		else:	
-			cmd = '3dSkullStrip -prefix '+t1_ns_file+' -input '+os.path.join(this_inDir,'t1_raw.nii.gz')
+			cmd = '3dSkullStrip -prefix '+t1_ns_file+' -input '+os.path.join(this_inDir,'t1w_raw.nii.gz')
 			doCommand(cmd)
 
 
