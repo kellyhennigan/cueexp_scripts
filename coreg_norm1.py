@@ -220,7 +220,7 @@ if __name__ == '__main__':
 		if os.path.isfile(t1_tlrc_afni_file):
 			print '\n afni xformed t1_tlrc_afni file already exists...\n'
 		else:
-			cmd =('@auto_tlrc -no_ss -base '+t1_template % (base_dir)+' -suffix _afni '
+			cmd =('@auto_tlrc -no_ss -base '+t1_template+' -suffix _afni '
 			'-input '+t1_ns_file)
 			doCommand(cmd)
 
