@@ -14,10 +14,10 @@ close all
 [p,task,subjects,gi]=whichCueSubjects();
 dataDir = p.data;
 
-subjects = { 
-    'tv181019'
-    'tb171209'
-  };
+% subjects = { 
+%     'tv181019'
+%     'tb171209'
+%   };
 
 
 % define info that's different for our data vs claudia's data here
@@ -195,15 +195,15 @@ for s=1:numel(subjects)
         
         
         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings
-        pa=getCueData(subjects{s},'pa_stim_trials');
-        if any(isnan(pa))
-            pa=choice_num(find(tr==1))';
-        end
-        pa=pa-nanmean(pa);
-        pa=reshape(repmat(pa,4,1),[],1);
-        pa(isnan(pa))=0;
-        [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
-        
+%         pa=getCueData(subjects{s},'pa_stim_trials');
+%         if any(isnan(pa))
+%             pa=choice_num(find(tr==1))';
+%         end
+%         pa=pa-nanmean(pa);
+%         pa=reshape(repmat(pa,4,1),[],1);
+%         pa(isnan(pa))=0;
+%         [reg,regc]=createRegTS(find(tr==1 | tr==2 | tr==3 | tr==4),pa,nTRs,hrf,[regDir '/pa_trial_cue.1D']);
+%         
         
         
         %%%%%%%%%% whole-trial parametric regressor modulated by pa ratings by cond
