@@ -10,8 +10,9 @@
 #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
-
-set MAINDIR = ${HOME}/cueexp
+cd ..
+set MAINDIR = $PWD
+# set MAINDIR = ${HOME}/cueexp
 set SCRIPTSDIR = ${MAINDIR}/scripts
 set DATADIR = ${MAINDIR}/data
 
