@@ -6,7 +6,11 @@ import os,sys
 ##################### fit glm using 3dDeconvolve #####################################################################
 # EDIT AS NEEDED:
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+os.chdir('../')
+main_dir=os.getcwd()
+data_dir=main_dir+'/data'
+
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 
 afniStr = '_afni' # set this to '' if not using afni coreg version

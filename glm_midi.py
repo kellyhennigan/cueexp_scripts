@@ -6,7 +6,11 @@ import os,sys
 ##################### fit glm using 3dDeconvolve #####################################################################
 # EDIT AS NEEDED:
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+os.chdir('../')
+main_dir=os.getcwd()
+data_dir=main_dir+'/data'
+
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 afniStr = '_afni' # set this to '' if not using afni coreg version
 #afniStr = '' # set this to '' if not using afni coreg version
@@ -58,6 +62,7 @@ for subject in subjects:
 	cmd = ('3dDeconvolve '		
 		'-jobs 2 '
 		'-input '+func_dir+'/'+func_files+' '
+		'-concat '+main_dir+'/scripts/midi_runs_wEnd.1D '
 		'-censor '+func_dir+'/'+'midi_censor.1D '
 		'-num_stimts 21 '
 		'-polort 2 '
