@@ -88,7 +88,7 @@ def main():
 
 	
 	# data directory
-	data_dir=main_dir+'/'+this_dir
+	data_dir=main_dir+'/data'
 
 	
 	# get subject ids

@@ -90,8 +90,8 @@ end
 % measures
 
 %%%%%%%%%%%%%% params for figure 1
-fgMCorr = 'RD'; % fg measure to correlate with behavior & plot as color map
-fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
+fgMPlot = 'MD'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 
 % get correlation between fgMCorr & scores along pathway nodes

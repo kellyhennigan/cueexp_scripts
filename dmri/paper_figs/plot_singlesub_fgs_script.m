@@ -48,19 +48,32 @@ seed = 'DA';
 %%%%%%%%%%%%%%% params for plotting just 2 MFB fiber groups %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% targets={
+%     'nacc';
+%     'nacc'};
+% 
+% fgStrs = {
+%     '_belowAC';
+%     '_aboveAC'};
+% 
+% fgNameStrs = { 
+%     '%s%s_%s%s%s_dil2_autoclean.pdb',...
+%     '%s%s_%s%s%s_dil2_autoclean.pdb'};
+%    
+% outStr = '_2';
 targets={
     'nacc';
-    'nacc'};
+    };
 
 fgStrs = {
     '_belowAC';
-    '_aboveAC'};
+    };
 
 fgNameStrs = { 
-    '%s%s_%s%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s%s_dil2_autoclean.pdb'};
+    '%s%s_%s%s%s_dil2_autoclean.pdb'    };
    
-outStr = '_2';
+outStr = '_1';
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,7 +90,7 @@ nfibers=100;
 cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgStrs,'uniformoutput',0);
 
 
-plotToScreen=0; % 1 to plot to screen, otherwise 0
+plotToScreen=1; % 1 to plot to screen, otherwise 0
 
 %%
 
@@ -187,7 +200,7 @@ for i = 1:numel(subjects)
     
     vwC = [0,0]; % coronal view
     
-    h=AFQ_AddImageTo3dPlot(t1,[0, 1, 0],'gray');
+    h=AFQ_AddImageTo3dPlot(t1,[0, 5, 0],'gray');
     view(vwC);
     %   llh = lightangle(vwC(1),vwC(2));
     

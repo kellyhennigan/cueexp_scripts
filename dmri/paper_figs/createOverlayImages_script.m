@@ -59,7 +59,7 @@ gspace='mni'; % group space
 % end
 
 targets={'nacc'};
-fdFileStrs = {['DA_%s_belowAC_dil2' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']};
+fdFileStrs = {['DAL_%sL_belowAC_dil2' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']};
 
 if strcmp(gspace,'tlrc')
     bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
@@ -72,17 +72,33 @@ thresh=.05; % value to threshold maps; otherwise 0 to not threshold
 
 scale = 0; % 1 to scale, otherwise 0
 
-q_crange=[.1 .6]; % min/max quantiles of data values to determine color range
+q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
 plane=2; % which plane to plot
 % acpcSlices=[-20:2:10]; % which acpc slices to plot
-acpcSlices=[-6]; % which acpc slices to plot
+acpcSlices=[-5]; % which acpc slices to plot
 
 % plane=3; % which plane to plot
 % acpcSlices=[-18:2:-12]; % which acpc slices to plot
 % acpcSlices=[]; % which acpc slices to plot
 
-cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
+% cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
+cols{1}=[
+    0.0510    0.1843    0.3569
+    0.1098    0.2078    0.5373
+    0.2824    0.2039    0.6392
+    0.3882    0.2549    0.5922
+    0.4941    0.3020    0.5608
+    0.6000    0.3294    0.5412
+    0.6980    0.3647    0.5176
+    0.8118    0.4039    0.4471
+    0.9020    0.4510    0.3843
+    0.9373    0.5255    0.3412
+    0.9961    0.6196    0.2510
+    0.9922    0.7333    0.2627
+    0.9804    0.8510    0.2784];
+
+
 
 ac=[]; % auto-crop images? inf means no cropping
 
