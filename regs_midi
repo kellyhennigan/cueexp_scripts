@@ -12,7 +12,9 @@
 
 # this version of midi vecs assumes that 4 rows are added to the end of each scan run, coresponding to the last 4 TRs in each run 
 
-set MAINDIR = ${HOME}/cueexp
+cd ..
+set MAINDIR = $PWD
+# set MAINDIR = ${HOME}/cueexp
 set SCRIPTSDIR = ${MAINDIR}/scripts
 set DATADIR = ${MAINDIR}/data
 
