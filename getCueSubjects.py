@@ -50,7 +50,7 @@ def getsubs(task='',group='all'):
 
 		omit_subs = [] # list of subjects to omit specific to this task
 		
-		omitSubjsFile = os.path.join(os.path.expanduser('~'),'cueexp','data','subjects_list','omit_subs_'+task)
+		omitSubjsFile = os.path.join(data_dir,'subjects_list','omit_subs_'+task)
 	
 		with open(omitSubjsFile, 'r') as f:
 			next(f) # omit header line
