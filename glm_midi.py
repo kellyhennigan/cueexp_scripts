@@ -6,9 +6,11 @@ import os,sys
 ##################### fit glm using 3dDeconvolve #####################################################################
 # EDIT AS NEEDED:
 
+scripts_dir=os.getcwd()
 os.chdir('../')
 main_dir=os.getcwd()
 data_dir=main_dir+'/data'
+os.chdir(scripts_dir)
 
 #data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 

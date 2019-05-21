@@ -10,9 +10,12 @@ import os,sys
 # whole trial (TRs 1-4), rather than just at the image onset period (TR 2). 
 
 
+scripts_dir=os.getcwd()
 os.chdir('../')
 main_dir=os.getcwd()
 data_dir=main_dir+'/data'
+os.chdir(scripts_dir)
+
 #data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 afniStr = '_afni' # set this to '' if not using afni coreg version
