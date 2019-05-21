@@ -62,6 +62,7 @@ for subject in subjects:
 	cmd = ('3dDeconvolve '		
 		'-jobs 2 '
 		'-input '+func_dir+'/'+func_files+' '
+		'-concat '+main_dir+'/scripts/mid_runs_wEnd.1D '
 		'-censor '+func_dir+'/'+'mid_censor.1D '
 		'-num_stimts 14 '
 		'-polort 2 '
