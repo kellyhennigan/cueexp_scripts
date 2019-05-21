@@ -32,6 +32,9 @@ getCuePaths;
 fshome = getenv('FREESURFER_HOME');
 % setenv('FREESURFER_HOME',fshome);  % this to tell where FS folder is
 
+if isempty(fshome)
+    error('hold up - freesurfer home dir not found');
+end
 
 for s=1:numel(subjects)
     
@@ -40,8 +43,8 @@ for s=1:numel(subjects)
     fprintf(['\n\nworking on subject ' subject '...\n\n']);
     
     
-    inDir = ['/home/hennigan/freesurfer/subjects/' subject '/mri']; % freesurfer subject mri dir
-    subjDir = ['/home/hennigan/cueexp/data/' subject ];
+    inDir = fullfile(fshome,'subjects',subject,'mri');
+    subjDir = fullfile(dataDir,subject);
     outDir = [subjDir '/t1']; % dir for out nifti files
     
     
