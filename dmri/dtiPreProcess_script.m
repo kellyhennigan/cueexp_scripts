@@ -24,6 +24,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % define relevant input 
+getCuePaths();
 [~,~,subjects]=whichCueSubjects('stim','');
 
 

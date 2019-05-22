@@ -241,44 +241,44 @@ bdNames = {};  % brain data predictor names
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
-% tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
-
-TRs = [3:7];
-aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
-
-for j=1:numel(roiNames)
-         
-    for k = 1:numel(stims)
-        
-        % if there's a minus sign, assume desired output is stim1-stim2
-        if strfind(stims{k},'-')
-            stim1 = stims{k}(1:strfind(stims{k},'-')-1);
-            stim2 = stims{k}(strfind(stims{k},'-')+1:end);
-            thistc1=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim1),subjects,TRs);
-            thistc2=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim2),subjects,TRs);
-            thistc=thistc1-thistc2;
-        
-        % otherwise just load stim timecourses
-        else
-            thistc=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stims{k}),subjects,TRs);
-        end
-        bd = [bd thistc];
-        
-        % update var names
-        for ti = 1:numel(TRs)
-            bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' num2str(TRs(ti))];
-        end
-        
-        % if averaging over TRs is desired, include it
-        if ~isempty(aveTRs)
-            bd = [bd mean(thistc(:,aveTRs),2)];
-            bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' strrep(num2str(TRs(aveTRs)),' ','') 'mean'];
-        end
-            
-    end % stims
-   
-end % rois
+% tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
+% % tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
+% 
+% TRs = [3:7];
+% aveTRs = [3:5]; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
+% 
+% for j=1:numel(roiNames)
+%          
+%     for k = 1:numel(stims)
+%         
+%         % if there's a minus sign, assume desired output is stim1-stim2
+%         if strfind(stims{k},'-')
+%             stim1 = stims{k}(1:strfind(stims{k},'-')-1);
+%             stim2 = stims{k}(strfind(stims{k},'-')+1:end);
+%             thistc1=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim1),subjects,TRs);
+%             thistc2=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stim2),subjects,TRs);
+%             thistc=thistc1-thistc2;
+%         
+%         % otherwise just load stim timecourses
+%         else
+%             thistc=loadRoiTimeCourses(sprintf(tcPath,roiNames{j},stims{k}),subjects,TRs);
+%         end
+%         bd = [bd thistc];
+%         
+%         % update var names
+%         for ti = 1:numel(TRs)
+%             bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' num2str(TRs(ti))];
+%         end
+%         
+%         % if averaging over TRs is desired, include it
+%         if ~isempty(aveTRs)
+%             bd = [bd mean(thistc(:,aveTRs),2)];
+%             bdNames{end+1} = [roiVarNames{j} '_' strrep(stims{k},'-','') '_TR' strrep(num2str(TRs(aveTRs)),' ','') 'mean'];
+%         end
+%             
+%     end % stims
+%    
+% end % rois
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI BETAS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 

@@ -11,7 +11,8 @@ figDir = p.figures;
 
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
+% dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_190521.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data

@@ -38,9 +38,13 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 %% Initialize variables.
 
 
-if notDefined('filepath')
-    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180721.csv';
-end
+% if notDefined('filepath')
+    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180730.csv';
+% end
+% 
+% if notDefined('filepath')
+%     filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180730.csv';
+% end
 
 
 if notDefined('subjects')
