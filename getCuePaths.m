@@ -31,7 +31,11 @@ p.figures_dti = fullfile(p.baseDir, 'figures_dti');
 p.scripts = fullfile(p.baseDir, 'scripts');
 
 % place scripts directory at the top of the search path
-path(p.scripts,path)
+path([p.scripts '/paper_fig_scripts'],path);
+path([p.scripts '/dmri'],path);
+path([p.scripts '/dmri/paper_figs'],path);
+path(p.scripts,path);
+
 
 
 % subject directories
