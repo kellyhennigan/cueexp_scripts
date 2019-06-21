@@ -66,7 +66,8 @@ force = True						# if true, the command will save over a pre-existing output fi
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-outFileStr = '_dil2'  # out file name suffix? Leave blank if not desired
+#outFileStr = '_dil2'  # out file name suffix? Leave blank if not desired
+outFileStr = ''  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
