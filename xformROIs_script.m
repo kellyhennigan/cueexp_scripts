@@ -8,7 +8,7 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim','');
 dataDir = p.data;
 
-inRoiFile = fullfile(dataDir,'ROIs','%s.nii'); % directory with tlrc space ROIs
+inRoiFile = fullfile(dataDir,'ROIs','%s.nii.gz'); % directory with tlrc space ROIs
 % roiNames = {'DA','PVT'};
 roiNames = {'mpfc8mmL','mpfc8mmR'};
 
