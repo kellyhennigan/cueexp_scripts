@@ -20,7 +20,7 @@ main_dir=os.getcwd()
 os.chdir('scripts/dmri')
 
 # data directory
-data_dir=main_dir+'/data'
+dataDir=main_dir+'/data'
 
 
 # define input directory and files relative to subject's directory 
