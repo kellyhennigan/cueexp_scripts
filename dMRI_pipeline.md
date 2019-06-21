@@ -94,19 +94,12 @@ In matlab, run:
 ```
 convertFsSegFiles_script.m
 createRoiMasks_script.m
+**(also troubleshoot getting mpfc ROI in native space)**
 ```
 To convert freesurfer segmentation files to be in nifti format & save out desired ROI masks based on FS segmentation labels (as it pertains to us here, this gives a NAcc ROI)
 
 #### output
-Saves out files to directory, **cuefmri/data/subjid/anat_proc**
-
-
-
-### get MPFC ROI 
-this needs work...
-
-#### output
-mpfcL and mpfcR nifti ROIs in native space 
+Saves out files to directory, **cuefmri/data/subjid/ROIs**
 
 
 
