@@ -48,8 +48,15 @@ xc = bool(input('enter 1 for yes, or 0 to only print: '))
 
 # relevant vars, files, & directories (relative to subj dir)
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data') # main data directory
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data') # main data directory
 #data_dir = '/scratch/PI/knutson/cue_dti/data'
+os.chdir('../../')
+main_dir=os.getcwd()
+os.chdir('scripts/dmri')
+
+# data directory
+data_dir=main_dir+'/data'
+
 
 dwi_dir='dti96trilin'
 
