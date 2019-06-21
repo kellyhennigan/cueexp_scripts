@@ -59,15 +59,15 @@ init_cutoff = ''
 #initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
 initdir = ''			
 nthreads = 8						# of threads to use for tractography
-#dilateRoiStr = '_dil2' 			# if ROI is dilated, add dilation string here
-dilateRoiStr = '' 					
+dilateRoiStr = '_dil2' 			# if ROI is dilated, add dilation string here
+#dilateRoiStr = '' 					
 force = True						# if true, the command will save over a pre-existing output file with the same name
 
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-#outFileStr = '_dil2'  # out file name suffix? Leave blank if not desired
-outFileStr = ''  # out file name suffix? Leave blank if not desired
+outFileStr = '_dil2'  # out file name suffix? Leave blank if not desired
+#outFileStr = ''  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
