@@ -6,10 +6,10 @@ close all
 
 p = getCuePaths();
 dataDir = p.data;
-figDir = p.figures_dti;
+figDir = p.figures;
 
-roiName = 'DA';
-roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);
+roiName = 'mpfc8mm';
+roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii.gz']);
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');
 
 outDir = fullfile(figDir,'ROIs');

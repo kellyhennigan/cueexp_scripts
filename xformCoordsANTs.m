@@ -77,6 +77,7 @@ antspath = '~/repos/antsbin/bin';
 
 %%%%%%%%%  define and execute ants command
 cmd = [antspath '/antsApplyTransformsToPoints -d 3 -i ' inFile ' -o ' outFile xform_str];
+cmd
 system(cmd);
 
 

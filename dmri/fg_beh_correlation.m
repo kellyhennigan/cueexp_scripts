@@ -20,13 +20,13 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAL_naccL_belowAC_dil2_autoclean'; %'.mat' will be added to end
 fgStr=fgMatStr;
 
 titleStr = 'inferior NAcc tract';
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS'
+scale = 'discount_rate'
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
 
@@ -60,6 +60,7 @@ fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 [fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
 
+scores=log(scores)
 
 % midi betas:
 % scale = 'gvnant';
@@ -176,8 +177,8 @@ end
 % nSubs = numel(subjects);
 
 
-fa=mean(fgMeasures{1}(:,26:75),2)
-md=mean(fgMeasures{2}(:,26:75),2)
+% fa=mean(fgMeasures{1}(:,26:75),2)
+% md=mean(fgMeasures{2}(:,26:75),2)
 
 
 

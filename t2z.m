@@ -27,9 +27,9 @@ end
 
 %% to get the p-val from the t or Z score, with 1 or 2 tails: 
 % 
-% p = 1-tcdf(t,df);  % for 1 tailed t stats
+% p = 1-tcdf(t,df);  % for 1 tailed t stats %%% DOUBLE CHECK THIS!!!
 % 
-% p = 2.*(1-tcdf(t,df)); % for 2-tailed t stats
+% p = 2*tcdf(-abs(t),df); % for 2-tailed t stats
 % 
 % p = 1-normcdf(Z); % for 1-tailed Z scores
 % 

@@ -86,3 +86,13 @@ dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,tipi_extra,tipi_agree
 pairs.panels(dp)
 
 ```       
+
+#pairs plots 8: left inferior nacc, BIS, discount rate
+
+```{r pairs plot8, collapse=TRUE, warning=FALSE}
+
+dp = with(d1, data.frame(nacc_inferiorL_fa,nacc_inferiorL_md,BIS,discount_rate))
+
+pairs.panels(dp)
+
+```       
