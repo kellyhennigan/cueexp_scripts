@@ -13,7 +13,13 @@ import sys
 ##########################################################################################
 # EDIT AS NEEDED:
 
-dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')	# experiment main data directory
+#dataDir = os.path.join(os.path.expanduser('~'),'cueexp','data')	# experiment main data directory
+os.chdir('../../')
+main_dir=os.getcwd()
+os.chdir('scripts/dmri')
+
+# data directory
+dataDir=main_dir+'/data'
 	
 
 # define input directory and files relative to subject's directory 
@@ -31,7 +37,7 @@ seedStr = 'DA'						# if false, will use the mask as seed ROI by default
 
 targetStrs = ['nacc']		
 #excPath = ''
-excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
+excPath = dataDir+'/ROIs/ACabove_mask.nii.gz'
 
 LR = ['L','R'] # 'L' for left and/or 'R' for right
 
@@ -131,14 +137,14 @@ if __name__ == '__main__':
 					cmd = cmd+' -include '+os.path.join(roiDir,roi+LorR+dilateRoiStr+'.nii.gz')
 				if excPath:
 					cmd = cmd+' -exclude '+excPath
-				if number:
-					cmd = cmd+' -number '+str(number)
 				# if number:
-				# 	cmd = cmd+' -select '+str(number)
-				if maxnum:
-					cmd = cmd+' -maxnum '+str(maxnum)
+				# 	cmd = cmd+' -number '+str(number)
+				if number:
+					cmd = cmd+' -select '+str(number)
 				# if maxnum:
-				# 	cmd = cmd+' -seeds '+str(maxnum)
+				# 	cmd = cmd+' -maxnum '+str(maxnum)
+				if maxnum:
+					cmd = cmd+' -seeds '+str(maxnum)
 				# if maxattempts:
 				# 	cmd = cmd+' -max_attempts_per_seed '+str(maxattempts)
 				if maxlength:
@@ -149,14 +155,14 @@ if __name__ == '__main__':
 					cmd = cmd+' -step '+str(step_size)
 				if cutoff:
 					cmd = cmd+' -cutoff '+str(cutoff)
-				if init_cutoff:
-					cmd = cmd+' -initcutoff '+str(init_cutoff)
 				# if init_cutoff:
-				# 	cmd = cmd+' -seed_cutoff '+str(init_cutoff)
-				if initdir:
-					cmd = cmd+' -initdirection '+str(initdir)
+				# 	cmd = cmd+' -initcutoff '+str(init_cutoff)
+				if init_cutoff:
+					cmd = cmd+' -seed_cutoff '+str(init_cutoff)
 				# if initdir:
-				# 	cmd = cmd+' -seed_direction '+str(initdir)
+				# 	cmd = cmd+' -initdirection '+str(initdir)
+				if initdir:
+					cmd = cmd+' -seed_direction '+str(initdir)
 				if nthreads:
 					cmd = cmd+' -nthreads '+str(nthreads)
 				if force:

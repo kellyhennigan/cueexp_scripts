@@ -34,12 +34,13 @@ maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
-seedStr = 'mpfc8mm'						# if false, will use the mask as seed ROI by default
+#seedStr = 'mpfc8mm'						# if false, will use the mask as seed ROI by default
 #seedStr = 'nacc'					# if false, will use the mask as seed ROI by default
+seedStr = 'DA'
 
-#targetStrs = ['caudate','putamen','nacc']		# can be many or none; if not defined, fibers will just be tracked from the seed ROI
+targetStrs = ['caudate','putamen','nacc']		# can be many or none; if not defined, fibers will just be tracked from the seed ROI
 #targetStrs = ['PVT']		
-targetStrs = ['nacc']		
+#targetStrs = ['nacc']		
 excPath = ''
 #excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
 
@@ -52,11 +53,11 @@ maxnum = str(int(number)*10000)		# max number of candidate fibers to generate (d
 maxlength = '50'					# max length (in mm) of the tracks
 stop = True							# stop track once it has traversed all include ROIs
 step_size = ''						# define step size for tracking alg (in mm); default is .1* voxel size
-cutoff = '.05'					# determine FA cutoff value for terminating tracks (default is .1)
-#cutoff = '.10'						# FA (or FOD amplitude) cutoff for initializing tracks 
-init_cutoff = '.05'				# initial cutoff for initializing tracks 
-#init_cutoff = ''				
-#initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
+#cutoff = '.05'					# determine FA cutoff value for terminating tracks (default is .1)
+cutoff = '.10'						# FA (or FOD amplitude) cutoff for initializing tracks 
+#init_cutoff = '.05'				# initial cutoff for initializing tracks 
+init_cutoff = ''				
+initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
 initdir = ''			
 nthreads = 8						# of threads to use for tractography
 dilateRoiStr = '_dil2' 			# if ROI is dilated, add dilation string here
