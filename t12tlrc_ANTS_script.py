@@ -14,8 +14,13 @@ import os,sys,glob
 ##################### define global variables #################################
 # EDIT AS NEEDED:
 
+os.chdir('../')
+main_dir=os.getcwd()
+os.chdir('scripts')
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+# data directory
+dataDir=main_dir+'/data'
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
 
 t1_dir = os.path.join(data_dir,'%s','t1')  # first %s is data_dir & 2nd is subject id
 
