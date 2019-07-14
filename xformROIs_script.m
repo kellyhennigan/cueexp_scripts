@@ -9,8 +9,8 @@ close all
 dataDir = p.data;
 
 inRoiFile = fullfile(dataDir,'ROIs','%s.nii.gz'); % directory with tlrc space ROIs
-% roiNames = {'DA','PVT'};
-roiNames = {'mpfc8mmL','mpfc8mmR'};
+roiNames = {'DA','PVT'};
+% roiNames = {'mpfc8mmL','mpfc8mmR'};
 
 outRoiFile = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % %s is subject & roiName
 
