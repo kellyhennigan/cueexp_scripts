@@ -25,6 +25,9 @@ def getMainDir():
 
 	# move up 1 more level if still in scripts dir
 	temp=os.path.split(os.getcwd())
+
+	print 'temp[1]: '+temp[1]
+	
 	if temp[1]=='scripts':
 		os.chdir('../')
 
@@ -45,6 +48,7 @@ def getsubs(task='',group='all'):
 
 	# data directory
 	data_dir=main_dir+'/data'
+	print 'data_dir:'+data_dir
 
 	# define path to subject file
 	subjFile = os.path.join(data_dir,'subjects_list','subjects')
