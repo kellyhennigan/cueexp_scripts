@@ -9,30 +9,40 @@
 # (0 for controls, 1 for patients). Alternatively, do subjsA,_ = getsubs(0)	to return just 
 # control subjects, or: subjsB,_ = getsubs(1) for just patients.   
 
-import os,sys
+import os,sys,socket
 
 
 #########  get main data directory and subjects to process	
 def getMainDir():
 
-	# get full path for main project directory & return to current dir
-	# this is a jenky work around to deal with running scripts from different directories
-	# and running this from differnt computers that have different paths to the main project dir
+	hostname=socket.gethostname()
+
+	if hostname=='vta': 					# linux 
+		main_dir='/home/span/lvta/cueexp'
+	elif hostname=='sr15-9bb16ea2f9':		# Kelly's laptop
+		main_dir='/Users/kelly/cueexp'
+	else: 
+		main_dir='/Users/kelly/cueexp'
+
+
+	# # get full path for main project directory & return to current dir
+	# # this is a jenky work around to deal with running scripts from different directories
+	# # and running this from differnt computers that have different paths to the main project dir
 	
-	currentdir=os.getcwd()
+	# currentdir=os.getcwd()
 
-	os.chdir('../')
+	# os.chdir('../')
 
-	# move up 1 more level if still in scripts dir
-	temp=os.path.split(os.getcwd())
+	# # move up 1 more level if still in scripts dir
+	# temp=os.path.split(os.getcwd())
 
-	print 'temp[1]: '+temp[1]
-	
-	if temp[1]=='scripts':
-		os.chdir('../')
+	# print 'temp[1]: '+temp[1]
 
-	main_dir=os.getcwd()
-	os.chdir(currentdir)
+	# if temp[1]=='scripts':
+	# 	os.chdir('../')
+
+	# main_dir=os.getcwd()
+	# os.chdir(currentdir)
 
 	return main_dir
 
