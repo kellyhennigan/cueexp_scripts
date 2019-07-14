@@ -24,26 +24,6 @@ def getMainDir():
 	else: 
 		main_dir='/Users/kelly/cueexp'
 
-
-	# # get full path for main project directory & return to current dir
-	# # this is a jenky work around to deal with running scripts from different directories
-	# # and running this from differnt computers that have different paths to the main project dir
-	
-	# currentdir=os.getcwd()
-
-	# os.chdir('../')
-
-	# # move up 1 more level if still in scripts dir
-	# temp=os.path.split(os.getcwd())
-
-	# print 'temp[1]: '+temp[1]
-
-	# if temp[1]=='scripts':
-	# 	os.chdir('../')
-
-	# main_dir=os.getcwd()
-	# os.chdir(currentdir)
-
 	return main_dir
 
 
