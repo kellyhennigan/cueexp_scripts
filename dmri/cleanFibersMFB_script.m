@@ -17,6 +17,7 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
+getCuePaths();
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 dataDir = p.data;
 
