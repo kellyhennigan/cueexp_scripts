@@ -20,7 +20,7 @@ close all
 getCuePaths();
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 dataDir = p.data;
-
+mainfigDir=p.figures_dti;
 
 seed = 'DA';  % define seed roi
 
@@ -37,7 +37,7 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
 method = 'mrtrix_fa';
-fstr = 'belowAC_dil2';
+fstr = 'belowAC2';
 
 % out file name for pruned fibers
 outFgStr = [seed '%s_%s%s_' fstr '_autoclean']; %s: LorR, target, LorR
@@ -84,7 +84,7 @@ for lr=LorR
     outFgName = sprintf(outFgStr,lr,target,lr);
     
     if savePlots
-        figDir = fullfile(p.figures,'dti',method,outFgName);
+        figDir = fullfile(mainfigDir,'cleaned_fgs',method,outFgName);
         if ~exist(figDir,'dir')
             mkdir(figDir);
         end
