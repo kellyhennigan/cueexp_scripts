@@ -21,6 +21,7 @@ close all
 
 dataDir = p.data;
 % subjects = getCueSubjects('dti');
+mainfigDir=p.figures_dti;
 
 seed = 'DA';  % define seed roi
 
@@ -87,7 +88,7 @@ for j=1:numel(targets)
         outFgName = sprintf(outFgStr,lr,target,lr);
         
         if savePlots
-            figDir = fullfile(p.figures,'dti',method,outFgName);
+            figDir = fullfile(mainfigDir,'cleaned_fgs',method,outFgName);
             if ~exist(figDir,'dir')
                 mkdir(figDir);
             end
