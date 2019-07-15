@@ -20,6 +20,7 @@ close all
 [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 
 dataDir = p.data;
+mainfigDir=p.figures_dti;
 
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
@@ -91,7 +92,7 @@ for j=1:numel(targets)
         outFgName = sprintf(outFgStr,lr,target,lr);
         
         if savePlots
-            figDir = fullfile(p.figures,'dti',method,outFgName);
+                figDir = fullfile(mainfigDir,'cleaned_fgs',method,outFgName);
             if ~exist(figDir,'dir')
                 mkdir(figDir);
             end
