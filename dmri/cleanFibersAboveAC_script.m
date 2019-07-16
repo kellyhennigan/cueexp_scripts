@@ -17,7 +17,8 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
-[p,task,subjects,gi]=whichCueSubjects('stim','dti');
+getCuePaths();
+[p,task,subjects,gi]=whichCueSubjects('stim','');
 
 dataDir = p.data;
 % subjects = getCueSubjects('dti');
@@ -38,7 +39,7 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
 method = 'mrtrix_fa';
-fstr = 'aboveAC_dil2';
+fstr = 'aboveAC_v2';
 
 % out file name for pruned fibers
 outFgStr = [seed '%s_%s%s_' fstr '_autoclean']; %s: LorR, target, LorR

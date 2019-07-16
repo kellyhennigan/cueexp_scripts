@@ -17,7 +17,8 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
-[p,task,subjects,gi]=whichCueSubjects('stim','dti');
+getCuePaths();
+[p,task,subjects,gi]=whichCueSubjects('stim','');
 
 dataDir = p.data;
 mainfigDir=p.figures_dti;
@@ -26,8 +27,8 @@ seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
 % targets = {'putamen'}; % string for roi
-% targets = {'nacc'};
-targets = {'caudate'}; % stri  ng for roi
+targets = {'nacc','caudate','putamen'};
+% targets = {'caudate'}; % stri  ng for roi
 % targets = {'putamen'};
 
 % LorR = ['L'];
@@ -41,7 +42,7 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
 method = 'mrtrix_fa';
-fstr = 'dil2';
+fstr = 'v2';
 
 
 % out file name for pruned fibers
