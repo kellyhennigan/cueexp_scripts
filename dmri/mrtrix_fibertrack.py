@@ -54,7 +54,7 @@ maxlength = '50'					# max length (in mm) of the tracks
 stop = True							# stop track once it has traversed all include ROIs
 step_size = ''						# define step size for tracking alg (in mm); default is .1* voxel size
 #cutoff = '.05'					# determine FA cutoff value for terminating tracks (default is .1)
-cutoff = '.10'						# FA (or FOD amplitude) cutoff for initializing tracks 
+cutoff = ''						# FA (or FOD amplitude) cutoff for initializing tracks 
 #init_cutoff = '.05'				# initial cutoff for initializing tracks 
 init_cutoff = ''				
 initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
@@ -67,7 +67,7 @@ force = True						# if true, the command will save over a pre-existing output fi
 # define directory for resulting fiber files (relative subject's directory)
 outDir = 'fibers/'+method			# directory for saving out fiber file
 
-outFileStr = '_dil2'  # out file name suffix? Leave blank if not desired
+outFileStr = '_v2'  # out file name suffix? Leave blank if not desired
 #outFileStr = ''  # out file name suffix? Leave blank if not desired
 
 print 'execute commands?'
