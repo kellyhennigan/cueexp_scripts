@@ -113,7 +113,9 @@ for j=1:numel(targets)
             
             % load fiber groups
             cd(fullfile(subjDir,'fibers',method));
-            fg = fgRead(fgName);
+            if exist(fgName,'file')
+                fg = fgRead(fgName);
+            end
             
 %              AFQ_RenderFibers(fg,'tubes',0,'color',[1 0 0])
             if numel(fg.fibers)<2

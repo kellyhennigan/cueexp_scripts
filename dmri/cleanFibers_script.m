@@ -117,8 +117,9 @@ for j=1:numel(targets)
             
             % load fiber groups
             cd(fullfile(subjDir,'fibers',method));
-            fg = fgRead(fgName);
-            
+            if exist(fgName,'file')
+                fg = fgRead(fgName);
+            end
             
             if numel(fg.fibers)<2
                 
