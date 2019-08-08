@@ -22,6 +22,7 @@ method = 'mrtrix_fa';
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
 fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
+% fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
