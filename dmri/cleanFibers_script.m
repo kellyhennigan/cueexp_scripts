@@ -42,11 +42,11 @@ savePlots = 1; % 1 to save out plots, otherwise 0
 
 % method = 'conTrack';
 method = 'mrtrix_fa';
-fstr = 'v2';
+fstr = '';
 
 
 % out file name for pruned fibers
-outFgStr = [seed '%s_%s%s_' fstr '_autoclean']; %s: LorR, target, LorR
+outFgStr = [seed '%s_%s%s' fstr '_autoclean']; %s: LorR, target, LorR
 
 plotToScreen = 0; % don't plot to screen
 
@@ -65,7 +65,7 @@ switch method
         
     case {'mrtrix','mrtrix_orig','mrtrix_fa','mrtrix_tournier'}
         
-        fgStr = [seed '%s_%s%s_' fstr '.tck']; % %s: target, LorR
+        fgStr = [seed '%s_%s%s' fstr '.tck']; % %s: target, LorR
         box_thresh = 5;
         maxIter = 5;  %
         
