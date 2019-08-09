@@ -48,7 +48,7 @@ if strcmp(lr,'L')
     
     if strcmp(subject,'ac160415') || strcmp(subject,'ag151024') || strcmp(subject,'cs160214') || strcmp(subject,'ja160416') || strcmp(subject,'rt160420') || strcmp(subject,'rp160205')
         max_thresh(3)=-1;
-    elseif strcmp(subject,'al170316') || strcmp(subject,'jn160403')  || strcmp(subject,'kd170115') || strcmp(subject,'tg170423') ||  strcmp(subject,'tm160117') 
+    elseif strcmp(subject,'al170316') || strcmp(subject,'jn160403')  || strcmp(subject,'kd170115') || strcmp(subject,'tg170423') ||  strcmp(subject,'tm160117') ||  strcmp(subject,'ps151001') 
         max_thresh(3)=0;
     elseif strcmp(subject,'jd170330')
         max_thresh(3)=3;
@@ -60,7 +60,7 @@ if strcmp(lr,'L')
     
     %%%%%%%%%%% RIGHT SIDE %%%%%%%%%%%
 elseif strcmp(lr,'R')
-    if strcmp(subject,'er170121') || strcmp(subject,'jh160702') ||  strcmp(subject,'lm160914') ||  strcmp(subject,'rc161007') ||  strcmp(subject,'vb170914') || strcmp(subject,'zm160627')
+    if strcmp(subject,'er170121') || strcmp(subject,'jh160702') ||  strcmp(subject,'lm160914') ||  strcmp(subject,'rc161007') ||  strcmp(subject,'vb170914') || strcmp(subject,'zm160627') || strcmp(subject,'ps151001')
         max_thresh(3)=0;    
     elseif strcmp(subject,'dd170610') || strcmp(subject,'rp160205')
         max_thresh(3)=-1;
