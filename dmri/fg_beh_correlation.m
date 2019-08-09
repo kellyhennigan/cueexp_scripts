@@ -21,7 +21,7 @@ method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC_dil2_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
@@ -36,16 +36,17 @@ scale = 'bis';
 
 
 % include control variables?
-% covars = {};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
-omit_subs={};
+% omit_subs={'kj180621'};
+omit_subs={''};
 
 
 
@@ -64,7 +65,7 @@ fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 [fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
 
-scores=log(scores)
+% scores=log(scores)
 
 % midi betas:
 % scale = 'gvnant';
