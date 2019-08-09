@@ -43,9 +43,9 @@ method = 'mrtrix_fa';
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean';...
 %     'DAR_naccR_belowAC_dil2_autoclean'};
-fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean'};
+fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean'};
 
-titleStrs = {'left inferior NAcc tract'};
+titleStrs = {'inferior NAcc tract'};
 
 
 % which scale to correlate with fiber group measures?
@@ -55,10 +55,10 @@ scale = 'BIS'
 
 
 % include control variables?
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-%  covars = {'age','dwimotion'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
