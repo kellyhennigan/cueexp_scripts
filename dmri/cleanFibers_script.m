@@ -93,7 +93,7 @@ for j=1:numel(targets)
         outFgName = sprintf(outFgStr,lr,target,lr);
         
         if savePlots
-                figDir = fullfile(mainfigDir,'cleaned_fgs',method,outFgName);
+            figDir = fullfile(mainfigDir,'cleaned_fgs',method,outFgName);
             if ~exist(figDir,'dir')
                 mkdir(figDir);
             end
@@ -119,56 +119,58 @@ for j=1:numel(targets)
             cd(fullfile(subjDir,'fibers',method));
             if exist(fgName,'file')
                 fg = fgRead(fgName);
-            end
-            
-            if numel(fg.fibers)<2
                 
-                fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
                 
-            else
-                
-                % reorient fibers so they all start in DA ROI
-                [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
-                
-                % remove crazy fibers that deviate outside area defined by box_thresh
-                fg = pruneFG(fg,roi1,roi2,0,box_thresh);
-                
-                % remove outliers and save out cleaned fiber group
-               if numel(fg.fibers)<2
+                if numel(fg.fibers)<2
                     
                     fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
                     
                 else
                     
-                    [~, keep]=AFQ_removeFiberOutliers(fg,...
-                        maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                    % reorient fibers so they all start in DA ROI
+                    [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
                     
-                    fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
+                    % remove crazy fibers that deviate outside area defined by box_thresh
+                    fg = pruneFG(fg,roi1,roi2,0,box_thresh);
                     
-                    cleanfg = getSubFG(fg,find(keep),outFgName);
-                    
-                    nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
-                    
-                    
-                    AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
-                    title(gca,subject);
-                    if savePlots
-                        print(gcf,'-dpng','-r300',fullfile(figDir,subject));
-                    end
-                    
-                    mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
-                    
-                    close all
-                    
-                    if saveOutFGMeasures 
-                         dt = dtiLoadDt6(fullfile(dataDir,subject,dt6file));
-                         saveOutSubjFGMeasures(cleanfg,dt,roi1,roi2,pwd);
-                    end
-                    
+                    % remove outliers and save out cleaned fiber group
+                    if numel(fg.fibers)<2
+                        
+                        fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+                        
+                    else
+                        
+                        [~, keep]=AFQ_removeFiberOutliers(fg,...
+                            maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                        
+                        fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
+                        
+                        cleanfg = getSubFG(fg,find(keep),outFgName);
+                        
+                        nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
+                        
+                        
+                        AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
+                        title(gca,subject);
+                        if savePlots
+                            print(gcf,'-dpng','-r300',fullfile(figDir,subject));
+                        end
+                        
+                        mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
+                        
+                        close all
+                        
+                        if saveOutFGMeasures
+                            dt = dtiLoadDt6(fullfile(dataDir,subject,dt6file));
+                            saveOutSubjFGMeasures(cleanfg,dt,roi1,roi2,pwd);
+                        end
+                        
+                        
+                    end % empty fibers
                     
                 end % empty fibers
                 
-            end % empty fibers
+            end % if fg exists
             
         end % subjects
         
