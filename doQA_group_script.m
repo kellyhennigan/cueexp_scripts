@@ -166,6 +166,21 @@ for i=1:numel(thresh)
     
 end
 
+% plot histogram showing mean motion metric
+
+fig=setupFig;
+hist(mean_motion,numel(subjects));
+
+xlabel(['mean vol-to-vol motion (' motion_metric ')'])
+ylabel('# of subjects')
+title(['mean ' motion_metric ' during ' task ' task'])
+
+if savePlots
+    figPath = fullfile(figDir,['subj_hist_mean_' motion_metric '.png']);
+    print(gcf,'-dpng','-r300',figPath)
+end
+
+
 %% calculate tSNR
 
 %% show where censored TRs are
