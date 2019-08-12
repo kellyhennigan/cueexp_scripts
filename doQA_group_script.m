@@ -78,7 +78,8 @@ for s = 1:numel(subjects)
                 load(sprintf(mp_file,subject)); % loads a structural array, "xform"
                 mp=vertcat(xform(:).ecParams);
                 mp = mp(:,[1:3 5 4 6]); % rearrange to be in order dx,dy,dz,roll,pitch,yaw
-                mp(:,1:3) = mp(:,1:3).*vox_mm; % change displacement to be in units of mm
+                mp(:,1:3) = mp(:,1:3); % change displacement to be in units of mm
+%                  mp(:,1:3) = mp(:,1:3).*vox_mm; % change displacement to be in units of mm
                 mp(:,4:6) = mp(:,4:6)/(2*pi)*360; % convert rotations to units of degrees
             catch
                 warning(['couldnt get motion params for subject ' subject ', so skipping...'])
