@@ -112,7 +112,7 @@ for s = 1:numel(subjects)
                 
             case 'fwdisplacement'
                 
-                m = computeFrameWiseDisplacement(mp);
+                m = computeFrameWiseHeadDisplacement(mp);
                 
         end
         
