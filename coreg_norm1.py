@@ -184,34 +184,38 @@ if __name__ == '__main__':
 
 		########## ANTS ########
 
-		# # estimate transform from t1 native space to tlrc template
-		# xf_str = 'xfs/t12tlrc_xform_'
-		# xf_affine_file = xf_str+'Affine.txt'
-		# xf_warp_file = xf_str+'Warp.nii.gz'
-		# t1_tlrc_file = 't1_tlrc.nii.gz'
+		print '\n\n\nANTS - xform t1 native space to tlrc template\n\n\n'
 
-		# if (os.path.isfile(xf_affine_file) and os.path.isfile(xf_warp_file)):
-		# 	print '\n ants xform files already exist...\n'
-		# else:	
-		# 	cmd = ('ANTS 3 -m CC['+t1_template % (base_dir)+','+t1_ns_file+',1,4] '
-		# 	'-r Gauss[3,0] -o '+xf_str+' -i 100x50x30x10 -t SyN[.25]')
-		# 	doCommand(cmd)
+		# estimate transform from t1 native space to tlrc template
+		xf_str = 'xfs/t12tlrc_xform_'
+		xf_affine_file = xf_str+'Affine.txt'
+		xf_warp_file = xf_str+'Warp.nii.gz'
+		t1_tlrc_file = 't1_tlrc.nii.gz'
 
-		# # apply transform to put t1 in tlrc space
-		# if os.path.isfile(t1_tlrc_file):
-		# 	print '\n ants xformed t1_tlrc file already exists...\n'
-		# else:	
-		# 	cmd =('WarpImageMultiTransform 3 t1_ns.nii.gz '+t1_tlrc_file+
-		# 	' '+xf_warp_file+' '+xf_affine_file)
-		# 	doCommand(cmd)
+		if (os.path.isfile(xf_affine_file) and os.path.isfile(xf_warp_file)):
+			print '\n ants xform files already exist...\n'
+		else:	
+			cmd = ('ANTS 3 -m CC['+t1_template+','+t1_ns_file+',1,4] '+
+			'-r Gauss[3,0] -o '+xf_str+' -i 100x50x30x10 -t SyN[.25]')
+			doCommand(cmd)
 
-		# 	# change header to play nice with afni
-		# 	cmd = '3drefit -view tlrc -space tlrc '+t1_tlrc_file
-		# 	doCommand(cmd)
+		# apply transform to put t1 in tlrc space
+		if os.path.isfile(t1_tlrc_file):
+			print '\n ants xformed t1_tlrc file already exists...\n'
+		else:	
+			cmd =('WarpImageMultiTransform 3 t1_ns.nii.gz '+t1_tlrc_file+
+			' '+xf_warp_file+' '+xf_affine_file)
+			doCommand(cmd)
+
+			# change header to play nice with afni
+			cmd = '3drefit -view tlrc -space tlrc '+t1_tlrc_file
+			doCommand(cmd)
 
 		
 		
 		########## AFNI ########
+
+		print '\n\n\nAFNI - xform t1 native space to tlrc template\n\n\n'
 
 		# estimate & apply xform from t1 native space to tlrc template 
 		t1_tlrc_afni_str = 't1_tlrc_afni'
@@ -235,6 +239,7 @@ if __name__ == '__main__':
 
 		###################### FUNC <-> T1 PIPELINE ############################
 	
+		print '\n\n\nFUNC <-> T1\n\n\n'
 
 		# get 1st volume of functional data & skullstrip
 		for task in tasks:
@@ -264,37 +269,44 @@ if __name__ == '__main__':
 
 			########## ANTS ########
 		
+			print '\n\n\nANTS - estimate affine for func <-> t1 (native space)\n\n\n'
+
 			# estimate affine func vol > t1 
-			# task_xf_str = 'xfs/'+task+'2t1_xform_'
-			# task_xf_file = task_xf_str+'Affine.txt'
-			# task_tlrc_file = 'vol1_'+task+'_tlrc.nii.gz'
+			task_xf_str = 'xfs/'+task+'2t1_xform_'
+			task_xf_file = task_xf_str+'Affine.txt'
+			task_tlrc_file = 'vol1_'+task+'_tlrc.nii.gz'
 			
-			# print '\n task_xf_file: '+task_xf_file+'\n'
+			print '\n task_xf_file: '+task_xf_file+'\n'
 
-			# if os.path.isfile(task_xf_file):
-			# 	print '\n ants xform file '+task_xf_file+' already exists...\n'
-			# else:	
-			# 	cmd =('ANTS 3 -m MI[t1_ns.nii.gz,'+vol_ns_file+',1,32] '
-			# 	'-o '+task_xf_str+' -i 0 --rigid-affine true')
-			# 	doCommand(cmd)
+			if os.path.isfile(task_xf_file):
+				print '\n ants xform file '+task_xf_file+' already exists...\n'
+			else:	
+				cmd =('ANTS 3 -m MI[t1_ns.nii.gz,'+vol_ns_file+',1,32] '
+				'-o '+task_xf_str+' -i 0 --rigid-affine true')
+				doCommand(cmd)
 
 
-			# # apply xforms to put func ref vol in tlrc template space
-			# if os.path.isfile(task_tlrc_file):
-			# 	print '\n ants xformed file '+task_tlrc_file+' already exists...\n'
-			# else:	
-			# 	cmd =('antsApplyTransforms -d 3 -e 3 -i '+vol_ns_file+' '
-			# 	'-r '+func_template % (base_dir)+' ' 
-			# 	'-o '+task_tlrc_file+' --float '
-			# 	'-t '+task_xf_file+' '+xf_affine_file+' '+xf_warp_file)
-			# 	doCommand(cmd)
+			# apply xforms to put func ref vol in tlrc template space
 
-			# 	# change header to play nice with afni
-			# 	cmd = '3drefit -view tlrc -space tlrc '+task_tlrc_file
-			# 	doCommand(cmd)
+			print '\n\n\napply xforms to put func ref vol in tlrc space\n\n\n'
+
+			if os.path.isfile(task_tlrc_file):
+				print '\n ants xformed file '+task_tlrc_file+' already exists...\n'
+			else:	
+				cmd =('antsApplyTransforms -d 3 -e 3 -i '+vol_ns_file+' '
+				'-r '+func_template+' ' 
+				'-o '+task_tlrc_file+' --float '
+				'-t '+task_xf_file+' '+xf_affine_file+' '+xf_warp_file)
+				doCommand(cmd)
+
+				# change header to play nice with afni
+				cmd = '3drefit -view tlrc -space tlrc '+task_tlrc_file
+				doCommand(cmd)
 	
 
 			########## AFNI ########
+
+			print '\n\n\nAFNI - estimate affine for func <-> t1 & apply xforms to put func ref vol in tlrc space\n\n\n'
 
 			# do estimation & apply with this one command:
 			task_tlrc_afni_str = 'vol1_'+task+'_tlrc_afni'

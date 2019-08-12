@@ -15,6 +15,9 @@ savePlots = 1; % 1 to save plots, otherwise 0
 
 figDir = fullfile(p.figures,'QA',task);
 
+motion_metric = 'euclideannorm'; 
+% motion_metric = 'displacement'; 
+% motion_metric = 'fwdisplacement'; 
 
 %%
 
@@ -27,7 +30,7 @@ switch task
         
         vox_mm = 2; % dti voxel dimensions are 2mm isotropic
         
-        en_thresh = 5; % euclidean norm threshold for calling a TR "bad"
+        thresh = 5; % euclidean norm threshold for calling a TR "bad"
         
         % what percentage of bad volumes should lead to excluding a subject for
         % motion?
@@ -38,7 +41,7 @@ switch task
         
         mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task
         
-        en_thresh = [.5 1 2];
+        thresh = [.5 1 2];
         percent_bad_thresh = [5 1 .5];
         
 end
@@ -52,10 +55,10 @@ if ~exist(figDir,'dir') && savePlots
 end
 
 % define vectors and matrices to be filled in
-max_en = nan(numel(subjects),1); % max movement from 1 vol to the next
+max_motion = nan(numel(subjects),1); % max movement from 1 vol to the next
 max_TR = nan(numel(subjects),1); % TR w/max movement
-nBad = nan(numel(subjects),numel(en_thresh)); % # of vols w/movement > en_thresh
-omit_idx = nan(numel(subjects),numel(en_thresh)); % 1 to suggest omitting, otherwise 0
+nBad = nan(numel(subjects),numel(thresh)); % # of vols w/movement > thresh
+omit_idx = nan(numel(subjects),numel(thresh)); % 1 to suggest omitting, otherwise 0
 
 
 for s = 1:numel(subjects)
@@ -92,25 +95,38 @@ for s = 1:numel(subjects)
     
     if ~isempty(mp)
         
-        % calculate euclidean norm (head motion distance roughly in mm units)
-        en = [0;sqrt(sum(diff(mp).^2,2))];
+        switch motion_metric
+            
+            case 'euclideannorm'
+                
+                m = computeAfniEuclideanNorm(mp); 
+                
+            case 'displacement'
+                
+                m = computeHeadDisplacement(mp(:,1:3)); 
+                
+            case 'fwdisplacement'
+                
+                m = computeFrameWiseDisplacement(mp);
+                
+        end
         
         
         % determine this subject's max movement
-        [max_en(s,1),max_TR(s,1)]=max(en);
+        [max_motion(s,1),max_TR(s,1)]=max(m);
         
         
-        for i=1:numel(en_thresh)
+        for i=1:numel(thresh)
             
-            % calculate # of bad vols based on en_thresh
-            nBad(s,i) = numel(find(en>en_thresh(i)));
+            % calculate # of bad vols based on thresh
+            nBad(s,i) = numel(find(m>thresh(i)));
             
             fprintf('\n%s has %d vols with motion > %.1f, which is %.2f percent of %s vols\n\n',...
-                subject,nBad(s,i),en_thresh(i),100.*nBad(s,i)/numel(en),task);
+                subject,nBad(s,i),thresh(i),100.*nBad(s,i)/numel(m),task);
             
             
             % determine whether to omit subject or not, based on percent_bad_thresh
-            if 100.*nBad(s,i)/numel(en)>percent_bad_thresh(i)
+            if 100.*nBad(s,i)/numel(m)>percent_bad_thresh(i)
                 omit_idx(s,i) = 1;
             else
                 omit_idx(s,i) = 0;
@@ -126,24 +142,24 @@ end % subjects
 
 %% plot histogram of bad volume count
 
-for i=1:numel(en_thresh)
+for i=1:numel(thresh)
     
     fig=setupFig;
     hist(nBad(:,i),numel(subjects));
     
-    xlabel(['# of TRs with head movement > euc dist of ' num2str(en_thresh(i))])
+    xlabel(['# of TRs with head movement > euc dist of ' num2str(thresh(i))])
     ylabel('# of subjects')
     title(['head movement during ' task ' task'])
     
     hold on
     yl=ylim;
-    h2=plot([floor(numel(en).*percent_bad_thresh(i)./100) floor(numel(en).*percent_bad_thresh(i)./100)],[yl(1) yl(2)],'k--');
+    h2=plot([floor(numel(m).*percent_bad_thresh(i)./100) floor(numel(m).*percent_bad_thresh(i)./100)],[yl(1) yl(2)],'k--');
     
     legend(h2,{['percent bad thresh=' num2str(percent_bad_thresh(i))]})
     legend('boxoff')
     
     if savePlots
-        figPath = fullfile(figDir,['subj_hist_en_thresh' num2str(en_thresh(i)) '.png']);
+        figPath = fullfile(figDir,['subj_hist_thresh' num2str(thresh(i)) '.png']);
         print(gcf,'-dpng','-r300',figPath)
     end
     

@@ -19,13 +19,15 @@ else
     subjects = splitstring(subjects)';
 end
 
-
-
 dataDir = p.data;
 
 figDir = fullfile(p.figures,'QA',task);
 
 savePlots = 1; % 1 to save plots, otherwise 0
+
+motion_metric = 'euclideannorm'; 
+% motion_metric = 'displacement'; 
+% motion_metric = 'fwdisplacement'; 
 
 %%
 
@@ -105,7 +107,7 @@ for s = 1:numel(subjects)
     end
     
     if isempty(mp)
-        max_en(s,1)=nan; max_TR(s,1)=nan; nBad(s,1)=nan; omit_idx(s,1)=nan;
+        max_motion(s,1)=nan; max_TR(s,1)=nan; nBad(s,1)=nan; omit_idx(s,1)=nan;
     else
         
         % plot motion params & save if desired
@@ -115,23 +117,27 @@ for s = 1:numel(subjects)
             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
         end
         
-        
-        % calculate euclidean norm (head motion distance roughly in mm units)
-        en = [0;sqrt(sum(diff(mp).^2,2))];
-        
-        
+         switch motion_metric        
+            case 'euclideannorm'
+                m = computeAfniEuclideanNorm(mp); 
+            case 'displacement'
+                m = computeHeadDisplacement(mp(:,1:3)); 
+            case 'fwdisplacement'
+                m = computeFrameWiseDisplacement(mp);
+        end
+               
         % determine this subject's max movement
-        [max_en(s,1),max_TR(s,1)]=max(en);
+        [max_motion(s,1),max_TR(s,1)]=max(m);
         
         
-        % calculate # of bad images based on en_thresh
-        nBad(s,1) = numel(find(en>en_thresh));
+        % calculate # of bad images based on thresh
+        nBad(s,1) = numel(find(m>thresh));
         fprintf('\n%s has %d bad image, which is %.2f percent of %s vols\n\n',...
-            subject,nBad(s),100.*nBad(s,1)/numel(en),task);
+            subject,nBad(s),100.*nBad(s,1)/numel(m),task);
         
         
         % determine whether to omit subject or not, based on percent_bad_thresh
-        if 100.*nBad(s)/numel(en)>percent_bad_thresh
+        if 100.*nBad(s)/numel(m)>percent_bad_thresh
             omit_idx(s,1) = 1;
         else
             omit_idx(s,1) = 0;
@@ -142,10 +148,10 @@ for s = 1:numel(subjects)
         if ~isempty(roits_file) && exist(sprintf(roits_file,subject),'file')
             ts = dlmread(sprintf(roits_file,subject));
         else
-            ts = zeros(numel(en),1); roi_str = '';
+            ts = zeros(numel(m),1); roi_str = '';
         end
         
-       fig = plotEnMotionThresh(en,en_thresh,ts,roi_str);
+       fig = plotEnMotionThresh(m,thresh,ts,roi_str);
         
         % if a time series is plotted for diffusion data, ignore the b0 volumes
         % (it messes up the plot scale)

@@ -45,9 +45,9 @@ saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
-% omit_subs={'kj180621'};
-omit_subs={''};
-
+omit_subs={'kj180621'};
+% omit_subs={'ps151001'};
+% omit_subs={''};
 
 
 %% load data & create out directory, if needed
