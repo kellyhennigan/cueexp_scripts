@@ -15,8 +15,8 @@ savePlots = 1; % 1 to save plots, otherwise 0
 
 figDir = fullfile(p.figures,'QA',task);
 
-% motion_metric = 'euclideannorm'; 
-motion_metric = 'displacement'; 
+motion_metric = 'euclideannorm'; 
+% motion_metric = 'displacement'; 
 % motion_metric = 'fwdisplacement'; 
 
 %%
@@ -34,8 +34,9 @@ switch task
         
         % what percentage of bad volumes should lead to excluding a subject for
         % motion?
-        percent_bad_thresh = 1;
+        percent_bad_thresh = 3;
         
+        mean_thresh = .7; % threshold for determining who to exclude based on mean vol-to-vol motion
         
     otherwise % for fmri tasks
         
@@ -43,6 +44,8 @@ switch task
         
         thresh = [.5 1 2];
         percent_bad_thresh = [5 1 .5];
+        
+        mean_thresh = .5; % threshold for determining who to exclude based on mean vol-to-vol motion
         
 end
 
@@ -128,7 +131,7 @@ for s = 1:numel(subjects)
             
             
             % determine whether to omit subject or not, based on percent_bad_thresh
-            if 100.*nBad(s,i)/numel(m)>percent_bad_thresh(i)
+            if 100.*nBad(s,i)/numel(m)>percent_bad_thresh(i) || mean_motion(s) > mean_thresh
                 omit_idx(s,i) = 1;
             else
                 omit_idx(s,i) = 0;
