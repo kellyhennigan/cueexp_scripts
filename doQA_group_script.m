@@ -57,6 +57,7 @@ end
 % define vectors and matrices to be filled in
 max_motion = nan(numel(subjects),1); % max movement from 1 vol to the next
 max_TR = nan(numel(subjects),1); % TR w/max movement
+mean_motion = nan(numel(subjects),1); % mean vol-to-vol motion
 nBad = nan(numel(subjects),numel(thresh)); % # of vols w/movement > thresh
 omit_idx = nan(numel(subjects),numel(thresh)); % 1 to suggest omitting, otherwise 0
 
@@ -114,7 +115,7 @@ for s = 1:numel(subjects)
         
         % determine this subject's max movement
         [max_motion(s,1),max_TR(s,1)]=max(m);
-        
+        mean_motion(s,1)=mean(m);
         
         for i=1:numel(thresh)
             
