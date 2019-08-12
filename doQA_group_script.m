@@ -15,9 +15,9 @@ savePlots = 1; % 1 to save plots, otherwise 0
 
 figDir = fullfile(p.figures,'QA',task);
 
-% motion_metric = 'euclideannorm'; 
+motion_metric = 'euclideannorm'; 
 % motion_metric = 'displacement'; 
-motion_metric = 'fwdisplacement'; 
+% motion_metric = 'fwdisplacement'; 
 
 %%
 
