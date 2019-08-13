@@ -22,7 +22,7 @@ method = 'mrtrix_fa';
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
@@ -45,10 +45,10 @@ saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
-% omit_subs={'kj180621'};
+ omit_subs={'kj180621'};
 % omit_subs={'ps151001'};
 % omit_subs={'ac160415'};
-omit_subs={''};
+% omit_subs={''};
 
 %% load data & create out directory, if needed
 
