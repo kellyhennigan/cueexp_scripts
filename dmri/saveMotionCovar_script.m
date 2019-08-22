@@ -48,11 +48,11 @@ for s = 1:numel(subjects)
         enorm = [0;sqrt(sum(diff(mp).^2,2))];
       
         % mean motion 
-        meandisplacement = computeMeanDisplacement(mp(:,1:3));
-        
-        % mean framewise displacement
-        meanfwd =  computeFrameWiseMeanDisplacement(mp);
-        
+%         meandisplacement = computeHeadDisplacement(mp(:,1:3));
+%         
+%         % mean framewise displacement
+%         meanfwd =  computeFrameWiseMeanDisplacement(mp);
+%         
         % max enorm 
         maxenorm = max(enorm);
         

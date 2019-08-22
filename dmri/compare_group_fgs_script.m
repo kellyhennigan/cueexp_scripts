@@ -31,21 +31,21 @@ targets={'nacc';
     'nacc';
     'nacc'};
 
-fgMatStrs = {'DAL_%sL_belowAC_dil2_autoclean';
-    'DAR_%sR_belowAC_dil2_autoclean';
-    'DAL_%sL_aboveAC_dil2_autoclean';
-    'DAR_%sR_aboveAC_dil2_autoclean'};
+fgMatStrs = {'DAL_%sL_belowAC_autoclean';
+    'DAR_%sR_belowAC_autoclean';
+    'DAL_%sL_aboveAC_autoclean';
+    'DAR_%sR_aboveAC_autoclean'};
    
 
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % covars = {'age'};
-% covars={'age','dwimotion'};
-cocovars={''};
+ covars={'age','dwimotion'};
+% cocovars={''};
 
 % corresponding labels for saving out
-fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
+fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 
 % plot groups
 group = {'controls','patients'};
@@ -62,10 +62,10 @@ lspec = {'-','--'};
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
-omit_subs = {'as170730'}; % as170730 is too old for this sample
+omit_subs = {'as170730','kj180621'}; % as170730 is too old for this sample
 
-fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
-% fgMPlots={'FA','MD'};
+% fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
+fgMPlots={'FA','MD'};
 
 doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
