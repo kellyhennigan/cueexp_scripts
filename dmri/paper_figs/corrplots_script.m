@@ -11,7 +11,7 @@ figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'patients'};
+group = {'controls'};
 
 
 % directory & filename of fg measures
@@ -43,10 +43,10 @@ method = 'mrtrix_fa';
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean';...
 %     'DAR_naccR_belowAC_dil2_autoclean'};
-fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean'};
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
 
-titleStrs = {'inferior NAcc tract'};
-
+% titleStrs = {'inferior NAcc tract'};
+titleStrs=fgMatStrs;
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS'
@@ -63,7 +63,7 @@ scale = 'BIS'
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
-omit_subs={};
+omit_subs={'kj180621'};
 
 
 
@@ -151,7 +151,7 @@ end
     
     % plot it
     fig{f} = subplotCorr([],{fa,1-md,rd,ad},{scores},{'FA','1-MD','RD','AD'},scale,corrStr);
-    ti=suptitle(titleStr);
+    ti=suptitle(strrep(titleStr,'_',' '));
     set(ti,'FontSize',18)
     
     if saveFigs
