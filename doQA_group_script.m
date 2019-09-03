@@ -9,7 +9,7 @@ dataDir = p.data;
 
 task = input('cue, mid, midi, or dti (or just hit return for no task)? ','s');
 
-[subjects,gi]=getCueSubjects('',0);
+[subjects,gi]=getCueSubjects('');
 
 savePlots = 1; % 1 to save plots, otherwise 0
 
