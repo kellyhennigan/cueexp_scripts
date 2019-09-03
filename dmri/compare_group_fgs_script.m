@@ -26,6 +26,7 @@ method = 'mrtrix_fa';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean'};
+
 targets={'nacc';
     'nacc';
     'nacc';
@@ -35,7 +36,17 @@ fgMatStrs = {'DAL_%sL_belowAC_autoclean';
     'DAR_%sR_belowAC_autoclean';
     'DAL_%sL_aboveAC_autoclean';
     'DAR_%sR_aboveAC_autoclean'};
-   
+%    
+% fgMatStrs = {'DAL_%sL_dil2_autoclean';
+%     'DAR_%sR_dil2_autoclean';
+%     'DAL_%sL_dil2_autoclean';
+%     'DAR_%sR_dil2_autoclean'};
+% 
+% targets={'caudate';
+%     'caudate';
+%     'putamen';
+%     'putamen'};
+
 
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
@@ -48,9 +59,9 @@ fgMatStrs = {'DAL_%sL_belowAC_autoclean';
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 
 % plot groups
-group = {'controls','patients'};
-groupStr = '_bygroup';
-lspec = {'-','--'};
+% group = {'controls','patients'};
+% groupStr = '_bygroup';
+% lspec = {'-','--'};
 
 % group = {'controls'};
 % groupStr = 'controls';
@@ -58,7 +69,11 @@ lspec = {'-','--'};
 
 % group = {'controls','relapsers','nonrelapsers'};
 % groupStr = '_byrelapse';
+% lspec = {'-','--'};
 
+group = {'relapsers','nonrelapsers'};
+groupStr = '_byrelapse';
+lspec = {'-','--'};
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 

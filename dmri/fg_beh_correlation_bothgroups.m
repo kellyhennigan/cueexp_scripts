@@ -20,7 +20,7 @@ group = {'controls','patients'};
 method = 'mrtrix_fa';
 
 
-fgMatStr = 'DAL_naccL_belowAC_dil2_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
 
 titleStr = 'NAcc pathway (inferior)';
 
@@ -29,7 +29,7 @@ titleStr = 'NAcc pathway (inferior)';
 scale = 'BIS';
 
 % include control variables? 
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 covars = {''};
 % covars = {'dwimotion'};
 % covars = '';

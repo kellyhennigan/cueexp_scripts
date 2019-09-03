@@ -196,6 +196,10 @@ switch measure
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         data = obstime;
         
+    case 'censored'
+        
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        data = censored;
         
     case {'3monthfollowupdays','finalfollowupdays'}
         
