@@ -29,8 +29,8 @@ titleStr = 'NAcc pathway (inferior)';
 scale = 'BIS';
 
 % include control variables? 
-covars = {'age','dwimotion'};
-covars = {''};
+ covars = {'age','dwimotion'};
+% covars = {};
 % covars = {'dwimotion'};
 % covars = '';
 

@@ -35,13 +35,28 @@ end
 % 
 % p = 2.*(1-normcdf(Z)); % for 2-tailed Z scores
 
-
 %% 
 
 % 
 % p = 2.*(1-tcdf(T_2tail,df)); % for 2-tailed T stats
 % Z_2tail = norminv(1-(p./2)); % corresponding Z stats for two-tailed test
 
+
+%% note: compare to afni's cdf command! 
+% ref: http://andysbrainblog.blogspot.com/2013/01/afni-command-of-week-cdf.html
+
+% % e.g.:
+
+% Not necessarily a neuroimaging-specific tool, cdf simply converts
+% between p-values and t-statistics (or F-statistics) using the cumulative
+% distribution function. Supply the test that you did, followed by the
+% t-statistic (or p-value) and degrees of freedom, e.g.:
+% 
+% cdf -t2p fitt 3.4 15 p = 0.00396 #A t-statstic of 3.4 with 15 degrees of
+% freedom yields a p-value of 0.00396
+% 
+% cdf -p2t fitt 0.001 30 t = 3.65 #We would need a t-statistic of 3.65 or
+% greater to reach a p-value of 0.001
 
 
 %% some useful code found here: 

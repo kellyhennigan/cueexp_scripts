@@ -14,7 +14,7 @@ dataDir = p.data;
 method = 'mrtrix_fa';
 
 target='nacc';
-fgMatStr = ['DALR_' target 'LR_belowAC_dil2_autoclean']; %'.mat' will be added to end
+fgMatStr = ['DALR_' target 'LR_belowAC_autoclean']; %'.mat' will be added to end
 
 % which scale to correlate with fiber group measures?
 scale = 'BIS';

@@ -26,16 +26,16 @@ method = 'mrtrix_fa';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean'};
-
-targets={'nacc';
-    'nacc';
-    'nacc';
-    'nacc'};
-
-fgMatStrs = {'DAL_%sL_belowAC_autoclean';
-    'DAR_%sR_belowAC_autoclean';
-    'DAL_%sL_aboveAC_autoclean';
-    'DAR_%sR_aboveAC_autoclean'};
+% 
+% targets={'nacc';
+%     'nacc';
+%     'nacc';
+%     'nacc'};
+% 
+% fgMatStrs = {'DAL_%sL_belowAC_autoclean';
+%     'DAR_%sR_belowAC_autoclean';
+%     'DAL_%sL_aboveAC_autoclean';
+%     'DAR_%sR_aboveAC_autoclean'};
 %    
 % fgMatStrs = {'DAL_%sL_dil2_autoclean';
 %     'DAR_%sR_dil2_autoclean';
@@ -47,21 +47,31 @@ fgMatStrs = {'DAL_%sL_belowAC_autoclean';
 %     'putamen';
 %     'putamen'};
 
+targets={'nacc';
+    'nacc';
+    'caudate';
+    'putamen'};
+
+fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
+    'DALR_%sLR_aboveAC_autoclean';
+    'DALR_%sLR_dil2_autoclean';
+    'DALR_%sLR_dil2_autoclean'};
+
 
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % covars = {'age'};
- covars={'age','dwimotion'};
-% cocovars={''};
+%  covars={'age','dwimotion'};
+covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 
 % plot groups
-% group = {'controls','patients'};
-% groupStr = '_bygroup';
-% lspec = {'-','--'};
+group = {'controls','patients'};
+groupStr = '_bygroup';
+lspec = {'-','--'};
 
 % group = {'controls'};
 % groupStr = 'controls';
@@ -71,13 +81,13 @@ fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 % groupStr = '_byrelapse';
 % lspec = {'-','--'};
 
-group = {'relapsers','nonrelapsers'};
-groupStr = '_byrelapse';
-lspec = {'-','--'};
+% group = {'relapsers','nonrelapsers'};
+% groupStr = '_byrelapse';
+% lspec = {'-','--'};
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
-omit_subs = {'as170730','kj180621'}; % as170730 is too old for this sample
+omit_subs = {'as170730','kj180621','kc190225','mm190226'}; % as170730 is too old for this sample
 
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
 fgMPlots={'FA','MD'};
@@ -167,7 +177,7 @@ for j=1:numel(fgMatStrs)
             end
             
             % only plot p-value for mid 50% comparison
-            p(round(nNodes./2)) = thisp;
+%             p(round(nNodes./2)) = thisp;
         end
         
         
