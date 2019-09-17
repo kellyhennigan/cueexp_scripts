@@ -27,15 +27,11 @@ method = 'mrtrix_fa';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean'};
 % 
-% targets={'nacc';
-%     'nacc';
-%     'nacc';
-%     'nacc'};
-% 
-% fgMatStrs = {'DAL_%sL_belowAC_autoclean';
-%     'DAR_%sR_belowAC_autoclean';
-%     'DAL_%sL_aboveAC_autoclean';
-%     'DAR_%sR_aboveAC_autoclean'};
+targets={'nacc';
+    'nacc'};
+
+fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
+    'DALR_%sLR_aboveAC_autoclean'};
 %    
 % fgMatStrs = {'DAL_%sL_dil2_autoclean';
 %     'DAR_%sR_dil2_autoclean';
@@ -47,23 +43,30 @@ method = 'mrtrix_fa';
 %     'putamen';
 %     'putamen'};
 
-targets={'nacc';
-    'nacc';
-    'caudate';
-    'putamen'};
-
-fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
-    'DALR_%sLR_aboveAC_autoclean';
-    'DALR_%sLR_dil2_autoclean';
-    'DALR_%sLR_dil2_autoclean'};
-
+% targets={'nacc';
+%     'nacc';
+%     'caudate';
+%     'putamen'};
+% 
+% fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
+%     'DALR_%sLR_aboveAC_autoclean';
+%     'DALR_%sLR_dil2_autoclean';
+%     'DALR_%sLR_dil2_autoclean'};
+% 
+% targets={
+%     'caudate';
+%     'putamen'};
+% 
+% fgMatStrs = {
+%     'DALR_%sLR_autoclean';
+%     'DALR_%sLR_autoclean'};
 
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % covars = {'age'};
-%  covars={'age','dwimotion'};
-covars={};
+ covars={'age','dwimotion'};
+% covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');

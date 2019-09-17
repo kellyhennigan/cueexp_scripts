@@ -10,10 +10,10 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'controls'};
+% group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
-%  group = {'patients'};
+ group = {'patients'};
 
 % directory & filename of fg measures
 % method = 'conTrack';
@@ -30,22 +30,22 @@ titleStr = 'inferior NAcc tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
-% scale = 'years_of_use';
+scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
-scale = 'bis';
+% scale = 'age';
 
 
 % include control variables?
-% covars = {};
+covars = {'age','dwimotion'};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
 
- omit_subs={'kj180621'};
+omit_subs = {'kj180621','kc190225','mm190226'};
 % omit_subs={'ps151001'};
 % omit_subs={'ac160415'};
 % omit_subs={''};
