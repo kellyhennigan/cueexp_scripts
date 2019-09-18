@@ -10,10 +10,10 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-% group = {'controls'};
+group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
- group = {'patients'};
+%  group = {'patients'};
 
 % directory & filename of fg measures
 % method = 'conTrack';

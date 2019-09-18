@@ -352,6 +352,26 @@ if __name__ == '__main__':
 				cmd = 'maskfilter -npass 2 t1/wm_mask.nii.gz dilate '+wmmask_dilated_file
 				doCommand(cmd)
 
+		
+		# dilate putamen, caudate, nacc, and DA ROIs 
+		cmd = 'maskfilter -npass 2 ROIs/caudateL.nii.gz dilate ROIs/caudateL_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/caudateR.nii.gz dilate ROIs/caudateR_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/naccL.nii.gz dilate ROIs/naccL_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/naccR.nii.gz dilate ROIs/naccR_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/putamenL.nii.gz dilate ROIs/putamenL_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/putamenR.nii.gz dilate ROIs/putamenR_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/DAL.nii.gz dilate ROIs/DAL_dil2.nii.gz'
+		doCommand(cmd)
+		cmd = 'maskfilter -npass 2 ROIs/DAR.nii.gz dilate ROIs/DAR_dil2.nii.gz'
+		doCommand(cmd)
+
+
 
 		print 'FINISHED SUBJECT '+subject
 			
