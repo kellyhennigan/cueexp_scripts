@@ -38,6 +38,8 @@ for i = 1:numel(subjects)
     
     p=getCuePaths(subject);
     
+    cd(p.subj);
+    
     % define raw diffusion and t1 file names
     dwRawFileName = fullfile(p.raw, 'dwi.nii.gz');  % filepath to raw dti data
     t1FileName = fullfile(p.subj, 't1.nii.gz');   % filepath to
@@ -91,7 +93,7 @@ if nBadWMVox>10
 %   showMontage(double(badData));
 %   resp=input('clip neg values to zero? (should say yes if # is low) ','s');
 %   if strcmpi(resp(1),'y')
-      dtiFixTensorsAndDT6(dt6file);
+      dtiFixTensorsAndDT6(dt6file,dt.files.tensors);
 %   end
 end
 
