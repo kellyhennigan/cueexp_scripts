@@ -40,7 +40,7 @@ switch task
         
         vox_mm = 2; % dti voxel dimensions are 2mm isotropic
         
-        en_thresh = 3; % euclidean norm threshold for calling a TR "bad"
+        thresh = 3; % euclidean norm threshold for calling a TR "bad"
         
         % what percentage of bad volumes should lead to excluding a subject for
         % motion? 
@@ -55,7 +55,7 @@ switch task
         
         mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task
         
-        en_thresh = 1;
+        thresh = 1;
         percent_bad_thresh = 1;
         
         roi_str = 'nacc_afni';

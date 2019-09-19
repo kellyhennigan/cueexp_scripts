@@ -11,7 +11,7 @@ figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'patients'};
+group = {'controls'};
 
 
 
@@ -19,18 +19,25 @@ group = {'patients'};
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+%     'DALR_naccLR_aboveAC_autoclean';
+%     'DALR_naccLR_autoclean';
+%     'DALR_caudateLR_autoclean';...
+%     'DALR_putamenLR_autoclean'};
+
 fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
     'DALR_naccLR_aboveAC_autoclean';
-    'DALR_caudateLR_autoclean';...
-    'DALR_putamenLR_autoclean'};
+    'DALR_naccLR_autoclean'};
 
     
 % fgMatStrs = {'DAL_naccL_belowAC_autoclean';
 %     'DAL_naccL_aboveAC_autoclean';
+%     'DAL_naccL_autoclean';
 %     'DAL_caudateL_autoclean';
 %     'DAL_putamenL_autoclean';
 %     'DAR_naccR_belowAC_autoclean';
 %     'DAR_naccR_aboveAC_autoclean';
+%     'DAR_naccR_autoclean';
 %     'DAR_caudateR_autoclean';
 %     'DAR_putamenR_autoclean'};
 
@@ -45,10 +52,10 @@ scale = 'BIS'
 
 
 % include control variables?
-% covars = {};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
- covars = {'age','dwimotion'};
+%  covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
