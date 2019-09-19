@@ -37,7 +37,7 @@ seedStr = 'DA'						# if false, will use the mask as seed ROI by default
 
 targetStrs = ['nacc']		
 #excPath = ''
-excPath = dataDir+'/ROIs/ACabove_mask.nii.gz'
+excPath = dataDir+'/ROIs/ACbelow_mask.nii.gz'
 
 LR = ['L','R'] # 'L' for left and/or 'R' for right
 

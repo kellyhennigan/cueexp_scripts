@@ -10,6 +10,7 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
+
 group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
@@ -30,7 +31,7 @@ titleStr = 'inferior NAcc tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
-scale = 'years_of_use';
+scale = 'bis';
 % scale = 'nacc_nvlout_betas';
 % scale = 'age';
 
@@ -44,11 +45,22 @@ covars = {'age','dwimotion'};
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
-
-omit_subs = {'kj180621','kc190225','mm190226'};
+    
+% omit_subs = {'kj180621','kc190225','mm190226'};
 % omit_subs={'ps151001'};
 % omit_subs={'ac160415'};
-% omit_subs={''};
+omit_subs={'yl160507'
+    'cm160510'
+    'gm160909'
+    'jb161004'
+    'rt170816'
+    'sh180518'
+    'dl180602'
+    'tm181129'
+    'kc190225'
+    'mm190226'
+    'tc190628'
+    'jj190821'};
 
 %% load data & create out directory, if needed
 
@@ -174,7 +186,7 @@ if saveFigs
     outName = [fgMatStr '_' group{:} cvStr nodeStr];
     print(gcf,'-dpng','-r300',fullfile(outDir,outName))
 end
-
+% 
 %%%% NOTE: if control variables are included, the p-values need to be
 % adjusted to account for the difference in degrees of freedom!! (1 less
 % degree of freedom per covariate)

@@ -29,8 +29,8 @@ titleStr = 'NAcc pathway (inferior)';
 scale = 'BIS';
 
 % include control variables? 
- covars = {'age','dwimotion'};
-% covars = {};
+%  covars = {'age','dwimotion'};
+covars = {};
 % covars = {'dwimotion'};
 % covars = '';
 
@@ -40,7 +40,7 @@ cols(1,:)=[0 0 0];
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(p.figures_dti, ['FG_' strrep(scale,'_','') '_corr'],fgMatStr);
 
-omit_subs = {'kj180621','kc190225','mm190226'};
+omit_subs = {''};
     
 plotLeg=1;
 

@@ -14,38 +14,26 @@ figDir = pa.figures_dti;
 group = {'patients'};
 
 
+
+
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean';...
-    'DAL_naccL_belowAC_autoclean';...
-    'DAR_naccR_belowAC_autoclean';...
-    'DALR_naccLR_aboveAC_autoclean';...
-    'DAL_naccL_aboveAC_autoclean';...
-    'DAR_naccR_aboveAC_autoclean'};
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+    'DALR_naccLR_aboveAC_autoclean';
+    'DALR_caudateLR_autoclean';...
+    'DALR_putamenLR_autoclean'};
 
-% % 
-% titleStrs = {'Inferior NAcc tract';...
-%     'Superior NAcc tract';...
-%     'Caudate tract';...
-%     'Putamen tract'};
-
-% fgMatStrs = {'DALR_naccLR_belowAC_dil2_autoclean';
-%     'DAL_naccL_belowAC_dil2_autoclean';
-%     'DAR_naccR_belowAC_dil2_autoclean'};
-% 
-% % 
-% titleStrs = {'Inferior NAcc tract';
-%     'Left inferior NAcc tract';
-%     'Right inferior NAcc tract'};
     
+% fgMatStrs = {'DAL_naccL_belowAC_autoclean';
+%     'DAL_naccL_aboveAC_autoclean';
+%     'DAL_caudateL_autoclean';
+%     'DAL_putamenL_autoclean';
+%     'DAR_naccR_belowAC_autoclean';
+%     'DAR_naccR_aboveAC_autoclean';
+%     'DAR_caudateR_autoclean';
+%     'DAR_putamenR_autoclean'};
 
-
-% fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-% 
-% fgMatStrs = {'DAL_naccL_belowAC_dil2_autoclean';...
-%     'DAR_naccR_belowAC_dil2_autoclean'};
-% fgMatStrs = {'DAR_naccR_belowAC_autoclean'};
 
 % titleStrs = {'inferior NAcc tract'};
 titleStrs=fgMatStrs;
@@ -65,7 +53,7 @@ scale = 'BIS'
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
-omit_subs={'kj180621'};
+omit_subs={''};
 
 
 

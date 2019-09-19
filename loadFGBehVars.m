@@ -74,7 +74,7 @@ end
     
 % remove any subjects from keep index that arent returned in
 % getCueSubjects('dti')
-% keep_idx(ismember(subjects,getCueSubjects('dti'))==0)=0;
+keep_idx(ismember(subjects,getCueSubjects('dti'))==0)=0;
 
 
 % exclude omit_subs from keep index

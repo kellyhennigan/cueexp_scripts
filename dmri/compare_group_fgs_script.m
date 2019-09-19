@@ -26,33 +26,17 @@ method = 'mrtrix_fa';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean';
 %     'DALR_%sLR_dil2_autoclean'};
-% 
+
 targets={'nacc';
-    'nacc'};
+    'nacc';
+    'caudate';
+    'putamen'};
 
 fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
-    'DALR_%sLR_aboveAC_autoclean'};
-%    
-% fgMatStrs = {'DAL_%sL_dil2_autoclean';
-%     'DAR_%sR_dil2_autoclean';
-%     'DAL_%sL_dil2_autoclean';
-%     'DAR_%sR_dil2_autoclean'};
-% 
-% targets={'caudate';
-%     'caudate';
-%     'putamen';
-%     'putamen'};
-
-% targets={'nacc';
-%     'nacc';
-%     'caudate';
-%     'putamen'};
-% 
-% fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
-%     'DALR_%sLR_aboveAC_autoclean';
-%     'DALR_%sLR_dil2_autoclean';
-%     'DALR_%sLR_dil2_autoclean'};
-% 
+    'DALR_%sLR_aboveAC_autoclean';
+    'DALR_%sLR_autoclean';
+    'DALR_%sLR_autoclean'};
+% % %    
 % targets={
 %     'caudate';
 %     'putamen'};
@@ -60,13 +44,16 @@ fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
 % fgMatStrs = {
 %     'DALR_%sLR_autoclean';
 %     'DALR_%sLR_autoclean'};
+%    
 
 
-% fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
-
+% fgMatStrs = {'DAL_%sL_dil2_autoclean';
+%     'DAR_%sR_dil2_autoclean';
+%     'DAL_%sL_dil2_autoclean';
+%     'DAR_%sR_dil2_autoclean'};
 % covars = {'age'};
- covars={'age','dwimotion'};
-% covars={};
+%  covars={'age','dwimotion'};
+covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
@@ -90,10 +77,10 @@ lspec = {'-','--'};
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
-omit_subs = {'as170730','kj180621','kc190225','mm190226'}; % as170730 is too old for this sample
+omit_subs = {''}; 
 
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
-fgMPlots={'FA','MD'};
+fgMPlots={'FA'};
 
 doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,7 +156,7 @@ for j=1:numel(fgMatStrs)
             % if there's 2 groups, do a ttest. Otherwise do a one-way anova
             if numel(groupindices)==2
                 [h,thisp,~,stats]=ttest2(mid50(gi==groupindices(1)),mid50(gi==groupindices(2)))
-                test_res = sprintf('t(%d) = %.1f; p = %.3f\n',stats.df,stats.tstat,thisp);
+                test_res = sprintf('t(%d) = %.3f; p = %.3f\n',stats.df,stats.tstat,thisp);
             else
                 %           thisp=getPValsGroup(mid50); % one-way ANOVA
                 [thisp,tab]=anova1(mid50,gi,'off'); % get stats
