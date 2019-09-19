@@ -26,10 +26,10 @@ mainfigDir=p.figures_dti;
 seed = 'DA';  % define seed roi
 % seed = 'nacc';
 
-% targets = {'nacc'}; % string for roi
-targets = {'caudate','putamen','nacc'};
-% targets = {'caudate'}; % stri  ng for roi
-% targets = {'putamen'};
+targets=input('target name(s): ','s');
+targets=splitstring(targets);
+% targets = {'caudate','putamen','nacc'};
+
 
 % LorR = ['L'];
 LorR = upper(input('L, R, or both? ','s'));
