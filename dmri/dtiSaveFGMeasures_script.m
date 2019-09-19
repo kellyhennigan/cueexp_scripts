@@ -26,8 +26,8 @@ LorR = ['L','R'];
 combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 seeds = {'DA','DA','DA','DA'};
-targets = {'nacc','nacc','caudate','putamen'};
-versionStrs = {'belowAC_autoclean','aboveAC_autoclean','autoclean','autoclean'};
+targets = {'nacc','nacc','nacc','caudate','putamen'};
+versionStrs = {'belowAC_autoclean','aboveAC_autoclean','autoclean','autoclean','autoclean'};
 
 
 % seeds = {'DA'};
