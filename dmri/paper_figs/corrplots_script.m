@@ -25,9 +25,11 @@ method = 'mrtrix_fa';
 %     'DALR_caudateLR_autoclean';...
 %     'DALR_putamenLR_autoclean'};
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
-    'DALR_naccLR_aboveAC_autoclean';
-    'DALR_naccLR_autoclean'};
+fgMatStrs = {'DAL_naccL_belowAC_autoclean';
+    'DAR_naccR_belowAC_autoclean';
+    'DALR_naccLR_belowAC_autoclean'};
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
+
 
     
 % fgMatStrs = {'DAL_naccL_belowAC_autoclean';
@@ -46,16 +48,16 @@ fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
 titleStrs=fgMatStrs;
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS'
+scale = 'BIS';
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
 
 
 % include control variables?
-covars = {};
+% covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-%  covars = {'age','dwimotion'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);

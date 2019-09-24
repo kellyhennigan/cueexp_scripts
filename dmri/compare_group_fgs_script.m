@@ -36,6 +36,12 @@ fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
     'DALR_%sLR_aboveAC_autoclean';
     'DALR_%sLR_autoclean';
     'DALR_%sLR_autoclean'};
+
+% fgMatStrs = {'DAL_%sL_belowAC_autoclean';
+%     'DAL_%sL_aboveAC_autoclean';
+%     'DAL_%sL_autoclean';
+%     'DAL_%sL_autoclean'};
+
 % % %    
 % targets={
 %     'caudate';
@@ -52,8 +58,8 @@ fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
 %     'DAL_%sL_dil2_autoclean';
 %     'DAR_%sR_dil2_autoclean'};
 % covars = {'age'};
-%  covars={'age','dwimotion'};
-covars={};
+ covars={'age','dwimotion'};
+% covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');

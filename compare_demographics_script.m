@@ -6,11 +6,11 @@ close all
 p = getCuePaths(); 
 dataDir = p.data;
 
-task = 'cue'; 
+task = 'dti'; 
 
-groups = {'early_relapsers','early_abstainers'};
+% groups = {'early_relapsers','early_abstainers'};
 % groups = {'controls','relapsers_6months','nonrelapsers_6months'};
-% groups = {'controls','patients'};
+groups = {'controls','patients'};
 
 % demVars = {'age','gender','education','smoke','bdi','bis','discount_rate'};
 % demVars = {'discount_rate'};

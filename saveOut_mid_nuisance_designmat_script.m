@@ -28,11 +28,12 @@ nuisance_regfiles{3} = fullfile(dataDir,'%s','func_proc',[task '_wm' afniStr '.1
 nuisance_regidx{3} = 1; 
 
 
-regNames = {'poly0','poly1','poly2','dx','dy','dz','roll','pitch','yaw','csf','wm'};
+regNames = {'poly0run1','poly1run1','poly2run1','poly0run2','poly1run2','poly2run2','dx','dy','dz','roll','pitch','yaw','csf','wm'};
 
 outFilePath = fullfile(dataDir,'%s','func_proc',['pp_' task '_tlrc' afniStr '_nuisance_designmat']);
 
-nTRs=436;
+nTRsPerRun=[256 292];
+nTRs=sum(nTRsPerRun);
 
 
 %% do it
@@ -47,7 +48,7 @@ for i=1:numel(subjects) % subject loop
     fprintf(['\n\nworking on subject ' subject '...\n\n']);
     
         
-        baseregs=modelBaseline(nTRs,nDPolyRegs);
+        baseregs=modelBaseline(nTRsPerRun,nDPolyRegs);
         for n=1:numel(nuisance_regfiles)
             temp = dlmread(sprintf(nuisance_regfiles{n},subject));
             baseregs = [baseregs, temp(:,nuisance_regidx{n})];

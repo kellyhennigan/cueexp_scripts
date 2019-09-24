@@ -10,8 +10,8 @@ task = 'dti';
 
 %  group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
 % group = 'patients';
-group = 'controls';
-% group = 'nonrelapsers_3months';
+% group = 'controls';
+group = 'relapsers_3months';
    
 [subjects,gi,notes] = getCueSubjects(task,group);
 % subjects(22:end)=[]; gi(22:end)=[];
