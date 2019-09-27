@@ -89,12 +89,10 @@ for s=1:numel(subjects)
           TRs1=repmat(onsetTRs1,1,fcTRs(end))+repmat(0:fcTRs(end)-1,size(onsetTRs1,1),1);
           TRs1=TRs1(:,fcTRs);
           TRs1=reshape(TRs1',[],1);
-          TRs1=TRs1(~isnan(TRs1));
           
           TRs2=repmat(onsetTRs2,1,fcTRs(end))+repmat(0:fcTRs(end)-1,size(onsetTRs2,1),1);
           TRs2=TRs2(:,fcTRs); 
           TRs2=reshape(TRs2',[],1);
-          TRs2=TRs2(~isnan(TRs2));
           
           if censorTRs
               censorVols = find(dlmread(sprintf(censorFilePath,subject))==0);
@@ -102,6 +100,9 @@ for s=1:numel(subjects)
               TRs2(ismember(TRs2,censorVols))=nan;
           end
             
+          TRs1=TRs1(~isnan(TRs1));
+          TRs2=TRs2(~isnan(TRs2));
+          
           % method 1: use error time series
           r1(s,1)=corr(seed_errts(TRs1),target_errts(TRs1));
           r2(s,1)=corr(seed_errts(TRs2),target_errts(TRs2));
