@@ -2,7 +2,7 @@
 title: "pairs plots"
 author: "Kelly MacNiven"
 date: "3/11/2019"
-output: pdf_document
+output: html_document
 ---
 
 
@@ -11,16 +11,17 @@ get libraries & load data
 require(psych)
 
 #load data
-d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190326.csv')
-
-
+#d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190924.csv')
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__190926_nosr141031.csv')
+d1$FA<-d1$inf_NAcc_fa_controllingagemotion
+d1$inverseMD<-1-d1$inf_NAcc_md_controllingagemotion
 ```
 
 #pairs plots 1: age and motion
 
 ```{r pairs plot1, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,age,dwimotion))
+dp = with(d1, data.frame(FA,inverseMD,BIS,age,dwimotion))
           
 pairs.panels(dp)
 
@@ -30,7 +31,7 @@ pairs.panels(dp)
 
 ```{r pairs plot2, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
+dp = with(d1, data.frame(FA,inverseMD,BIS,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
 
 pairs.panels(dp)
 
@@ -40,7 +41,7 @@ pairs.panels(dp)
 
 ```{r pairs plot3, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
+dp = with(d1, data.frame(FA,inverseMD,BIS,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
 
 pairs.panels(dp)
 
@@ -50,7 +51,7 @@ pairs.panels(dp)
 
 ```{r pairs plot4, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,BIS_attn,BIS_motor,BIS_nonplan))
+dp = with(d1, data.frame(FA,inverseMD,BIS,BIS_attn,BIS_motor,BIS_nonplan))
 
 pairs.panels(dp)
 
@@ -60,9 +61,9 @@ pairs.panels(dp)
 
 ```{r pairs plot5, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,BIS,d1$nacc_gain5_TR3,d1$nacc_gain5_TR4,d1$nacc_gvnant_beta))
+#dp = with(d1, data.frame(FA,inverseMD,BIS,d1$nacc_gain5_TR3,d1$nacc_gain5_TR4,d1$nacc_gvnant_beta))
 
-pairs.panels(dp)
+#pairs.panels(dp)
 
 ```       
 
@@ -71,7 +72,7 @@ pairs.panels(dp)
 
 ```{r pairs plot6, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
+dp = with(d1, data.frame(FA,inverseMD,discount_rate,basdrive,basfunseek,basrewardresp,bisbas_bis,BDI))
 
 pairs.panels(dp)
 
@@ -81,7 +82,7 @@ pairs.panels(dp)
 
 ```{r pairs plot7, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferior_fa,nacc_inferior_md,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
+dp = with(d1, data.frame(FA,inverseMD,tipi_extra,tipi_agree,tipi_consci,tipi_emostab,tipi_open))
 
 pairs.panels(dp)
 
@@ -91,7 +92,7 @@ pairs.panels(dp)
 
 ```{r pairs plot8, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(nacc_inferiorL_fa,nacc_inferiorL_md,BIS,discount_rate))
+dp = with(d1, data.frame(FA,inverseMD,BIS,discount_rate))
 
 pairs.panels(dp)
 

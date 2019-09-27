@@ -23,12 +23,11 @@ close all
 
 %% define initial stuff
 
-p = getCuePaths;
+[p,task,subjects,gi]=whichCueSubjects();
+
 dataDir = p.data;
 
-task = 'cue';
-
-[subjects,gi]=getCueSubjects('cue');
+[subjects,gi]=getCueSubjects(task);
 
  afniStr = '_afni';
 % afniStr = ''; % to use ants version
@@ -42,8 +41,9 @@ censorFilePath = fullfile(dataDir, ['%s/func_proc/%s_censor.1D']);
 
 
 % file path to onset time files (1st %s is subject and 2nd %s is stimNames)
-stims = {'drugs','food','neutral','alcohol'};
-stimFilePath = fullfile(dataDir,'%s','regs','%s_cue_cue.1D');
+[stims,stimFiles]=getCueExpStims(task);
+
+stimFileDir = fullfile(dataDir,'%s','regs');
 
 % roi directory
 roiDir = fullfile(dataDir,'ROIs');
@@ -52,7 +52,7 @@ roiDir = fullfile(dataDir,'ROIs');
 roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 % name of dir to save to;  %s is task and then roiName
-outDir = fullfile(dataDir,'%s/single_trial_cue_timecourses/%s');
+outDir = fullfile(dataDir,'%s/single_trial_' task '_timecourses/%s');
 % 
 omitOTs=0; % 1 to omit outliers, otherwise 0
 if omitOTs
@@ -133,7 +133,8 @@ for i=1:numel(subjects) % subject loop
             
             
             % get stim onset times
-            onsetTRs = find(dlmread(sprintf(stimFilePath,subject,stims{k})));
+            stimFilePath=fullfile(sprintf(stimFileDir,subject),stimFiles{k});
+            onsetTRs = find(dlmread(stimFilePath));
             
             % # of trials for this condition
             nTrials = numel(onsetTRs); 

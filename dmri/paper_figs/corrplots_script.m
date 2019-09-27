@@ -14,20 +14,23 @@ figDir = pa.figures_dti;
 group = {'controls'};
 
 
-
-
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
-%     'DALR_naccLR_aboveAC_autoclean';
-%     'DALR_naccLR_autoclean';
-%     'DALR_caudateLR_autoclean';...
-%     'DALR_putamenLR_autoclean'};
-
-fgMatStrs = {'DAL_naccL_belowAC_autoclean';
-    'DAR_naccR_belowAC_autoclean';
-    'DALR_naccLR_belowAC_autoclean'};
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
+% 
+% fgMatStrs = {'DAL_naccL_belowAC_autoclean';
+%     'DAL_naccL_aboveAC_autoclean';
+%     'DAL_caudateL_autoclean';
+%     'DAL_putamenL_autoclean';
+%     'DAR_naccR_belowAC_autoclean';
+%     'DAR_naccR_aboveAC_autoclean';
+%     'DAR_caudateR_autoclean';
+%     'DAR_putamenR_autoclean'};
+% 
+% fgMatStrs = {'DAL_naccL_belowAC_autoclean';
+%     'DAR_naccR_belowAC_autoclean';
+%     'DALR_naccLR_belowAC_autoclean'};
 % fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
 
 
@@ -48,7 +51,8 @@ fgMatStrs = {'DAL_naccL_belowAC_autoclean';
 titleStrs=fgMatStrs;
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS';
+% scale = 'BIS_nonplan';
+scale='discount_rate';
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
 
@@ -90,6 +94,7 @@ for f=1:numel(fgMatStrs)
     [fgMeasures,fgMLabels,scores,subjects,gi]=loadFGBehVars(...
         fgMFile,scale,group,omit_subs);
     
+    scores=log(scores);
     
     n = numel(subjects);
     
@@ -124,7 +129,7 @@ end
         cvs=cell2mat(cellfun(@(x) getCueData(subjects,x), covars, 'uniformoutput',0));
         
         [rfa,pfa]=partialcorr(fa,scores,cvs);
-        [rmd,pmd]=partialcorr(md,scores,cvs);
+        [rmd,pmd]=partialcorr(1-md,scores,cvs);
         [rrd,prd]=partialcorr(rd,scores,cvs);
         [rad,pad]=partialcorr(ad,scores,cvs);
         
@@ -134,7 +139,7 @@ end
     else
         
         [rfa,pfa]=corr(fa,scores);
-        [rmd,pmd]=corr(md,scores);
+        [rmd,pmd]=corr(1-md,scores);
         [rrd,prd]=corr(rd,scores);
         [rad,pad]=corr(ad,scores);
         
