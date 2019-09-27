@@ -19,8 +19,8 @@ dataDir = p.data;
 
 task='mid';
 
-% subjects=getCueSubjects(task);
-subjects=getCueSubjects('dti',0);
+subjects=getCueSubjects(task);
+
 
 Xbasefname=['pp_' task '_tlrc_afni_nuisance_designmat.txt'];
 
