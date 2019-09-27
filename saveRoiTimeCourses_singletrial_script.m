@@ -52,7 +52,7 @@ roiDir = fullfile(dataDir,'ROIs');
 roiNames = whichRois(roiDir,'_func.nii','_func.nii');
 
 % name of dir to save to;  %s is task and then roiName
-outDir = fullfile(dataDir,'%s/single_trial_' task '_timecourses/%s');
+outDir = fullfile(dataDir,['%s/single_trial_' task '_timecourses/%s']);
 % 
 omitOTs=0; % 1 to omit outliers, otherwise 0
 if omitOTs
