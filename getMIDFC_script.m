@@ -19,9 +19,7 @@ dataDir = p.data;
 
 task='mid';
 
-subjects=getCueSubjects(task);
-subjects(end)=[];
-
+[subjects,gi]=getCueSubjects(task);
 
 Xbasefname=['pp_' task '_tlrc_afni_nuisance_designmat.txt'];
 
@@ -29,18 +27,17 @@ seedtsfname=[task '_VTA_afni.1D']; % seed ROI time series
 
 targettsfname=[task '_nacc_afni.1D']; % time series for target ROI
 
-reg1file=fullfile(dataDir,'%s','regs','gain5_trial_mid.1D');
-reg2file=fullfile(dataDir,'%s','regs','gain0_trial_mid.1D');
+conds = {'gain5','gain0'}; % conditions to contrast
 
+regfileStr=fullfile(dataDir,'%s','regs',['%s_trial_mid.1D']); %s is subject, conds
 
 censorTRs=1; % 1 to censor out bad motion TRs, otherwise 0
 
 censorFilePath = fullfile(dataDir, '%s','func_proc',[task '_censor.1D']);
 
-
 TR=2; 
 
-fcTRs=[3]; % which TRs to use for func connectivity calculation?
+fcTRs=[1:7]; % which TRs to use for func connectivity calculation?
 % This should be relative to trial onset, e.g., TRs=[3 4] 
 
 %% do it
@@ -60,28 +57,62 @@ for s=1:numel(subjects)
         Xbase=readtable(sprintf(Xbasefname,subject));
         baseNames = Xbase.Properties.VariableNames;
         Xbase=table2array(Xbase);
-        
-        targetts=dlmread(targettsfname);
-        seedts=dlmread(seedtsfname);
-        
-        % regress out baseline regs
-        target_errts=glm_fmri_fit(targetts,Xbase,[],'err_ts');
-        seed_errts=glm_fmri_fit(seedts,Xbase,[],'err_ts');
-       
-        % method 1: err ts then correlate
-        d1(s,1)=corr(target_errts,seed_errts);
-        
-        % method 2: partial corr
-        d2(s,1)=partialcorr(targetts,seedts,Xbase);
-        
-        % method 3: regression with Xbase and seed ts as predictors
-        stats=glm_fmri_fit(targetts,[Xbase seedts],[zeros(1,size(Xbase,2)) 1]);
-        d3(s,1)=stats.B(end);
-        
-        
-        %% do gain5 vs gain0 functional connectivity 
-        
       
+        seedts=dlmread(seedtsfname);
+        targetts=dlmread(targettsfname);
+     
+          % regress out baseline regs
+          seed_errts=glm_fmri_fit(seedts,Xbase,[],'err_ts');
+        target_errts=glm_fmri_fit(targetts,Xbase,[],'err_ts');
+       
+        % if censoring TRs, set censored TRs to nan
+        if censorTRs
+            censorVols = find(dlmread(sprintf(censorFilePath,subject))==0);
+            seedts(censorVols)=nan; seed_errts(censorVols)=nan;
+            targetts(censorVols)=nan; target_errts(censorVols)=nan;
+        end
+          
+        % method 1: straight up correlation 
+        r_restingstate(s,1)=nancorr(seedts,targetts);
+        
+        % method 2: correlation, partialling out nuisance regs 
+%         note: this returns the same r as doing
+%         partialcorr(targets,seedts,Xbase), but nancorr() can handle nan
+%         values
+        r_restingstate_partial(s,1)=nancorr(seed_errts,target_errts);
+        
+        
+        %% contrast functional connectivity between gain5 vs gain0 trials
+        for j=1:numel(conds)
+            
+            onsetTRs=find(dlmread(sprintf(regfileStr,subject,conds{j})));
+            
+              TRs=repmat(onsetTRs,1,fcTRs(end))+repmat(0:fcTRs(end)-1,size(onsetTRs,1),1);
+              TRs=TRs(:,fcTRs);
+              
+              if ~censorVols
+         
+                  % correlation between seed and target during cond{j}
+                  r_cond{j}(s,:)=diag(corr(seedts(TRs),targetts(TRs)));
+                  
+                  % also do it on data with nuisance regs regressed out
+                  r_cond_partial{j}(s,:)=diag(corr(seed_errts(TRs),target_errts(TRs)));
+                  
+              else
+                  
+                  % if censorVols, have to do this the slower way with a loop:
+                  for k=1:numel(fcTRs)
+                      r_cond{j}(s,k)=nancorr(seedts(TRs(:,k)),targetts(TRs(:,k)));
+                      r_cond_partial{j}(s,k)=nancorr(seed_errts(TRs(:,k)),target_errts(TRs(:,k)));
+                  end
+          
+                  
+       r_cond{1} = 
+            
+            
+            
+            
+            
         % do gain5 vs gain0 anticipation
         onsetTRs1=find(dlmread(sprintf(reg1file,subject)));
         onsetTRs2=find(dlmread(sprintf(reg2file,subject)));
