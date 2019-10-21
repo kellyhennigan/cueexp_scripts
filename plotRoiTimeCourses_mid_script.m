@@ -15,7 +15,6 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-
 % tcDir = ['timecourses_' task ];
 % tcDir = ['timecourses_' task '_woOutliers' ];
 % tcDir = ['timecourses_' task '_afni_woOutliers' ];
@@ -29,7 +28,7 @@ tcPath = fullfile(dataDir,tcDir);
 roiNames = whichRois(tcPath);
 
 
-nTRs = 10; % # of TRs to plot
+nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
@@ -55,7 +54,7 @@ plotColorSet = 'color'; % 'grayscale' or 'color'
 
 plotErr = 'bar'; % 'bar' or 'shaded'
 
-plotToScreen=0;
+plotToScreen=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,11 +74,13 @@ plotToScreen=0;
 % would be for making 2 figures: the 1st would plot alc, drugs, etc. for
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
-[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
+% [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 
-% plotGroups = {'relapsers non-relapsers'};
+plotGroups = {'controls'; 'controls'};
+plotStims={'gain0 gain5'};
+
 % plotStims = {'drugs'};
-% plotStimStrs = plotStims;
+plotStimStrs = plotStims;
 %
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -95,8 +96,8 @@ for r = 1:numel(roiNames)
     
     %% define time courses to plot
     
-%     for f = 1:nFigs
-        for f = 11:nFigs
+    for f = 1:nFigs
+%         for f = 11:nFigs
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f});
         stims = splitstring(plotStims{f});
@@ -178,7 +179,10 @@ for r = 1:numel(roiNames)
         % line colors & line specs
         cols = reshape(getCueExpColors_old(numel(tc),'cell'),size(tc,1),[]);
 %         lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
+        cols{1}=[1 0 0];
+        cols{end}=[0.1490    0.5451    0.8235];
         
+
         
         % get stats, if plotting
         p=[];
@@ -223,12 +227,22 @@ for r = 1:numel(roiNames)
                 [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
         end
         
+    
+    %%%%%%%%%% change font sizes
+    fsize = 26;
+    set(gca,'fontName','Helvetica','fontSize',fsize)
+    print(gcf,'-dpng','-r300',savePath);
+    
+             % title and legend off
+    legend(gca,'off')
+    title('')
+   print(gcf,'-dpng','-r300',[savePath '_noleg']);
         
-        fprintf('done.\n\n');
+   fprintf('done.\n\n');
         
         
     end % figures
     
-end %roiNames
+end % roiNames
 
 

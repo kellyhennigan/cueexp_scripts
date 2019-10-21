@@ -76,6 +76,7 @@ onsetsDT = round(onsets/dt)+1; % +1 because reg(1) is t=0
 % add events to regressor time series
 if strcmp(dur,'stick')
     reg(onsetsDT)=vals; % set regressor at event onset times to value in vals
+    reg
 else
     
     durDT = dur/dt;   % event durations in dt units

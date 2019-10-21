@@ -52,16 +52,16 @@ titleStrs=fgMatStrs;
 
 % which scale to correlate with fiber group measures?
 % scale = 'BIS_nonplan';
-scale='discount_rate';
+% scale='discount_rate';
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
-
+scale='BIS';
 
 % include control variables?
 % covars = {};
-% covars = {'age'};
+covars = {'age'};
 % covars = {'dwimotion'};
- covars = {'age','dwimotion'};
+%  covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);

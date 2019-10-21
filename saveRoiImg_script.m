@@ -8,7 +8,7 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-roiName = 'mpfc8mm';
+roiName = 'naccR_desai';
 roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii.gz']);
 t1Path = fullfile(dataDir,'templates','TT_N27.nii');
 
@@ -19,8 +19,8 @@ end
     
 saveViews = {'x','y','z'}; % x y z for sagittal, coronal, and axial views
 
-col = [1 0 0]; % color for ROI mask
-
+% col = [1 0 0]; % color for ROI mask
+col = [1 1 0]; % color for ROI mask
 
 %% do it
 

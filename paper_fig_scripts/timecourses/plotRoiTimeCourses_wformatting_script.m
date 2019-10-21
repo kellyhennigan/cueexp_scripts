@@ -8,10 +8,10 @@ clear all
 close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
-task = 'cue';
+task = 'mid';
 p = getCuePaths();
 dataDir = p.data;
-figDir = '/Users/kelly/cueexp/paper_figs_tables_stats/timecourses/figs';
+% figDir = '/Users/kelly/cueexp/paper_figs_tables_stats/timecourses/figs';
 % figDir='/Users/kelly/cueexp/writeup/SUBMISSION_JAMA/revisions/FIGURES/fig3';
 
 % tcDir = ['timecourses_' task ];
@@ -26,15 +26,18 @@ tcPath = fullfile(dataDir,tcDir);
 % which roi to process?
 roiName = 'VTA';
 
+figDir = ['/Users/kelly/cueexp/timecourses_mid_afni/' roiName]
 
-nTRs = 10; % # of TRs to plot
+
+nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
 
 useSpline = 0; % if 1, time series will be upsampled by TR*10
 
-omitSubs = {'cd171130','ab171208','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715'}; % any subjects to omit?
+% omitSubs = {'cd171130','ab171208','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715'}; % any subjects to omit?
+omitSubs = {''};
 
 plotStats = 1; % 1 to note statistical signficance on figures
 
@@ -50,7 +53,7 @@ plotColorSet = 'color'; % 'grayscale' or 'color'
 
 plotErr = 'bar'; % 'bar' or 'shaded'
 
-plotToScreen=0;
+plotToScreen=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,6 +75,12 @@ plotToScreen=0;
 
 [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 
+plotGroups = {'controls'};
+plotStims={'gain0 gain1 gain5'};
+
+% plotStims = {'drugs'};
+plotStimStrs = plotStims;
+
 % plotGroups = {'relapsers non-relapsers'};
 % plotStims = {'drugs'};
 % plotStimStrs = plotStims;
@@ -86,7 +95,7 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
-for f=6
+for f=1
 % for f=[1 3 6]
 %     for f = 1:nFigs
     
