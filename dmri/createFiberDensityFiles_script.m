@@ -78,8 +78,8 @@ xform_warp2=fullfile(dataDir,'templates','tlrc2mni_xform_Warp.nii.gz');
 
 
 % options
-only_seed_endpts = 1; % create density maps of only seed endpoints?
-only_endpts = 0; % create density maps of only seed/target endpoints?
+only_seed_endpts = 0; % create density maps of only seed endpoints?
+only_target_endpts = 1; % create density maps of only seed/target endpoints?
 smooth = 0; % 0 or empty to not smooth, otherwise this defines the smoothing kernel
 
 LorR = ['L','R']; % if ['L','R'], script shold loop over l/r sides;
@@ -139,6 +139,12 @@ for i=1:numel(subjects)
                 fg.fibers = cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0);
                 outName = [outName, '_' seed 'endpts'];
             end
+            
+             % to use just target endpoints of fibers:
+            if only_target_endpts
+                fg.fibers = cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0);
+                outName = [outName, '_striatumendpts'];
+            end
 
             % make fiber density maps
             %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
@@ -150,13 +156,13 @@ for i=1:numel(subjects)
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
 
-            %             % save out center of mass coords
-            if only_seed_endpts
+            % save out center of mass coords
+            if (only_seed_endpts || only_target_endpts)
                 imgCoM = centerofmass(nii.data);
                 CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
                 dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
             end
-
+          
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
             outFileTLRC=[outPath '_tlrc.nii.gz'];
@@ -174,8 +180,8 @@ for i=1:numel(subjects)
 
             writeFileNifti(outNii);
 
-            % save out center of mass coords for tlrc space
-            if only_seed_endpts
+            % save out center of mass coords for group space
+            if (only_seed_endpts || only_target_endpts)
                 imgCoM = centerofmass(outNii.data);
                 CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
                 dlmwrite(fullfile(thisFdDir,[outName '_CoM_mni']),CoM);
