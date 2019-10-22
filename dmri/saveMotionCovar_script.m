@@ -7,7 +7,7 @@ close all
 p = getCuePaths();
 dataDir = p.data;
 
-subjects=getCueSubjects('dti');
+subjects=getCueSubjects('');
 
 
 % filepath to motion params .mat file, saved out during pre-processing

@@ -41,7 +41,7 @@ hold on
 for i=1:numel(d)
     
     hh(i) = histogram(d{i});
-    hh(i).Normalization = 'probability';
+%     hh(i).Normalization = 'probability';
     hh(i).EdgeColor = [1 1 1];
     hh(i).FaceColor = cols(i,:);
     
