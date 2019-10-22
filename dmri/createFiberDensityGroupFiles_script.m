@@ -56,18 +56,18 @@ gspace='mni'; % tlrc or mni
 
 
 inNiiFileStrs = {
-    ['DAL_naccL_belowAC_dil2_autoclean_DAendpts_' gspace];
-    ['DAR_naccR_belowAC_dil2_autoclean_DAendpts_' gspace];
-    ['DA_nacc_belowAC_dil2_autoclean_DAendpts_' gspace];
-    ['DAL_naccL_aboveAC_dil2_autoclean_DAendpts_' gspace];
-    ['DAR_naccR_aboveAC_dil2_autoclean_DAendpts_' gspace];
-    ['DA_nacc_aboveAC_dil2_autoclean_DAendpts_' gspace];
-    ['DAL_caudateL_dil2_autoclean_DAendpts_' gspace];
-    ['DAR_caudateR_dil2_autoclean_DAendpts_' gspace];
-    ['DA_caudate_dil2_autoclean_DAendpts_' gspace];
-    ['DAL_putamenL_dil2_autoclean_DAendpts_' gspace];
-    ['DAR_putamenR_dil2_autoclean_DAendpts_' gspace];
-    ['DA_putamen_dil2_autoclean_DAendpts_' gspace];
+    ['DAL_naccL_belowAC_autoclean_DAendpts_' gspace];
+    ['DAR_naccR_belowAC_autoclean_DAendpts_' gspace];
+    ['DA_nacc_belowAC_autoclean_DAendpts_' gspace];
+    ['DAL_naccL_aboveAC_autoclean_DAendpts_' gspace];
+    ['DAR_naccR_aboveAC_autoclean_DAendpts_' gspace];
+    ['DA_nacc_aboveAC_autoclean_DAendpts_' gspace];
+    ['DAL_caudateL_autoclean_DAendpts_' gspace];
+    ['DAR_caudateR_autoclean_DAendpts_' gspace];
+    ['DA_caudate_autoclean_DAendpts_' gspace];
+    ['DAL_putamenL_autoclean_DAendpts_' gspace];
+    ['DAR_putamenR_autoclean_DAendpts_' gspace];
+    ['DA_putamen_autoclean_DAendpts_' gspace];
     };
 
 % 
@@ -99,14 +99,14 @@ inNiiFileStrs = {
 %     'DAL_putamenL_autoclean_DAendpts_CoM_tlrc';
 %     'DAR_putamenR_autoclean_DAendpts_CoM_tlrc'};
 
-inCoMFiles = {['DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAR_naccR_belowAC_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAL_naccL_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAR_naccR_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAL_caudateL_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAR_caudateR_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAL_putamenL_dil2_autoclean_DAendpts_CoM_' gspace];
-    ['DAR_putamenR_dil2_autoclean_DAendpts_CoM_' gspace]};
+inCoMFiles = {['DAL_naccL_belowAC_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_naccR_belowAC_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_naccL_aboveAC_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_naccR_aboveAC_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_caudateL_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_caudateR_autoclean_DAendpts_CoM_' gspace];
+    ['DAL_putamenL_autoclean_DAendpts_CoM_' gspace];
+    ['DAR_putamenR_autoclean_DAendpts_CoM_' gspace]};
 
 % directory to save out group files
 outDir = fullfile(dataDir,'fg_densities',method);
