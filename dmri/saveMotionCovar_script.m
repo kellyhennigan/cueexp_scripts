@@ -17,6 +17,9 @@ vox_mm = 2; % dti voxel dimensions are 2mm isotropic
 
 outFilePath = fullfile(dataDir,'dwimotion.csv');
 
+% motion_metric = 'euclideannorm'; 
+motion_metric = 'displacement'; 
+% motion_metric = 'fwdisplacement'; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -43,23 +46,19 @@ for s = 1:numel(subjects)
         mp(:,1:3) = mp(:,1:3).*vox_mm; % change displacement to be in units of mm
         mp(:,4:6) = mp(:,4:6)/(2*pi)*360; % convert rotations to units of degrees
         
+        
+        switch motion_metric
+            case 'euclideannorm'
+                m = computeAfniEuclideanNorm(mp);
+            case 'displacement'
+                m = computeHeadDisplacement(mp(:,1:3));
+            case 'fwdisplacement'
+                m = computeFrameWiseDisplacement(mp);
+        end
          
-        % get the euclidean norm of volume-to-volume motion 
-        enorm = [0;sqrt(sum(diff(mp).^2,2))];
-      
-        % mean motion 
-%         meandisplacement = computeHeadDisplacement(mp(:,1:3));
-%         
-%         % mean framewise displacement
-%         meanfwd =  computeFrameWiseMeanDisplacement(mp);
-%         
-        % max enorm 
-        maxenorm = max(enorm);
-        
-        %%% decide here which summary measure to use
-        
-         % define subject motion covariate as mean of all motion params
-        dwimotion(s,1) = mean(enorm);
+        % define subject motion covariate as mean metric across all
+         % volumes
+        dwimotion(s,1) = mean(m);
       
         
     end
