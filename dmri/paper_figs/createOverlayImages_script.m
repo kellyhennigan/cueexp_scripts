@@ -13,8 +13,8 @@ cd(dataDir);
 
 
 % cell array of subject ids to process
-subjects=getCueSubjects('dti',0);
-% subjects={'controls'};
+% subjects=getCueSubjects('dti',0);
+subjects={'controls'};
 % subjects = {'bp160213','kn160918','cs171002'};
 % subjidx=[16 32 40];
 
@@ -31,7 +31,7 @@ fdDir = fullfile(dataDir,'fg_densities',method);
 smoothStr='';
 % smoothStr='_smooth3';
 
-endptStr = '_DAendpts'; % endpoints string
+endptStr = '_striatumendpts'; % endpoints string
 % endptStr = ''; % endpoints string
 
 gspace='mni'; % group space
@@ -86,13 +86,13 @@ scale = 0; % 1 to scale, otherwise 0
 
 q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
-% plane=2; % which plane to plot
+plane=2; % which plane to plot
 % acpcSlices=[-20:2:10]; % which acpc slices to plot
-% acpcSlices=[]; % which acpc slices to plot
+acpcSlices=[-10:10]; % which acpc slices to plot
 
-plane=3; % which plane to plot
+% plane=3; % which plane to plot
 % acpcSlices=[-18:2:-12]; % which acpc slices to plot
-acpcSlices=[-16 -12]; % which acpc slices to plot
+% acpcSlices=[-16 -12]; % which acpc slices to plot
 
 cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
 % cols{1}=[

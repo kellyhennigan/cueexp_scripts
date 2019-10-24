@@ -24,7 +24,7 @@ p=getCuePaths();
 dataDir = p.data;
 
 [subjects,gi]=getCueSubjects('dti');
-subjects=subjects(48:end);
+% subjects=subjects(48:end);
 % subjects = {'jh160702'};
 
 
@@ -79,7 +79,7 @@ xform_warp2=fullfile(dataDir,'templates','tlrc2mni_xform_Warp.nii.gz');
 
 % options
 only_seed_endpts = 0; % create density maps of only seed endpoints?
-only_target_endpts = 1; % create density maps of only seed/target endpoints?
+only_target_endpts = 0; % create density maps of only seed/target endpoints?
 smooth = 0; % 0 or empty to not smooth, otherwise this defines the smoothing kernel
 
 LorR = ['L','R']; % if ['L','R'], script shold loop over l/r sides;
