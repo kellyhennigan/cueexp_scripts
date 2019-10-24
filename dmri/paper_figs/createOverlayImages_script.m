@@ -13,10 +13,11 @@ cd(dataDir);
 
 
 % cell array of subject ids to process
-% subjects=getCueSubjects('dti',0);
-subjects={'controls'};
+subjects=getCueSubjects('dti',0);
+% subjects={'controls'};
 % subjects = {'bp160213','kn160918','cs171002'};
 % subjidx=[16 32 40];
+
 % filepath to mask, if desired
 % maskFilePath = fullfile(dataDir,'ROIs','DA.nii');
 
@@ -30,17 +31,17 @@ fdDir = fullfile(dataDir,'fg_densities',method);
 smoothStr='';
 % smoothStr='_smooth3';
 
-% endptStr = '_DAendpts'; % endpoints string
-endptStr = ''; % endpoints string
+endptStr = '_DAendpts'; % endpoints string
+% endptStr = ''; % endpoints string
 
 gspace='mni'; % group space
 
 
 % this should be a cell array that matches the dimensions of fdFileStrs 
-% targets={'nacc';
-%     'nacc';
-%     'caudate';
-%     'putamen'};
+targets={'nacc';
+    'nacc';
+    'caudate';
+    'putamen'};
 
 
 % filenames of fiber density files; %s is target
@@ -57,9 +58,20 @@ gspace='mni'; % group space
 %         ['DA_%s_dil2' smoothStr '_autoclean' endptStr '_' gspace '_ALL'];
 %         ['DA_%s_dil2' smoothStr '_autoclean' endptStr '_' gspace '_ALL']};
 % end
+if strcmp(subjects{1},'controls')
+    fdFileStrs = {['DA_%s_belowAC' smoothStr '_autoclean' endptStr '_' gspace '_MEAN'];
+        ['DA_%s_aboveAC' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']
+        ['DA_%s' smoothStr '_autoclean' endptStr '_' gspace '_MEAN'];
+        ['DA_%s' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']};
+else
+    fdFileStrs = {['DA_%s_belowAC' smoothStr '_autoclean' endptStr '_' gspace '_ALL'];
+        ['DA_%s_aboveAC' smoothStr '_autoclean' endptStr '_' gspace '_ALL']
+        ['DA_%s' smoothStr '_autoclean' endptStr '_' gspace '_ALL'];
+        ['DA_%s' smoothStr '_autoclean' endptStr '_' gspace '_ALL']};
+end
 
-targets={'nacc'};
-fdFileStrs = {['DAL_%sL_belowAC_dil2' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']};
+% targets={'nacc'};
+% fdFileStrs = {['DAL_%sL_belowAC_dil2' smoothStr '_autoclean' endptStr '_' gspace '_MEAN']};
 
 if strcmp(gspace,'tlrc')
     bg = niftiRead(fullfile(dataDir,'templates','TT_N27.nii'));
@@ -74,31 +86,29 @@ scale = 0; % 1 to scale, otherwise 0
 
 q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
-plane=2; % which plane to plot
+% plane=2; % which plane to plot
 % acpcSlices=[-20:2:10]; % which acpc slices to plot
-acpcSlices=[-5]; % which acpc slices to plot
-
-% plane=3; % which plane to plot
-% acpcSlices=[-18:2:-12]; % which acpc slices to plot
 % acpcSlices=[]; % which acpc slices to plot
 
-% cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
-cols{1}=[
-    0.0510    0.1843    0.3569
-    0.1098    0.2078    0.5373
-    0.2824    0.2039    0.6392
-    0.3882    0.2549    0.5922
-    0.4941    0.3020    0.5608
-    0.6000    0.3294    0.5412
-    0.6980    0.3647    0.5176
-    0.8118    0.4039    0.4471
-    0.9020    0.4510    0.3843
-    0.9373    0.5255    0.3412
-    0.9961    0.6196    0.2510
-    0.9922    0.7333    0.2627
-    0.9804    0.8510    0.2784];
+plane=3; % which plane to plot
+% acpcSlices=[-18:2:-12]; % which acpc slices to plot
+acpcSlices=[-16 -12]; % which acpc slices to plot
 
-
+cols=getDTIFDColors(targets,fdFileStrs); % colors for fiber density maps
+% cols{1}=[
+%     0.0510    0.1843    0.3569
+%     0.1098    0.2078    0.5373
+%     0.2824    0.2039    0.6392
+%     0.3882    0.2549    0.5922
+%     0.4941    0.3020    0.5608
+%     0.6000    0.3294    0.5412
+%     0.6980    0.3647    0.5176
+%     0.8118    0.4039    0.4471
+%     0.9020    0.4510    0.3843
+%     0.9373    0.5255    0.3412
+%     0.9961    0.6196    0.2510
+%     0.9922    0.7333    0.2627
+%     0.9804    0.8510    0.2784];
 
 ac=[]; % auto-crop images? inf means no cropping
 
@@ -177,6 +187,9 @@ nOls = numel(fdImgs); % useful variable to have
 
 s=1
 for s=1:numel(subjects)
+    
+    close all
+     
     
     subject=subjects{s};
     

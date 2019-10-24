@@ -11,17 +11,18 @@ get libraries & load data
 require(psych)
 
 #load data
-#d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_190924.csv')
-d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__190926_nosr141031.csv')
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_191022.csv')
+#d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__191022.csv')
 d1$FA<-d1$inf_NAcc_fa_controllingagemotion
 d1$inverseMD<-1-d1$inf_NAcc_md_controllingagemotion
+d1$smoke[d1$smoke>0]=1
 ```
 
-#pairs plots 1: age and motion
+#pairs plots 1: age, motion, and sex
 
 ```{r pairs plot1, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(FA,inverseMD,BIS,age,dwimotion))
+dp = with(d1, data.frame(FA,inverseMD,BIS,age,dwimotion,gender))
           
 pairs.panels(dp)
 
@@ -88,11 +89,11 @@ pairs.panels(dp)
 
 ```       
 
-#pairs plots 8: left inferior nacc, BIS, discount rate
+#pairs plots 8: supp fig: years of use, age of first use, 
 
 ```{r pairs plot8, collapse=TRUE, warning=FALSE}
 
-dp = with(d1, data.frame(FA,inverseMD,BIS,discount_rate))
+dp = with(d1, data.frame(FA,years_of_use,first_use_age,smoke))
 
 pairs.panels(dp)
 

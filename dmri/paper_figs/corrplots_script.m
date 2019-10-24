@@ -11,13 +11,19 @@ figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'controls'};
+group = {'patients'};
 
 
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
+% fgMatStrs = {};
+
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+    'DALR_naccLR_aboveAC_autoclean';
+    'DALR_caudateLR_autoclean';
+    'DALR_putamenLR_autoclean';
+    };
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_autoclean';
 %     'DAL_naccL_aboveAC_autoclean';
@@ -59,9 +65,9 @@ scale='BIS';
 
 % include control variables?
 % covars = {};
-covars = {'age'};
+% covars = {'age'};
 % covars = {'dwimotion'};
-%  covars = {'age','dwimotion'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -94,7 +100,7 @@ for f=1:numel(fgMatStrs)
     [fgMeasures,fgMLabels,scores,subjects,gi]=loadFGBehVars(...
         fgMFile,scale,group,omit_subs);
     
-    scores=log(scores);
+%     scores=log(scores);
     
     n = numel(subjects);
     

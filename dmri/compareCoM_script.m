@@ -20,10 +20,10 @@ targets = {'nacc','nacc','caudate','putamen'};
 
 gspace = 'mni';
 
-CoMFileStrs = {[seed '%s_%s%s_belowAC_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
-    [seed '%s_%s%s_aboveAC_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt']
-    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
-    [seed '%s_%s%s_dil2_autoclean_DAendpts_CoM_' gspace '_ALL.txt']}; % %s's are: L/R, target, L/R
+CoMFileStrs = {[seed '%s_%s%s_belowAC_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
+    [seed '%s_%s%s_aboveAC_autoclean_DAendpts_CoM_' gspace '_ALL.txt']
+    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
+    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '_ALL.txt']}; % %s's are: L/R, target, L/R
 
 lr='LR';
 
