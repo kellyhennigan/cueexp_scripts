@@ -42,11 +42,11 @@ switch task
         
         vox_mm = 2; % dti voxel dimensions are 2mm isotropic
         
-        thresh = [2]; % threshold for calling a TR "bad"
+        thresh = [2 4]; % threshold for calling a TR "bad"
         
         % what percentage of bad volumes should lead to excluding a subject for
         % motion?
-        percent_bad_thresh = [5];
+        percent_bad_thresh = [5 5];
         
         mean_thresh = 2; % threshold for determining who to exclude based on mean vol-to-vol motion
         
