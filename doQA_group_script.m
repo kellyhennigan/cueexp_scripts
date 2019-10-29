@@ -11,17 +11,17 @@ task = input('cue, mid, midi, or dti (or just hit return for no task)? ','s');
 
 [subjects,gi]=getCueSubjects('');
 
-% temporarily omit subs without MFB tracts
-oidx=[   15
-    25
-    28
-    79
-    93
-   112
-   126
-   128];
-subjects(oidx)=[];
-gi(oidx)=[];
+% % temporarily omit subs without MFB tracts
+% oidx=[   15
+%     25
+%     28
+%     79
+%     93
+%    112
+%    126
+%    128];
+% subjects(oidx)=[];
+% gi(oidx)=[];
 
 savePlots = 1; % 1 to save plots, otherwise 0
 
