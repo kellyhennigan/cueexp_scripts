@@ -29,7 +29,7 @@ end
 % 
 % p = 1-tcdf(t,df);  % for 1 tailed t stats %%% DOUBLE CHECK THIS!!!
 % 
-% p = 2*tcdf(-abs(t),df); % for 2-tailed t stats
+% 307; % for 2-tailed t stats
 % 
 % p = 1-normcdf(Z); % for 1-tailed Z scores
 % 

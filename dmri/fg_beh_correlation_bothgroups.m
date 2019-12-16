@@ -116,7 +116,7 @@ for i=1:nP
     axH=subplot(nRow,nCol,i);
     hold on
     for j=1:numel(group)
-        [axH,rpStr] = plotCorr(axH,scores{j},mean(fgMeasures{j}{i}(:,node),2),scale,fgMLabels(i),'',cols(j,:));
+        [axH,rpStr] = plotCorr(axH,mean(fgMeasures{j}{i}(:,node),2),scores{j},fgMLabels(i),scale,'',cols(j,:));
         tStr{j} = ['\fontsize{10}{\color[rgb]{' num2str(cols(j,:)) '}' rpStr '} ']; % title strings
     end
     
@@ -134,19 +134,20 @@ suptitle(titleStr)
 if saveFigs
     outName = [fgMatStr '_bothgroups' cvStr]; 
     print(figH,fullfile(outDir,outName),'-depsc')
-    
+    1
 %     print(figH,'-dpng','-r300',fullfile(outDir,[group{:} '_fg_' strrep(scale,'_','') '_corr_node' nodeStr]))
 end
 
 % legend
 if plotLeg
-lh=get(axH,'Children')
-legend(axH,[lh(3) lh(1)],group,'Location','EastOutside','FontSize',12)
-legend('boxoff')
-legStr='_w_leg';
+    lh=get(axH,'Children')
+    legend(axH,[lh(3) lh(1)],group,'Location','EastOutside','FontSize',12)
+    legend('boxoff')
+    legStr='_w_leg';
 else
     legStr='';
 end
+
 if saveFigs
     print(gcf,'-dpng','-r300',fullfile(outDir,[outName '_w_leg']))
 end

@@ -177,13 +177,13 @@ for i=1:numel(labels)
         case 'loss0'
             colors(i,:)=[29 186 154]./255; % green
             
-        case {'gainwin','gainwin-gainmiss'}
+        case {'gainwin','gainwin-gainmiss','gainhit'}
             colors(i,:)=[253 158 33]./255; % orange
             
         case 'gainmiss'
             colors(i,:)=[246 97 165]./255; % pink
             
-        case {'losswin','losswin-lossmiss'}
+        case {'losswin','losswin-lossmiss','losshit'}
             colors(i,:)=[2 117 180]./255; % blue
             
         case 'lossmiss'

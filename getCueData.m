@@ -69,22 +69,22 @@ switch measure
         %  fitk_method = 'MLE';
         
         data = getDiscountingK(subjects,fitk_method); % returns discounting param, k
-    
         
-   case {'tipi','tipi_extra','tipi_agree','tipi_consci','tipi_emostab','tipi_open'}
-      
         
-        data = getTIPIScores(subjects,measure); 
-      
+    case {'tipi','tipi_extra','tipi_agree','tipi_consci','tipi_emostab','tipi_open'}
+        
+        
+        data = getTIPIScores(subjects,measure);
+        
     case {'digitspan','forwarddigitspan','backwarddigitspan'}
         
         data=getDigitSpan(subjects,measure);
         
         
-   case {'bisbas','basdrive','basfunseek','basrewardresp','bisbas_bis'}
-      
-        data = getBISBASScores(subjects,measure); 
-
+    case {'bisbas','basdrive','basfunseek','basrewardresp','bisbas_bis'}
+        
+        data = getBISBASScores(subjects,measure);
+        
         
     case {'race','ethnicity'}
         
@@ -117,15 +117,15 @@ switch measure
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         data = ri;
         
-%     case 'early_relapsers'
-%         
-%         [ri,days2relapse,notes]=getCueRelapseData(subjects);
-%         ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >220 days after participation
-%         data = ri;
-   
+        %     case 'early_relapsers'
+        %
+        %         [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        %         ri(days2relapse>220) = 0; % set relapse to 0 if it occurred >220 days after participation
+        %         data = ri;
+        
     case 'relapse_1month'
         
-        daythresh=40; 
+        daythresh=40;
         lost_daythresh=10; % patients not followed up for this much time will be set to nan
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
@@ -139,51 +139,53 @@ switch measure
         
         daythresh=100;
         lost_daythresh=90; % patients not followed up for this much time will be set to nan
-      
-        [ri,days2relapse,notes]=getCueRelapseData(subjects); 
+        
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         
         ri(days2relapse > daythresh) = 0; % set relapse to 0 if it occurred >90 days after participation
         ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
         data = ri;
+    
+%         data = get3MonthRelapseTemp(subjects)
         
     case 'relapse_4months'
         
         daythresh=130;
         lost_daythresh=90; % patients not followed up for this much time will be set to nan
-      
+        
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
-                 
+        
         ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >120 days after participation
         ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
         
     case 'relapse_6months'
-       
+        
         daythresh=220;
         lost_daythresh=160; % patients not followed up for this much time will be set to nan
-      
+        
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
-         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
-         
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        
         ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >200 days after participation
         ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
-  
-   case 'relapse_8months'
-       
-         daythresh=240;
+        
+    case 'relapse_8months'
+        
+        daythresh=240;
         lost_daythresh=160; % patients not followed up for this much time will be set to nan
-      
-       [ri,days2relapse,notes]=getCueRelapseData(subjects);
-         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
-         
+        
+        [ri,days2relapse,notes]=getCueRelapseData(subjects);
+        [obstime,censored,notes]=getCueRelapseSurvival(subjects);
+        
         ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >160 days after participation
         ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
         data = ri;
-  
+        
         
     case 'days2relapse'
         
@@ -213,15 +215,15 @@ switch measure
             'post_for_treatment','meds','dop_drugtest',...
             'days_sober','days_in_rehab','years_of_use',...
             'auditscore4orgreater','courtmandated',...
-         'opioidusedisorder','cannabisuse'}
-    
+            'opioidusedisorder','cannabisuse'}
+        
         
         data = getPatientData(subjects,measure);
         
     case {'primary_meth','primary_cocaine','primary_crack'}
         
         primary_stim = getPatientData(subjects,'primary_stim');
-           
+        
         if strcmp(measure,'primary_cocaine')
             stim='cocaine';
         elseif strcmp(measure,'primary_crack')
@@ -373,7 +375,7 @@ switch measure
         end
         
         
-     case {'cuert_stim','cuert_alcohol','cuert_drugs','cuert_food','cuert_neutral',...
+    case {'cuert_stim','cuert_alcohol','cuert_drugs','cuert_food','cuert_neutral',...
             'cuert_stim_trials','cuert_alcohol_trials','cuert_drugs_trials','cuert_food_trials','cuert_neutral_trials'}
         
         % define path to subject stim file(s)
@@ -420,7 +422,7 @@ switch measure
             case 'cuert_neutral_trials'
                 data = rt(:,ci==4);  % neutral is 4th col
         end
-            
+        
         
         
     case {'pa_cue','na_cue','valence_cue','arousal_cue'}
@@ -431,8 +433,8 @@ switch measure
         
         % load cue pa and na ratings
         [cue_type,pa,na,valence,arousal] = cellfun(@(x) getCueVARatings(x), stimfilepath,'uniformoutput',0);
-        pa = cell2mat(pa); 
-        na = cell2mat(na); 
+        pa = cell2mat(pa);
+        na = cell2mat(na);
         valence=cell2mat(valence);
         arousal=cell2mat(arousal);
         
@@ -482,16 +484,16 @@ switch measure
         
         data = getStimPANA(subjects,measure);
         
-      
+        
     case {'famil_stim','famil_alcohol','famil_drugs','famil_food','famil_neutral'}
         
         data = getStimFamil(subjects,measure);
         
     case 'dwimotion'
         
-       
+        
         data = getDWIMotion(subjects);
-   
+        
         
     otherwise
         
@@ -522,7 +524,7 @@ end % getCueData
 %% internal functions to get the measures:
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
 function age = getAge(subjects)
 
 age = []; % var to populate with subjects' age
@@ -533,27 +535,27 @@ docid = '1wcYTCKhouZ8Cf8omTFQMkekxcJn0lVBKi9ApPHTR3ak'; % doc id for google shee
 % try to load spreadsheet; if it can't be loaded, return age var as empty
 try
     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-    
+
 catch
     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
         'returning age var as empty...']);
     return
-    
+
 end
 
 % assuming spreadsheet is loaded, get desired data
 cj = find(strncmp(d(1,:),'age',3)); % column with age data
 
 for i=1:numel(subjects)
-    
+
     ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
-    
+
     if isempty(ri)
         age(i,1) = nan;
     else
         age(i,1) = str2double(d{ri,cj});
     end
-    
+
 end
 
 end % getAge()
@@ -634,7 +636,7 @@ end % getBDIScores
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores
 function scores = getBISScores(subjects,measure)
 
 % reference: Factor structure of the Barratt impulsiveness scale. Patton JH, Stanford MS, and Barratt ES (1995)
@@ -647,87 +649,87 @@ docid = '1gFcxI_1luO2TtOwwQRvm9F45qzHPThnKDBTaZm3esoo'; % doc id for google shee
 
 try
     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-    
+
     % if the google sheet couldn't be accessed, use these values (update as
     % often as possible):
 catch
     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
         'Using offline values that may not be the most updated...'])
-    
+
     % NOTE: ADD A WAY TO LOAD GSHEET WHEN OFFLINE HERE...
     %     d=...
-    
+
     d={};
-    
+
 end
 
 % if data is loaded, compute bis scores
 if isempty(d)
-    
+
     scores = [];
-    
+
 else
-    
-    
+
+
     % which items are reverse scored
     reverseArr = [1 7 8 9 10 12 13 15 20 29 30];
-    
+
     attnArr = [5 6 9 11 20 24 26 28];
     motorArr = [2 3 4 16 17 19 21 22 23 25 30];
     nonplanArr = [1 7 8 10 12 13 14 15 18 27 29];
-    
-    
+
+
     for i=1:numel(subjects)
-        
+
         idx=find(strncmp(d(:,1),subjects{i},8));
-        
+
         if ~isempty(idx)
-            
+
             item_scores = str2double(d(idx,4:end));
             item_scores(reverseArr) = 5-item_scores(reverseArr); % reverse score for certain items
-            
+
             % occasionally, a subject will leave 1 question blank. If
             % that's the case, fill in that response with the median response from all the other questions
             if ~isempty(find(isnan(item_scores)))
                 item_scores(isnan(item_scores))=nanmedian(item_scores);
             end
-            
+
             bis_score(i,1) = sum(item_scores);
             attn_score(i,1) = sum(item_scores(attnArr));
             motor_score(i,1) = sum(item_scores(motorArr));
             nonplan_score(i,1) = sum(item_scores(nonplanArr));
-            
+
         else
-            
+
             bis_score(i,1) = nan;
             attn_score(i,1) = nan;
             motor_score(i,1) = nan;
             nonplan_score(i,1) = nan;
-            
+
         end
-        
+
     end
-    
+
     switch measure
-        
+
         case 'bis'
-            
+
             scores=bis_score;
-            
+
         case 'bis_attn'
-            
+
             scores=attn_score;
-            
+
         case 'bis_motor'
-            
+
             scores=motor_score;
-            
+
         case 'bis_nonplan'
-            
+
             scores=nonplan_score;
-            
+
     end
-    
+
 end
 
 end % getBISScores()
@@ -1077,7 +1079,7 @@ end % subj loop
 end % getFollowupDays
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
 function dwimotion = getDWIMotion(subjects)
 
 p = getCuePaths();
@@ -1127,18 +1129,18 @@ else
     agree_ci = find(strcmp(d(1,:),'tipiagree')); % column with agreeableness scores
     consci_ci = find(strcmp(d(1,:),'tipiconsci')); % column with conscientiousness scores
     emostab_ci = find(strcmp(d(1,:),'tipiemostab')); % column with emotional stability scores
-    open_ci = find(strcmp(d(1,:),'tipiopen')); % column with openness scores 
+    open_ci = find(strcmp(d(1,:),'tipiopen')); % column with openness scores
     
     for i=1:numel(subjects)
         idx=find(strncmp(d(:,1),subjects{i},8));
         if isempty(idx)
             scores(i,:) = nan(1,5);
         else
-            scores(i,1) = str2double(d{idx,extra_ci}); 
-            scores(i,2) = str2double(d{idx,agree_ci}); 
-            scores(i,3) = str2double(d{idx,consci_ci}); 
-            scores(i,4) = str2double(d{idx,emostab_ci}); 
-            scores(i,5) = str2double(d{idx,open_ci}); 
+            scores(i,1) = str2double(d{idx,extra_ci});
+            scores(i,2) = str2double(d{idx,agree_ci});
+            scores(i,3) = str2double(d{idx,consci_ci});
+            scores(i,4) = str2double(d{idx,emostab_ci});
+            scores(i,5) = str2double(d{idx,open_ci});
         end
         
     end % subjects
@@ -1158,23 +1160,23 @@ switch measure
     case 'tipi_open'
         scores=scores(:,5);
 end
-  
+
 end % getTIPIscores
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BISBAS scores
 function scores = getBISBASScores(subjects,measure)
 
-% reference: 
+% reference:
 % Carver, C. S., & White, T. L. (1994). Behavioral inhibition, behavioral activation, and affective responses to impending reward and punishment: The BIS/BAS Scales. Journal of Personality and Social Psychology, 67(2), 319-333. doi: 10.1037/0022-3514.67.2.319
 % Scale and scoring instructions available for research and teaching purposes at:
 % http://www.psy.miami.edu/faculty/ccarver/sclBISBAS.html
-% 
+%
 
 % for whatever reason, our version of BISBAS has a different order and
 % doesnt have the "filler" questions that appear at the reference above.
 % So, the correspondence between our order of items and each sub-scale is
-% manually coded by Kelly. Someone should double-check that its correct!! 
+% manually coded by Kelly. Someone should double-check that its correct!!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1194,10 +1196,10 @@ if isempty(d)
 else
     
     % find columns containing various TIPI scores
-    basdrive_ci = find(strcmpi(d(1,:),'BASDrive')); 
-    basfun_ci = find(strcmpi(d(1,:),'BASFunSeeking')); 
-    basrewardresp_ci = find(strcmpi(d(1,:),'BASRewardResponse')); 
-    bis_ci = find(strcmpi(d(1,:),'BIS')); 
+    basdrive_ci = find(strcmpi(d(1,:),'BASDrive'));
+    basfun_ci = find(strcmpi(d(1,:),'BASFunSeeking'));
+    basrewardresp_ci = find(strcmpi(d(1,:),'BASRewardResponse'));
+    bis_ci = find(strcmpi(d(1,:),'BIS'));
     
     
     i=1
@@ -1206,10 +1208,10 @@ else
         if isempty(idx)
             scores(i,:) = nan(1,4);
         else
-            scores(i,1) = str2double(d{idx,basdrive_ci}); % 
-            scores(i,2) = str2double(d{idx,basfun_ci}); % 
-            scores(i,3) = str2double(d{idx,basrewardresp_ci}); % 
-            scores(i,4) = str2double(d{idx,bis_ci}); % 
+            scores(i,1) = str2double(d{idx,basdrive_ci}); %
+            scores(i,2) = str2double(d{idx,basfun_ci}); %
+            scores(i,3) = str2double(d{idx,basrewardresp_ci}); %
+            scores(i,4) = str2double(d{idx,bis_ci}); %
         end
     end % subjects
 end % isempty
@@ -1228,7 +1230,7 @@ switch measure
         % if bisbas, return all subscores
 end
 
-      
+
 end % getScores
 
 
@@ -1236,7 +1238,7 @@ end % getScores
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get digit span scores
 function scores = getDigitSpan(subjects,measure)
 
-% reference: 
+% reference:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1256,7 +1258,7 @@ if isempty(d)
 else
     
     % find columns containing various TIPI scores
-    dstotal_ci = find(strcmpi(d(1,:),'digtotal')); 
+    dstotal_ci = find(strcmpi(d(1,:),'digtotal'));
     dsforward_ci = find(strcmpi(d(1,:),'digfortotal'));
     dsback_ci = find(strcmpi(d(1,:),'digbacktotal'));
     
@@ -1266,14 +1268,14 @@ else
         if isempty(idx)
             scores(i,:) = nan(1,3);
         else
-            scores(i,1) = str2double(d{idx,dstotal_ci}); 
+            scores(i,1) = str2double(d{idx,dstotal_ci});
             scores(i,2) = str2double(d{idx,dsforward_ci});
             scores(i,3) = str2double(d{idx,dsback_ci});
         end
     end % subjects
 end % isempty
 
-switch measure  
+switch measure
     case 'digitspan'
         scores=scores(:,1);
     case 'forwarddigitspan'
@@ -1281,5 +1283,106 @@ switch measure
     case 'backwarddigitspan'
         scores=scores(:,3);
 end
-    
+
 end % getScores
+
+
+%% TEMPORARY SOLUTION FOR BEING OFFLINE
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores
+% function scores = getBISScores(subjects,measure)
+% 
+% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
+% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+% 
+% % load data
+% d = readtable(dataPath);
+% vars = d.Properties.VariableNames; 
+% 
+% si=getStrIndices(subjects,table2array(d(:,1)));
+% 
+% switch lower(measure)
+%     
+%     case 'bis'
+%         ci = find(strcmpi('BIS',vars));
+%         
+%     case 'bis_attn'
+%         ci = find(strcmpi('BIS_attn',vars));
+%         
+%     case 'bis_motor'
+%         ci = find(strcmpi('BIS_motor',vars));
+%         
+%     case 'bis_nonplan'
+%         ci = find(strcmpi('BIS_nonplan',vars));
+%         
+% end
+% 
+% scores=nan(numel(subjects),1);
+% scores(~isnan(si))=table2array(d(si(~isnan(si)),ci));
+% 
+% 
+% end % getBISScores()
+% 
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
+% function age = getAge(subjects)
+% 
+% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
+% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+% 
+% % load data
+% d = readtable(dataPath);
+% vars = d.Properties.VariableNames;
+% 
+% si=getStrIndices(subjects,table2array(d(:,1)));
+% 
+% ci = find(strcmpi('age',vars));
+% 
+% age=nan(numel(subjects),1);
+% age(~isnan(si))=table2array(d(si(~isnan(si)),ci));
+% 
+% 
+% end % getAge()
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
+% function dwimotion = getDWIMotion(subjects)
+% 
+% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
+% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+% 
+% % load data
+% d = readtable(dataPath);
+% vars = d.Properties.VariableNames;
+% 
+% si=getStrIndices(subjects,table2array(d(:,1)));
+% 
+% ci = find(strcmpi('dwimotion',vars));
+% 
+% dwimotion=nan(numel(subjects),1);
+% dwimotion(~isnan(si))=table2array(d(si(~isnan(si)),ci));
+% 
+% end % dwimotion
+
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
+% function ri = get3MonthRelapseTemp(subjects)
+% 
+% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
+% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+% 
+% % load data
+% d = readtable(dataPath);
+% vars = d.Properties.VariableNames;
+% 
+% si=getStrIndices(subjects,table2array(d(:,1)));
+% 
+% ci = find(strcmpi('relapse_3months',vars));
+% 
+% ri=nan(numel(subjects),1);
+% ri(~isnan(si))=table2array(d(si(~isnan(si)),ci));
+% 
+% end % dwimotion
+
+
+

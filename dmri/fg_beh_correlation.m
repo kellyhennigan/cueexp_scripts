@@ -11,9 +11,9 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 % which group(s) to plot?
 
-group = {'controls'};
+% group = {'controls'};
 % group = {'nonrelapsers'};
-% group = {'all'};
+group = {'all'};
 %  group = {'patients'};
 
 % directory & filename of fg measures
@@ -23,44 +23,44 @@ method = 'mrtrix_fa';
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'mpfc8mmL_naccL_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
-titleStr = 'inferior NAcc tract';
+titleStr = 'mpfc-nacc Left tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
-scale = 'bis';
+scale = 'age';
 % scale = 'nacc_nvlout_betas';
 % scale = 'age';
 
 
 % include control variables?
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 % covars = {'age'};
 % covars = {'dwimotion'};
-% covars = {'dwimotion'};
+covars = {''};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
     
 % omit_subs = {'kj180621','kc190225','mm190226'};
-% omit_subs={'ps151001'};
+ omit_subs={''};
 % omit_subs={'ac160415'};
-omit_subs={'yl160507'
-    'cm160510'
-    'gm160909'
-    'jb161004'
-    'rt170816'
-    'sh180518'
-    'dl180602'
-    'tm181129'
-    'kc190225'
-    'mm190226'
-    'tc190628'
-    'jj190821'};
+% omit_subs={'yl160507'
+%     'cm160510'
+%     'gm160909'
+%     'jb161004'
+%     'rt170816'
+%     'sh180518'
+%     'dl180602'
+%     'tm181129'
+%     'kc190225'
+%     'mm190226'
+%     'tc190628'
+%     'jj190821'};
 
 %% load data & create out directory, if needed
 

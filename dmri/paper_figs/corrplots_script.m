@@ -17,13 +17,13 @@ group = {'patients'};
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-% fgMatStrs = {};
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
-    'DALR_naccLR_aboveAC_autoclean';
-    'DALR_caudateLR_autoclean';
-    'DALR_putamenLR_autoclean';
-    };
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+%     'DALR_naccLR_aboveAC_autoclean';
+%     'DALR_caudateLR_autoclean';
+%     'DALR_putamenLR_autoclean';
+%     };
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_autoclean';
 %     'DAL_naccL_aboveAC_autoclean';

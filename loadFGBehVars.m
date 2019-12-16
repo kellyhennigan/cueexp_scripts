@@ -64,15 +64,19 @@ if strcmpi(group,'controls') || isequal(group,0)
     keep_idx=gi==0;
 elseif strcmpi(group,'patients') || isequal(group,1)
     keep_idx=gi>0;
+    
 elseif strcmpi(group,'relapsers') 
 %     rel = getCueData(subjects,'relapse');
 %     keep_idx=rel==1;
-   rel = getCueData(subjects,'relapse_4months');
+%    rel = getCueData(subjects,'relapse_3months');
+  rel = getCueData(subjects,'relapse_6months');
     keep_idx=rel==1;
      
 elseif strcmpi(group,'nonrelapsers') 
-    rel = getCueData(subjects,'relapse');
-    keep_idx=rel==0;    
+%     rel = getCueData(subjects,'relapse_3months');
+  rel = getCueData(subjects,'relapse_6months');
+    keep_idx=rel==0;   
+
 end
     
 % remove any subjects from keep index that arent returned in

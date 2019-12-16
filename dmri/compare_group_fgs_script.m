@@ -9,65 +9,39 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures_dti '/fgm_trajectories/bygroup'];
+outDir = [p.figures_dti '/PAPERFIG_fgm_trajectories/bygroup'];
 
 
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
+
+targets={'nacc'};
+
+fgMatStrs = {'mpfc8mmL_%sL_autoclean'};
+
+
 % targets={'nacc';
 %     'nacc';
-%     'nacc';
 %     'caudate';
 %     'putamen'};
 % 
-% fgMatStrs = {'DALR_%sLR_belowAC_dil2_autoclean';
-%     'DALR_%sLR_aboveAC_dil2_autoclean';
-%     'DALR_%sLR_dil2_autoclean';
-%     'DALR_%sLR_dil2_autoclean';
-%     'DALR_%sLR_dil2_autoclean'};
-
-targets={'nacc';
-    'nacc';
-    'caudate';
-    'putamen'};
-
-fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
-    'DALR_%sLR_aboveAC_autoclean';
-    'DALR_%sLR_autoclean';
-    'DALR_%sLR_autoclean'};
-
-% fgMatStrs = {'DAL_%sL_belowAC_autoclean';
-%     'DAL_%sL_aboveAC_autoclean';
-%     'DAL_%sL_autoclean';
-%     'DAL_%sL_autoclean'};
-
-% % %    
-% targets={
-%     'caudate';
-%     'putamen'};
-% 
-% fgMatStrs = {
+% fgMatStrs = {'DALR_%sLR_belowAC_autoclean';
+%     'DALR_%sLR_aboveAC_autoclean';
 %     'DALR_%sLR_autoclean';
 %     'DALR_%sLR_autoclean'};
-%    
 
-% fgMatStrs = {'DAL_%sL_dil2_autoclean';
-%     'DAR_%sR_dil2_autoclean';
-%     'DAL_%sL_dil2_autoclean';
-%     'DAR_%sR_dil2_autoclean'};
-% covars = {'age'};
 %  covars={'age','dwimotion'};
 covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 
-% plot groups
+% % plot groups
 group = {'controls','patients'};
 groupStr = '_bygroup';
 lspec = {'-','--'};
-
+% 
 % group = {'controls'};
 % groupStr = 'controls';
 % lspec = {'-'};
@@ -82,10 +56,10 @@ lspec = {'-','--'};
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
-omit_subs = {''}; 
+omit_subs = {''};
 
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
-fgMPlots={'MD'};
+fgMPlots={'FA'};
 
 doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -172,7 +146,7 @@ for j=1:numel(fgMatStrs)
             end
             
             % only plot p-value for mid 50% comparison
-%             p(round(nNodes./2)) = thisp;
+            %             p(round(nNodes./2)) = thisp;
         end
         
         
@@ -190,8 +164,10 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-        xlab = 'fiber group node';
-        ylab = fgMPlot;
+        %         xlab = 'tract node location (midbrain to striatum)';
+        
+%         ylab = fgMPlot;
+
         cols=repmat({getDTIColors(targets{j},fgMatStr)},size(group)); % plot groups as same color
         if doStats
             figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') '; ' strrep(cvStr,'_',' ') test_res];
@@ -203,11 +179,30 @@ for j=1:numel(fgMatStrs)
         lineLabels=strcat(group,repmat({' n='},1,numel(group)),cellfun(@(x) num2str(size(x,1)), groupfgm, 'uniformoutput',0));
         %         cols = {[0 0 1];[1 0 0] }';
         
+        xlab='';
+        ylab='';
+        figtitle='';
         
         %%%%%%%%%%% finally, plot the thing!
         [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols,p,lineLabels,...
             xlab,ylab,figtitle,[],plotToScreen,lspec);
         hold on
+        pos=get(fig,'Position')
+        newpos=[pos(1), pos(2), pos(3)./2, pos(4)./2]; % reduce the figure size to be more in line with publication size
+        set(fig,'Position',newpos)
+
+%         set(gca,'FontSize',30)
+        set(gca,'XTick',[])
+        set(gca,'YTick',[0:.05:.6])
+        
+%         
+        % get same y-axis for all fiber groups for FA w/no covars
+        %         if isempty(cvStr) && strcmp(fgMPlot,'FA')
+        %             ylim([.2 .62])
+        %             set(gca,'YTick',[.2:.2:.6])
+        %         end
+        ylim([.18 .35])
+        
         yl=ylim
         plot([26 26],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
         plot([75 75],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
@@ -218,8 +213,5 @@ for j=1:numel(fgMatStrs)
     end % fg measures (fgMPlots)
     
 end % fiber groups (fgMatStrs)
-
-
-
 
 

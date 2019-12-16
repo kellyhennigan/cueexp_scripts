@@ -23,15 +23,15 @@ getCuePaths();
 dataDir = p.data;
 mainfigDir=p.figures_dti;
 
-seed = 'DA';  % define seed roi
-% seed = 'nacc';
+% seed = 'DA';  % define seed roi
+seed = 'mpfc8mm';
 
-targets=input('target name(s): ','s');
-targets=splitstring(targets);
-% targets = {'caudate','putamen','nacc'};
+% targets=input('target name(s): ','s');
+% targets=splitstring(targets);
+targets = {'nacc'};
 
 
-% LorR = ['L'];
+ % LorR = ['L'];
 LorR = upper(input('L, R, or both? ','s'));
 if strcmp(LorR,'BOTH')
     LorR='LR';
@@ -102,11 +102,11 @@ for j=1:numel(targets)
         
         fprintf('\n\n working on %s fibers for roi %s%s...\n\n',method,target,lr);
         
-        i=1
+        
         for i=1:numel(subjects)
-            
+            %             for i=116:numel(subjects)
             subject = subjects{i};
-            fprintf(['\n\nworking on subject ' subject '...\n\n'])
+           
             subjDir = fullfile(p.data,subject);
             cd(subjDir);
             
@@ -117,60 +117,67 @@ for j=1:numel(targets)
             
             % load fiber groups
             cd(fullfile(subjDir,'fibers',method));
-            if exist(fgName,'file')
-                fg = fgRead(fgName);
+            
+            
+            if ~exist([outFgName '.pdb'],'file')
                 
-                
-                if numel(fg.fibers)<2
+                if exist(fgName,'file')
+                    fg = fgRead(fgName);
                     
-                    fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
-                    
-                else
-                    
-                    % reorient fibers so they all start in DA ROI
-                    [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
-                    
-                    % remove crazy fibers that deviate outside area defined by box_thresh
-                    fg = pruneFG(fg,roi1,roi2,0,box_thresh);
-                    
-                    % remove outliers and save out cleaned fiber group
+                     fprintf(['\n\nworking on subject ' subject '...\n\n'])
+           
                     if numel(fg.fibers)<2
                         
                         fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
                         
                     else
                         
-                        [~, keep]=AFQ_removeFiberOutliers(fg,...
-                            maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                        % reorient fibers so they all start in DA ROI
+                        [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
                         
-                        fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
+                        % remove crazy fibers that deviate outside area defined by box_thresh
+                        fg = pruneFG(fg,roi1,roi2,0,box_thresh);
                         
-                        cleanfg = getSubFG(fg,find(keep),outFgName);
-                        
-                        nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
-                        
-                        
-                        AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
-                        title(gca,subject);
-                        if savePlots
-                            print(gcf,'-dpng','-r300',fullfile(figDir,subject));
-                        end
-                        
-                        mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
-                        
-                        close all
-                        
-                        if saveOutFGMeasures
-                            dt = dtiLoadDt6(fullfile(dataDir,subject,dt6file));
-                            saveOutSubjFGMeasures(cleanfg,dt,roi1,roi2,pwd);
-                        end
-                        
+                        % remove outliers and save out cleaned fiber group
+                        if numel(fg.fibers)<2
+                            
+                            fprintf(['\n\nfiber group is empty for subject, ' subject '\n\n']);
+                            
+                        else
+                            
+                            [~, keep]=AFQ_removeFiberOutliers(fg,...
+                                maxDist,maxLen,numNodes,M,count,maxIter,show);     % remove outlier fibers
+                            
+                            fprintf('\n\n final # of %s cleaned fibers: %d\n\n',fg.name, numel(find(keep)));
+                            
+                            cleanfg = getSubFG(fg,find(keep),outFgName);
+                            
+                            nFibers_clean(i,1) = numel(cleanfg.fibers); % keep track of the final # of fibers
+                            
+                            
+                            AFQ_RenderFibers(cleanfg,'tubes',0,'color',[1 0 0],'plottoscreen',plotToScreen);
+                            title(gca,subject);
+                            if savePlots
+                                print(gcf,'-dpng','-r300',fullfile(figDir,subject));
+                            end
+                            
+                            mtrExportFibers(cleanfg,cleanfg.name);  % save out cleaned fibers
+                            
+                            close all
+                            
+                            if saveOutFGMeasures
+                                dt = dtiLoadDt6(fullfile(dataDir,subject,dt6file));
+                                saveOutSubjFGMeasures(cleanfg,dt,roi1,roi2,pwd);
+                            end
+                            
+                            
+                        end % empty fibers
                         
                     end % empty fibers
                     
-                end % empty fibers
+                end % if fg exists
                 
-            end % if fg exists
+            end
             
         end % subjects
         

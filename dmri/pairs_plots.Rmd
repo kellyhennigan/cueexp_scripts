@@ -11,11 +11,15 @@ get libraries & load data
 require(psych)
 
 #load data
-d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_191022.csv')
+d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_191104.csv')
 #d1 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__191022.csv')
 d1$FA<-d1$inf_NAcc_fa_controllingagemotion
 d1$inverseMD<-1-d1$inf_NAcc_md_controllingagemotion
 d1$smoke[d1$smoke>0]=1
+
+# just controls 
+d1<-d1[d1$gi==0]
+
 ```
 
 #pairs plots 1: age, motion, and sex
