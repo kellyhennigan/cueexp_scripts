@@ -26,9 +26,7 @@ LorR = ['L','R'];
 combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 seeds = {'mpfc8mm'};
-% targets = {'nacc','nacc','nacc','caudate','putamen'};
-% versionStrs = {'belowAC_autoclean','aboveAC_autoclean','autoclean','autoclean','autoclean'};
-targets = {'nacc'}
+targets = {'nacc'};
 versionStrs = {'autoclean'};
 
 

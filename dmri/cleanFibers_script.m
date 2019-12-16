@@ -53,6 +53,7 @@ plotToScreen = 0; % don't plot to screen
 saveOutFGMeasures=1; % 1 to compute and save out fiber group measures (fa,md,etc.), otherwise, 0
 dt6file = 'dti96trilin/dt6.mat'; % filepath relative to subject's directory
 
+
 %% get pruning params based on tractography method
 
 switch method
@@ -110,6 +111,12 @@ for j=1:numel(targets)
             subjDir = fullfile(p.data,subject);
             cd(subjDir);
             
+            
+            % only continue processing if the outfile doesn't already exist
+            % for this subject
+            if ~exist(fullfile(subjDir,'fibers',method,[outFgName '.pdb']),'file')
+           
+            
             % load seed and target rois
             roi1 = roiNiftiToMat(['ROIs/' seed lr '.nii.gz']);
             roi2 = roiNiftiToMat(['ROIs/' target lr '.nii.gz']);
@@ -118,8 +125,6 @@ for j=1:numel(targets)
             % load fiber groups
             cd(fullfile(subjDir,'fibers',method));
             
-            
-            if ~exist([outFgName '.pdb'],'file')
                 
                 if exist(fgName,'file')
                     fg = fgRead(fgName);
@@ -177,7 +182,7 @@ for j=1:numel(targets)
                     
                 end % if fg exists
                 
-            end
+            end % if outfile doesn't exist
             
         end % subjects
         
