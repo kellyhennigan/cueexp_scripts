@@ -3,9 +3,9 @@
 clear all
 close all
 
-fgName = 'DAL_putamenL_autoclean';
+fgName = 'mpfc8mmL_naccL_autoclean';
 
-method = 'conTrack';
+method = 'mrtrix_fa';
 
 fgPath = fullfile('/Users/kelly/cueexp/data/fgMeasures',method,[fgName '.mat']);
 

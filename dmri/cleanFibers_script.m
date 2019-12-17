@@ -141,7 +141,7 @@ for j=1:numel(targets)
                         [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
                         
                         % remove crazy fibers that deviate outside area defined by box_thresh
-                        fg = pruneFG(fg,roi1,roi2,0,box_thresh);
+%                         fg = pruneFG(fg,roi1,roi2,0,box_thresh);
                         
                         % remove outliers and save out cleaned fiber group
                         if numel(fg.fibers)<2
