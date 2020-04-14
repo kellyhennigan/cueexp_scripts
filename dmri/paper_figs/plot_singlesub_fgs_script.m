@@ -48,33 +48,39 @@ seed = 'DA';
 %%%%%%%%%%%%%%% params for plotting just 2 MFB fiber groups %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% targets={
-%     'nacc';
-%     'nacc'};
-% 
-% fgStrs = {
-%     '_belowAC';
-%     '_aboveAC'};
-% 
-% fgNameStrs = { 
-%     '%s%s_%s%s%s_dil2_autoclean.pdb',...
-%     '%s%s_%s%s%s_dil2_autoclean.pdb'};
-%    
-% outStr = '_2';
 targets={
     'nacc';
-    };
+    'nacc'};
 
 fgStrs = {
     '_belowAC';
-    };
+    '_aboveAC'};
 
 fgNameStrs = { 
-    '%s%s_%s%s%s_dil2_autoclean.pdb'    };
+    '%s%s_%s%s%s_dil2_autoclean.pdb',...
+    '%s%s_%s%s%s_dil2_autoclean.pdb'};
    
-outStr = '_1';
+outStr = '_2';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% params for plotting just MFB fiber group %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+% targets={
+%     'nacc';
+%     };
+% 
+% fgStrs = {
+%     '_belowAC';
+%     };
+% 
+% fgNameStrs = { 
+%     '%s%s_%s%s%s_dil2_autoclean.pdb'    };
+%    
+% outStr = '_1';
+% 
+% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

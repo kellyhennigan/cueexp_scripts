@@ -31,7 +31,7 @@ titleStr = 'mpfc-nacc Left tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
-scale = 'age';
+scale = 'bis';
 % scale = 'nacc_nvlout_betas';
 % scale = 'age';
 
@@ -40,7 +40,7 @@ scale = 'age';
 % covars = {'age','dwimotion'};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {''};
+covars = {};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
@@ -48,20 +48,8 @@ outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
     
 % omit_subs = {'kj180621','kc190225','mm190226'};
  omit_subs={''};
-% omit_subs={'ac160415'};
-% omit_subs={'yl160507'
-%     'cm160510'
-%     'gm160909'
-%     'jb161004'
-%     'rt170816'
-%     'sh180518'
-%     'dl180602'
-%     'tm181129'
-%     'kc190225'
-%     'mm190226'
-%     'tc190628'
-%     'jj190821'};
 
+ 
 %% load data & create out directory, if needed
 
 % create dir for saving out figs, if desired
@@ -108,26 +96,26 @@ end
 % measures
 % 
 % %%%%%%%%%%%%%% params for figure 1
-% fgMCorr = 'MD'; % fg measure to correlate with behavior & plot as color map
-% fgMPlot = 'MD'; % fg measure to plot as values along pathway node
-% %%%%%%%%%%%%%%%
-% 
-% % get correlation between fgMCorr & scores along pathway nodes
-% if ~notDefined('covars')
-%     [r,p]=partialcorr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))},cvs);
-% else
-%     [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
-% end
-% 
-% % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
-% % crange=[min(r) max(r)];
+fgMCorr = 'FA'; % fg measure to correlate with behavior & plot as color map
+fgMPlot = 'FA'; % fg measure to plot as values along pathway node
+%%%%%%%%%%%%%%%
+
+% get correlation between fgMCorr & scores along pathway nodes
+if ~notDefined('covars')
+    [r,p]=partialcorr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))},cvs);
+else
+    [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+end
+
+% plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+crange=[min(r) max(r)];
 % crange=[0 .5];
-% fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
-% title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
-% if saveFigs
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr' cvStr]))
-% end
-% 
+fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
+title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
+if saveFigs
+    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr' cvStr]))
+end
+
 
 
 %% fig 2: plot correlations with fg measures

@@ -103,7 +103,7 @@ for i=1:numel(subjects) % subject loop
     for j=1:numel(rois)
         
         % this roi time series
-        roi_ts = roi_mean_ts(func.data,rois{j}.data);
+        roi_ts = roi_mean_ts(func.data,single(rois{j}.data));
         
         % set vols with abs(zscore > 4) to nan (assume this is due to
         % some non-bio noise)

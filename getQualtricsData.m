@@ -39,12 +39,12 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 
 
 if notDefined('filepath')
-if notDefined('filepath')
-    filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_190530_TEMP.csv';
+    if notDefined('filepath')
+        filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_190530_TEMP.csv';
+    end
+    
 end
-
-end
-% 
+%
 % if notDefined('filepath')
 %     filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_180730.csv';
 % end
@@ -135,7 +135,7 @@ d.subjid = subjects;
 
 for i=1:numel(subjects)
     
-%     subjects{i}
+    %     subjects{i}
     % deal with subject-specific issues here:
     
     % subject ja151218's responses are coded with id, 'ja151218_actual'
@@ -158,7 +158,7 @@ for i=1:numel(subjects)
     elseif strcmp(subjects{i},'ld160918')
         si=find(strcmp('ld160914',qsubs));
         
-        % subjects who were entered twice: 
+        % subjects who were entered twice:
     elseif strcmp(subjects{i},'tj160529') || strcmp(subjects{i},'jw170330') ...
             || strcmp(subjects{i},'tb171209') || strcmp(subjects{i},'kk180117') ...
             || strcmp(subjects{i},'sh180518') || strcmp(subjects{i},'jj180618')
@@ -168,13 +168,19 @@ for i=1:numel(subjects)
         % subject al170316 was incorrectly entered as al160317
     elseif strcmp(subjects{i},'al170316')
         si=find(strcmp('al160317',qsubs));
-   
-%         subject jc180212 coded by his name
+        
+        %         subject jc180212 coded by his name
     elseif strcmp(subjects{i},'jc180212')
         si=find(strcmp('Jonathan Contoplianos',qsubs));
         
+        % subject ds170728 was firt scanned on 170716 but the fmri data was
+        % lost, so s/he was re-scanned on 170728, though they did the
+        % qualtrics survey on 170716
+    elseif strcmp(subjects{i},'ds170728')
+        si=find(strcmp('ds170716',qsubs));
+        
     else
-        si=find(strcmp(subjects{i},qsubs));
+        si=find(strcmpi(subjects{i},qsubs));
     end
     
     % if subject's data isn't found, return nan/empty values for that
@@ -293,6 +299,12 @@ for i=1:numel(subjects)
     
     
 end % subjects loop
+
+%% qualtrics survey for Post July2018 codes the question of "do you smoke"
+% as 1=yes/currently, but 3=in the past/not now, etc.
+% so re-code any "smoke" responses that are above 1 as 0 to indicate not a
+% current smoker
+d.smoke(d.smoke>1)=0;
 
 %% recode classify with strings
 %

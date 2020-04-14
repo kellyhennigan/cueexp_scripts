@@ -3,7 +3,7 @@
 clear all
 close all
 
-fgName = 'mpfc8mmL_naccL_autoclean';
+fgName = 'mpfc8mmR_naccR_autoclean';
 
 method = 'mrtrix_fa';
 
@@ -30,6 +30,7 @@ out_fgMeasure = array2table(cell2mat(fgMeasures'));
 T = [table(out_subjects,out_fgName,out_fgMName) out_fgMeasure];
     
 % save out
-outPath = fullfile('/Users/kelly/Google Drive/cuefmri/fg_measures/', [fgName '_' method '.csv']);
+% outPath = fullfile('/Users/kelly/Google Drive/cuefmri/fg_measures/', [fgName '_' method '.csv']);
+outPath = fullfile('/Users/kelly/cueexp/data/fgMeasures',method,'csv_files',[fgName '.csv']);
 writetable(T,outPath,'WriteVariableNames',0); 
 

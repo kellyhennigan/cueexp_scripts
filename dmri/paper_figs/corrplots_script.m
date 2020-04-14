@@ -11,7 +11,7 @@ figDir = pa.figures_dti;
 
 
 % which group(s) to plot?
-group = {'patients'};
+group = {'controls'};
 
 
 % directory & filename of fg measures
@@ -67,7 +67,7 @@ scale='BIS';
 % covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
- covars = {'age','dwimotion'};
+ covars = {'age','dwimotion','gender'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
