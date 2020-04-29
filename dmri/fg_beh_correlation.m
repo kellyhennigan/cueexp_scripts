@@ -11,9 +11,9 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 % which group(s) to plot?
 
-% group = {'controls'};
+group = {'controls'};
 % group = {'nonrelapsers'};
-group = {'all'};
+% group = {'all'};
 %  group = {'patients'};
 
 % directory & filename of fg measures
@@ -22,12 +22,12 @@ method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
-% fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
-fgMatStr = 'mpfc8mmL_naccL_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
+% fgMatStr = 'mpfc8mmL_naccL_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
-titleStr = 'mpfc-nacc Left tract';
+titleStr = 'MFB tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
@@ -37,7 +37,7 @@ scale = 'bis';
 
 
 % include control variables?
-% covars = {'age','dwimotion'};
+covars = {'age','dwimotion'};
 % covars = {'age'};
 % covars = {'dwimotion'};
 covars = {};

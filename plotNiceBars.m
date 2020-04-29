@@ -297,8 +297,8 @@ title(titleStr,'fontName',fontName,'fontSize',fontSize)
 
 % save figure if desired
 if savePath
-%     print(fig,'-dpng','-r300',savePath)
-      saveas(fig,savePath,'pdf');
+    print(fig,'-dpng','-r300',savePath)
+%       saveas(fig,savePath,'pdf');
 end
 
 

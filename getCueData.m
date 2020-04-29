@@ -103,14 +103,14 @@ switch measure
         data = data{2}; % cell array of strings describing how much smoking per day
         
         
-    case 'education_qualtrics'
+    case 'education'
         
         data = getEducationQualtrics(subjects);
         data = data{1}; % just return the quantitative var
         
-    case 'education'
+    case 'education_safe'
         
-        data = getEducation(subjects); % years of education from SaFE questionnaire
+        data = getEducationSafe(subjects); % years of education from SaFE questionnaire
         
     case 'relapse'
         
@@ -773,7 +773,7 @@ else
                 
                 SS = [30 40 67 34 15 32 83 21 48 40 25 65 24 30 53 47 40 50 45 27 16]';
                 LL = [85 55 85 35 35 55 85 30 55 65 35 75 55 35 55 60 70 80 70 30 30]';
-                delay = [14 25 35 43 10 20 35 75 45 70 25 50 10 20 55 50 20 70 35 35 35]';
+               delay=[14 25 35 43 10 20 35 75 45 70 25 50 10 20 55 50 20 70 35 35 35]';
                 
                 % estimate discounting param k using either Kirby or MLE method
                 if strcmp(fitk_method,'Kirby')
@@ -857,6 +857,27 @@ education{2} = d.education2;
 %     5= Master's degree
 %     6= Doctoral degree
 %     7= Professional degree
+%     8=other; 2 people that responded this wrote in associates degree
+
+% recode to reflect years completed: 
+
+%     1= Grammar school > 6
+%     2= High school or equivalent > 12
+%     3= Some college > 13
+%     4= Bachelor's degree > 16
+%     5= Master's degree > 18
+%     6= Doctoral degree > 20
+%     7= Professional degree > 14
+%     8=other; 2 people that responded this wrote in associates degree > 14
+
+education{1}(education{1}==8)=14;
+education{1}(education{1}==7)=14;
+education{1}(education{1}==6)=20;
+education{1}(education{1}==5)=18;
+education{1}(education{1}==4)=16;
+education{1}(education{1}==3)=13;
+education{1}(education{1}==2)=12;
+education{1}(education{1}==1)=6;
 
 end
 
@@ -964,7 +985,7 @@ end
 end % familiarity
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject education data (from SAFE)
-function educ_years = getEducation(subjects)
+function educ_years = getEducationSafe(subjects)
 
 docid = '1oH0mM7oka6MxElE4Wxu69g3TpsXA2-fLCxTAtggCDQA'; % doc id for google sheet w/SaFE data
 

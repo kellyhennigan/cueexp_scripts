@@ -7,14 +7,14 @@ p=getCuePaths();
 dataDir = p.data; 
 outDir = fullfile(p.figures_dti,'fgs_mni_corrmap');
 
-fgStr = 'DAL_naccL_belowAC_dil2_autoclean';
+fgStr = 'DAL_naccL_belowAC_autoclean';
 
 fgmni=fgRead(fullfile(dataDir,'fibers_mni',[fgStr '_group_mni.pdb']));
 
 
 t1 = niftiRead(fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii'));
 
-fgMCorr='MD';
+fgMCorr='FA';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,15 +36,15 @@ end
 
 cd(dataDir);
 
-    
-    % Rescale image values to get better gary/white/CSF contrast
-    t1.data = mrAnatHistogramClip(double(t1.data),0.3,0.99);
+
+% Rescale image values to get better gary/white/CSF contrast
+t1.data = mrAnatHistogramClip(double(t1.data),0.3,0.99);
     
   
 % get corr values
 vals=dlmread(fullfile(dataDir,'fg_bis_corr_vals',[fgStr '_controls_wCV_agedwimotion_' fgMCorr]));
 
-crange = [0 .5];
+crange = [-.5 0];
 rgb=repmat({vals2colormap(vals,'autumn',crange)},1,numel(fgmni.fibers));
 
 

@@ -9,7 +9,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures_dti '/PAPERFIG_fgm_trajectories/bygroup'];
+outDir = [p.figures_dti '/paper_figs/fgm_trajectories/bygroup'];
 
 
 % directory & filename of fg measures

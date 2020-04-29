@@ -40,7 +40,7 @@ function [d,pa,na,famil,image_types]=getQualtricsData(filepath,subjects)
 
 if notDefined('filepath')
     if notDefined('filepath')
-        filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_190530_TEMP.csv';
+        filepath = '/Users/Kelly/cueexp/data/qualtrics_data/Post_Scan_Survey_200324.csv';
     end
     
 end
@@ -217,6 +217,11 @@ for i=1:numel(subjects)
             d.smoke_perday{i,1} = 0;
         end
         
+         % subject rt160420 completed high school based on SAFE response,
+         % record that here
+        if strcmp(subjects{i},'rt160420')
+            d.education(i,1) = 2;
+        end
         pa(i,:) = nan(1,72);
         na(i,:) = nan(1,72);
         famil(i,:) = nan(1,72);

@@ -15,7 +15,7 @@ group='controls';
 
 method = 'mrtrix_fa';
 fgMDir = fullfile(dataDir,'fgMeasures',method);
-fgMStr = '_belowAC_dil2_autoclean';
+fgMStr = '_belowAC_autoclean';
 lr = ['L'];
 target = 'nacc';
 fgMName = ['DA' lr '_' target lr fgMStr];
@@ -52,7 +52,7 @@ for i=1:size(subjects)
     
     fprintf('\nworking on subject %s...\n',subject)
     
-    % % get subject's node coords in tlrc space
+    % % get subject's node coords in group space
     fgcoords_tlrc = xformCoordsANTs(SuperFibers(i).fibers{1},...
         sprintf(xform_aff,subject),...
         sprintf(xform_invWarp,subject))';

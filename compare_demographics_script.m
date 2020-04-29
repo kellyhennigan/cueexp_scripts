@@ -29,9 +29,9 @@ demVars = {'age','gender','education','smoke','bdi','bis','discount_rate',...
     'craving',...
     };
 
-omit_subs = {'wh160130','at160601','lm160914','jb161004','se161021','ja160416'};
+% omit_subs = {'wh160130','at160601','lm160914','jb161004','se161021','ja160416'};
 % omit_subs = {'ja160416'};
-     
+     omit_subs = {''};
 
 %% 
 
