@@ -25,13 +25,13 @@ hyp.data(hyp.data<.25)=0;
 hyp.qto_xyz=hyp.sto_xyz;
 hyp.qto_ijk=hyp.sto_ijk;
 
-fgStr = 'DAL_naccL_belowAC_dil2_autoclean';
+fgStr = 'DAL_naccL_belowAC_autoclean';
 
 fd=niftiRead(fullfile(dataDir,'fibers_mni',[fgStr '_group_mni.nii.gz']));
-fd.data(fd.data~=0)=1;
+% fd.data(fd.data~=0)=1;
 
-fd2=niftiRead(fullfile(dataDir2,'fibers_mni',[fgStr '_group_mni.nii.gz']));
-fd2.data(fd2.data~=0)=1;
+fd2=niftiRead(fullfile(dataDir2,'fibers_mni',[fgStr '_group_mni_skew32.nii.gz']));
+% fd2.data(fd2.data~=0)=1;
 
 
 % sampleNum='1';
