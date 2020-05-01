@@ -45,14 +45,17 @@ def whichSubs(base_dir='cueexp'):
 
 
 if __name__ == '__main__':
-
-
-	base_dir = whichBaseDir()
 	
-	data_dir = os.path.join(os.path.expanduser('~'),base_dir,'data')  
+	
+	# get full path for main project directory & return to current dir
+	os.chdir('../')
+	main_dir=os.getcwd()
+	os.chdir('scripts')
+
+	data_dir = os.path.join(main_dir,'data')  
 	os.chdir(data_dir) 		
 
-	subjects = whichSubs(base_dir)
+	subjects = whichSubs()
 
 	filepath = raw_input('filepath to process, relative to subject dir: ')
 	print filepath

@@ -14,12 +14,18 @@ import os,sys,glob
 ##################### define global variables #################################
 # EDIT AS NEEDED:
 
+os.chdir('../')
+main_dir=os.getcwd()
+os.chdir('scripts')
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+# data directory
+data_dir=main_dir+'/data'
+#data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+
 
 t1_dir = os.path.join(data_dir,'%s','t1')  # first %s is data_dir & 2nd is subject id
 
-mni_file = os.path.join(data_dir,'templates','mni_icbm152_nlin_asym_09a_nifti','mni_icbm152_t1_tal_nlin_asym_09a.nii') # %s is data_dir
+mni_file = os.path.join(data_dir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii') # %s is data_dir
 
 print('execute commands?')
 xc = bool(input('enter 1 for yes, or 0 to only print: '))
@@ -95,7 +101,7 @@ if __name__ == '__main__':
 
 
 		# change header to play nice with afni
-		cmd = '3drefit -view mni -space mni '+t1_mni
+		cmd = '3drefit -view tlrc -space mni '+t1_mni
 		doCommand(cmd)
 
 

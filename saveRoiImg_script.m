@@ -8,9 +8,10 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-roiName = 'naccR_desai';
-roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii.gz']);
-t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+roiName = 'left_hypothal';
+roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);
+% t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
 
 outDir = fullfile(figDir,'ROIs');
 if ~exist(outDir,'dir')

@@ -18,12 +18,12 @@ cd(dataDir);
 bg = niftiRead(fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii'));
 
 % hypothalamus atlas mask
-hyp=niftiRead(fullfile(dataDir,'templates','CIT168toMNI152_prob_atlas_bilat_1mm_hypothalamus.nii.gz'));
-% hyp=niftiRead(fullfile(dataDir,'templates','CIT168toMNI152_prob_atlas_bilat_1mm_putamen.nii.gz'));
-hyp.data(hyp.data>=.25)=1;
-hyp.data(hyp.data<.25)=0;
-hyp.qto_xyz=hyp.sto_xyz;
-hyp.qto_ijk=hyp.sto_ijk;
+ hyp=niftiRead(fullfile(dataDir,'templates','hypothalamusL25.nii'));
+% hyp=niftiRead(fullfile(dataDir,'templates','CIT168toMNI152_prob_atlas_bilat_1mm_hypothalamus.nii.gz'));
+% hyp.data(hyp.data>=.25)=1;
+% hyp.data(hyp.data<.25)=0;
+% hyp.qto_xyz=hyp.sto_xyz;
+% hyp.qto_ijk=hyp.sto_ijk;
 
 fgStr = 'DAL_naccL_belowAC_autoclean';
 
@@ -78,8 +78,9 @@ cmap=fdcol;
 
 scale = 0; % 1 to scale, otherwise 0
 
-q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
+q_crange=[.1 .8]; % min/max quantiles of data values to determine color range
 
+thresh=.1;
 
 plane=2;
 acpcSlices=-6
@@ -98,6 +99,8 @@ figPrefix = '';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
+
+fd.data(fd.data<thresh)=0;
 
 fdXform = fd.qto_xyz;
 
