@@ -166,7 +166,7 @@ for i=1:numel(subjects)
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
             outFile=[outPath '_mni.nii.gz'];
-            outNii=xformANTs(inFile,outFileMNI,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
+            outNii=xformANTs(inFile,outFile,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
 
             % Smooth the image?
             if smooth
