@@ -1,10 +1,13 @@
 %% Make fiber density maps
 
-% assumes all filberfiles have fibers oriented to start in the DA ROI and
+% assumes all fiberfiles have fibers oriented to start in the DA ROI and
 % end in the target ROI
 
-% saves out niftis that contain a count of the number of fibers in each
-% voxel
+% saves out niftis with values that represent whether fibers go through
+% that voxel and if so, how many. Scaled to have a max value of 1.
+
+% if only_seed_endpts or ony_target_endpts is set to true, then center of
+% mass coordinates are also saved out. 
 
 %
 % NOTE: this script first saves out the L and R fiber density maps, then
@@ -70,11 +73,9 @@ fdDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
 
 
-% subject-specific xforms for native > tlrc space
-xform_aff=fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt');
-xform_warp=fullfile(dataDir,'%s','t1','t12tlrc_xform_Warp.nii.gz');
-xform_aff2=fullfile(dataDir,'templates','tlrc2mni_xform_Affine.txt');
-xform_warp2=fullfile(dataDir,'templates','tlrc2mni_xform_Warp.nii.gz');
+% subject-specific xforms for native > mni space
+xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
+xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
 
 
 % options
@@ -138,17 +139,16 @@ for i=1:numel(subjects)
             if only_seed_endpts
                 fg.fibers = cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0);
                 outName = [outName, '_' seed 'endpts'];
-            end
-            
-             % to use just target endpoints of fibers:
-            if only_target_endpts
+                
+            % to use just target endpoints of fibers:
+            elseif only_target_endpts
                 fg.fibers = cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0);
                 outName = [outName, '_striatumendpts'];
             end
 
             % make fiber density maps
             %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
-            fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,only_seed_endpts);
+            fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
 
             % save new fiber density file
             outName = [outName outNameStr];
@@ -156,7 +156,7 @@ for i=1:numel(subjects)
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
 
-            % save out center of mass coords
+            % save out center of mass coords if doing just endpts 
             if (only_seed_endpts || only_target_endpts)
                 imgCoM = centerofmass(nii.data);
                 CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
@@ -165,19 +165,18 @@ for i=1:numel(subjects)
           
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
-            outFileTLRC=[outPath '_tlrc.nii.gz'];
-            outNiiTLRC=xformANTs(inFile,outFileTLRC,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
-
             outFile=[outPath '_mni.nii.gz'];
-            outNii=xformANTs(outFileTLRC,outFile,xform_aff2,xform_warp2);
-            outNii.data=outNii.data./max(outNii.data(:));
-
+            outNii=xformANTs(inFile,outFileMNI,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
 
             % Smooth the image?
             if smooth
                 outNii.data = smooth3(outNii.data, 'gaussian', smooth);
             end
 
+            % scale to have max value of 1 in group space
+            outNii.data=outNii.data./max(outNii.data(:));
+
+            % save out fiber density file in group space
             writeFileNifti(outNii);
 
             % save out center of mass coords for group space
