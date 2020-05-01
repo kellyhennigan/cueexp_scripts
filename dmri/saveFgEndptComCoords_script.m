@@ -37,7 +37,7 @@ LorR=['L','R'];
 xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
 xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
 
-outDir = fullfile(dataDir,'fibers_mni_v2');
+outDir = fullfile(dataDir,'fgendpt_com_coords');
 if ~exist(outDir,'dir')
     mkdir(outDir);
 end
@@ -54,7 +54,8 @@ for lr=LorR
         
         fgName = [seed lr '_' target lr '_' fgFileStrs{j}];
         
-        i=1;
+       
+        seedCoM_mni=[]; targetCoM_mni=[];
         for i=1:size(subjects)
             
             subject = subjects{i};
@@ -64,12 +65,10 @@ for lr=LorR
             fg=fgRead(fullfile(dataDir,subject,'fibers',method,[fgName '.pdb']));
             
             % get mean coord for endpoints
-            seedCoM=mean(cell2mat(cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0)'),2);
-            targetCoM=mean(cell2mat(cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0)'),2);
+            seedCoM(i,:)=mean(cell2mat(cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0)'),2)';
+            targetCoM(i,:)=mean(cell2mat(cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0)'),2)';
             
-            endptCoM=[seedCoM';targetCoM'];
-            
-            endptCoM_mni = xformCoordsANTs(endptCoM,...
+            endptCoM_mni = xformCoordsANTs([seedCoM(i,:);targetCoM(i,:)],...
                 sprintf(xform_aff,subject),...
                 sprintf(xform_warp,subject));
             
@@ -80,14 +79,26 @@ for lr=LorR
             
         end % subject loop
         
-        % save out com coords w/subject ids
-        T = table([subjects],seedCoM_mni);
-        CoMfile=[fgName '_DAendpts_CoM_mni_ALL.txt'];
+        %% save out com coords w/subject ids
+       
+        % native space seed endpt
+        T = table([subjects],seedCoM);
+        CoMfile=[fgName '_DAendpts_CoM_nativespace.txt'];
         writetable(T,fullfile(outDir,CoMfile),'WriteVariableNames',0);
         
-        % save out com coords w/subject ids
+        % mni space seed endpt
+        T = table([subjects],seedCoM_mni);
+        CoMfile=[fgName '_DAendpts_CoM_mni.txt'];
+        writetable(T,fullfile(outDir,CoMfile),'WriteVariableNames',0);
+        
+        % native space target endpt
+        T = table([subjects],targetCoM);
+        CoMfile=[fgName '_striatumendpts_CoM_nativespace.txt'];
+        writetable(T,fullfile(outDir,CoMfile),'WriteVariableNames',0);
+        
+        % mni space target endpt
         T = table([subjects],targetCoM_mni);
-        CoMfile=[fgName '_striatumendpts_CoM_mni_ALL.txt'];
+        CoMfile=[fgName '_striatumendpts_CoM_mni.txt'];
         writetable(T,fullfile(outDir,CoMfile),'WriteVariableNames',0);
         
     end % targets

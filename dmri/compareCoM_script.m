@@ -15,7 +15,8 @@ cd /Users/kelly/cueexp/data/fg_densities/mrtrix_fa
 
 
 % fibers directory relative to subject dir
-inDir = fullfile(dataDir,'fg_densities','mrtrix_fa');
+% inDir = fullfile(dataDir,'fg_densities','mrtrix_fa');
+inDir = fullfile(dataDir,'fibers_mni_v2');
 
 seed = 'DA';
 
