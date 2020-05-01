@@ -1,4 +1,4 @@
-% xform fiber groups to group space 
+% xform fiber groups to group space
 
 
 clear all
@@ -16,14 +16,23 @@ method = 'mrtrix_fa';
 
 
 seed = 'DA';
-targets = {'nacc','nacc','caudate','putamen'};
+
+% targets = {'nacc','nacc','caudate','putamen'};
+%
+% % string to identify fiber group files (must correspond to targets cell array)
+% fgFileStrs = {'belowAC_autoclean',...
+%     'aboveAC_autoclean',...
+%     'autoclean',...
+%     'autoclean'};
+%
+% LorR=['L','R'];
+
+targets = {'nacc'}
 
 % string to identify fiber group files (must correspond to targets cell array)
-fgFileStrs = {'belowAC_autoclean',...
-    'aboveAC_autoclean',...
-    'autoclean',...
-    'autoclean'};
+fgFileStrs = {'belowAC_autoclean'};
 
+LorR=['L'];
 
 
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
@@ -38,85 +47,77 @@ if ~exist(outDir,'dir')
     mkdir(outDir);
 end
 
-LorR=['L','R'];
 
 %% get coords from desired node of fiber group & convert to tlrc space
 
 t1=niftiRead(t1Path); % load background image
 
 for lr=LorR
-
-for j=1:numel(targets)
-
-    target=targets{j};
-
-    fgName = [seed lr '_' target lr '_' fgFileStrs{j}];
     
-    outName=[fgName '_group_allfibers_mni' ];
+    for j=1:numel(targets)
+        
+        target=targets{j};
+        
+        fgName = [seed lr '_' target lr '_' fgFileStrs{j}];
+        
+        outName=[fgName '_group_allfibers_mni' ];
+        
+        allfibers={};
+        
+        i=1;
+        for i=1:size(subjects)
+            
+            subject = subjects{i};
+            
+            fprintf('\nworking on subject %s...\n',subject)
+            
+            fg=fgRead(fullfile(dataDir,subject,'fibers',method,[fgName '.pdb']));
+            
+            % take just 100 fibers for each subject
+            nfibers=numel(fg.fibers);
+            if nfibers>100
+                fi=randperm(nfibers,100); % fiber index
+                fg.fibers=fg.fibers(fi);
+            end
+            
+            fgcoords_mni = cellfun(@(x) xformCoordsANTs(x,...
+                sprintf(xform_aff,subject),...
+                sprintf(xform_warp,subject)),fg.fibers,'uniformoutput',0);
+            
+            fgcoords_mni=cellfun(@(x) x', fgcoords_mni,'uniformoutput',0);
+            
+            allfibers(end+1:end+numel(fgcoords_mni),1)=fgcoords_mni;
+            
+            fprintf('\ndone.\n')
+            
+        end % subject loop
+        
+        % save out as fiber group
+        fg = dtiNewFiberGroup(outName, [],[],1,allfibers);
+        mtrExportFibers(fg,fullfile(outDir,outName));
+        
+        % save out as density map
+        fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
+        ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+        writeFileNifti(ni);
+        
+        % make density map of just seed endpoints
+        outName_seed = [outName, '_' seed 'endpts'];
+        fg_seed=fg;
+        fg_seed.fibers = cellfun(@(x) x(:,1), fg_seed.fibers,'UniformOutput',0);
+        fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
+        ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+        writeFileNifti(ni);
+        
+        % make density map of just striatum endpoints
+        outName_target = [outName, '_striatumendpts'];
+        fg_target=fg;
+        fg_target.fibers = cellfun(@(x) x(:,end), fg_target.fibers,'UniformOutput',0);
+        fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
+        ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+        writeFileNifti(ni);
+        
+        
+    end % targets
 
-    allfibers={};
-
-i=1;
-for i=1:size(subjects)
-    
-    subject = subjects{i};
-    
-    fprintf('\nworking on subject %s...\n',subject)
-    
-    fg=fgRead(fullfile(dataDir,subject,'fibers',method,[fgName '.pdb']));
-    
-    % % get subject's node coords in group space
-%     fgcoords_tlrc = xformCoordsANTs(SuperFibers(i).fibers{1},...
-%         sprintf(xform_aff,subject),...
-%         sprintf(xform_invWarp,subject))';
-%     
-
-% take just 100 fibers for each subject
-nfibers=numel(fg.fibers);
-if nfibers>100
-    fi=randperm(nfibers,100); % fiber index
-    fg.fibers=fg.fibers(fi);
-end
-
-fgcoords_mni = cellfun(@(x) xformCoordsANTs(x,...
-        sprintf(xform_aff,subject),...
-        sprintf(xform_warp,subject)),fg.fibers,'uniformoutput',0);
-      
-    fgcoords_mni=cellfun(@(x) x', fgcoords_mni,'uniformoutput',0);
-    
-    allfibers(end+1:end+numel(fgcoords_mni),1)=fgcoords_mni;
-    
-    fprintf('\ndone.\n')
-    
-end % subject loop
-
-% save out as fiber group
-fg = dtiNewFiberGroup(outName, [],[],1,allfibers);
-mtrExportFibers(fg,fullfile(outDir,outName));
-
-% save out as density map
-fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
-ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
-writeFileNifti(ni);
-
-% make density map of just seed endpoints 
-outName_seed = [outName, '_' seed 'endpts'];
-fg_seed=fg;
-fg_seed.fibers = cellfun(@(x) x(:,1), fg_seed.fibers,'UniformOutput',0);
-fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
-ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
-writeFileNifti(ni);
-
-% make density map of just striatum endpoints 
-outName_target = [outName, '_striatumendpts'];
-fg_target=fg;
-fg_target.fibers = cellfun(@(x) x(:,end), fg_target.fibers,'UniformOutput',0);
-fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
-ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
-writeFileNifti(ni);
-    
-
-% save out coords as .mat file
-save(fullfile(outDir,[outName '.mat']),'fgcoords_mni');
-
-
+end % LorR
