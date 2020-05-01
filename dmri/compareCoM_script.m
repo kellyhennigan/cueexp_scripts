@@ -1,6 +1,9 @@
 % script to determine the spatial organization of fiber groups projecting
 % to/from the midbrain.
 
+% gives stats for testing for a medial-lateral organization of DA
+% endpoints.
+
 clear all
 close all
 

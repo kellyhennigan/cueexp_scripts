@@ -1,4 +1,4 @@
-% plot out color map
+% plot and save out color maps 
 
 clear all
 close all
