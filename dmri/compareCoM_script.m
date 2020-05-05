@@ -11,12 +11,10 @@ p=getCuePaths();
 dataDir = p.data;
 
 
-cd /Users/kelly/cueexp/data/fg_densities/mrtrix_fa
-
 
 % fibers directory relative to subject dir
 % inDir = fullfile(dataDir,'fg_densities','mrtrix_fa');
-inDir = fullfile(dataDir,'fibers_mni_v2');
+inDir = fullfile(dataDir,'fgendpt_com_coords');
 
 seed = 'DA';
 
@@ -24,10 +22,10 @@ targets = {'nacc','nacc','caudate','putamen'};
 
 gspace = 'mni';
 
-CoMFileStrs = {[seed '%s_%s%s_belowAC_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
-    [seed '%s_%s%s_aboveAC_autoclean_DAendpts_CoM_' gspace '_ALL.txt']
-    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '_ALL.txt'];
-    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '_ALL.txt']}; % %s's are: L/R, target, L/R
+CoMFileStrs = {[seed '%s_%s%s_belowAC_autoclean_DAendpts_CoM_' gspace '.txt'];
+    [seed '%s_%s%s_aboveAC_autoclean_DAendpts_CoM_' gspace '.txt']
+    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '.txt'];
+    [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '.txt']}; % %s's are: L/R, target, L/R
 
 lr='LR';
 

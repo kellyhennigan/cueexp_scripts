@@ -106,7 +106,7 @@ for lr=LorR
         fg_seed=fg;
         fg_seed.fibers = cellfun(@(x) x(:,1), fg_seed.fibers,'UniformOutput',0);
         fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
-        ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+        ni=createNewNii(t1,fd,fullfile(outDir,[outName_seed]),'fiber density');
         writeFileNifti(ni);
         
         % make density map of just striatum endpoints
@@ -114,7 +114,7 @@ for lr=LorR
         fg_target=fg;
         fg_target.fibers = cellfun(@(x) x(:,end), fg_target.fibers,'UniformOutput',0);
         fd = dtiComputeFiberDensityNoGUI(fg_seed, t1.qto_xyz,size(t1.data),1,1,0);
-        ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+        ni=createNewNii(t1,fd,fullfile(outDir,[outName_target]),'fiber density');
         writeFileNifti(ni);
         
         

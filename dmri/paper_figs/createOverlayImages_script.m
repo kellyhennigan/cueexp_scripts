@@ -31,7 +31,7 @@ fdDir = fullfile(dataDir,'fg_densities',method);
 smoothStr='';
 % smoothStr='_smooth3';
 
-endptStr = '_striatumendpts'; % endpoints string
+endptStr = '_DAendpts'; % endpoints string
 % endptStr = ''; % endpoints string
 
 gspace='mni'; % group space
@@ -88,7 +88,8 @@ q_crange=[.1 .9]; % min/max quantiles of data values to determine color range
 
 plane=2; % which plane to plot
 % acpcSlices=[-20:2:10]; % which acpc slices to plot
-acpcSlices=[-10:10]; % which acpc slices to plot
+% acpcSlices=[-10:10]; % which acpc slices to plot
+acpcSlices=[-20]; % which acpc slices to plot
 
 % plane=3; % which plane to plot
 % acpcSlices=[-18:2:-12]; % which acpc slices to plot
