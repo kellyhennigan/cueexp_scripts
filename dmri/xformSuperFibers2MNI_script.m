@@ -14,23 +14,21 @@ dataDir = p.data;
 group='controls';
 
 method = 'mrtrix_fa';
+
 fgMDir = fullfile(dataDir,'fgMeasures',method);
-fgMStr = '_belowAC_autoclean';
-lr = ['L'];
-target = 'nacc';
-fgMName = ['DA' lr '_' target lr fgMStr];
+
+fgMName = ['DAL_naccL_belowAC_autoclean'];
+
 fgMFile=fullfile(fgMDir,[fgMName '.mat']);
 
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
 
 % define subject-specific filepaths for affine & warp xforms from native to tlrc space
-xform_aff=fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt');
-xform_invWarp=fullfile(dataDir,'%s','t1','t12tlrc_xform_InverseWarp.nii.gz');
-xform_aff2=fullfile(dataDir,'templates','tlrc2mni_xform_Affine.txt');
-xform_invWarp2=fullfile(dataDir,'templates','tlrc2mni_xform_InverseWarp.nii.gz');
+xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
+xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
 
 
-outDir = fullfile(dataDir,'fibers_mni');
+outDir = fullfile(dataDir,'superfibers_mni');
 if ~exist(outDir,'dir')
     mkdir(outDir);
 end
@@ -53,12 +51,9 @@ for i=1:size(subjects)
     fprintf('\nworking on subject %s...\n',subject)
     
     % % get subject's node coords in group space
-    fgcoords_tlrc = xformCoordsANTs(SuperFibers(i).fibers{1},...
+    fgcoords_mni{i,1} = xformCoordsANTs(SuperFibers(i).fibers{1},...
         sprintf(xform_aff,subject),...
-        sprintf(xform_invWarp,subject))';
-    
-    fgcoords_mni{i,1} = xformCoordsANTs(fgcoords_tlrc,xform_aff2,xform_invWarp2)';
-    
+        sprintf(xform_warp,subject))';
     
     fprintf('\ndone.\n')
     
@@ -70,11 +65,9 @@ mtrExportFibers(fg,fullfile(outDir,outName));
 
 % save out as density map
 %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
-fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
-
-% save new fiber density file
-ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
-writeFileNifti(ni);
+% fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
+% ni=createNewNii(t1,fd,fullfile(outDir,outName),'fiber density');
+% writeFileNifti(ni);
 
 % save out coords as .mat file
 save(fullfile(outDir,[outName '.mat']),'fgcoords_mni');

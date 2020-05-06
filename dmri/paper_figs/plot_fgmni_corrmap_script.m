@@ -5,7 +5,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p=getCuePaths();
 dataDir = p.data; 
-outDir = fullfile(p.figures_dti,'fgs_mni_corrmap');
+outDir = fullfile(p.figures_dti,'paper_figs','fgs_mni_corrmap');
 
 fgStr = 'DAL_naccL_belowAC_autoclean';
 
@@ -44,8 +44,9 @@ t1.data = mrAnatHistogramClip(double(t1.data),0.3,0.99);
 % get corr values
 vals=dlmread(fullfile(dataDir,'fg_bis_corr_vals',[fgStr '_controls_wCV_agedwimotion_' fgMCorr]));
 
+cmap=flipud(autumn(256));
 crange = [-.5 0];
-rgb=repmat({vals2colormap(vals,'autumn',crange)},1,numel(fgmni.fibers));
+rgb=repmat({vals2colormap(vals,cmap,crange)},1,numel(fgmni.fibers));
 
 
     %%   PLOTS
@@ -145,12 +146,15 @@ rgb=repmat({vals2colormap(vals,'autumn',crange)},1,numel(fgmni.fibers));
     
     %% get colorbar 
     
-    sh=AFQ_RenderFibers(fgRes,'color',rgb,'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'plottoscreen',plotToScreen);
+    sh=AFQ_RenderFibers(fgmni,'color',rgb,'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'plottoscreen',plotToScreen);
     caxis(crange);
-    colormap(autumn);
-    colorbar;
+    colormap(cmap);
+    cb=colorbar;
  set(gca,'fontName','Helvetica','fontSize',12)
    
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject 'BIS' fgMCorr 'corr' fgStr '_colorbar']));
+ % horizontal colorbar
+ set(cb,'Location','southoutside')
+ 
+    print(gcf,'-dpng','-r300',fullfile(outDir,[ 'BIS' fgMCorr 'corr' fgStr '_colorbar']));
    
     
