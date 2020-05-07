@@ -27,7 +27,7 @@ t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.ni
 xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
 xform_invWarp=fullfile(dataDir,'%s','t1','t12mni_xform_InverseWarp.nii.gz');
 
-outDir = fullfile(dataDir,'superfibers_mni_v2');
+outDir = fullfile(dataDir,'superfibers_mni');
 if ~exist(outDir,'dir')
     mkdir(outDir);
 end
