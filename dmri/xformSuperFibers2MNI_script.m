@@ -25,7 +25,6 @@ t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.ni
 
 % define subject-specific filepaths for affine & warp xforms from native to tlrc space
 xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
-xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
 xform_invWarp=fullfile(dataDir,'%s','t1','t12mni_xform_InverseWarp.nii.gz');
 
 outDir = fullfile(dataDir,'superfibers_mni_v2');
@@ -50,12 +49,8 @@ for i=1:size(subjects)
     
     fprintf('\nworking on subject %s...\n',subject)
     
-    % % get subject's node coords in group space
-%     fgcoords_mni{i,1} = xformCoordsANTs(SuperFibers(i).fibers{1},...
-%         sprintf(xform_aff,subject),...
-%         sprintf(xform_warp,subject))';
-%     
-fgcoords_mni{i,1} = xformCoordsANTs(SuperFibers(i).fibers{1},...
+    % % get subject's node coords in group space  
+fgcoords_mni{i,1} = xformCoordsANTsMovingToFixed(SuperFibers(i).fibers{1},...
         sprintf(xform_aff,subject),...
         sprintf(xform_invWarp,subject))';
     
