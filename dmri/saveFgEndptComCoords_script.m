@@ -35,7 +35,7 @@ LorR=['L','R'];
 
 % define subject-specific filepaths for affine & warp xforms from native to tlrc space
 xform_aff=fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt');
-xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
+xform_invwarp=fullfile(dataDir,'%s','t1','t12mni_xform_InverseWarp.nii.gz');
 
 outDir = fullfile(dataDir,'fgendpt_com_coords');
 if ~exist(outDir,'dir')
@@ -68,9 +68,9 @@ for lr=LorR
             seedCoM(i,:)=mean(cell2mat(cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0)'),2)';
             targetCoM(i,:)=mean(cell2mat(cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0)'),2)';
             
-            endptCoM_mni = xformCoordsANTs([seedCoM(i,:);targetCoM(i,:)],...
+            endptCoM_mni = xformCoordsANTsMovingToFixed([seedCoM(i,:);targetCoM(i,:)],...
                 sprintf(xform_aff,subject),...
-                sprintf(xform_warp,subject));
+                sprintf(xform_invwarp,subject));
             
             seedCoM_mni(i,:)=endptCoM_mni(1,:);
             targetCoM_mni(i,:)=endptCoM_mni(2,:);
