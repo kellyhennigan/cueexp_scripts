@@ -17,10 +17,16 @@ method = 'mrtrix_fa';
 
 fgMDir = fullfile(dataDir,'fgMeasures',method);
 
-fgMName = ['DAL_naccL_belowAC_autoclean'];
+fgMNames = {'DAL_naccL_belowAC_autoclean';
+    'DAR_naccR_belowAC_autoclean';
+    'DAL_naccL_aboveAC_autoclean';
+    'DAR_naccR_aboveAC_autoclean';
+    'DAL_caudateL_autoclean';
+    'DAR_caudateR_autoclean';
+    'DAL_putamenL_autoclean';
+    'DAR_putamenR_autoclean'};
 
-fgMFile=fullfile(fgMDir,[fgMName '.mat']);
-
+    
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
 
 % define subject-specific filepaths for affine & warp xforms from native to tlrc space
@@ -36,11 +42,18 @@ end
 
 t1=niftiRead(t1Path); % load background image
 
-[fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
-    fgMFile,'',group);
 
+for j=1:numel(fgMNames)
+    
+    fgMName=fgMNames{j}; 
+    
+    fgMFile=fullfile(fgMDir,[fgMName '.mat']);
+    
+    outName=[fgMName '_group_mni' ];
 
-outName=[fgMName '_group_mni' ];
+    [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers]=loadFGBehVars(...
+        fgMFile,'',group);
+
 
 i=1
 for i=1:size(subjects)
@@ -69,5 +82,8 @@ mtrExportFibers(fg,fullfile(outDir,outName));
 
 % save out coords as .mat file
 save(fullfile(outDir,[outName '.mat']),'fgcoords_mni');
+
+
+end % fg loop
 
 
