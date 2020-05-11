@@ -18,8 +18,8 @@ close all
 
 % get experiment-specific paths and cd to main data directory
 p=getCuePaths();
-% [p,task,subjects,gi]=whichCueSubjects('stim','');
-[subjects,gi]=getCueSubjects('dti');
+[p,task,subjects,gi]=whichCueSubjects('stim','');
+% [subjects,gi]=getCueSubjects('dti');
 dataDir = p.data;
 mainfigDir=p.figures_dti;
 
