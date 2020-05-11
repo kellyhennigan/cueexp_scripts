@@ -17,12 +17,14 @@ close all
 
 
 % get experiment-specific paths and cd to main data directory
-getCuePaths();
-[p,task,subjects,gi]=whichCueSubjects('stim','');
+p=getCuePaths();
+% [p,task,subjects,gi]=whichCueSubjects('stim','');
+[subjects,gi]=getCueSubjects('dti');
 dataDir = p.data;
 mainfigDir=p.figures_dti;
 
-seed = 'DA';  % define seed roi
+% seed = 'DA';  % define seed roi
+seed = 'PauliAtlasDA';  % define seed roi
 
 target = 'nacc'; % stri  ng for roi
 
