@@ -52,7 +52,7 @@ if strcmp(lr,'L')
         max_thresh(3)=0;
     elseif strcmp(subject,'jd170330')
         max_thresh(3)=3;
-    elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622')
+    elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622') || strcmp(subject,'er171009')
         max_thresh(2)=5;
         
     end
