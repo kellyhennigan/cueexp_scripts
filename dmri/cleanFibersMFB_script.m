@@ -20,7 +20,6 @@ close all
 p=getCuePaths();
 % [p,task,subjects,gi]=whichCueSubjects('stim','');
 [subjects,gi]=getCueSubjects('dti');
-subjects(1:60)=[];
 dataDir = p.data;
 mainfigDir=p.figures_dti;
 
