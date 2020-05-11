@@ -25,14 +25,17 @@ LorR = ['L','R'];
 
 combineLR = 1; % 1 to combine L and R, otherwise, 0
 
-seeds = {'mpfc8mm'};
-targets = {'nacc'};
-versionStrs = {'autoclean'};
+% seeds = {'mpfc8mm'};
+% targets = {'nacc'};
+% versionStrs = {'autoclean'};
 
 
 % seeds = {'DA'};
 % targets = {'nacc'};
 % versionStrs = {'aboveAC_autoclean'};
+seeds = {'PauliAtlasDA'};
+targets = {'nacc'};
+versionStrs = {'belowAC_autoclean'};
 
 
 % 
