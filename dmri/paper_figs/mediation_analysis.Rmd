@@ -1,0 +1,81 @@
+---
+title: "Mediation comparison v2"
+author: "Kelly MacNiven"
+date: "11/22/2019"
+output: pdf_document
+# helpful intrepretation of lavaan vars in mediation analysis here: https://nmmichalak.github.io/nicholas_michalak/blog_entries/2018/nrg01/nrg01.html
+---
+
+## get libraries
+
+```{r libraries}
+library(lavaan)
+#library(QuantPsyc)
+```
+
+
+##load data
+
+```{r data}
+df = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__200413.csv')
+```
+
+
+## pull out and scale variables of interest
+
+```{r define and scale vars}
+
+# re-code group index to be 0=control and 1=patient 
+df$gi[df$gi>0] <- 1
+
+FA <- scale(df$inf_NAcc_fa)
+BIS <- scale(df$BIS)
+dx <- df$gi
+age <- scale(df$age)
+dwimotion <- scale(df$dwimotion)
+
+
+```
+
+
+## total effect of fa on diagnosis
+```{r mod 1}
+
+# total effect path c controlling for age and motion
+modc = glm(dx ~ FA + age + dwimotion)
+summary(modc)
+
+```
+
+
+##set up SEM mediation model
+
+```{r set up mediation}
+require(lavaan)
+
+med_cv.model <- '# mediator paths (a and b path)
+         M ~ a*X + age + dwimotion
+         Y ~ b*M
+         # c prime path
+         Y ~ cprime*X + age + dwimotion
+         # indirect and total effects
+         ab := a*b
+         total := cprime + ab
+        '
+```
+
+##mediation model: MFB FA > BIS > dx, controlling age and motion
+
+```{r mediation model}
+set.seed(1234)
+X <- FA
+M <- BIS
+Y <- dx
+data <- data.frame(X = X, Y = Y, M = M, age=age,dwimotion=dwimotion)
+#med.fit <- sem(med_cv.model, data = data)
+med.fit <- sem(med_cv.model, data = data, se = 'bootstrap', bootstrap = 10000)
+summary(med.fit, fit.measures=TRUE)
+AIC(med.fit)
+BIC(med.fit)
+```
+
