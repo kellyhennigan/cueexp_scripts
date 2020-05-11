@@ -52,9 +52,11 @@ if strcmp(lr,'L')
         max_thresh(3)=0;
     elseif strcmp(subject,'jd170330')
         max_thresh(3)=3;
-    elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622') || strcmp(subject,'er171009') || strcmp(subject,'jc160321') || strcmp(subject,'rv160413') || strcmp(subject,'rt160420')
+    elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622') || strcmp(subject,'er171009') || strcmp(subject,'jc160321') || strcmp(subject,'rv160413') 
         max_thresh(2)=5;
-        
+    elseif strcmp(subject,'rt160420')
+        max_thresh(2)=3;
+       
     end
     
     
