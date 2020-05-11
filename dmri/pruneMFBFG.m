@@ -66,7 +66,7 @@ elseif strcmp(lr,'R')
         max_thresh(3)=0;    
     elseif strcmp(subject,'dd170610') || strcmp(subject,'rp160205')
         max_thresh(3)=-1;
-    elseif strcmp(subject,'rl170603') || strcmp(subject,'ts170927') || strcmp(subject,'md181018')
+    elseif strcmp(subject,'rl170603') || strcmp(subject,'ts170927') || strcmp(subject,'md181018') || strcmp(subject,'rf170610')
         max_thresh(2)=5;
     end
     
