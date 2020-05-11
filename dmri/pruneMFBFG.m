@@ -55,7 +55,7 @@ if strcmp(lr,'L')
     elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622') || strcmp(subject,'er171009') || strcmp(subject,'jc160321') || strcmp(subject,'rv160413') 
         max_thresh(2)=5;
     elseif strcmp(subject,'rt160420')
-        max_thresh(3)=-4;
+        max_thresh(2)=0;
        
     end
     
