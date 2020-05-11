@@ -46,7 +46,7 @@ max_thresh = max([roi1.coords;roi2.coords])+thresh;
 %%%%%%%%%%% LEFT SIDE %%%%%%%%%%%
 if strcmp(lr,'L')
     
-    if strcmp(subject,'ac160415') || strcmp(subject,'ag151024') || strcmp(subject,'cs160214') || strcmp(subject,'ja160416') || strcmp(subject,'rt160420') || strcmp(subject,'rp160205')
+    if strcmp(subject,'ac160415') || strcmp(subject,'ag151024') || strcmp(subject,'cs160214') || strcmp(subject,'ja160416') || strcmp(subject,'rp160205')
         max_thresh(3)=-1;
     elseif strcmp(subject,'al170316') || strcmp(subject,'jn160403')  || strcmp(subject,'kd170115') || strcmp(subject,'tg170423') ||  strcmp(subject,'tm160117') ||  strcmp(subject,'ps151001') 
         max_thresh(3)=0;
@@ -55,7 +55,7 @@ if strcmp(lr,'L')
     elseif strcmp(subject,'kj180621')  || strcmp(subject,'lh180622') || strcmp(subject,'er171009') || strcmp(subject,'jc160321') || strcmp(subject,'rv160413') 
         max_thresh(2)=5;
     elseif strcmp(subject,'rt160420')
-        max_thresh(2)=0;
+        max_thresh(2)=2;
        
     end
     
