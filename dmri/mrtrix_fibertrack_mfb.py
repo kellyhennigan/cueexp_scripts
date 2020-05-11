@@ -33,7 +33,9 @@ maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
-seedStr = 'DA'						# if false, will use the mask as seed ROI by default
+#seedStr = 'DA'						# if false, will use the mask as seed ROI by default
+seedStr = 'PauliAtlasDA'						# if false, will use the mask as seed ROI by default
+
 
 targetStrs = ['nacc']		
 #excPath = ''
@@ -55,7 +57,7 @@ init_cutoff = ''
 initdir = '0,1,0.5' 		        # vector specifying the initial direction to track fibers from seed to target
 #initdir = ''			
 nthreads = 8						# of threads to use for tractography
-dilateRoiStr = '_dil2' 			# if ROI is dilated, add dilation string here
+dilateRoiStr = '_dil2' 				# if ROI is dilated, add dilation string here
 #dilateRoiStr = '' 					
 force = True						# if true, the command will save over a pre-existing output file with the same name
 
