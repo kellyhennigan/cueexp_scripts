@@ -17,7 +17,7 @@ group = {'controls'};
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
+fgMatStrs = {'DAL_naccL_belowAC_autoclean'};
 
 % fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
 %     'DALR_naccLR_aboveAC_autoclean';
@@ -67,13 +67,17 @@ scale='BIS';
 % covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
- covars = {'age','dwimotion','gender'};
+ covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
+outDir = fullfile(figDir, 'paper_figs',['FG_' strrep(scale,'_','') '_corr']);
 
 omit_subs={''};
 
+%%%%%%%%%%%%%%%
+%     node=26:75; % middle 50% of tract
+node=42;
+% node=43:72;
 
 
 %% load data & create out directory, if needed
@@ -107,24 +111,20 @@ for f=1:numel(fgMatStrs)
     
     %% figure: plot correlations with fg measures
     
-    %%%%%%%%%%%%%%%
-    node=26:75; % middle 50% of tract
-% node=65;
-% node=43:72;
 
 % get a string describing node(s)
 if isequal(26:75,node)
     nodeStr = 'mid50';
 elseif numel(node)>1
-    nodeStr = sprintf('%d_%d',node(1),node(end));
+    nodeStr = sprintf('node%d_%d',node(1),node(end));
 else
-    nodeStr = num2str(node);
+    nodeStr = ['node' num2str(node)];
 end
 
     
     % THIS ASSUMES THE MEASURES ARE STORED IN THIS ORDER
     fa = mean(fgMeasures{1}(:,node),2);
-    md = mean(fgMeasures{2}(:,node),2);
+    md = mean(fgMeasures{2}(:,node),2); imd = 1-md;
     rd = mean(fgMeasures{3}(:,node),2);
     ad = mean(fgMeasures{4}(:,node),2);
     
@@ -135,17 +135,24 @@ end
         cvs=cell2mat(cellfun(@(x) getCueData(subjects,x), covars, 'uniformoutput',0));
         
         [rfa,pfa]=partialcorr(fa,scores,cvs);
-        [rmd,pmd]=partialcorr(1-md,scores,cvs);
+        [rimd,pimd]=partialcorr(imd,scores,cvs);
         [rrd,prd]=partialcorr(rd,scores,cvs);
         [rad,pad]=partialcorr(ad,scores,cvs);
         
+        % regress out covariates for plotting correlation
+        fa = glm_fmri_fit(fa,[ones(numel(subjects),1) cvs],[],'err_ts');
+        imd = glm_fmri_fit(imd,[ones(numel(subjects),1) cvs],[],'err_ts');
+        rd = glm_fmri_fit(rd,[ones(numel(subjects),1) cvs],[],'err_ts');
+        ad = glm_fmri_fit(ad,[ones(numel(subjects),1) cvs],[],'err_ts');
+        scores = glm_fmri_fit(scores,[ones(numel(subjects),1) cvs],[],'err_ts');
+  
         cvStr = ['_wCV_' covars{:}];
         
         
     else
         
         [rfa,pfa]=corr(fa,scores);
-        [rmd,pmd]=corr(1-md,scores);
+        [rimd,pimd]=corr(imd,scores);
         [rrd,prd]=corr(rd,scores);
         [rad,pad]=corr(ad,scores);
         
@@ -155,12 +162,12 @@ end
     
     % strings of corr coefficients and p values for plots
     corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
-    corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
+     corrStr{2} = sprintf('r=%.2f, p=%.3f',rimd,pimd);
     corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
     corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
     
     % plot it
-    fig{f} = subplotCorr([],{fa,1-md,rd,ad},{scores},{'FA','1-MD','RD','AD'},scale,corrStr);
+    fig{f} = subplotCorr([],{fa,imd,rd,ad},{scores},{'FA','1-MD','RD','AD'},scale,corrStr);
     ti=suptitle(strrep(titleStr,'_',' '));
     set(ti,'FontSize',18)
     

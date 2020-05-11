@@ -119,11 +119,11 @@ for i=1:nP
     axH=subplot(nRow,nCol,i);
     [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i},[],[],14);
 % 
-%     % FA xlim
-%     if i==1
-%         xlim([.1 .4])
-%         set(gca,'XTick',[.1:.1:.4])
-%     end
+% FA xlim
+% if i==1
+%     xlim([.1 .5])
+%     set(gca,'XTick',[.1:.1:.5])
+% end
 % % 
 %     % MD
 %     if i==2
