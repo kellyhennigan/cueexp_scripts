@@ -235,12 +235,6 @@ outStr = '_2';
 
 
 
-% get some useful plot params
-scsz=get(0,'Screensize');
-plotTubes = 1;  % plot fiber pathways as tubes or lines?
-fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
-nfibers=100;
-
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgStrs,'uniformoutput',0);
 
@@ -249,28 +243,11 @@ plotToScreen=0; % 1 to plot to screen, otherwise 0
 
 %%
 
-if ~exist(outDir,'dir')
-    mkdir(outDir)
-end
-
-cd(dataDir);
-
-i=1;
-for i = 1:numel(subjects)
+% i=1;
+% for i = 1:numel(subjects)
     % for i = 1:5
     
-    close all
-    
-    subject = subjects{i};
-    
-    fprintf('\n\nworking on subject %s...\n',subject);
-    
-    %load t1
-    t1 = niftiRead(sprintf(t1Path,subject));
-    % Rescale image values to get better gary/white/CSF contrast
-    img = mrAnatHistogramClip(double(t1.data),0.3,0.99);
-    t1.data=img;
-    
+   
     
     for j=1:numel(targets)
         
