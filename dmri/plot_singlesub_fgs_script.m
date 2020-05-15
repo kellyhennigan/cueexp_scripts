@@ -8,7 +8,7 @@ dataDir = p.data;
 outDir = fullfile(p.figures_dti,'fgs_single_subs');
 
 % subjects={'al151016','hw161104','jh160702','jw160316','ph161104','pk160319','rp160205'};
-subjects={'ph161104'};
+subjects=getCueSubjects('dti',0);
 
 
 % paths and directories are relative to subject specific dir
