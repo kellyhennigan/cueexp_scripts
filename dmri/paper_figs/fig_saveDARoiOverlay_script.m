@@ -19,12 +19,12 @@ roiNames = {'DA'};
 outDir = fullfile(p.figures_dti,'paper_figs',['fig' num2str(fignum) '_singlesubject_ROIs']);
 
 
-t1Path = fullfile(dataDir,'%s','t1','t1_fs.nii.gz'); %s is subject ID
+t1Path = fullfile(dataDir,'%s','t1','t1_ns.nii.gz'); %s is subject ID
 
 
-plane=3; % 1 for sagittal, 2 for coronal, 3 for axial view
+plane=2; % 1 for sagittal, 2 for coronal, 3 for axial view
 
-sl=[-10]; % which acpc slices to plot (leave empty to find the slice with the most roi coords)
+sl=[-18]; % which acpc slices to plot (leave empty to find the slice with the most roi coords)
 
 cols=getDTIColors(roiNames);
 
@@ -44,6 +44,10 @@ for i=1:numel(subjects)
     
     t1 = niftiRead(sprintf(t1Path,subject));
     
+    % Rescale image values to get better gary/white/CSF contrast
+% img = mrAnatHistogramClip(double(t1.data),0.3,0.99);
+% t1.data=img;
+
     j=1
     for j=1:numel(roiNames)
         

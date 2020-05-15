@@ -22,8 +22,8 @@ method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DALR_naccLR_belowAC2_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
-% fgMatStr = 'mpfc8mmL_naccL_autoclean'; %'.mat' will be added to end
+% fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'PauliAtlasDAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
@@ -40,7 +40,7 @@ scale = 'bis';
 covars = {'age','dwimotion'};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {};
+% covars = {};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);

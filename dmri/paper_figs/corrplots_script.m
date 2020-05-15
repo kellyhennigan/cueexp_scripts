@@ -70,7 +70,8 @@ scale='BIS';
  covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, 'paper_figs',['FG_' strrep(scale,'_','') '_corr']);
+% outDir = fullfile(figDir, 'paper_figs','fig3_FG_BIS_corr');
+outDir = fullfile(figDir, 'paper_figs',['fig5_fgs_mni_corrmap']);
 
 omit_subs={''};
 

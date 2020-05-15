@@ -25,9 +25,9 @@ outDir = fullfile(p.figures_dti,'paper_figs',['fig' num2str(fignum) '_singlesubj
 
 
 
-plane=2; % which plane to plot
+plane=3; % which plane to plot
 
-sl=[9]; % which acpc slices to plot (leave empty to find the slice with the most roi coords)
+sl=[-1]; % which acpc slices to plot (leave empty to find the slice with the most roi coords)
 
 
 cols=getDTIColors(roiNames);

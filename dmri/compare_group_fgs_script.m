@@ -31,9 +31,14 @@ method = 'mrtrix_fa';
 %     'DALR_%sLR_autoclean';
 %     'DALR_%sLR_autoclean'};
 
+% targets={'nacc'};
+% 
+fgMatStrs = {'DALR_%sLR_belowAC_autoclean'};
+
 targets={'nacc'};
 
-fgMatStrs = {'DALR_%sLR_belowAC_autoclean'};
+% fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
+
 
  covars={'age','dwimotion'};
 % covars={'age','dwimotion','bis'};

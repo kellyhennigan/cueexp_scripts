@@ -10,22 +10,28 @@
 clear all
 close all
 
-p=getCuePaths();
+p=getCuePaths(); pskew=getSkew32Paths();
 dataDir = p.data;
 
 fgStr = 'DAL_naccL_belowAC_autoclean';
 
-fg=fgRead(fullfile(dataDir,'superfibers_mni',[fgStr '_group_mni.pdb']));
+plotskew32dataset=0; 
 
 fgMCorr='FA';
 
 t1 = niftiRead(fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii'));
 
-outDir = fullfile(p.figures_dti,'paper_figs','fgs_mni_corrmap');
+outDir = fullfile(p.figures_dti,'paper_figs','fig5_fgs_mni_corrmap');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it 
+
+if plotskew32dataset
+    fg=fgRead(fullfile(pskew.data,'superfibers_mni',[fgStr '_group_mni.pdb']));
+else
+    fg=fgRead(fullfile(dataDir,'superfibers_mni',[fgStr '_group_mni.pdb']));
+end
 
 
 % get some useful plot params
@@ -48,7 +54,11 @@ cd(dataDir);
 t1.data = mrAnatHistogramClip(double(t1.data),0.3,0.99);
     
 % get correlation values
-vals=dlmread(fullfile(dataDir,'fg_bis_corr_vals',[fgStr '_controls_wCV_agedwimotion_' fgMCorr]));
+if plotskew32dataset
+    vals=dlmread(fullfile(pskew.data,'fg_bis_corr_vals',[fgStr '_wCV_agedwimotion_' fgMCorr]));
+else
+    vals=dlmread(fullfile(dataDir,'fg_bis_corr_vals',[fgStr '_controls_wCV_agedwimotion_' fgMCorr]));
+end
 
 % get colors for plotting
 cmap=flipud(autumn(256));
@@ -107,15 +117,21 @@ rgb=repmat({vals2colormap(vals,cmap,crange)},1,numel(fg.fibers));
     view(vwL);
     
     % save out left fibers whole-brain figure
-    print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_sagittalL']));
-    
+    if plotskew32dataset
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_sagittalL_skew32']));
+    else
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_sagittalL']));
+    end
     
     % change axis on y and zlims to close-up    
     zlim(gca,[-40,40])
     ylim(gca,[-40,40])
     
-      print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_sagittalL']));
-   
+     if plotskew32dataset
+         print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_sagittalL_skew32']));
+     else
+         print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_sagittalL']));
+     end
     
       
     delete(h) % delete that slice
@@ -136,13 +152,22 @@ rgb=repmat({vals2colormap(vals,cmap,crange)},1,numel(fg.fibers));
     
     set(gca,'fontName','Helvetica','fontSize',12)
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_coronalL']));
+    if plotskew32dataset
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_coronalL_skew32']));
+    else
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_wb_coronalL']));
+    end
     
     % change axis on x and zlims
     xlim(gca,[-40,40])
     zlim(gca,[-40,40])
     
-     print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_coronalL']));
+    
+    if plotskew32dataset
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_coronalL_skew32']));
+    else
+        print(gcf,'-dpng','-r300',fullfile(outDir,['BIS' fgMCorr 'corr' fgStr '_coronalL']));
+    end
      
     fprintf('done.\n\n');
     
@@ -157,7 +182,7 @@ rgb=repmat({vals2colormap(vals,cmap,crange)},1,numel(fg.fibers));
     caxis(crange);
     colormap(cmap);
     cb=colorbar;
- set(gca,'fontName','Helvetica','fontSize',16)
+ set(gca,'fontName','Helvetica','fontSize',20)
    set(cb,'Ticks',[-.5:.1:0])
    
  % horizontal colorbar
