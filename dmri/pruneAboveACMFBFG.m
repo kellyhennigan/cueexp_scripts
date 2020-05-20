@@ -5,7 +5,7 @@ function [fgOut,o_idx] = pruneMFBFG(subject,lr,fg,roi1,roi2,doPlot,thresh)
 % identifies fibers that deviate > 3 voxels from the most extreme x,y, and
 % z coords of teh ROIs
 %
-% also: removes any fibers that go above the AC (based on having a z-coord
+% also: removes any fibers that go below the AC (based on having a z-coord
 % greater than 1)
 %
 % INPUT:
@@ -40,13 +40,18 @@ keep_idx=ones(numel(fg.fibers),1); % index of which fibers to keep
 yend=cellfun(@(x) x(2,end), fg.fibers);
 zend=cellfun(@(x) x(3,end), fg.fibers);
 
+
+
 %%%%%%%%%%% LEFT SIDE %%%%%%%%%%%
 if strcmp(lr,'L')
     
     if strcmp(subject,'cg160715')
         keep_idx(yend<1 & zend<-2)=0;
-    else
+    elseif strcmp(subject,'ph161104')
         keep_idx(yend<1 & zend<0)=0;
+        keep_idx(zend<1)=0;
+    else
+       keep_idx(yend<1 & zend<0)=0;
     end
     
     %%%%%%%%%%% RIGHT SIDE %%%%%%%%%%%
