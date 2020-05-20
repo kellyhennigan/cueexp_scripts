@@ -6,7 +6,7 @@ close all
 p = getCuePaths;
 dataDir = p.data;
 figDir = p.figures_dti;
-outDir=[figDir '/xcoord_plots'];
+outDir=[figDir '/paper_figs/fig2_xcoord_plots'];
 
 % fibers directory relative to subject dir
 % inDir = fullfile(dataDir,'fg_densities','mrtrix_fa');
