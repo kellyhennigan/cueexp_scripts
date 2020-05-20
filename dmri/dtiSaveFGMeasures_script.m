@@ -30,12 +30,13 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 % versionStrs = {'autoclean'};
 
 
-% seeds = {'DA'};
-% targets = {'nacc'};
-% versionStrs = {'aboveAC_autoclean'};
-seeds = {'PauliAtlasDA'};
+seeds = {'DA'};
 targets = {'nacc'};
-versionStrs = {'belowAC_autoclean'};
+versionStrs = {'aboveAC_autoclean'};
+
+% seeds = {'PauliAtlasDA'};
+% targets = {'nacc'};
+% versionStrs = {'belowAC_autoclean'};
 
 
 % 
