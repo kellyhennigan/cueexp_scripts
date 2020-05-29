@@ -30,9 +30,9 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 % versionStrs = {'autoclean'};
 
 
-seeds = {'DA'};
-targets = {'nacc'};
-versionStrs = {'aboveAC_autoclean'};
+% seeds = {'DA'};
+% targets = {'nacc'};
+% versionStrs = {'aboveAC_autoclean'};
 
 % seeds = {'PauliAtlasDA'};
 % targets = {'nacc'};
@@ -40,9 +40,9 @@ versionStrs = {'aboveAC_autoclean'};
 
 
 % 
-% seeds = {'DA','DA'};
-% targets = {'caudate','putamen'};
-% versionStrs = {'dil2_autoclean','dil2_autoclean'};
+seeds = {'DA','DA','DA','DA'};
+targets = {'nacc','nacc','caudate','putamen'};
+versionStrs = {'belowAC_autoclean','aboveAC_autoclean','autoclean','autoclean'};
 
 % fiber group file strings
 inDir = fullfile(dataDir,'%s','fibers',method); %s: subject

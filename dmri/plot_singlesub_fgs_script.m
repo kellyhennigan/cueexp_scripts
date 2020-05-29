@@ -8,8 +8,8 @@ dataDir = p.data;
 outDir = fullfile(p.figures_dti,'fgs_single_subs');
 
 % subjects={'al151016','hw161104','jh160702','jw160316','ph161104','pk160319','rp160205'};
-% subjects=getCueSubjects('dti',0);
-subjects={'ph161104'}; 
+subjects=getCueSubjects('dti',0);
+% subjects={'ph161104'}; 
 
 % paths and directories are relative to subject specific dir
 t1Path = fullfile(dataDir,'%s','t1','t1_fs.nii.gz'); % %s is subject id
@@ -54,7 +54,7 @@ outStr = '_4';
 scsz=get(0,'Screensize');
 plotTubes = 1;  % plot fiber pathways as tubes or lines?
 fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
-nfibers=300;
+nfibers=100;
 
 
 cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgStrs,'uniformoutput',0);

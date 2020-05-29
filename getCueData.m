@@ -96,21 +96,34 @@ switch measure
         data = getSmokers(subjects);
         data = data{1}; % 1 for yes, 0 for no
         
+        % 
         
     case 'smokeperday'
         
         data = getSmokers(subjects);
         data = data{2}; % cell array of strings describing how much smoking per day
         
+        % there are 8 controls that have nan data for smoking. Set them to
+        % be 0 here
+        data(isnan(data))=0;
         
-    case 'education'
+    case 'education_qualtrics'
         
         data = getEducationQualtrics(subjects);
         data = data{1}; % just return the quantitative var
         
-    case 'education_safe'
+    case 'education'
         
         data = getEducationSafe(subjects); % years of education from SaFE questionnaire
+        
+        % fill in nan values with self-reported education from qualtrics
+        educqual = getEducationQualtrics(subjects);
+        educqual = educqual{1}; % just return the quantitative var
+        
+        idx=find(isnan(data));
+        data(idx)=educqual(idx);
+        
+        
         
     case 'relapse'
         

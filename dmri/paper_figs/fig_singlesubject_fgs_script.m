@@ -2,6 +2,8 @@
 clear all
 close all
 
+rng default % start random seed generator from same spot
+
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p=getCuePaths();
 dataDir = p.data; 
@@ -24,33 +26,28 @@ fgDir = fullfile(dataDir,'%s','fibers',method);
 
 seed = 'DA';
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%% params for plotting all 4 fiber groups %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% params for plotting just 2 MFB fiber groups %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+
+
 targets={
-    'caudate';
-    'putamen';
     'nacc';
     'nacc'};
 
 fgStrs = {
-    '';
-    '';
     '_belowAC';
     '_aboveAC'};
 
-fgNameStrs = { '%s%s_%s%s%s_autoclean.pdb',...
-    '%s%s_%s%s%s_autoclean.pdb',...
+fgNameStrs = { 
     '%s%s_%s%s%s_autoclean.pdb',...
     '%s%s_%s%s%s_autoclean.pdb'};
    
-outStr = '_4';
+outStr = '_2';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 % get some useful plot params
 scsz=get(0,'Screensize');
@@ -62,7 +59,7 @@ nfibers=100;
 cols=cellfun(@(x,y) getDTIColors(x,y), targets, fgStrs,'uniformoutput',0);
 
 
-plotToScreen=0; % 1 to plot to screen, otherwise 0
+plotToScreen=1; % 1 to plot to screen, otherwise 0
 
 %%
 
@@ -130,13 +127,13 @@ end
     view(vwL);
     
     % save out left fibers whole-brain figure
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalL']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_sagittalL']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalL']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_sagittalL']));
     
     delete(h) % delete that slice
     
@@ -147,12 +144,12 @@ end
     
     %%% save out right side
     view(vwR)
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalR']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_sagittalR']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalR']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_sagittalR']));
     
     delete(h) % delete that slice
     
@@ -171,13 +168,13 @@ end
     
     set(gca,'fontName','Helvetica','fontSize',12)
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_coronal']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_coronal']));
     
     % change axis on x and zlims
     xlim(gca,[-40,40])
     zlim(gca,[-40,40])
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_coronal']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_coronal']));
     
     fprintf('done.\n\n');
      
@@ -186,30 +183,36 @@ end
     %   print(gcf,'-dpdf','-r600','naccR_corr_light')
     
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%% params for plotting just 2 MFB fiber groups %%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% params for plotting all 4 fiber groups %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 close all
 clear fg
 
 targets={
+    'caudate';
+    'putamen';
     'nacc';
     'nacc'};
 
 fgStrs = {
+    '';
+    '';
     '_belowAC';
     '_aboveAC'};
 
-fgNameStrs = { 
+fgNameStrs = { '%s%s_%s%s%s_autoclean.pdb',...
+    '%s%s_%s%s%s_autoclean.pdb',...
     '%s%s_%s%s%s_autoclean.pdb',...
     '%s%s_%s%s%s_autoclean.pdb'};
    
-outStr = '_2';
+outStr = '_4';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 
 % get some useful plot params
@@ -290,13 +293,13 @@ end
     view(vwL);
     
     % save out left fibers whole-brain figure
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalL']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_sagittalL']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalL']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_sagittalL']));
     
     delete(h) % delete that slice
     
@@ -307,12 +310,12 @@ end
     
     %%% save out right side
     view(vwR)
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_sagittalR']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_sagittalR']));
     
     % change axis on y and zlims to close-up
     zlim(gca,[-50,50])
     ylim(gca,[-50,50])
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalR']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_sagittalR']));
     
     delete(h) % delete that slice
     
@@ -331,13 +334,13 @@ end
     
     set(gca,'fontName','Helvetica','fontSize',12)
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_wb_coronal']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_wb_coronal']));
     
     % change axis on x and zlims
     xlim(gca,[-40,40])
     zlim(gca,[-40,40])
     
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_coronal']));
+    print(gcf,'-dpng','-r600',fullfile(outDir,[subject outStr '_coronal']));
     
     fprintf('done.\n\n');
      

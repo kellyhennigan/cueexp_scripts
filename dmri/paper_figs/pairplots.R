@@ -10,7 +10,9 @@ library(GGally)
 
 
 # load data and define variables 
-d0 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_patients_200417.csv')
+#d0 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_patients_200417.csv')
+d0 = read.csv('/Users/kelly/cueexp/data/q_demo_data/data_controls_200424.csv')
+
 d0$FA<-d0$inf_NAcc_fa_controllingagemotion
 d0$inverseMD<-1-d0$inf_NAcc_md_controllingagemotion
 d0$FA_raw<-d0$inf_NAcc_fa
