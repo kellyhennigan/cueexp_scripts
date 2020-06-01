@@ -23,9 +23,9 @@ CoMFileStrs = {[seed '%s_%s%s_belowAC_autoclean_DAendpts_CoM_' gspace '.txt'];
     [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '.txt'];
     [seed '%s_%s%s_autoclean_DAendpts_CoM_' gspace '.txt']}; % %s's are: L/R, target, L/R
 
-lr='LR';
+lr='R';
 
-mergeLR=1; 
+mergeLR=0; 
 
 
 fgStrs = {'Inferior NAcc tract';...

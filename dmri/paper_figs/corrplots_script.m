@@ -17,13 +17,13 @@ group = {'controls'};
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
 
-% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
-%     'DALR_naccLR_aboveAC_autoclean';
-%     'DALR_caudateLR_autoclean';
-%     'DALR_putamenLR_autoclean';
-%     };
+fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+    'DALR_naccLR_aboveAC_autoclean';
+    'DALR_caudateLR_autoclean';
+    'DALR_putamenLR_autoclean';
+    };
 % 
 % fgMatStrs = {'DAL_naccL_belowAC_autoclean';
 %     'DAL_naccL_aboveAC_autoclean';
@@ -58,10 +58,10 @@ titleStrs=fgMatStrs;
 
 % which scale to correlate with fiber group measures?
 % scale = 'BIS_nonplan';
-scale='discount_rate';
+% scale='discount_rate';
 % scale = 'years_of_use';
 % scale = 'nacc_nvlout_betas';
-% scale='BIS';
+scale='BIS';
 
 % include control variables?
 % covars = {};
@@ -70,7 +70,7 @@ scale='discount_rate';
  covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, 'paper_figs',['FG_' scale '_corr']);
+outDir = fullfile(figDir, 'paper_figs',['fig3_FG_' scale '_corr']);
 % outDir = fullfile(figDir, 'paper_figs',['fig5_fgs_mni_corrmap']);
 
 omit_subs={''};
