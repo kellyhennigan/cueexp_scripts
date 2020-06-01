@@ -23,7 +23,7 @@ fgNames = {'DA%s_nacc%s_belowAC_autoclean.pdb';
     'DA%s_putamen%s_autoclean.pdb'};
 
 
-lr='R';
+LR=['L','R'];
 
 
 fgStrs = {'Inferior NAcc tract';...
