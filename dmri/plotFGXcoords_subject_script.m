@@ -32,7 +32,7 @@ fgStrs = {'Inferior NAcc tract';...
     'Putamen tract'};
 
 
-msize=30;
+msize=20;
 
 cols=[
     0.9333    0.6980    0.1373
@@ -91,11 +91,11 @@ ylabel('Y coordinates')
 outName = [subject lr '_XYcoords_points'];
 print(fig,fullfile(outDir,outName),'-depsc')
 
-legend(fgStrs)
-legend('boxoff')
-legend('location','EastOutside')
-outName = [outName '_w_leg'];
-print(fig,fullfile(outDir,outName),'-depsc')
+% legend(fgStrs)
+% legend('boxoff')
+% legend('location','EastOutside')
+% outName = [outName '_w_leg'];
+% print(fig,fullfile(outDir,outName),'-depsc')
 hold off
 
 
@@ -109,12 +109,12 @@ xlabel('X coordinates')
 ylabel('Z coordinates')
 outName = [subject lr '_XZcoords_points'];
 print(fig,fullfile(outDir,outName),'-depsc')
-
-legend(fgStrs)
-legend('boxoff')
-legend('location','EastOutside')
-outName = [outName '_w_leg'];
-print(fig,fullfile(outDir,outName),'-depsc')
+% 
+% legend(fgStrs)
+% legend('boxoff')
+% legend('location','EastOutside')
+% outName = [outName '_w_leg'];
+% print(fig,fullfile(outDir,outName),'-depsc')
 hold off
 
 close all
