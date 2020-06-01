@@ -117,6 +117,8 @@ outName = [outName '_w_leg'];
 print(fig,fullfile(outDir,outName),'-depsc')
 hold off
 
+close all
+
      end
      
 end
