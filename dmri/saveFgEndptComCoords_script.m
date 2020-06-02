@@ -7,8 +7,8 @@ p=getCuePaths();
 dataDir = p.data;
 
 
-subjects=getCueSubjects('dti',0);
-
+% subjects=getCueSubjects('dti',0);
+subjects={'ph161104'};
 
 method = 'mrtrix_fa';
 
