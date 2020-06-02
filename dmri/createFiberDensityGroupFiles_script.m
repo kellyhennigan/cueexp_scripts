@@ -85,20 +85,20 @@ gspace='mni'; % tlrc or mni
 %     ['DA_putamen_autoclean_DAendpts_' gspace];
 %     };
 
-inNiiFileStrs = {
-    ['DAL_naccL_belowAC_autoclean_' gspace];
-    ['DAR_naccR_belowAC_autoclean_' gspace];
-    ['DA_nacc_belowAC_autoclean_' gspace];
-    ['DAL_naccL_aboveAC_autoclean_' gspace];
-    ['DAR_naccR_aboveAC_autoclean_' gspace];
-    ['DA_nacc_aboveAC_autoclean_' gspace];
-    ['DAL_caudateL_autoclean_' gspace];
-    ['DAR_caudateR_autoclean_' gspace];
-    ['DA_caudate_autoclean_' gspace];
-    ['DAL_putamenL_autoclean_' gspace];
-    ['DAR_putamenR_autoclean_' gspace];
-    ['DA_putamen_autoclean_' gspace];
-    };
+% inNiiFileStrs = {
+%     ['DAL_naccL_belowAC_autoclean_' gspace];
+%     ['DAR_naccR_belowAC_autoclean_' gspace];
+%     ['DA_nacc_belowAC_autoclean_' gspace];
+%     ['DAL_naccL_aboveAC_autoclean_' gspace];
+%     ['DAR_naccR_aboveAC_autoclean_' gspace];
+%     ['DA_nacc_aboveAC_autoclean_' gspace];
+%     ['DAL_caudateL_autoclean_' gspace];
+%     ['DAR_caudateR_autoclean_' gspace];
+%     ['DA_caudate_autoclean_' gspace];
+%     ['DAL_putamenL_autoclean_' gspace];
+%     ['DAR_putamenR_autoclean_' gspace];
+%     ['DA_putamen_autoclean_' gspace];
+%     };
 
 
 
