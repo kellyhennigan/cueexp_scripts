@@ -11,7 +11,7 @@ dataDir = p.data; cd(dataDir)
 % figDir = fullfile(p.figures,'dmri','fgs_single_subs');
 figDir = fullfile(p.figures_dti,'rendered_tube_fgs');
 
-
+rng default % start random seed generator from same spot
 
 method = 'mrtrix_fa';
 
@@ -21,16 +21,16 @@ seed = 'DA';
 targets = {'nacc','nacc','caudate','putamen'};
 fgStrs={'_aboveAC','_belowAC','',''}; % just for figure name
 
-fgNameStrs = { '%s%s_%s%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s%s_dil2_autoclean.pdb',...
-    '%s%s_%s%s%s_dil2_autoclean.pdb'};
+fgNameStrs = { '%s%s_%s%s%s_autoclean.pdb',...
+    '%s%s_%s%s%s_autoclean.pdb',...
+    '%s%s_%s%s%s_autoclean.pdb',...
+    '%s%s_%s%s%s_autoclean.pdb'};
 
 LorR = 'L';
 
 % get some useful plot params
 plotTubes = 1;  % plot fiber pathways as tubes or lines?
-fg_rad = 1;   % radius of fiber pathway tubes (only matters if plotTubes=1)
+fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
 nfibers=100;
 
 

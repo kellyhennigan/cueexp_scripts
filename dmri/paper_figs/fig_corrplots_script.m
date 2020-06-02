@@ -10,8 +10,9 @@ dataDir = pa.data;
 figDir = pa.figures_dti;
 
 
-% which group(s) to plot?
-group = {'patients'};
+% which group(s) to plot? options are: 
+% 'controls','patients','all', 'relapsers', or 'nonrelapsers'
+group = 'controls';
 
 
 % directory & filename of fg measures
@@ -57,9 +58,15 @@ scale='BIS';
 covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, 'PAPERFIG_bisfgcorr',[group{:}]);
+outDir = fullfile(figDir, 'paper_figs',['fig3_FG_' scale '_corr']);
+% outDir = fullfile(figDir, 'paper_figs',['fig5_fgs_mni_corrmap']);
+
 
 omit_subs={''};
+
+%%%%%%%%%%%%%%%
+node=26:75; % middle 50% of tract
+% node=42;
 
 
 
@@ -94,10 +101,6 @@ for f=1:numel(fgMatStrs)
     
     %% figure: plot correlations with fg measures
     
-    %%%%%%%%%%%%%%%
-    node=26:75; % middle 50% of tract
-    % node=65;
-    % node=43:72;
     
     % get a string describing node(s)
     if isequal(26:75,node)
@@ -171,40 +174,45 @@ for f=1:numel(fgMatStrs)
     for fi=1:numel(x)
         
         axH=subplot(nRow,nCol,fi);
-        [axH,rpStr] = plotCorr(axH,x{fi},y,xlab{fi},ylab,corrStr{fi},col,[],[],fSize);
-        %
+        
+        % only have ylabel on left plots
+        if iseven(fi)
+        [axH,rpStr] = plotCorr(axH,x{fi},y,xlab{fi},'',corrStr{fi},col,[],[],fSize);
+        else
+                [axH,rpStr] = plotCorr(axH,x{fi},y,xlab{fi},ylab,corrStr{fi},col,[],[],fSize);
+        end
         
         if ~isempty(cvStr)
             
-        if strcmp(group,'controls')
-            %     % FA xlim
-            if strcmpi(xlab{fi},'FA')
-                xlim([-.1 .16])
-                set(gca,'XTick',[-.1:.1:.15])
+            if strcmp(group,'controls')
+                %     % FA xlim
+                if strcmpi(xlab{fi},'FA')
+                    xlim([-.1 .16])
+                    set(gca,'XTick',[-.1:.1:.15])
+                end
+                
+                %     % MD
+                if strcmpi(xlab{fi},'1-MD')
+                    xlim([-.1 .1])
+                    set(gca,'XTick',[-.1:.1:.1])
+                end
+                
+            elseif strcmp(group,'patients')
+                %     % FA xlim
+                if strcmpi(xlab{fi},'FA')
+                    xlim([-.2 .2])
+                    set(gca,'XTick',[-.2:.2:.2])
+                end
+                
+                %     % MD
+                if strcmpi(xlab{fi},'1-MD')
+                    xlim([-.22 .2])
+                    set(gca,'XTick',[-.2:.2:.2])
+                end
             end
             
-            %     % MD
-            if strcmpi(xlab{fi},'1-MD')
-                xlim([-.1 .1])
-                set(gca,'XTick',[-.1:.1:.1])
-            end
-            
-        elseif strcmp(group,'patients')
-            %     % FA xlim
-            if strcmpi(xlab{fi},'FA')
-                xlim([-.2 .2])
-                set(gca,'XTick',[-.2:.2:.2])
-            end
-            
-            %     % MD
-            if strcmpi(xlab{fi},'1-MD')
-                xlim([-.22 .2])
-                set(gca,'XTick',[-.2:.2:.2])
-            end
         end
         
-        end
-    
     end
     
     % adjust fig size so that plots are square-shaped
@@ -220,7 +228,7 @@ for f=1:numel(fgMatStrs)
     set(ti,'FontSize',12)
     
     if saveFigs
-          outName = [fgMatStr '_' cvStr '_' nodeStr];
+          outName = [group '_' fgMatStr '_' cvStr '_' nodeStr];
                 print(figH,fullfile(outDir,outName),'-depsc')
 %         print(figH,fullfile(outDir,outName),'-dpdf')
     end

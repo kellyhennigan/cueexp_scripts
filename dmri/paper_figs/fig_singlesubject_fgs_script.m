@@ -74,7 +74,7 @@ fprintf('\n\nworking on subject %s...\n',subject);
     
 %load t1
 t1 = niftiRead(sprintf(t1Path,subject));
-% Rescale image values to get better gary/white/CSF contrast
+% Rescale image values to get better gray/white/CSF contrast
 img = mrAnatHistogramClip(double(t1.data),0.3,0.99);
 t1.data=img;
 

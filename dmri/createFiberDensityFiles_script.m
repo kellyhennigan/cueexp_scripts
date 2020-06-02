@@ -26,9 +26,9 @@ close all
 p=getCuePaths();
 dataDir = p.data;
 
-[subjects,gi]=getCueSubjects('dti');
+% [subjects,gi]=getCueSubjects('dti');
 % subjects=subjects(48:end);
-% subjects = {'jh160702'};
+subjects = {'ph161104'};
 
 
 method = 'mrtrix_fa';

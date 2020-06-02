@@ -21,17 +21,17 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
+% fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
-% fgMatStr = 'PauliAtlasDAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'PauliAtlasDAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
 titleStr = 'MFB tract';
 
 % which scale to correlate with fiber group measures?
-scale = 'discount_rate'
-% scale = 'bis';
+% scale = 'discount_rate'
+scale = 'bis';
 % scale = 'nacc_nvlout_betas';
 % scale = 'age';
 
@@ -65,7 +65,7 @@ fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 [fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
 
-scores=log(scores)
+% scores=log(scores)
 
 % midi betas:
 % scale = 'gvnant';
