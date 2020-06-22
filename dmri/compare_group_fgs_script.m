@@ -9,7 +9,7 @@ close all
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p = getCuePaths();
 dataDir = p.data;
-outDir = [p.figures_dti '/paper_figs/fgm_trajectories/bygroup'];
+outDir = [p.figures_dti '/fgm_trajectories/bygroup'];
 
 
 % directory & filename of fg measures
@@ -40,9 +40,9 @@ targets={'nacc'};
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
- covars={'age','dwimotion'};
+%  covars={'age','dwimotion'};
 % covars={'age','dwimotion','bis'};
-% covars={};
+covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
@@ -71,7 +71,7 @@ omit_subs = {''};
 % fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
 fgMPlots={'FA'};
 
-doStats=1;
+doStats=0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it

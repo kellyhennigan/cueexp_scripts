@@ -18,28 +18,28 @@ group = 'controls';
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-% fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
-
-% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
-%     'DALR_naccLR_aboveAC_autoclean';
-%     'DALR_caudateLR_autoclean';
-%     'DALR_putamenLR_autoclean';
-%     };
-%
 
 fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
     'DALR_naccLR_aboveAC_autoclean';
     'DALR_caudateLR_autoclean';
     'DALR_putamenLR_autoclean';
-    'DAL_naccL_belowAC_autoclean';
-    'DAL_naccL_aboveAC_autoclean';
-    'DAL_caudateL_autoclean';
-    'DAL_putamenL_autoclean';
-    'DAR_naccR_belowAC_autoclean';
-    'DAR_naccR_aboveAC_autoclean';
-    'DAR_caudateR_autoclean';
-    'DAR_putamenR_autoclean'};
+    };
+%
+% 
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean';
+%     'DALR_naccLR_aboveAC_autoclean';
+%     'DALR_caudateLR_autoclean';
+%     'DALR_putamenLR_autoclean';
+%     'DAL_naccL_belowAC_autoclean';
+%     'DAL_naccL_aboveAC_autoclean';
+%     'DAL_caudateL_autoclean';
+%     'DAL_putamenL_autoclean';
+%     'DAR_naccR_belowAC_autoclean';
+%     'DAR_naccR_aboveAC_autoclean';
+%     'DAR_caudateR_autoclean';
+%     'DAR_putamenR_autoclean'};
 
+% fgMatStrs = {'DALR_naccLR_belowAC_autoclean'};
 
 % titleStrs = {'inferior NAcc tract'};
 titleStrs=fgMatStrs;
@@ -52,21 +52,21 @@ titleStrs=fgMatStrs;
 scale='BIS';
 
 % include control variables?
-% covars = {};
+covars = {};
 % covars = {'age'};
 % covars = {'dwimotion'};
-covars = {'age','dwimotion'};
+% covars = {'age','dwimotion'};
 
 saveFigs =1;   % 1 to save figs to outDir otherwise 0
-outDir = fullfile(figDir, 'paper_figs',['fig3_FG_' scale '_corr']);
-% outDir = fullfile(figDir, 'paper_figs',['fig5_fgs_mni_corrmap']);
+% outDir = fullfile(figDir, 'paper_figs',['fig3_FG_' scale '_corr']);
+outDir = fullfile(figDir, 'paper_figs',['figS1_corr_nocovars']);
 
 
 omit_subs={''};
 
 %%%%%%%%%%%%%%%
 node=26:75; % middle 50% of tract
-% node=42;
+
 
 
 
@@ -211,8 +211,20 @@ for f=1:numel(fgMatStrs)
                 end
             end
             
+        else
+            
+               if strcmp(group,'controls')
+                %     % FA xlim
+                if strcmpi(xlab{fi},'FA')
+                    xlim([.2 .73])
+                    set(gca,'XTick',[.2:.1:.7])
+                elseif strcmpi(xlab{fi},'1-MD')
+                    xlim([.28 .58])
+                    set(gca,'XTick',[.25:.1:.55])
+                end
+                
+               end
         end
-        
     end
     
     % adjust fig size so that plots are square-shaped

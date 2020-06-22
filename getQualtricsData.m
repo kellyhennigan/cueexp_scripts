@@ -257,6 +257,13 @@ for i=1:numel(subjects)
         d.smoke(i,1) = dataArray{21}(si);
         d.smoke_perday{i,:} = dataArray{22}{si};
         
+        % smoking wasnt recorded in qualtrics for these subjects so
+        % hard-code here:
+        if any(strcmp(subjects{i},{'ps151001','dw151003','aa151010','al151016','ie151020','sr151031','vm151031','jg151121'}))
+            d.smoke(i,1) = 0;
+            d.smoke_perday{i,1} = 0;
+        end
+        
         
         pa(i,:) = paQ(si,:);
         na(i,:) = naQ(si,:);

@@ -17,7 +17,7 @@ library(lavaan)
 ##load data
 
 ```{r data}
-df = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__200413.csv')
+df = read.csv('/Users/kelly/cueexp/data/q_demo_data/data__200603.csv')
 ```
 
 

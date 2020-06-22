@@ -10,8 +10,8 @@ task = 'dti';
 
 %  group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
 % group = 'patients';
-group = 'controls';
-% group = 'relapsers_3months';
+% group = 'controls';
+group = 'relapsers_6months';
    
 [subjects,gi,notes] = getCueSubjects(task,group);
 % subjects(22:end)=[]; gi(22:end)=[];
@@ -97,14 +97,14 @@ smoke = getCueData(subjects,'smoke');
 s{end+1} = sprintf('\npercent smokers: %.2f',numel(find(smoke==1))./numel(smoke(~isnan(smoke))));
 
 
-%% # veterans
-
-if gi(1)==1
-    nVets=numel(subjects);
-else
-    nVets = sum(cellfun(@(x) ~isempty(strfind(x,'veteran')), notes));
-end
-s{end+1}=sprintf('\npercent veterans: %.2f',nVets./N);
+% %% # veterans
+% 
+% if gi(1)==1
+%     nVets=numel(subjects);
+% else
+%     nVets = sum(cellfun(@(x) ~isempty(strfind(x,'veteran')), notes));
+% end
+% s{end+1}=sprintf('\npercent veterans: %.2f',nVets./N);
 
 
 %% BDI 

@@ -151,7 +151,7 @@ switch measure
     case 'relapse_3months'
         
         daythresh=100;
-        lost_daythresh=90; % patients not followed up for this much time will be set to nan
+        lost_daythresh=50; % patients not followed up for this much time will be set to nan
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);

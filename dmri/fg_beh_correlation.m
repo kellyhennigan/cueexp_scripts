@@ -21,9 +21,9 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-% fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
-fgMatStr = 'PauliAtlasDAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
+% fgMatStr = 'PauliAtlasDAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
 
 fgStr=fgMatStr;
 
@@ -42,7 +42,7 @@ covars = {'age','dwimotion'};
 % covars = {'dwimotion'};
 % covars = {};
 
-saveFigs =1;   % 1 to save figs to outDir otherwise 0
+saveFigs =0;   % 1 to save figs to outDir otherwise 0
 outDir = fullfile(figDir, ['FG_' strrep(scale,'_','') '_corr']);
 
     
@@ -65,7 +65,7 @@ fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStr '.mat']);
 [fgMeasures,fgMLabels,scores,subjects,gi,SF]=loadFGBehVars(...
     fgMFile,scale,group,omit_subs);
 
-% scores=log(scores)
+scores=log(scores)
 
 % midi betas:
 % scale = 'gvnant';
@@ -100,23 +100,23 @@ fgMCorr = 'FA'; % fg measure to correlate with behavior & plot as color map
 fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%%
 
-% get correlation between fgMCorr & scores along pathway nodes
-if ~notDefined('covars')
-    [r,p]=partialcorr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))},cvs);
-else
-    [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
-end
-
-% plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
-crange=[min(r) max(r)];
-% crange=[0 .5];
-fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
-title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
-if saveFigs
-    print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr' cvStr]))
-end
-
-
+% % get correlation between fgMCorr & scores along pathway nodes
+% if ~notDefined('covars')
+%     [r,p]=partialcorr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))},cvs);
+% else
+%     [r,p]=corr(scores,fgMeasures{find(strcmp(fgMCorr,fgMLabels))});
+% end
+% 
+% % plot nodes on x-axis, fgMPlot values on y-axis, and correlation vals in color
+% crange=[min(r) max(r)];
+% % crange=[0 .5];
+% fig1=dti_plotCorr(fgMeasures{strcmp(fgMPlot,fgMLabels)},r,crange,fgMPlot);
+% title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
+% if saveFigs
+%     print(gcf,'-dpng','-r300',fullfile(outDir,[group{:} '_' fgMPlot 'trajectory_' fgMCorr '_' scale '_corr' cvStr]))
+% end
+% 
+% 
 
 %% fig 2: plot correlations with fg measures
 

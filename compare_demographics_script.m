@@ -10,7 +10,8 @@ task = 'dti';
 
 % groups = {'early_relapsers','early_abstainers'};
 % groups = {'controls','relapsers_6months','nonrelapsers_6months'};
-groups = {'controls','patients'};
+% groups = {'controls','patients'};
+groups = {'nonrelapsers_6months','relapsers_6months'};
 
 % demVars = {'age','gender','education','smoke','bdi','bis','discount_rate'};
 % demVars = {'discount_rate'};

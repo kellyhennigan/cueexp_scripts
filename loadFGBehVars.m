@@ -62,21 +62,42 @@ keep_idx = ones(numel(subjects),1);
 % if a specific group is desired: 
 if strcmpi(group,'controls') || isequal(group,0)
     keep_idx=gi==0;
+    
 elseif strcmpi(group,'patients') || isequal(group,1)
     keep_idx=gi>0;
     
-elseif strcmpi(group,'relapsers') 
-%     rel = getCueData(subjects,'relapse');
-%     keep_idx=rel==1;
-%    rel = getCueData(subjects,'relapse_3months');
-  rel = getCueData(subjects,'relapse_6months');
+elseif strcmpi(group,'relapsers') || strcmpi(group,'relapse') 
+    rel = getCueData(subjects,'relapse');
     keep_idx=rel==1;
-     
-elseif strcmpi(group,'nonrelapsers') 
-%     rel = getCueData(subjects,'relapse_3months');
-  rel = getCueData(subjects,'relapse_6months');
-    keep_idx=rel==0;   
+ 
+    elseif strcmpi(group,'relapsers_3months') || strcmpi(group,'relapse_3months') 
+    rel = getCueData(subjects,'relapse_3months');
+    keep_idx=rel==1;
 
+    elseif strcmpi(group,'relapsers_4months') || strcmpi(group,'relapse_4months') 
+    rel = getCueData(subjects,'relapse_4months');
+    keep_idx=rel==1;
+
+    elseif strcmpi(group,'relapsers_6months') || strcmpi(group,'relapse_6months') 
+    rel = getCueData(subjects,'relapse_6months');
+    keep_idx=rel==1;
+
+   elseif strcmpi(group,'nonrelapsers') || strcmpi(group,'nonrelapse') 
+    rel = getCueData(subjects,'relapse');
+    keep_idx=rel==0;
+ 
+    elseif strcmpi(group,'nonrelapsers_3months') || strcmpi(group,'nonrelapse_3months') 
+    rel = getCueData(subjects,'relapse_3months');
+    keep_idx=rel==0;
+
+    elseif strcmpi(group,'nonrelapsers_4months') || strcmpi(group,'nonrelapse_4months') 
+    rel = getCueData(subjects,'relapse_4months');
+    keep_idx=rel==0;
+
+    elseif strcmpi(group,'nonrelapsers_6months') || strcmpi(group,'nonrelapse_6months') 
+    rel = getCueData(subjects,'relapse_6months');
+    keep_idx=rel==0;
+ 
 end
     
 % remove any subjects from keep index that arent returned in
