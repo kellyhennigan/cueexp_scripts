@@ -14,7 +14,12 @@ import os,sys,re,glob,numpy as np
 
 # set up study-specific directories and file names, etc.
 
-data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+# data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+scripts_dir=os.getcwd()
+os.chdir('../')
+main_dir=os.getcwd()
+data_dir=main_dir+'/data'
+os.chdir(scripts_dir)
 
 from getCueSubjects import getsubs
 subjsA,_ = getsubs('midi',1)	# patients
