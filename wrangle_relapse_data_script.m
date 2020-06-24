@@ -7,9 +7,9 @@ close all
 
 p = getCuePaths(); dataDir = p.data; % cue exp paths
 
-task = 'cue';
+task = 'mid';
 
-group = 'patients';
+group = '';
 % group = 'patients_complete';
 
 subjects = getCueSubjects(task,group); 
