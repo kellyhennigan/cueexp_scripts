@@ -13,11 +13,16 @@ import os,sys,re,glob,numpy as np
 
 justPrint = 0 # 1 to just print, 0 to print and execute
 
-# set up study-specific directories and file names, etc.
-if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
-	data_dir = '/Volumes/G-DRIVE/cueexp/data'
-else: 
-	data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+# # set up study-specific directories and file names, etc.
+# if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
+# 	data_dir = '/Volumes/G-DRIVE/cueexp/data'
+# else: 
+# 	data_dir = os.path.join(os.path.expanduser('~'),'cueexp','data')
+scripts_dir=os.getcwd()
+os.chdir('../')
+main_dir=os.getcwd()
+data_dir=main_dir+'/data'
+os.chdir(scripts_dir)
 
 
 from getCueSubjects import getsubs
