@@ -31,8 +31,8 @@ stimStr = stim; % stim name
 
 roiName = 'nacc_desai'; % roi to process
 
-% tcDir = ['timecourses_' task '_afni' ];
-tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 outDir_suffix = '_sample2';
 
@@ -41,7 +41,8 @@ outDir_suffix = '_sample2';
 % colorScheme = 'relapse'; 
 colorScheme = 'rand'; 
 
-omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
+% omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
+omitSubs = {''}; % any subjects to omit?
 
 plotLegend=1; % 1 to include plot legend, otherwise 0
 

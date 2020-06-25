@@ -27,7 +27,7 @@ tcPath = fullfile(dataDir,tcDir);
 roiNames = whichRois(tcPath);
 % roiNames={'nacc_desai'};
 
-nTRs = 10; % # of TRs to plot
+nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
