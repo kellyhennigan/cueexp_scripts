@@ -12,7 +12,7 @@ figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 % dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_190906.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_200624.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
@@ -47,7 +47,7 @@ for i=9:numel(vars)
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = [Y ' ~ ' vars{i}];
     res=fitglm(T,modelspec,'Distribution','binomial');
-    if res.Coefficients.pValue(2)<.15
+    if res.Coefficients.pValue(2)<.10
         a=[a vars{i}];
         tB = [tB res.Coefficients.tStat(2)];
     end
@@ -137,7 +137,7 @@ end
 
 % modelspec = 'relIn3Mos ~ nacc_drugs_beta';
 % modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
-modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + VTA_drugs_beta'];
+modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
 
 
 res=fitglm(T,modelspec,'Distribution','binomial')
