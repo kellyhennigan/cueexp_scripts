@@ -61,11 +61,11 @@ switch task
     case 'mid'
         
         fileStr = 'glm_B+tlrc.HEAD'; % string identifying files w/single subject beta maps
-%         volIdx = [13,14,15,16]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-%         bNames = {'gvnant','lvnant','gvnout','nvlout'}; % bNames should correspond to volumes in index volIdx
+        volIdx = [13,14,15,16]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+        bNames = {'gvnant','lvnant','gvnout','nvlout'}; % bNames should correspond to volumes in index volIdx
 %         
-        volIdx = [11,12]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
-        bNames = {'ant','out'}; % bNames should correspond to volumes in index volIdx
+%         volIdx = [11,12]; % index of which volumes are the beta maps of interest (first vol=0, etc.)
+%         bNames = {'ant','out'}; % bNames should correspond to volumes in index volIdx
         
     case 'midi'
         
