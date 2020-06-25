@@ -29,7 +29,7 @@ tcPath = fullfile(dataDir,tcDir);
 roiNames = whichRois(tcPath);
 
 
-nTRs = 8; % # of TRs to plot
+nTRs = 10; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
@@ -40,7 +40,7 @@ useSpline = 0; % if 1, time series will be upsampled by TR*10
 %     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
 %     'gm161101'};
 % omitSubs = {'rl170603'}; % any subjects to omit?
-omitSubs={''};
+omitSubs={'tv181019'};
 
 plotStats = 1; % 1 to note statistical signficance on figures
 

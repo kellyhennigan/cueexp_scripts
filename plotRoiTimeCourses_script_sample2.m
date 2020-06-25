@@ -27,7 +27,7 @@ tcPath = fullfile(dataDir,tcDir);
 roiNames = whichRois(tcPath);
 % roiNames={'nacc_desai'};
 
-nTRs = 8; % # of TRs to plot
+nTRs = 10; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
@@ -37,7 +37,7 @@ useSpline = 0; % if 1, time series will be upsampled by TR*10
 % omitSubs = {'zl150930','ps151001','aa151010','al151016','jv151030',...
 %     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
 %     'gm161101'};
-omitSubs = {''}; % any subjects to omit?
+omitSubs = {'tv181019'}; % any subjects to omit?
 % omitSubs={'tb171209','tv181019'};
 
 plotStats = 1; % 1 to note statistical signficance on figures
@@ -52,7 +52,7 @@ outDir_suffix = '_sample2';
 
 plotColorSet = 'color'; % 'grayscale' or 'color'
 
-plotErr = 'shaded'; % 'bar' or 'shaded'
+plotErr = 'bar'; % 'bar' or 'shaded'
 
 plotToScreen=0;
 
@@ -79,6 +79,8 @@ plotToScreen=0;
 plotGroups = {'controls';
     'patients_sample1';
     'patients_sample2';
+    'controls patients_sample1';
+    'controls patients_sample2';
     'relapsers_3months_sample1 nonrelapsers_3months_sample1';
     'relapsers_3months_sample2 nonrelapsers_3months_sample2';
     'controls';
@@ -91,6 +93,8 @@ plotStims = {'food drugs neutral';
 'food drugs neutral';
 'drugs';
 'drugs';
+'drugs';
+'drugs';
 'strong_dontwant somewhat_dontwant somewhat_want strong_want';
 'strong_dontwant somewhat_dontwant somewhat_want strong_want';
 'strong_dontwant somewhat_dontwant somewhat_want strong_want'};
@@ -98,6 +102,8 @@ plotStims = {'food drugs neutral';
 plotStimStrs={'type';
     'type';
     'type';
+    'drugs';
+    'drugs';
     'drugs';
     'drugs';
     'want';

@@ -42,7 +42,7 @@ outDir_suffix = '_sample2';
 colorScheme = 'rand'; 
 
 % omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
-omitSubs = {''}; % any subjects to omit?
+omitSubs = {'tv181019'}; % any subjects to omit?
 
 plotLegend=1; % 1 to include plot legend, otherwise 0
 
