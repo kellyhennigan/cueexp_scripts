@@ -83,21 +83,49 @@ plotGroups = {'controls';
     'controls patients_sample2';
     'relapsers_3months_sample1 nonrelapsers_3months_sample1';
     'relapsers_3months_sample2 nonrelapsers_3months_sample2';
+    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
+    'controls patients_sample1';
+    'controls patients_sample2';
+    'relapsers_3months_sample1 nonrelapsers_3months_sample1';
+    'relapsers_3months_sample2 nonrelapsers_3months_sample2';
+    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
+    'controls patients_sample1';
+    'controls patients_sample2';
+    'relapsers_3months_sample1 nonrelapsers_3months_sample1';
+    'relapsers_3months_sample2 nonrelapsers_3months_sample2';
+    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
     'controls';
     'patients_sample1';
     'patients_sample2'};
 %
 
 plotStims = {'food drugs neutral';
-'food drugs neutral';
-'food drugs neutral';
-'drugs';
-'drugs';
-'drugs';
-'drugs';
-'strong_dontwant somewhat_dontwant somewhat_want strong_want';
-'strong_dontwant somewhat_dontwant somewhat_want strong_want';
-'strong_dontwant somewhat_dontwant somewhat_want strong_want'};
+    'food drugs neutral';
+    'food drugs neutral';
+    'drugs';
+    'drugs';
+    'drugs';
+    'drugs';
+    'drugs';
+    'drugs';
+    'drugs-neutral';
+    'drugs-neutral';
+    'drugs-neutral';
+    'drugs-neutral';
+    'drugs-neutral';
+    'drugs-neutral';
+    'drugs-food';
+    'drugs-food';
+    'drugs-food';
+    'drugs-food';
+    'drugs-food';
+    'drugs-food';
+    'strong_dontwant somewhat_dontwant somewhat_want strong_want';
+    'strong_dontwant somewhat_dontwant somewhat_want strong_want';
+    'strong_dontwant somewhat_dontwant somewhat_want strong_want'};
 
 plotStimStrs={'type';
     'type';
@@ -106,6 +134,21 @@ plotStimStrs={'type';
     'drugs';
     'drugs';
     'drugs';
+    'drugs';
+    'drugs';
+    
+    'drugvneutral';
+    'drugvneutral';
+    'drugvneutral';
+    'drugvneutral';
+    'drugvneutral';
+    'drugvneutral';
+    'drugvfood';
+    'drugvfood';
+    'drugvfood';
+    'drugvfood';
+    'drugvfood';
+    'drugvfood';
     'want';
     'want';
     'want'};
@@ -123,8 +166,8 @@ for r = 1:numel(roiNames)
     
     f=1
     %% define time courses to plot
-for f=1:nFigs
-%         for f = 1:nFigs
+    for f=1:nFigs
+        %         for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f});
@@ -164,7 +207,7 @@ for f=1:nFigs
             tc
             error('\hold up - time courses for at least one stim/group weren''t loaded.')
         end
-              
+        
         mean_tc = cellfun(@nanmean, tc,'uniformoutput',0);
         se_tc = cellfun(@(x) nanstd(x)./sqrt(size(x,1)), tc,'uniformoutput',0);
         
@@ -245,7 +288,7 @@ for f=1:nFigs
         
         switch plotErr
             case 'bar'
-                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);   
+                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
             case 'shaded'
                 [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
         end

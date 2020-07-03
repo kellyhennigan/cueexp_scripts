@@ -46,7 +46,7 @@ fstr = '';
 
 
 % out file name for pruned fibers
-outFgStr = [seed '%s_%s%s' fstr '_autoclean']; %s: LorR, target, LorR
+outFgStr = [seed '%s_%s%s' fstr '_autoclean23']; %s: LorR, target, LorR
 
 plotToScreen = 0; % don't plot to screen
 
@@ -73,8 +73,8 @@ switch method
 end
 
 % additional non-method specific pruning params
-maxDist=4; % threshold for eliminating based on mahalanobis distance
-maxLen=4;  % " " for pathway length
+maxDist=3; % threshold for eliminating based on mahalanobis distance
+maxLen=2;  % " " for pathway length
 numNodes=100;
 M='mean';
 count = 0;

@@ -227,7 +227,24 @@ if ~isempty(group)
         subjects = subjects(ri==0);
         notes = notes(ri==0);
         gi = gi(ri==0);
+    
+            % return those who relapsed within 6 mos in sample 1
+    elseif any(strcmpi(group,{'relapsers_6months_sample1','relapse_6months_sample1'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
         
+        
+        % return those who did not relapse within 6 mos in sample 1
+    elseif any(strcmpi(group,{'nonrelapsers_6months_sample1','nonrelapse_6months_sample1'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+ 
       
         % return those who relapsed within 3 mos in sample 2
     elseif any(strcmpi(group,{'relapsers_3months_sample2','relapse_3months_sample2'}))
@@ -247,6 +264,26 @@ if ~isempty(group)
         notes = notes(ri==0);
         gi = gi(ri==0);
         
+        
+        % return those who relapsed within 6 mos in sample 2
+    elseif any(strcmpi(group,{'relapsers_6months_sample2','relapse_6months_sample2'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+       
+        % return those who did not relapse within 6 mos in sample 2
+    elseif any(strcmpi(group,{'nonrelapsers_6months_sample2','nonrelapse_6months_sample2'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+        
+   
         
         % return the first 15 to have relapsed
 %     elseif any(strcmpi(group,{'early_relapse','early_relapsers'}))
