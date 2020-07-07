@@ -9,15 +9,15 @@ p = getCuePaths(); dataDir = p.data; % cue exp paths
 
 task = 'cue';
 
-group = 'patients';
-% group = 'patients_complete';
+% group = 'patients';
+group = '';
 
 [subjects,gi] = getCueSubjects(task,group); 
 
 
 % filepath for saving out table of variables
 % outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '_allsubs.csv']);
-outPath = fullfile(dataDir,'relapse_data',['relapse_data_' datestr(now,'yymmdd') '.csv']);
+outPath = fullfile(dataDir,'relapse_data',['relapse_data_' task '_' datestr(now,'yymmdd') '.csv']);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -221,24 +221,24 @@ Tbeh = table(pref_drug,pref_food,pref_neut,...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% brain data
-
+% 
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','ins_desai','insL_desai','insR_desai'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','ains','ainsL','ainsR'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','ins_desai','insL_desai','insR_desai','acing'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','ains','ainsL','ainsR','acing'};
 
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acing','ains','pvt'};
 
 % stims = {'drugs','food','neutral','drugs-neutral','drugs-food'};
-stims = {'alcohol','drugs','food','neutral'};
-
-
+stims = {'alcohol','drugs','food','neutral','drugs-neutral','drugs-food'};
+% 
+% 
 bd = [];  % array of brain data values
 bdNames = {};  % brain data predictor names
-
-
+% 
+% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
@@ -281,8 +281,8 @@ for j=1:numel(roiNames)
 end % rois
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI BETAS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
- 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI BETAS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%  
 betaPath = fullfile(dataDir,['results_' task '_afni'],'roi_betas','%s','%s.csv'); %s is roiName, stim
 
 for j=1:numel(roiNames)
@@ -299,11 +299,11 @@ for j=1:numel(roiNames)
       end % stims
       
 end % roiNames
-
+% 
 % brain data
 Tbrain = array2table(bd,'VariableNames',bdNames);
-
-
+% 
+% 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% concatenate relapse, demographic, behavioral, & brain data into 1 table
