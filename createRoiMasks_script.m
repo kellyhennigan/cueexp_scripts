@@ -90,6 +90,17 @@
 %     10,49};
 %
 
+% From Freesurfer's hippocampal subfields and amygdala nuclei segmentation
+% routine (segmentHA_T1.sh)
+%   #No.  Label Name:                                       R   G   B   A
+%   7001  Lateral-nucleus                                   72  132 181 0
+%   7002  Basolateral-nucleus                               243 243 243 0
+%   7003  Basal-nucleus                                     207 63  79  0
+%   7004  Centromedial-nucleus                              121 20  135 0
+%   7005  Central-nucleus                                   197 60  248 0
+%   7006  Medial-nucleus                                    2   149 2   0
+%   7007  Cortical-nucleus                                  221 249 166 0
+%   7008  Accessory-Basal-nucleus                           232 146 35  0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Define base directory, subject folders, freesurfer labels, and ROI names
@@ -98,24 +109,39 @@ clear all
 close all
 
 [p,task,subjects,gi]=whichCueSubjects('stim','');
+clear subjects
+subjects = {'ds190510','tc190628','ah190717','jj190821','rc191015','jm191125','mk191218'}; % additional SUD patients
 dataDir = p.data;
 
 % path to freesurfer segmentation file; %s is subject id
-segFilePath = fullfile(dataDir,'%s','t1','aparc+aseg.nii.gz');  % subject's aparc+aseg nii file
+% segFilePath = fullfile(dataDir,'%s','t1','aparc+aseg.nii.gz');  % subject's aparc+aseg nii file
+segFilePath = fullfile(dataDir,'%s','t1','aparc+a2009s+seg.nii.gz');  % subject's aparc+aseg nii file for anterior insula parcellation
 
 % %s is subject id
 outDir = fullfile(dataDir,'%s','ROIs');
 
 % roiNames & corresponding labels
-roiNames = {'nacc';
-    'caudate';
-    'putamen'};
+% roiNames = {'nacc';
+%     'caudate';
+%     'putamen'};
+
+% corresponding labels for left and right hemispheres
+% labels = {26,58;
+%     11,50;
+%     12,51}; 
 
 
-labels = {26,58;
-    11,50;
-    12,51}; 
+% roiNames & corresponding labels
+roiNames = {'ains';
+            'sgins'};
+        %'amygdala'};
+        
+roiNames_comb = 'asgins';
 
+% corresponding labels for left and right hemispheres
+labels = {11148,12148;
+          11118,12118};
+          18,54}; 
 
 
 
@@ -136,7 +162,7 @@ for i = 1:length(subjects)          % subject loop
     end
     
     for j = 1:numel(roiNames)
-        
+       
         % create & save out left ROI
         roiL = createNewNii(seg,[thisOutDir '/' roiNames{j} 'L']);
         roiL.data(seg.data == labels{j,1})=1; roiL.data = single(roiL.data);
@@ -156,9 +182,33 @@ for i = 1:length(subjects)          % subject loop
             error(['hold up - L and R ' roiNames{j} ' have overlappling voxels, which shouldn''t happen...'])
         end
         writeFileNifti(roi);
-        
+           
     end % rois
-     
+    
+    
+     %  now combine ains & sgins and save out
+            
+        %  left ROI
+        roi_comb_L = createNewNii(seg,[thisOutDir '/' roiNames_comb 'L']);
+        roi_comb_L.data(seg.data == labels{1,1} | seg.data == labels{2,1} )=1; roi_comb_L.data = single(roi_comb_L.data);
+        writeFileNifti(roi_comb_L);
+        roiNiftiToMat(roi_comb_L,1);
+        
+        %  right ROI
+        roi_comb_R = createNewNii(seg,[thisOutDir '/' roiNames_comb 'R']);
+        roi_comb_R.data(seg.data == labels{1,2} | seg.data == labels{2,2} )=1; roi_comb_R.data = single(roi_comb_R.data);
+        writeFileNifti(roi_comb_R);
+        roiNiftiToMat(roi_comb_R,1);
+        
+        %  now combine L & R and save out
+        roi_comb = createNewNii(seg,[thisOutDir '/' roiNames_comb ]);
+        roi_comb.data = roi_comb_L.data+roi_comb_R.data;
+        if any(roi_comb.data(:)>1)
+            error(['hold up - L and R ' roiNames_comb{k} ' have overlappling voxels, which shouldn''t happen...'])
+        end
+        writeFileNifti(roi_comb);
+        
+
      fprintf(['done with subject ' subject '.\n\n']);
     
 end % subjects
