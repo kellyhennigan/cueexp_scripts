@@ -11,7 +11,7 @@
 
 import os,sys,re,glob,numpy as np
 
-justPrint = 1 # 1 to just print, 0 to print and execute
+justPrint = 0 # 1 to just print, 0 to print and execute
 
 # # set up study-specific directories and file names, etc.
 # if os.path.exists('/Volumes/G-DRIVE/cueexp/data'):
@@ -34,7 +34,7 @@ print(subjsB)
 
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
 res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
-print('RESULTS DIR: '+res_dir)
+
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
 
@@ -106,7 +106,7 @@ mask_file = os.path.join(data_dir,'templates','tt29_bmask.nii')
 	
 
 os.chdir(res_dir) 		 			# cd to results dir 
-print(res_dir)
+print('RESULTS DIR: '+res_dir)
 
 
 for i, sub_label in enumerate(sub_labels): 
