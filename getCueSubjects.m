@@ -209,6 +209,19 @@ if ~isempty(group)
         subjects=subjects(idx:end);
         notes=notes(idx:end);
         gi=gi(idx:end);
+     
+            % return only 1st sample of patients
+    elseif strcmpi(group,'patients_for')
+        subjects = subjects(gi==1);
+        notes = notes(gi==1);
+        gi = gi(gi==1);
+        
+     % return only 2nd sample of patients
+    elseif strcmpi(group,'patients_epiphany') 
+        subjects = subjects(gi==2);
+        notes = notes(gi==2);
+        gi = gi(gi==2);
+      
         
         
       % return those who relapsed within 3 mos in sample 1
@@ -284,6 +297,81 @@ if ~isempty(group)
         gi = gi(ri==0);
         
    
+        %% 
+        
+            
+      % return FOR patients who relapsed within 3 mos 
+    elseif any(strcmpi(group,{'relapsers_3months_for','relapse_3months_for'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return FOR patients who did not relapse within 3 mos 
+    elseif any(strcmpi(group,{'nonrelapsers_3months_for','nonrelapse_3months_for'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+    
+            % return FOR patients who relapsed within 6 mos 
+    elseif any(strcmpi(group,{'relapsers_6months_for','relapse_6months_for'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return FOR patients who did not relapse within 6 mos 
+    elseif any(strcmpi(group,{'nonrelapsers_6months_for','nonrelapse_6months_for'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+ 
+        %%
+        
+            % return epiphany patients who relapsed within 3 mos 
+    elseif any(strcmpi(group,{'relapsers_3months_epiphany','relapse_3months_epiphany'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return epiphany patients who did not relapse within 3 mos 
+    elseif any(strcmpi(group,{'nonrelapsers_3months_epiphany','nonrelapse_3months_epiphany'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
+        ri=getCueData(subjects,'relapse_3months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+    
+            % return epiphany patients who relapsed within 6 mos 
+    elseif any(strcmpi(group,{'relapsers_6months_epiphany','relapse_6months_epiphany'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==1);
+        notes = notes(ri==1);
+        gi = gi(ri==1);
+        
+        
+        % return epiphany patients who did not relapse within 6 mos 
+    elseif any(strcmpi(group,{'nonrelapsers_6months_epiphany','nonrelapse_6months_epiphany'}))
+        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
+        ri=getCueData(subjects,'relapse_6months');
+        subjects = subjects(ri==0);
+        notes = notes(ri==0);
+        gi = gi(ri==0);
+ 
+        %%
+        
         
         % return the first 15 to have relapsed
 %     elseif any(strcmpi(group,{'early_relapse','early_relapsers'}))
@@ -298,7 +386,7 @@ if ~isempty(group)
 %         notes = notes(ri==0);
 %         gi = gi(ri==0);
 %         
-    end
+    end  % group
     
 end % if ~isempty(group)
 

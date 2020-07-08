@@ -29,20 +29,20 @@ stim = 'drugs'; % stim to plot
 
 stimStr = stim; % stim name 
 
-roiName = 'nacc_desai'; % roi to process
+roiName = 'VTA'; % roi to process
 
-tcDir = ['timecourses_' task '_afni' ];
-% tcDir = ['timecourses_' task '_afni_woOutliers' ];
+% tcDir = ['timecourses_' task '_afni' ];
+tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 outDir_suffix = '_sample2';
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
 % colorScheme = 'mean'; 
-% colorScheme = 'relapse'; 
-colorScheme = 'rand'; 
+colorScheme = 'relapse'; 
+% colorScheme = 'rand'; 
 
-% omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
-omitSubs = {'tv181019'}; % any subjects to omit?
+omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
+% omitSubs = {''}; % any subjects to omit?
 
 plotLegend=1; % 1 to include plot legend, otherwise 0
 
@@ -176,4 +176,4 @@ fprintf('done.\n\n')
 % gcf
 % hold on
 % subjects
-% plot(t,tc{30},'color','k','linewidth',2)
+% plot(t,tc{12},'color','k','linewidth',2)

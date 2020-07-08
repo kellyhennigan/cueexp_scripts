@@ -54,8 +54,7 @@ ggsurvplot(sfit_fig1,
            censor=F,
            conf.int=T,
            conf.int.style='ribbon',
-           xlim=c(0,400),
-           ggtheme = theme_survminer()) + scale_color_grey()
+           xlim=c(0,300)) 
 
 # Figure 2 - median split based on NAcc responses to drugs
 sfit_fig2 <- survfit(survival~highlow, data=d1,type="kaplan-meier", conf.type="plain")
@@ -67,8 +66,7 @@ ggsurvplot(sfit_fig2,
            conf.int.style='step',
            #palette = c("#E7B800","#2E9FDF"),
            legend.labs = c("High Cue Response","Low Cue Response"), 
-           xlim=c(0,400),
-           ggtheme = theme_survminer()) + scale_colour_grey()
+           xlim=c(0,300))
 ```
 
 #scatter plot of days to relapse by nacc drug betas
@@ -77,7 +75,7 @@ ggsurvplot(sfit_fig2,
 # Figure 3 
 ggplot(data=d2, aes(x=obstime, y=nacc_drugs_beta)) + 
   geom_point() + 
-  xlim(0,400) + 
+  xlim(0,300) + 
   xlab("Time (days)") +
   ylab("NAcc drug response") +
   theme(text=element_text(size=18))
@@ -87,8 +85,8 @@ ggplot(data=d2, aes(x=obstime, y=nacc_drugs_beta)) +
 
 #pairs plots
 
-```{r pairs plot, collapse=TRUE, warning=FALSE}
-require(psych)
-dp = with(d1, data.frame(relapse, age, pa_drug, nacc_drugs_beta,nacc_food_beta))
-pairs.panels(dp)
-```
+#```{r pairs plot, collapse=TRUE, warning=FALSE}
+#require(psych)
+#dp = with(d1, data.frame(relapse, age, pa_drug, nacc_drugs_beta,nacc_food_beta))
+#pairs.panels(dp)
+#```

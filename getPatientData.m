@@ -47,10 +47,10 @@ switch measure
     
     case 'dop'
         cj = find(strncmp(d(1,:),'DOP',3));
-    case 'for_admit_date'
-        cj = find(strncmp(d(1,:),'date of FOR admit',17));
-    case 'for_discharge_date'
-        cj = find(strncmp(d(1,:),'date of FOR discharge',21));
+    case 'admit_date'
+        cj = find(strncmp(d(1,:),'date of treatment admit',23));
+    case 'discharge_date'
+        cj = find(strncmp(d(1,:),'date of treatment discharge',27));
     case 'first_use_date'
         cj = find(strncmp(d(1,:),'date of first stim',18));
     case 'most_recent_use_date'

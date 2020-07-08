@@ -35,7 +35,8 @@ for i=1:numel(labels)
         case {'controls','nonrelapsers','nonrelapsers_3months','nonrelapsers 3months',...
                 'gain0go','loss0go','gain0nogo','loss0nogo'}
             
-            lspec{i} = '--';
+%             lspec{i} = '--';
+             lspec{i} = '-';
             
         otherwise 
             

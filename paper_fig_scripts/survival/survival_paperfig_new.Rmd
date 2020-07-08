@@ -65,11 +65,10 @@ fig1=ggsurvplot(sfit_fig1,
     #       break.time.by = 30,
            risk.table.y.text = FALSE,
            surv.plot.height=1,
-     #ggtheme = theme_survminer(),
           font.main = c(24, "plain","black"),
           font.x = c(16, "plain", "black"),
           font.y = c(16, "plain", "black"),
-          font.tickslab = c(16, "plain", "black")) + scale_color_grey()
+          font.tickslab = c(16, "plain", "black")) 
 #ggsave(paste(figDir,"KMcurve_wtable.pdf",sep=""),sfit_fig1,height=5,width=5,units='in') # this doesn't work for whatever reason...
 #ggsave("KMcurve_wtable.eps",fig1,path=paste(figDir,sep=""),height=5,width=5,units='in') # this doesn't work for whatever reason...
 

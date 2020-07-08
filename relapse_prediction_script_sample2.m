@@ -12,17 +12,24 @@ figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 % dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_200624.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200707.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
 
+T(T.gi==0,:)=[];
+
+% omit subs? 
+T(strcmp(T.subjid,'tv181019'),:)=[];
+T(strcmp(T.subjid,'tb171209'),:)=[];
+
+
 % remove subjects from 1st sample
 idx=find(strcmp(T.subjid,'er171009'));
 T1=T(1:idx,:);
 T2=T(idx+1:end,:);
-T(1:idx,:)=[];
+% T(1:idx,:)=[];
 
 % define outcome variable
 Y = 'relIn3Mos';

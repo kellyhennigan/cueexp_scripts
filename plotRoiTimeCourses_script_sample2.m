@@ -16,8 +16,8 @@ dataDir = p.data;
 figDir = p.figures;
 
 
-% tcDir = ['timecourses_' task '_afni_woOutliers' ];
-tcDir = ['timecourses_' task '_afni' ];
+tcDir = ['timecourses_' task '_afni_woOutliers' ];
+% tcDir = ['timecourses_' task '_afni' ];
 
 
 tcPath = fullfile(dataDir,tcDir);
@@ -48,7 +48,7 @@ numberFigs = 1; % 1 to number the figs' outnames (useful for viewing in Preview)
 
 % outDir_suffix = '_age_match';
 % outDir_suffix = '_nr16';
-outDir_suffix = '_sample2';
+outDir_suffix = '';
 
 plotColorSet = 'color'; % 'grayscale' or 'color'
 
@@ -79,79 +79,95 @@ plotToScreen=0;
 plotGroups = {'controls';
     'patients_sample1';
     'patients_sample2';
-    'controls patients_sample1';
-    'controls patients_sample2';
-    'relapsers_3months_sample1 nonrelapsers_3months_sample1';
-    'relapsers_3months_sample2 nonrelapsers_3months_sample2';
-    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
-    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
-    'controls patients_sample1';
-    'controls patients_sample2';
-    'relapsers_3months_sample1 nonrelapsers_3months_sample1';
-    'relapsers_3months_sample2 nonrelapsers_3months_sample2';
-    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
-    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
-    'controls patients_sample1';
-    'controls patients_sample2';
-    'relapsers_3months_sample1 nonrelapsers_3months_sample1';
-    'relapsers_3months_sample2 nonrelapsers_3months_sample2';
-    'relapsers_6months_sample1 nonrelapsers_6months_sample1';
-    'relapsers_6months_sample2 nonrelapsers_6months_sample2';
+  
+    'controls patients_sample1 patients_sample2';
+    'controls patients_sample1 patients_sample2';
+    'controls patients_sample1 patients_sample2';
+  
+    'controls patients_for patients_epiphany';
+    'controls patients_for patients_epiphany';
+    'controls patients_for patients_epiphany';
+    
+    'relapsers_3months_sample1 nonrelapsers_3months_sample1 controls';
+    'relapsers_3months_sample2 nonrelapsers_3months_sample2 controls';
+    'relapsers_3months_sample1 nonrelapsers_3months_sample1 controls';
+    'relapsers_3months_sample2 nonrelapsers_3months_sample2 controls';
+    'relapsers_3months_sample1 nonrelapsers_3months_sample1 controls';
+    'relapsers_3months_sample2 nonrelapsers_3months_sample2 controls';
+  
     'controls';
     'patients_sample1';
-    'patients_sample2'};
+    'patients_sample2';
+    
+    'relapsers_6months_sample1 nonrelapsers_6months_sample1 controls';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls';
+    'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls'
+    };
 %
 
 plotStims = {'food drugs neutral';
     'food drugs neutral';
     'food drugs neutral';
+    
+    'food';
+    'drugs';
+    'neutral';
+ 
+    'food';
+    'drugs';
+    'neutral';
+ 
+    'food';
+    'food';
     'drugs';
     'drugs';
-    'drugs';
-    'drugs';
-    'drugs';
-    'drugs';
-    'drugs-neutral';
-    'drugs-neutral';
-    'drugs-neutral';
-    'drugs-neutral';
-    'drugs-neutral';
-    'drugs-neutral';
-    'drugs-food';
-    'drugs-food';
-    'drugs-food';
-    'drugs-food';
-    'drugs-food';
-    'drugs-food';
+    'neutral';
+    'neutral';
+    
     'strong_dontwant somewhat_dontwant somewhat_want strong_want';
     'strong_dontwant somewhat_dontwant somewhat_want strong_want';
-    'strong_dontwant somewhat_dontwant somewhat_want strong_want'};
+    'strong_dontwant somewhat_dontwant somewhat_want strong_want';
+    
+    'food';
+    'food';
+    'drugs';
+    'drugs';
+    'neutral';
+    'neutral'
+    };
 
 plotStimStrs={'type';
     'type';
     'type';
-    'drugs';
-    'drugs';
-    'drugs';
-    'drugs';
-    'drugs';
-    'drugs';
     
-    'drugvneutral';
-    'drugvneutral';
-    'drugvneutral';
-    'drugvneutral';
-    'drugvneutral';
-    'drugvneutral';
-    'drugvfood';
-    'drugvfood';
-    'drugvfood';
-    'drugvfood';
-    'drugvfood';
-    'drugvfood';
+    'food';
+    'drugs';
+    'neutral';
+
+    'food';
+    'drugs';
+    'neutral';
+
+    'food';
+    'food';
+    'drugs';
+    'drugs';
+    'neutral';
+    'neutral';
+  
     'want';
     'want';
-    'want'};
+    'want';
+    
+    'food';
+    'food';
+    'drugs';
+    'drugs';
+    'neutral';
+    'neutral'};
 
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -286,13 +302,92 @@ for r = 1:numel(roiNames)
         
         fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
         
+        %         switch plotErr
+        %             case 'bar'
+        %                 [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
+        %             case 'shaded'
+        %                 [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
+        %         end
         switch plotErr
             case 'bar'
-                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
+                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,[],plotToScreen,lspec);
             case 'shaded'
-                [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
+                [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,[],plotToScreen,lspec);
         end
         
+        
+        %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %  EXTRA FORMATTING HAPPENS HERE
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        YL=[-.15 .15]; % YL is ylim
+        if strcmpi(roiName,'mpfc')
+            YL=[-.2 .25]; % YL is ylim for MPFC
+        elseif strcmpi(roiName,'nacc_desai')
+            YL=[-.1 .2]; % YL is ylim
+        elseif strcmpi(roiName,'VTA')
+            YL=[-.17 .27]; % for VTA
+        elseif strcmpi(roiName,'ins_desai')
+            YL=[-.15 .25]; % YL is ylim for  Ains
+        end
+         
+        %       
+        %         
+        
+        % 
+        YT = -.5:.05:.5; % YT determines YTicks
+        
+        %%%%%%% manually change y axis here:
+        if ~notDefined('YT')
+            set(gca,'YTick',YT)
+        end
+        
+        if ~notDefined('YL')
+            ylim([YL(1) YL(2)])
+        end
+        
+        
+        %%%%%%% grayed out rectangles
+        yl = ylim;
+        
+        gxs = [5 13]; % x-axis limits for graying out
+        
+        % vertices
+        v = [t(1) yl(1);
+            t(1) yl(2);
+            gxs(1) yl(2);
+            gxs(1) yl(1);
+            gxs(2) yl(1);
+            gxs(2) yl(2);
+            t(end) yl(2);
+            t(end) yl(1)];
+        
+        
+        patch('Faces',[1:4;5:8],'Vertices',v,'FaceColor',[.7 .7 .7],'EdgeColor','none','FaceAlpha',.5)
+        
+        %%%%%%% make lines thicker
+        lw=4;
+        ch=get(gca,'Children');
+        set(ch(:),'LineWidth',lw)
+        
+        
+        % ylim and ytick
+        ylim([yl(1) yl(2)])
+        set(gca,'YTick',YT)
+        
+        % xlim and xtick
+        xlim([t(1) t(end)])
+        set(gca,'xtick',t)
+        
+        % title and legend off
+%         legend(gca,'off')
+        %     title('')
+        
+        
+        
+        print(gcf,'-dpng','-r300',savePath);
         
         fprintf('done.\n\n');
         
