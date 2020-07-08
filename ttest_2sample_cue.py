@@ -34,7 +34,7 @@ print(subjsB)
 
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
 res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
-
+print('RESULTS DIR: '+res_dir)
 out_str = ''
 #out_str = '_n35'  # suffix to add to the end of enach out file
 
