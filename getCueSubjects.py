@@ -79,7 +79,7 @@ def getsubs(task='',group='all'):
 		subjects = [subjects[i] for i in idx]
 	
 	if str(group)=='patients' or str(group)=='1':
-		idx = [i for i, x in enumerate(gi) if x == 1]
+		idx = [i for i, x in enumerate(gi) if x > 0]
 		gi = [gi[i] for i in idx]
 		subjects = [subjects[i] for i in idx]
 
