@@ -26,9 +26,9 @@ os.chdir(scripts_dir)
 
 
 from getCueSubjects import getsubs
-#subjsA,_ = getsubs('cue',1)	# patients
-subjsB,_ = getsubs('cue',0) # controls
-subjsA=['cd171130','ab171208','kk180117','rl180205','jc180212','ct180224','rm180316','cm180506','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','dr180715','md181018','lh181030','td181116','kd181119','zg181207','lm181213','wa181217','sp190209','pf190214','rc190221','kc190225','mm190226','sd190315','hh190412','ds190510','tc190628','ah190717','jj190821','rc191015','jm191125','mk191218']
+
+subjsA=['ag151024','si151120','wr151127','ja151218','wh160130','nb160221','rv160413','cm160510','tj160529','at160601','zm160627','jf160703','cg160715','rs160730','nc160905','lm160914','jb161004','rc161007','se161021','mr161024','al170316','jd170330','jw170330','tg170423','jc170501','rl170603','rf170610','mr170621','ds170728','as170730','rc170730','rt170816','vb170914','ds170915','ts170927','er171009','rl180205','jc180212','ct180224','rm180316','sh180518','rm180525','dl180602','ap180613','jj180618','dr180715','md181018','zg181207','wa181217','sp190209','pf190214','rc190221','ds190510','tc190628','jj190821','rc191015','jm191125','mk191218']
+subjsB=['cd171130','ab171208','kk180117','cm180506','lh180622','lh181030','td181116','kd181119','lm181213','kc190225','mm190226','sd190315','hh190412','ah190717']
 
 print(subjsA)
 print(subjsB)
@@ -36,7 +36,7 @@ print(subjsB)
 #res_dir = os.path.join(data_dir,'results_cue')  # directory containing glm stat files
 res_dir = os.path.join(data_dir,'results_cue_afni')  # directory containing glm stat files
 
-out_str = '_sample2'
+out_str = '_FORvEPI'
 #out_str = '_n35'  # suffix to add to the end of enach out file
 
 
