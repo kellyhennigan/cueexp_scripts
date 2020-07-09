@@ -42,7 +42,7 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 % 
 seeds = {'mpfc8mm'};
 targets = {'nacc'};
-versionStrs = {'autoclean23'};
+versionStrs = {'autoclean'};
 
 % fiber group file strings
 inDir = fullfile(dataDir,'%s','fibers',method); %s: subject
