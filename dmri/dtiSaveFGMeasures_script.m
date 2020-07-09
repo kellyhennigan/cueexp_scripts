@@ -40,9 +40,9 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 
 % 
-seeds = {'DA','DA','DA','DA'};
-targets = {'nacc','nacc','caudate','putamen'};
-versionStrs = {'belowAC_autoclean','aboveAC_autoclean','autoclean','autoclean'};
+seeds = {'mpfc8mm'};
+targets = {'nacc'};
+versionStrs = {'autoclean23'};
 
 % fiber group file strings
 inDir = fullfile(dataDir,'%s','fibers',method); %s: subject
