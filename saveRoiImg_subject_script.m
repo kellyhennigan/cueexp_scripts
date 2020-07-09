@@ -1,5 +1,5 @@
 %% quick and dirty script to plot and save out *single subject* ROI masks
-% in x,y, and z planes with a subject loop
+% on t1 underlay
 
 
 clear all
@@ -11,15 +11,16 @@ subjects={'jh160702','ph161104'};
 dataDir = p.data;
 
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
+
+% list of ROIs to plot (script will loop over these)
 roiNames = {'nacc','caudate','putamen'};
-% roiNames = {'DA'};
+
 
 figDir = p.figures_dti;
 
 t1Path = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject ID
 
 outDir = fullfile(figDir,'ROIs_subject','%s'); %s is roiName
-
 
 plane=2; % 1 for sagittal, 2 for coronal, 3 for axial view
 
