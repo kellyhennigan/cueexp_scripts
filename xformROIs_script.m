@@ -20,13 +20,13 @@ outRoiFile = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % %s is subject & roiNam
 
 refFile = fullfile(dataDir,'%s','t1.nii.gz'); % reference file - out roi will be in this space
 
-% xform_aff = fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
+xform_aff = fullfile(dataDir,'%s','t1','t12tlrc_xform_Affine.txt'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
+
+xform_invWarp = fullfile(dataDir,'%s','t1','t12tlrc_xform_InverseWarp.nii.gz'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
+
+% xform_aff = fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
 % 
-% xform_invWarp = fullfile(dataDir,'%s','t1','t12tlrc_xform_InverseWarp.nii.gz'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
-
-xform_aff = fullfile(dataDir,'%s','t1','t12mni_xform_Affine.txt'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
-
-xform_invWarp = fullfile(dataDir,'%s','t1','t12mni_xform_InverseWarp.nii.gz'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
+% xform_invWarp = fullfile(dataDir,'%s','t1','t12mni_xform_InverseWarp.nii.gz'); % acpc aligned t1 > tlrc space affine xform (estimated with ANTs)
 
 
 %% do it
