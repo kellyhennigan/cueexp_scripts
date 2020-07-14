@@ -50,6 +50,7 @@ def getsubs(task='',group='all'):
 	dti_idx = []
 	cue_sample1_idx = []
 	cue_sample2_idx = []
+	dti_mfb_idx = []
 
 	with open(subjFile) as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
@@ -68,7 +69,7 @@ def getsubs(task='',group='all'):
 				dti_idx.append(bool(int(line[5])))
 				cue_sample1_idx.append(bool(int(line[6])))
 				cue_sample2_idx.append(bool(int(line[7])))
-
+				dti_mfb_idx.append(bool(int(line[8])))
 
 	# if a task string is given, return subset of subjects for that task
 	if task=='cue': 
@@ -99,6 +100,11 @@ def getsubs(task='',group='all'):
 	
 		subjects=list(compress(subjects,cue_sample2_idx))
 		gi=list(compress(gi,cue_sample2_idx))
+
+	elif task=='dti_mfb':
+	
+		subjects=list(compress(subjects,dti_mfb_idx))
+		gi=list(compress(gi,dti_mfb_idx))
 
 
 	# if desired, return only controls or patients ids
