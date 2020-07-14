@@ -85,6 +85,11 @@ def getsubs(task='',group='all'):
 		subjects=list(compress(subjects,midi_idx))
 		gi=list(compress(gi,midi_idx))
 
+	elif task=='dti':
+	
+		subjects=list(compress(subjects,dti_idx))
+		gi=list(compress(gi,dti_idx))
+
 	elif task=='cue_sample1':
 	
 		subjects=list(compress(subjects,cue_sample1_idx))
