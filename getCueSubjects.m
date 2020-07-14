@@ -1,4 +1,4 @@
-function [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
+function [subjects,gi] = getCueSubjects2(task,group)
 % -------------------------------------------------------------------------
 % [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % usage: returns cell array with subject id strings for this experiment.
@@ -7,20 +7,18 @@ function [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % controls, 1 for patients).
 
 % INPUT: 2 optional inputs:
-%   task - string that must be either 'cue','mid', 'midi', or 'dti' or '' 
+%   task - string that must be either 'cue','mid', 'midi', or 'dti' or ''
 %         (Default is '').
 %   group - number or string specifying to return only subjects from a single group:
 %         0 or 'controls' for control subs
 %         1 or 'patients' for stimulant-dependent patients
-%         'relapsers' for patient relapsers  
+%         'relapsers' for patient relapsers
 %         'nonrelapsers' for patient nonrelapsers
 %
 % OUTPUT:
 %   subjects - cell array of subject id strings for this experiment
 %   gi(optional) - if desired, this returns a vector of 0s and 1s
 %   indicating the group of the corresponding subject
-%   notes - cell array of strings with notes on subjects
-%   exc_subj_notes - cell array showing subjects excluded and notes as to why
 
 % notes:
 %
@@ -41,41 +39,29 @@ if notDefined('group')
 end
 
 % get subjects_list directory
-subjListDir = fullfile(getCueBaseDir,'data','subjects_list');
+subjListFileName = fullfile(getCueBaseDir,'data','subjects_list','subjects_list.csv');
 
-% filename that contains a list of subjects and a group index number
-subject_filename = fullfile(subjListDir,'subjects');
-
-fileID = fopen(subject_filename,'r');
-d = textscan(fileID, '%s%s\n', 'Delimiter', ',', 'HeaderLines' ,1, 'ReturnOnError', false);
-fclose(fileID);
+T=readtable(subjListFileName);
 
 
 % define subject id cell array & vector of corresponding group indices
-subjects = d{1};
-gi=str2num(cellfun(@(x) x(1), d{2}));
-notes = d{2};
+subjects = table2array(T(:,1));
+gi=table2array(T(:,2));
 
-% if task is defined, remove subjects to be excluded based on
-% omit_subs_[task] file and get notes as to why they are being excluded
-if isempty(task)
-    exc_subj_notes = [];
+
+% if task is defined, return only good subjects for that task
+if ~isempty(task)
     
-else
-    omit_subs_filename = fullfile(subjListDir, ['omit_subs_' task]);
+    taskindex = find(strcmpi(task,T.Properties.VariableNames));
     
-    fileID = fopen(omit_subs_filename,'r');
-    d = textscan(fileID, '%s%s%s\n', 'Delimiter', ',', 'HeaderLines' ,1, 'ReturnOnError', false);
-    fclose(fileID);
-    
-    % get subj ids and notes for subjects to be excluded
-    exc_subs = d{1};
-    exc_subj_notes=[d{1} d{2}];
-    
-    for i=1:numel(exc_subs)
-        gi(strcmp(subjects,exc_subs{i}))=[];
-        notes(strcmp(subjects,exc_subs{i}))=[];
-        subjects(strcmp(subjects,exc_subs{i}))=[];
+    if isempty(taskindex)
+        
+        fprintf(['\ntask name ' task ' not recognized;\n returning all subjects...\n'])
+        
+    else
+        
+        subjects(table2array(T(:,taskindex))==0)=[];
+        gi(table2array(T(:,taskindex))==0)=[];
     end
     
 end
@@ -87,38 +73,33 @@ if ~isempty(group)
     % return controls
     if strcmpi(group,'controls') || isequal(group,0)
         subjects = subjects(gi==0);
-        notes = notes(gi==0);
         gi = gi(gi==0);
         
-        % return patients
+        % return patients (return both VA and epiphany patients)
     elseif strcmpi(group,'patients') || isequal(group,1)
         subjects = subjects(gi>0);
-        notes = notes(gi>0);
         gi = gi(gi>0);
         
-    % return patients with complete followup data (or confirmed relapse before then) 
-    elseif strcmpi(group,'patients_complete') 
+        % return patients with complete followup data (or confirmed relapse before then)
+    elseif strcmpi(group,'patients_complete')
         ri=getCueData(subjects,'relapse');
         obs=getCueData(subjects,'observedtime');
         idx=find(ri==1 | obs>150); % either relapsed or followed up for >5 months
-        subjects = subjects(idx); 
-        notes = notes(idx);
+        subjects = subjects(idx);
         gi = gi(idx);
-   
+        
         % return patients with at least 3 months followup data (or confirmed relapse before then)
-    elseif strcmpi(group,'patients_3months') 
+    elseif strcmpi(group,'patients_3months')
         ri=getCueData(subjects,'relapse');
         obs=getCueData(subjects,'observedtime');
         idx=find(ri==1 | obs>=90); % either relapsed or followed up for >=3 months
         subjects = subjects(idx);
-        notes = notes(idx);
         gi = gi(idx);
         
         % return relapsers
     elseif strcmpi(group,'relapsers')
         ri=getCueData(subjects,'relapse');
         subjects = subjects(ri==1);
-        notes = notes(ri==1);
         gi = gi(ri==1);
         
         
@@ -126,14 +107,12 @@ if ~isempty(group)
     elseif strcmpi(group,'nonrelapsers')
         ri=getCueData(subjects,'relapse');
         subjects = subjects(ri==0);
-        notes = notes(ri==0);
         gi = gi(ri==0);
         
         % return those who relapsed within 3 mos
     elseif any(strcmpi(group,{'relapsers_3months','relapse_3months'}))
         ri=getCueData(subjects,'relapse_3months');
         subjects = subjects(ri==1);
-        notes = notes(ri==1);
         gi = gi(ri==1);
         
         
@@ -141,14 +120,12 @@ if ~isempty(group)
     elseif any(strcmpi(group,{'nonrelapsers_3months','nonrelapse_3months'}))
         ri=getCueData(subjects,'relapse_3months');
         subjects = subjects(ri==0);
-        notes = notes(ri==0);
         gi = gi(ri==0);
         
-             % return those who relapsed within 4 mos
+        % return those who relapsed within 4 mos
     elseif any(strcmpi(group,{'relapsers_4months','relapse_4months'}))
         ri=getCueData(subjects,'relapse_4months');
         subjects = subjects(ri==1);
-        notes = notes(ri==1);
         gi = gi(ri==1);
         
         
@@ -156,14 +133,12 @@ if ~isempty(group)
     elseif any(strcmpi(group,{'nonrelapsers_4months','nonrelapse_4months'}))
         ri=getCueData(subjects,'relapse_4months');
         subjects = subjects(ri==0);
-        notes = notes(ri==0);
         gi = gi(ri==0);
-       
+        
         % return those who relapsed within 6 mos
     elseif any(strcmpi(group,{'relapsers_6months','relapse_6months'}))
         ri=getCueData(subjects,'relapse_6months');
         subjects = subjects(ri==1);
-        notes = notes(ri==1);
         gi = gi(ri==1);
         
         
@@ -171,14 +146,12 @@ if ~isempty(group)
     elseif any(strcmpi(group,{'nonrelapsers_6months','nonrelapse_6months'}))
         ri=getCueData(subjects,'relapse_6months');
         subjects = subjects(ri==0);
-        notes = notes(ri==0);
         gi = gi(ri==0);
- 
-     % return those who relapsed within 8 mos
+        
+        % return those who relapsed within 8 mos
     elseif any(strcmpi(group,{'relapsers_8months','relapse_8months'}))
         ri=getCueData(subjects,'relapse_8months');
         subjects = subjects(ri==1);
-        notes = notes(ri==1);
         gi = gi(ri==1);
         
         
@@ -186,206 +159,21 @@ if ~isempty(group)
     elseif any(strcmpi(group,{'nonrelapsers_8months','nonrelapse_8months'}))
         ri=getCueData(subjects,'relapse_8months');
         subjects = subjects(ri==0);
-        notes = notes(ri==0);
         gi = gi(ri==0);
-      
         
-        % return only 1st sample of patients
-    elseif strcmpi(group,'patients_sample1')
-        subjects = subjects(gi>0);
-        notes = notes(gi>0);
-        gi = gi(gi>0);
-        idx=find(strcmp(subjects,'cd171130'));
-        subjects(idx:end)=[];
-        notes(idx:end)=[];
-        gi(idx:end)=[];
         
-     % return only 2nd sample of patients
-    elseif strcmpi(group,'patients_sample2') 
-        subjects = subjects(gi>0);
-        notes = notes(gi>0);
-        gi = gi(gi>0);
-        idx=find(strcmp(subjects,'cd171130'));
-        subjects=subjects(idx:end);
-        notes=notes(idx:end);
-        gi=gi(idx:end);
-     
-            % return only 1st sample of patients
+        % return only VA patients
     elseif strcmpi(group,'patients_for')
         subjects = subjects(gi==1);
-        notes = notes(gi==1);
         gi = gi(gi==1);
         
-     % return only 2nd sample of patients
-    elseif strcmpi(group,'patients_epiphany') 
+        
+        % return only epiphany patients
+    elseif strcmpi(group,'patients_epiphany')
         subjects = subjects(gi==2);
-        notes = notes(gi==2);
         gi = gi(gi==2);
-      
         
         
-      % return those who relapsed within 3 mos in sample 1
-    elseif any(strcmpi(group,{'relapsers_3months_sample1','relapse_3months_sample1'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return those who did not relapse within 3 mos in sample 1
-    elseif any(strcmpi(group,{'nonrelapsers_3months_sample1','nonrelapse_3months_sample1'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
-    
-            % return those who relapsed within 6 mos in sample 1
-    elseif any(strcmpi(group,{'relapsers_6months_sample1','relapse_6months_sample1'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return those who did not relapse within 6 mos in sample 1
-    elseif any(strcmpi(group,{'nonrelapsers_6months_sample1','nonrelapse_6months_sample1'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample1');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
- 
-      
-        % return those who relapsed within 3 mos in sample 2
-    elseif any(strcmpi(group,{'relapsers_3months_sample2','relapse_3months_sample2'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-       
-        % return those who did not relapse within 3 mos in sample 2
-    elseif any(strcmpi(group,{'nonrelapsers_3months_sample2','nonrelapse_3months_sample2'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
-        
-        
-        % return those who relapsed within 6 mos in sample 2
-    elseif any(strcmpi(group,{'relapsers_6months_sample2','relapse_6months_sample2'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-       
-        % return those who did not relapse within 6 mos in sample 2
-    elseif any(strcmpi(group,{'nonrelapsers_6months_sample2','nonrelapse_6months_sample2'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_sample2');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
-        
-   
-        %% 
-        
-            
-      % return FOR patients who relapsed within 3 mos 
-    elseif any(strcmpi(group,{'relapsers_3months_for','relapse_3months_for'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return FOR patients who did not relapse within 3 mos 
-    elseif any(strcmpi(group,{'nonrelapsers_3months_for','nonrelapse_3months_for'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
-    
-            % return FOR patients who relapsed within 6 mos 
-    elseif any(strcmpi(group,{'relapsers_6months_for','relapse_6months_for'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return FOR patients who did not relapse within 6 mos 
-    elseif any(strcmpi(group,{'nonrelapsers_6months_for','nonrelapse_6months_for'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_for');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
- 
-        %%
-        
-            % return epiphany patients who relapsed within 3 mos 
-    elseif any(strcmpi(group,{'relapsers_3months_epiphany','relapse_3months_epiphany'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return epiphany patients who did not relapse within 3 mos 
-    elseif any(strcmpi(group,{'nonrelapsers_3months_epiphany','nonrelapse_3months_epiphany'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
-        ri=getCueData(subjects,'relapse_3months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
-    
-            % return epiphany patients who relapsed within 6 mos 
-    elseif any(strcmpi(group,{'relapsers_6months_epiphany','relapse_6months_epiphany'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==1);
-        notes = notes(ri==1);
-        gi = gi(ri==1);
-        
-        
-        % return epiphany patients who did not relapse within 6 mos 
-    elseif any(strcmpi(group,{'nonrelapsers_6months_epiphany','nonrelapse_6months_epiphany'}))
-        [subjects,gi,notes]=getCueSubjects(task,'patients_epiphany');
-        ri=getCueData(subjects,'relapse_6months');
-        subjects = subjects(ri==0);
-        notes = notes(ri==0);
-        gi = gi(ri==0);
- 
-        %%
-        
-        
-        % return the first 15 to have relapsed
-%     elseif any(strcmpi(group,{'early_relapse','early_relapsers'}))
-%         ri=getCueData(subjects,'early_relapsers');
-%         subjects = subjects(ri==1);
-%         notes = notes(ri==1);
-%         gi = gi(ri==1);
-%         
-%     elseif any(strcmpi(group,{'early_abstainers'}))
-%         ri=getCueData(subjects,'early_relapsers');
-%         subjects = subjects(ri==0);
-%         notes = notes(ri==0);
-%         gi = gi(ri==0);
-%         
     end  % group
     
 end % if ~isempty(group)

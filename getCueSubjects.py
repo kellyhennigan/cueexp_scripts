@@ -9,8 +9,8 @@
 # (0 for controls, 1 for patients). Alternatively, do subjsA,_ = getsubs(0)	to return just 
 # control subjects, or: subjsB,_ = getsubs(1) for just patients.   
 
-import os,sys,socket
-
+import os,sys,socket,csv
+from itertools import compress
 
 #########  get main data directory and subjects to process	
 def getMainDir():
@@ -29,47 +29,71 @@ def getMainDir():
 
 def getsubs(task='',group='all'):
 
-
-	# define subjects and gi lists
-	subjects = [] # list of subject ids
-	gi = []			# list of corresponding group indices
-
 	main_dir=getMainDir()
 
 	# data directory
 	data_dir=main_dir+'/data'
-	print 'data_dir:'+data_dir
+	#print 'data_dir:'+data_dir
 
 	# define path to subject file
-	subjFile = os.path.join(data_dir,'subjects_list','subjects')
+	subjFile = os.path.join(data_dir,'subjects_list','subjects_list.csv')
 	
-	with open(subjFile, 'r') as f:
-		next(f) # omit header line
-		for line in f:	
-			subjects.append(line[0:line.find(',')])
-			gi.append(line[line.find(',')+1:line.find(',')+3])
-				
-	
-	# if a task string is given, return subset of subjects for that task
-	if task: 
 
-		omit_subs = [] # list of subjects to omit specific to this task
+	## define variables to pull out of csv file
+	subjects = [] # list of subject ids
+	gi = []		  # list of corresponding group indices
 		
-		omitSubjsFile = os.path.join(data_dir,'subjects_list','omit_subs_'+task)
-	
-		with open(omitSubjsFile, 'r') as f:
-			next(f) # omit header line
-			for line in f:	
-				omit_subs.append(line[0:line.find(',')])
-			
-		for omit_sub in omit_subs:
-			if omit_sub in subjects:
-				gi.pop(subjects.index(omit_sub))
-				subjects.remove(omit_sub)
-	
+	# these will be indices of which subjects to keep for each task	
+	cue_idx = []
+	mid_idx = []
+	midi_idx = []
+	dti_idx = []
+	cue_sample1_idx = []
+	cue_sample2_idx = []
 
-	# make group indices integers
-	gi = map(int,gi)		
+	with open(subjFile) as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		line_count = 0
+		for line in csv_reader:
+			if line_count == 0:
+				colnames=line
+				#print(colnames)
+				line_count += 1
+			else:
+				subjects.append(line[0])
+				gi.append(int(line[1]))
+				cue_idx.append(bool(int(line[2])))
+				mid_idx.append(bool(int(line[3])))
+				midi_idx.append(bool(int(line[4])))
+				dti_idx.append(bool(int(line[5])))
+				cue_sample1_idx.append(bool(int(line[6])))
+				cue_sample2_idx.append(bool(int(line[7])))
+
+
+	# if a task string is given, return subset of subjects for that task
+	if task=='cue': 
+		subjects=list(compress(subjects,cue_idx))
+		gi=list(compress(gi,cue_idx))
+
+	elif task=='mid':
+	
+		subjects=list(compress(subjects,mid_idx))
+		gi=list(compress(gi,mid_idx))
+
+	elif task=='midi':
+	
+		subjects=list(compress(subjects,midi_idx))
+		gi=list(compress(gi,midi_idx))
+
+	elif task=='cue_sample1':
+	
+		subjects=list(compress(subjects,cue_sample1_idx))
+		gi=list(compress(gi,cue_sample1_idx))
+
+	elif task=='cue_sample2':
+	
+		subjects=list(compress(subjects,cue_sample2_idx))
+		gi=list(compress(gi,cue_sample2_idx))
 
 
 	# if desired, return only controls or patients ids
@@ -84,51 +108,50 @@ def getsubs(task='',group='all'):
 		subjects = [subjects[i] for i in idx]
 
 
-
 	# return subjects and gi
 	return subjects, gi
 
 
-def getsubs_claudia(task=''):
+# def getsubs_claudia(task=''):
 
-	# define subjects and gi lists
-	subjects = [] # list of subject ids
-	gi = []			# list of corresponding group indices
+# 	# define subjects and gi lists
+# 	subjects = [] # list of subject ids
+# 	gi = []			# list of corresponding group indices
 
-	# define path to subject file
-	subjFile = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data','subjects_list','subjects')
+# 	# define path to subject file
+# 	subjFile = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data','subjects_list','subjects')
 	
-	with open(subjFile, 'r') as f:
-		next(f) # omit header line
-		for line in f:	
-			subjects.append(line[0:line.find(',')])
-			gi.append(line[line.find(',')+1:line.find(',')+3])
+# 	with open(subjFile, 'r') as f:
+# 		next(f) # omit header line
+# 		for line in f:	
+# 			subjects.append(line[0:line.find(',')])
+# 			gi.append(line[line.find(',')+1:line.find(',')+3])
 				
 	
-	# if a task string is given, return subset of subjects for that task
-	if task: 
+# 	# if a task string is given, return subset of subjects for that task
+# 	if task: 
 
-		omit_subs = [] # list of subjects to omit specific to this task
+# 		omit_subs = [] # list of subjects to omit specific to this task
 		
-		omitSubjsFile = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data','subjects_list','omit_subs_'+task)
+# 		omitSubjsFile = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data','subjects_list','omit_subs_'+task)
 	
-		with open(omitSubjsFile, 'r') as f:
-			next(f) # omit header line
-			for line in f:	
-				omit_subs.append(line[0:line.find(',')])
+# 		with open(omitSubjsFile, 'r') as f:
+# 			next(f) # omit header line
+# 			for line in f:	
+# 				omit_subs.append(line[0:line.find(',')])
 			
-		for omit_sub in omit_subs:
-			if omit_sub in subjects:
-				gi.pop(subjects.index(omit_sub))
-				subjects.remove(omit_sub)
+# 		for omit_sub in omit_subs:
+# 			if omit_sub in subjects:
+# 				gi.pop(subjects.index(omit_sub))
+# 				subjects.remove(omit_sub)
 	
 
-	# make group indices integers
-	gi = map(int,gi)		
+# 	# make group indices integers
+# 	gi = map(int,gi)		
 
 
-	# return subjects and gi
-	return subjects, gi
+# 	# return subjects and gi
+# 	return subjects, gi
 
 
 

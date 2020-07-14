@@ -12,7 +12,7 @@ figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 % dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200707.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200710.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
@@ -49,7 +49,7 @@ vars = T.Properties.VariableNames;
 a={};
 tB=[];
 
-for i=9:numel(vars)
+for i=10:numel(vars)
      i
 %     modelspec = ['relapse ~ ' vars{i}];
     modelspec = [Y ' ~ ' vars{i}];
@@ -69,7 +69,7 @@ a = a(ti)'; a
 a={};
 tB=[];
 
-for i=9:numel(vars)
+for i=10:numel(vars)
     i
     %     modelspec = ['relapse ~ ' vars{i}];
     if ~strcmp(vars(i),'nacc_drugs_beta')
