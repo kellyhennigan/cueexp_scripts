@@ -30,7 +30,7 @@ infile = 'CSD8.mif'					# tensor or CSD file
 alg = 'iFOD2'						# will do iFOD2 by default
 gradfile = 'b_file' 				# b-gradient encoding file in mrtrix format
 #maskfile = 'brainMask.nii.gz' 		# this should be included
-maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
+maskfile = 'wm_mask_dil4.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
@@ -44,7 +44,9 @@ targetStrs = ['nacc']
 excPath = ''
 #excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
 
-LR = ['L','R'] # 'L' for left and/or 'R' for right
+#LR = ['L','R'] # 'L' for left and/or 'R' for right
+LR = ['R'] # 'L' for left and/or 'R' for right
+
 
 # fiber tracking options; leave blank or comment out to use defaults:
 number = '1000'						# number of tracks to produce
