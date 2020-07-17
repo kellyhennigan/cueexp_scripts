@@ -92,7 +92,7 @@ if [ "$gett1w" != "0" ]; then
 
 	# check how many files there are: 
 	scanStr='T1w .9mm BRAVO'
-	outFilePath='t1w_raw.nii.gz'
+	outFilePath='t1_raw.nii.gz'
 	
 	# cmd="fw ls \"knutson/cuefmri/${cniID}\" --ids | grep '${scanStr}' | wc -l"
 	cmd="fw ls \"knutson/cuefmri/ex${cniID}/${cniID}\" --ids | grep '${scanStr}' | wc -l"
