@@ -70,7 +70,12 @@ if isempty(subjects)
 else
     subjects = splitstring(subjects)';
     for i=1:numel(subjects)
-        gi(i,1) = task_gi(ismember(task_subjects,subjects{i}));
+        subj_gi=task_gi(ismember(task_subjects,subjects{i}));
+        if isempty(subj_gi)
+            gi(i,1) = nan;
+        else
+            gi(i,1) = subj_gi;
+        end
     end
 end
 
