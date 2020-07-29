@@ -109,8 +109,8 @@ clear all
 close all
 
 [p,task,subjects,gi]=whichCueSubjects('stim','');
-clear subjects
-subjects = {'ds190510','tc190628','ah190717','jj190821','rc191015','jm191125','mk191218'}; % additional SUD patients
+% clear subjects
+% subjects = {'ds190510','tc190628','ah190717','jj190821','rc191015','jm191125','mk191218'}; % additional SUD patients
 dataDir = p.data;
 
 % path to freesurfer segmentation file; %s is subject id
@@ -121,28 +121,28 @@ segFilePath = fullfile(dataDir,'%s','t1','aparc+a2009s+seg.nii.gz');  % subject'
 outDir = fullfile(dataDir,'%s','ROIs');
 
 % roiNames & corresponding labels
-% roiNames = {'nacc';
-%     'caudate';
-%     'putamen'};
+roiNames = {'nacc';
+    'caudate';
+    'putamen'};
 
 % corresponding labels for left and right hemispheres
-% labels = {26,58;
-%     11,50;
-%     12,51}; 
+labels = {26,58;
+    11,50;
+    12,51}; 
 
 
 % roiNames & corresponding labels
-roiNames = {'ains';
-            'sgins'};
-        %'amygdala'};
-        
-roiNames_comb = 'asgins';
+% roiNames = {'ains';
+%             'sgins'};
+%         %'amygdala'};
+%         
+% roiNames_comb = 'asgins';
 
 % corresponding labels for left and right hemispheres
-labels = {11148,12148;
-          11118,12118};
-          18,54}; 
-
+% labels = {11148,12148;
+%           11118,12118};
+%           18,54}; 
+% 
 
 
 %% Get to it
@@ -186,28 +186,28 @@ for i = 1:length(subjects)          % subject loop
     end % rois
     
     
-     %  now combine ains & sgins and save out
-            
-        %  left ROI
-        roi_comb_L = createNewNii(seg,[thisOutDir '/' roiNames_comb 'L']);
-        roi_comb_L.data(seg.data == labels{1,1} | seg.data == labels{2,1} )=1; roi_comb_L.data = single(roi_comb_L.data);
-        writeFileNifti(roi_comb_L);
-        roiNiftiToMat(roi_comb_L,1);
-        
-        %  right ROI
-        roi_comb_R = createNewNii(seg,[thisOutDir '/' roiNames_comb 'R']);
-        roi_comb_R.data(seg.data == labels{1,2} | seg.data == labels{2,2} )=1; roi_comb_R.data = single(roi_comb_R.data);
-        writeFileNifti(roi_comb_R);
-        roiNiftiToMat(roi_comb_R,1);
-        
-        %  now combine L & R and save out
-        roi_comb = createNewNii(seg,[thisOutDir '/' roiNames_comb ]);
-        roi_comb.data = roi_comb_L.data+roi_comb_R.data;
-        if any(roi_comb.data(:)>1)
-            error(['hold up - L and R ' roiNames_comb{k} ' have overlappling voxels, which shouldn''t happen...'])
-        end
-        writeFileNifti(roi_comb);
-        
+%      %  now combine ains & sgins and save out
+%             
+%         %  left ROI
+%         roi_comb_L = createNewNii(seg,[thisOutDir '/' roiNames_comb 'L']);
+%         roi_comb_L.data(seg.data == labels{1,1} | seg.data == labels{2,1} )=1; roi_comb_L.data = single(roi_comb_L.data);
+%         writeFileNifti(roi_comb_L);
+%         roiNiftiToMat(roi_comb_L,1);
+%         
+%         %  right ROI
+%         roi_comb_R = createNewNii(seg,[thisOutDir '/' roiNames_comb 'R']);
+%         roi_comb_R.data(seg.data == labels{1,2} | seg.data == labels{2,2} )=1; roi_comb_R.data = single(roi_comb_R.data);
+%         writeFileNifti(roi_comb_R);
+%         roiNiftiToMat(roi_comb_R,1);
+%         
+%         %  now combine L & R and save out
+%         roi_comb = createNewNii(seg,[thisOutDir '/' roiNames_comb ]);
+%         roi_comb.data = roi_comb_L.data+roi_comb_R.data;
+%         if any(roi_comb.data(:)>1)
+%             error(['hold up - L and R ' roiNames_comb{k} ' have overlappling voxels, which shouldn''t happen...'])
+%         end
+%         writeFileNifti(roi_comb);
+%         
 
      fprintf(['done with subject ' subject '.\n\n']);
     
