@@ -45,7 +45,7 @@ excPath = ''
 #excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
 
 #LR = ['L','R'] # 'L' for left and/or 'R' for right
-LR = ['L'] # 'L' for left and/or 'R' for right
+LR = ['R'] # 'L' for left and/or 'R' for right
 
 
 # fiber tracking options; leave blank or comment out to use defaults:
