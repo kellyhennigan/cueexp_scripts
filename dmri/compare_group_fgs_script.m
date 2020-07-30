@@ -33,16 +33,16 @@ method = 'mrtrix_fa';
 
 % targets={'nacc'};
 % 
-fgMatStrs = {'DALR_%sLR_belowAC_autoclean'};
+fgMatStrs = {'mpfc8mmLR_%sLR_autoclean23'};
 
 targets={'nacc'};
 
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
-%  covars={'age','dwimotion'};
+ covars={'age','dwimotion'};
 % covars={'age','dwimotion','bis'};
-covars={};
+% covars={};
 
 % corresponding labels for saving out
 fgMatLabels = strrep(fgMatStrs,'_autoclean','');
@@ -68,10 +68,10 @@ cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % 
 
 omit_subs = {''};
 
-% fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
-fgMPlots={'FA'};
+fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
+% fgMPlots={'AD'};
 
-doStats=0;
+doStats=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -218,7 +218,7 @@ for j=1:numel(fgMatStrs)
         plot([26 26],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
         plot([75 75],[yl(1) yl(2)],'--','color',[.3 .3 .3],'linewidth',2)
         ylim(yl)
-        legend HIDE
+%         legend HIDE
         print(gcf,'-dpng','-r300',savePath);
         
     end % fg measures (fgMPlots)
