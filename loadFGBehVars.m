@@ -21,7 +21,7 @@ function [fgMeasures,fgMLabels,scores,subjects,gi,SuperFibers] = ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-
+nargout
 
 % set omit_subs to be an empty cell array if not given
 if notDefined('omit_subs')
@@ -51,10 +51,17 @@ load(fgMFile);
     % lr
     % nNodes
     % seed
-    % subjecrts
+    % subjects
     % SuperFibers
     % target
 
+    % for some .mat files, they don't have the gi variable. If that's the
+    % case, make a vector of nans with numel= to numel(subjects)
+    if notDefined('gi')
+        gi=nan(numel(subjects),1);
+    end
+    
+    
 %% define a "keep index" of desired subjects to return data for
 
 keep_idx = ones(numel(subjects),1);
