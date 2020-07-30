@@ -316,26 +316,26 @@ Tdti = array2table(fgms,'VariableNames',fgNames);
       
 
 %% get voxel counts for ROIs 
-
-% first, run: saveOutRoiNVoxels_script.m to save out voxel counts into a
-% table array 
-
-inPath=fullfile(dataDir,'q_demo_data','nroivoxels.csv');
-Tnvox=readtable(inPath);
-
-if strcmp(group,'controls')
-    Tnvox(Tnvox.gi>0,:)=[];
-elseif strcmp(group,'patients')
-    Tnvox(Tnvox.gi==0,:)=[];
-end
-
-if ~isequal(subjects,Tnvox.subjid)
-    error('hold up - the subject ids for the roi voxel counts dont match up with the subject list');
-end
-
-% take out the subject ids and group index variables
-Tnvox(:,1:2)=[];
-
+% 
+% % first, run: saveOutRoiNVoxels_script.m to save out voxel counts into a
+% % table array 
+% 
+% inPath=fullfile(dataDir,'q_demo_data','nroivoxels.csv');
+% Tnvox=readtable(inPath);
+% 
+% if strcmp(group,'controls')
+%     Tnvox(Tnvox.gi>0,:)=[];
+% elseif strcmp(group,'patients')
+%     Tnvox(Tnvox.gi==0,:)=[];
+% end
+% 
+% if ~isequal(subjects,Tnvox.subjid)
+%     error('hold up - the subject ids for the roi voxel counts dont match up with the subject list');
+% end
+% 
+% % take out the subject ids and group index variables
+% Tnvox(:,1:2)=[];
+% 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -350,8 +350,9 @@ Tgroupindex=table(gi);
 
 % concatenate all data into 1 table
 T=table();
-T = [Tsubj Tgroupindex Tvars Tbrain Tdti Tnvox];
+% T = [Tsubj Tgroupindex Tvars Tbrain Tdti Tnvox];
 
+T = [Tsubj Tgroupindex Tvars Tbrain Tdti];
 % T = [Tsubj Tgroupindex Tvars Tdti Tcontrollingagemotion];
 
 % save out
