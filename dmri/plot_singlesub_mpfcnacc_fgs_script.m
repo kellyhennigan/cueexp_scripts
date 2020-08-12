@@ -71,7 +71,7 @@ for i = 1:numel(subjects)
     
     sh=AFQ_RenderFibers(fg{1,1},'color',cols{1},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'plottoscreen',plotToScreen);
     delete(sh); % delete light object (for some reason this needs to be deleted from the first FG plotted to look good...
-    sh=AFQ_RenderFibers(fg{j,2},'color',cols{j},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'newfig',0);
+    sh=AFQ_RenderFibers(fg{1,2},'color',cols{1},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'newfig',0);
    
     fig = gcf;
     pos=get(fig,'position');
