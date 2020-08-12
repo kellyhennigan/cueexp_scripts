@@ -40,7 +40,7 @@ targets={'nacc'};
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
- covars={'age','dwimotion'};
+ covars={'age','dwimotion','gender'};
 % covars={'age','dwimotion','bis'};
 % covars={};
 
@@ -49,7 +49,7 @@ fgMatLabels = strrep(fgMatStrs,'_autoclean','');
 
 % % plot groups
 group = {'controls','patients'};
-groupStr = '_bygroup';
+groupStr = '_bydiagnosis';
 lspec = {'-','--'};
 % 
 % group = {'controls'};
@@ -68,7 +68,7 @@ cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % 
 
 omit_subs = {''};
 
-fgMPlots = {'FA','MD','RD','AD'}; % fg measure to plot as values along pathway node
+fgMPlots = {'FA','MD'}; % fg measure to plot as values along pathway node
 % fgMPlots={'AD'};
 
 doStats=1;
@@ -174,7 +174,7 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-                xlab = 'tract node location (midbrain to striatum)';
+                xlab = 'tract node location (mpfc to nacc)';
         
         ylab = fgMPlot;
 
