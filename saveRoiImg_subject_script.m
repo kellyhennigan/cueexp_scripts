@@ -7,14 +7,15 @@ close all
 
 % [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p=getCuePaths;
-subjects={'jh160702','ph161104'};
+% subjects={'jh160702','ph161104'};
+subjects = getCueSubjects('dti');
 dataDir = p.data;
 
-roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % directory with tlrc space ROIs
+roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % filepath to ROI file(s); %s is roi name
 
 % list of ROIs to plot (script will loop over these)
-roiNames = {'nacc','caudate','putamen'};
-
+% roiNames = {'nacc','caudate','putamen'};
+roiNames = {'mpfc8mmL'};
 
 figDir = p.figures_dti;
 
@@ -22,10 +23,10 @@ t1Path = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject ID
 
 outDir = fullfile(figDir,'ROIs_subject','%s'); %s is roiName
 
-plane=2; % 1 for sagittal, 2 for coronal, 3 for axial view
+plane=1; % 1 for sagittal, 2 for coronal, 3 for axial view
 
-col = [1 0 0]; % color for ROI mask
-
+% col = [1 1 0]; % color for ROI mask
+col=[238,178,35]./255;
 
 %% do it
 i=1
