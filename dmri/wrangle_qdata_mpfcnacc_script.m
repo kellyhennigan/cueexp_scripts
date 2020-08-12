@@ -18,7 +18,7 @@ group='';
 
 % filepath for saving out table of variables
 outDir=fullfile(dataDir,'q_demo_data');
-outPath = fullfile(outDir,['data_' group '_' datestr(now,'yymmdd') '.csv']);
+outPath = fullfile(outDir,['data_mpfcnacc_' group '_' datestr(now,'yymmdd') '.csv']);
 
 omit_subs={};
 
