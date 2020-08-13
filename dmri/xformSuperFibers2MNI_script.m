@@ -11,7 +11,7 @@ task='dti';
 dataDir = p.data;
 
 
-group='controls';
+group='';
 
 method = 'mrtrix_fa';
 
