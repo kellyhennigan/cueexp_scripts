@@ -1,4 +1,4 @@
-function [subjects,gi] = getCueSubjects2(task,group)
+function [subjects,gi] = getCueSubjects(task,group)
 % -------------------------------------------------------------------------
 % [subjects,gi,notes,exc_subj_notes] = getCueSubjects(task,group)
 % usage: returns cell array with subject id strings for this experiment.

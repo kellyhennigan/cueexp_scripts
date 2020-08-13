@@ -17,14 +17,16 @@ method = 'mrtrix_fa';
 
 fgMDir = fullfile(dataDir,'fgMeasures',method);
 
-fgMNames = {'DAL_naccL_belowAC_autoclean';
-    'DAR_naccR_belowAC_autoclean';
-    'DAL_naccL_aboveAC_autoclean';
-    'DAR_naccR_aboveAC_autoclean';
-    'DAL_caudateL_autoclean';
-    'DAR_caudateR_autoclean';
-    'DAL_putamenL_autoclean';
-    'DAR_putamenR_autoclean'};
+% fgMNames = {'DAL_naccL_belowAC_autoclean';
+%     'DAR_naccR_belowAC_autoclean';
+%     'DAL_naccL_aboveAC_autoclean';
+%     'DAR_naccR_aboveAC_autoclean';
+%     'DAL_caudateL_autoclean';
+%     'DAR_caudateR_autoclean';
+%     'DAL_putamenL_autoclean';
+%     'DAR_putamenR_autoclean'};
+fgMNames = {'mpfc8mmL_naccL_autoclean23';
+    'mpfc8mmR_naccR_autoclean23'};
 
     
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
