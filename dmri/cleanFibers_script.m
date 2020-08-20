@@ -24,7 +24,7 @@ dataDir = p.data;
 mainfigDir=p.figures_dti;
 
 % seed = 'DA';  % define seed roi
-seed = 'mpfc8mm';
+seed = 'PVT';
 
 % targets=input('target name(s): ','s');
 % targets=splitstring(targets);
