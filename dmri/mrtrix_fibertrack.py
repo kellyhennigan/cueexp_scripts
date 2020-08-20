@@ -34,8 +34,8 @@ maskfile = 'wm_mask_dil4.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
-seedStr = 'mpfc8mm'						# if false, will use the mask as seed ROI by default
-#seedStr = 'nacc'					# if false, will use the mask as seed ROI by default
+#seedStr = 'mpfc8mm'						# if false, will use the mask as seed ROI by default
+seedStr = 'PVT'					# if false, will use the mask as seed ROI by default
 #seedStr = 'DA'
 
 #targetStrs = ['caudate','putamen','nacc']		# can be many or none; if not defined, fibers will just be tracked from the seed ROI
@@ -44,8 +44,8 @@ targetStrs = ['nacc']
 excPath = ''
 #excPath = '/home/hennigan/cueexp/data/ROIs/ACabove_mask.nii.gz'
 
-#LR = ['L','R'] # 'L' for left and/or 'R' for right
-LR = ['L'] # 'L' for left and/or 'R' for right
+LR = ['L','R'] # 'L' for left and/or 'R' for right
+#LR = ['L'] # 'L' for left and/or 'R' for right
 
 
 # fiber tracking options; leave blank or comment out to use defaults:

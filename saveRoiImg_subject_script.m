@@ -7,16 +7,16 @@ close all
 
 % [p,task,subjects,gi]=whichCueSubjects('stim','dti');
 p=getCuePaths;
-% subjects={'jh160702','ph161104'};
-subjects = getCueSubjects('dti');
+subjects={'tm160117'};
+% subjects = getCueSubjects('dti');
 dataDir = p.data;
 
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % filepath to ROI file(s); %s is roi name
 
 % list of ROIs to plot (script will loop over these)
-% roiNames = {'nacc','caudate','putamen'};
+roiNames = {'nacc','caudate','putamen'};
 % roiNames = {'asgins','amygdala','nacc'};
-roiNames = {'mpfc8mmL'};
+% roiNames = {'mpfc8mmL'};
 
 figDir = p.figures_dti;
 

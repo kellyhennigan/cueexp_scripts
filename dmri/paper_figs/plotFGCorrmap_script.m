@@ -10,7 +10,8 @@
 clear all
 close all
 
-p=getCuePaths(); pskew=getSkew32Paths();
+p=getCuePaths(); 
+% pskew=getSkew32Paths();
 dataDir = p.data;
 
 fgStr = 'DAL_naccL_belowAC_autoclean';
