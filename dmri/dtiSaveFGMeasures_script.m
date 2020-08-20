@@ -40,7 +40,7 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 
 % 
-seeds = {'mpfc8mm'};
+seeds = {'PVT'};
 targets = {'nacc'};
 versionStrs = {'autoclean23'};
 
