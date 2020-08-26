@@ -33,14 +33,14 @@ method = 'mrtrix_fa';
 
 % targets={'nacc'};
 % 
-fgMatStrs = {'mpfc8mmLR_%sLR_autoclean23'};
+fgMatStrs = {'PVTLR_%sLR_autoclean23'};
 
 targets={'nacc'};
 
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
- covars={'age','dwimotion','gender'};
+ covars={'age','dwimotion'};
 % covars={'age','dwimotion','bis'};
 % covars={};
 
@@ -174,7 +174,7 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-                xlab = 'tract node location (mpfc to nacc)';
+                xlab = 'tract node location (PVT to nacc)';
         
         ylab = fgMPlot;
 

@@ -8,10 +8,10 @@ p = getCuePaths();
 dataDir = p.data;
 figDir = p.figures;
 
-roiName = 'left_hypothal';
+roiName = 'PVT';
 roiPath =  fullfile(dataDir,'ROIs',[roiName '.nii']);
-% t1Path = fullfile(dataDir,'templates','TT_N27.nii');
-t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
+t1Path = fullfile(dataDir,'templates','TT_N27.nii');
+% t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
 
 outDir = fullfile(figDir,'ROIs');
 if ~exist(outDir,'dir')
@@ -21,7 +21,7 @@ end
 saveViews = {'x','y','z'}; % x y z for sagittal, coronal, and axial views
 
 % col = [1 0 0]; % color for ROI mask
-col = [1 1 0]; % color for ROI mask
+col = [1 0 0]; % color for ROI mask
 
 %% do it
 
