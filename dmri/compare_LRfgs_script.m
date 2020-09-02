@@ -16,22 +16,17 @@ dataDir = p.data;
 method = 'mrtrix_fa';
 
 targets={'nacc';
-    'nacc';
-    'caudate';
-    'putamen'};
+    'nacc'};
 
-fgMatStrsL = {'DAL_%sL_belowAC_dil2_autoclean';
-    'DAL_%sL_aboveAC_dil2_autoclean';
-    'DAL_%sL_dil2_autoclean';
-    'DAL_%sL_dil2_autoclean'};
+fgMatStrsL = {'mpfc8mmL_%sL_autoclean23';
+    'PVTL_%sL_autoclean23'};
 
-fgMatStrsR = {'DAR_%sR_belowAC_dil2_autoclean';
-    'DAR_%sR_aboveAC_dil2_autoclean';
-    'DAR_%sR_dil2_autoclean';
-    'DAR_%sR_dil2_autoclean'};
+fgMatStrsR = {'mpfc8mmR_%sR_autoclean23';
+    'PVTR_%sR_autoclean23'};
 
 
-group = {'controls'};
+% group = {'controls'};
+group = {'all'}; 
 
 omit_subs={};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
