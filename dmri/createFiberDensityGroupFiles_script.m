@@ -19,7 +19,7 @@ p=getCuePaths();
 dataDir = p.data;
 
 % list of subjects to include
-subjects=getCueSubjects('dti',0);
+subjects=getCueSubjects('dti');
 % subjects = {'tm160117','jh160702'};
 
 % directory (relative to subject dir) that has fiber density files
@@ -30,126 +30,22 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 
 gspace='mni'; % tlrc or mni
 
-% script will loop over these
-% inNiiFileStrs = {
-%     'DAL_caudateL_autoclean_DAendpts_tlrc';
-%     'DAR_caudateR_autoclean_DAendpts_tlrc';
-%     'DA_caudate_autoclean_DAendpts_tlrc';
-%     'DAL_putamenL_autoclean_DAendpts_tlrc';
-%     'DAR_putamenR_autoclean_DAendpts_tlrc';
-%     'DA_putamen_autoclean_DAendpts_tlrc'
-%     };
-% inNiiFileStrs = {
-%     'DAL_naccL_belowAC_dil2_autoclean_mni';
-%     'DAR_naccR_belowAC_dil2_autoclean_mni';
-%     'DA_nacc_belowAC_dil2_autoclean_mni';
-%     'DAL_naccL_aboveAC_dil2_autoclean_mni';
-%     'DAR_naccR_aboveAC_dil2_autoclean_mni';
-%     'DA_nacc_aboveAC_dil2_autoclean_mni';
-%     'DAL_caudateL_dil2_autoclean_mni';
-%     'DAR_caudateR_dil2_autoclean_mni';
-%     'DA_caudate_dil2_autoclean_mni';
-%     'DAL_putamenL_dil2_autoclean_mni';
-%     'DAR_putamenR_dil2_autoclean_mni';
-%     'DA_putamen_dil2_autoclean_mni'
-%     };
-
-
-% inNiiFileStrs = {
-%     ['DAL_naccL_belowAC_autoclean_striatumendpts_' gspace];
-%     ['DAR_naccR_belowAC_autoclean_striatumendpts_' gspace];
-%     ['DA_nacc_belowAC_autoclean_striatumendpts_' gspace];
-%     ['DAL_naccL_aboveAC_autoclean_striatumendpts_' gspace];
-%     ['DAR_naccR_aboveAC_autoclean_striatumendpts_' gspace];
-%     ['DA_nacc_aboveAC_autoclean_striatumendpts_' gspace];
-%     ['DAL_caudateL_autoclean_striatumendpts_' gspace];
-%     ['DAR_caudateR_autoclean_striatumendpts_' gspace];
-%     ['DA_caudate_autoclean_striatumendpts_' gspace];
-%     ['DAL_putamenL_autoclean_striatumendpts_' gspace];
-%     ['DAR_putamenR_autoclean_striatumendpts_' gspace];
-%     ['DA_putamen_autoclean_striatumendpts_' gspace];
-%     };
-% 
+% script will loop over these 
 inNiiFileStrs = {
-    ['DAL_naccL_belowAC_autoclean_DAendpts_' gspace];
-    ['DAR_naccR_belowAC_autoclean_DAendpts_' gspace];
-    ['DA_nacc_belowAC_autoclean_DAendpts_' gspace];
-    ['DAL_naccL_aboveAC_autoclean_DAendpts_' gspace];
-    ['DAR_naccR_aboveAC_autoclean_DAendpts_' gspace];
-    ['DA_nacc_aboveAC_autoclean_DAendpts_' gspace];
-    ['DAL_caudateL_autoclean_DAendpts_' gspace];
-    ['DAR_caudateR_autoclean_DAendpts_' gspace];
-    ['DA_caudate_autoclean_DAendpts_' gspace];
-    ['DAL_putamenL_autoclean_DAendpts_' gspace];
-    ['DAR_putamenR_autoclean_DAendpts_' gspace];
-    ['DA_putamen_autoclean_DAendpts_' gspace];
-    };
+    ['mpfc8mmL_naccL_autoclean23_' gspace];
+    ['mpfc8mmR_naccR_autoclean23_' gspace];
+    ['mpfc8mmLR_naccLR_autoclean23_' gspace]};
 
-% inNiiFileStrs = {
-%     ['DAL_naccL_belowAC_autoclean_' gspace];
-%     ['DAR_naccR_belowAC_autoclean_' gspace];
-%     ['DA_nacc_belowAC_autoclean_' gspace];
-%     ['DAL_naccL_aboveAC_autoclean_' gspace];
-%     ['DAR_naccR_aboveAC_autoclean_' gspace];
-%     ['DA_nacc_aboveAC_autoclean_' gspace];
-%     ['DAL_caudateL_autoclean_' gspace];
-%     ['DAR_caudateR_autoclean_' gspace];
-%     ['DA_caudate_autoclean_' gspace];
-%     ['DAL_putamenL_autoclean_' gspace];
-%     ['DAR_putamenR_autoclean_' gspace];
-%     ['DA_putamen_autoclean_' gspace];
-%     };
-
-
-
-% 
-% inNiiFileStrs = {
-%     'DAL_naccL_belowAC_dil2_autoclean_mni';
-%     'DAR_naccR_belowAC_dil2_autoclean_mni';
-%     'DA_nacc_belowAC_dil2_autoclean_mni'};
-
-% inNiiFileStrs = {
-%     'DA_putamen_dil2_autoclean_mni'
-%     };
-
-
-
-% inCoMFiles={};
 
 % script will independently loop over these CoM files
-% inCoMFiles = {'DAL_naccL_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_naccR_belowAC_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAL_naccL_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_naccR_aboveAC_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAL_caudateL_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_caudateR_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAL_putamenL_dil2_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_putamenR_dil2_autoclean_DAendpts_CoM_tlrc'};
+inCoMFiles={};
+
 % inCoMFiles = {
 %     'DAL_caudateL_autoclean_DAendpts_CoM_tlrc';
 %     'DAR_caudateR_autoclean_DAendpts_CoM_tlrc';
 %     'DAL_putamenL_autoclean_DAendpts_CoM_tlrc';
 %     'DAR_putamenR_autoclean_DAendpts_CoM_tlrc'};
 
-% inCoMFiles = {['DAL_naccL_belowAC_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAR_naccR_belowAC_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAL_naccL_aboveAC_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAR_naccR_aboveAC_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAL_caudateL_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAR_caudateR_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAL_putamenL_autoclean_striatumendpts_CoM_' gspace];
-%     ['DAR_putamenR_autoclean_striatumendpts_CoM_' gspace]};
-
-% inCoMFiles = {['DAL_naccL_belowAC_autoclean_DAendpts_CoM_' gspace];
-%     ['DAR_naccR_belowAC_autoclean_DAendpts_CoM_' gspace];
-%     ['DAL_naccL_aboveAC_autoclean_DAendpts_CoM_' gspace];
-%     ['DAR_naccR_aboveAC_autoclean_DAendpts_CoM_' gspace];
-%     ['DAL_caudateL_autoclean_DAendpts_CoM_' gspace];
-%     ['DAR_caudateR_autoclean_DAendpts_CoM_' gspace];
-%     ['DAL_putamenL_autoclean_DAendpts_CoM_' gspace];
-%     ['DAR_putamenR_autoclean_DAendpts_CoM_' gspace]};
-
-inCoMFiles = {};
 
 % directory to save out group files
 outDir = fullfile(dataDir,'fg_densities',method);
