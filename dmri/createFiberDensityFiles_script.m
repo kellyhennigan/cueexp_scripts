@@ -11,9 +11,11 @@
 
 %
 % NOTE: this script first saves out the L and R fiber density maps, then
-% xforms them to tlrc space and normalizes them so that they each have a
-% max value of 1, combines L and R sides. Also saves out center of mass
-% coords for tlrc space.
+% xforms them to group space and normalizes them so that they each have a
+% max value of 1, then combines L and R sides. 
+
+% Also saves out center of mass coords in group space if only_seed_endpts
+% or only_target_endpts is set to true. 
 
 
 
@@ -35,26 +37,12 @@ method = 'mrtrix_fa';
 % method = 'conTrack';
 
 
-seed = 'DA';
-% targets = {'caudate','putamen'};
-targets = {'nacc','nacc','caudate','putamen'};
-% targets = {'nacc','nacc'};
-% targets = {'nacc'};
-% targets = {'nacc','caudate','putamen'};
+seeds = {'mpfc8mm'};
 
-% string to identify fiber group files (must correspond to targets cell array)
-fgFileStrs = {'belowAC_autoclean',...
-    'aboveAC_autoclean',...
-    'autoclean',...
-    'autoclean'};
-% fgFileStrs = {'autoclean',...
-%     'autoclean'};
-% fgFileStrs = {'belowAC_dil2_autoclean'};
-% fgFileStrs = {'aboveAC_dil2_autoclean',...
-%     'dil2_autoclean',...
-%     'dil2_autoclean'};
+targets = {'nacc'}; 
 
-% files are named [target fgFileStr '.pdb']
+% string to identify fiber files 
+fgFileStrs = {'%s%s_%s%s_autoclean23'}; 
 
 
 % string to include on outfile?
@@ -69,8 +57,8 @@ t1File = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject id
 fdDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 
 
-% dt6.mat file
-dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
+% % dt6.mat file
+% dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
 
 
 % subject-specific xforms for native > mni space
@@ -107,43 +95,46 @@ for i=1:numel(subjects)
     end
 
 
-    % load dt6.mat and t1 images
-    dt = dtiLoadDt6(sprintf(dt6File,subject));
+    % load t1 volume
+%     dt = dtiLoadDt6(sprintf(dt6File,subject));
     t1 = niftiRead(sprintf(t1File,subject));
 
     j=1;
-    for j=1:numel(targets)
+    for j=1:numel(seeds)
 
+        seed = seeds{j};
         target = targets{j};
         fgFileStr=fgFileStrs{j};
 
         lrFileNames = {};
 
         for lr=LorR
-
+            
+            % fill in the name of this fiber group, e.g.: "mpfcL_naccL_autoclean"
+            thisFgStr = sprintf(fgFileStr,seed,lr,target,lr);  
+            
             roi1 = roiNiftiToMat(fullfile(dataDir,subject,['ROIs/' seed lr '.nii.gz']));
 
             roi2 = roiNiftiToMat(fullfile(dataDir,subject,['ROIs/' target lr '.nii.gz']));
 
             % load fiber group
-            fg = fgRead(fullfile(dataDir,subject,'fibers',method,[seed lr '_' target lr '_' fgFileStr '.pdb']));
+            fg = fgRead(fullfile(dataDir,subject,'fibers',method,[thisFgStr '.pdb']));
 
             % reorient to make sure all fibers start in roi1 and end in roi2
             [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
 
             % define out name for fiber density file
-            outName = fg.name;
-            outName=[seed lr '_' target lr '_' fgFileStr];
-
+            outName = [thisFgStr outNameStr];
+            
             % to use just seed endpoints of fibers:
             if only_seed_endpts
                 fg.fibers = cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0);
-                outName = [outName, '_' seed 'endpts'];
+                outName = [outName '_' seed 'endpts'];
                 
             % to use just target endpoints of fibers:
             elseif only_target_endpts
                 fg.fibers = cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0);
-                outName = [outName, '_striatumendpts'];
+                outName = [outName '_' target 'endpts'];
             end
 
             % make fiber density maps
@@ -151,7 +142,6 @@ for i=1:numel(subjects)
             fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
 
             % save new fiber density file
-            outName = [outName outNameStr];
             outPath = fullfile(thisFdDir,outName);
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
@@ -231,7 +221,7 @@ end % subjects
 %     
 %     
 % %     % load dt6.mat and t1 images
-% %     dt = dtiLoadDt6(sprintf(dt6File,subject));
+% % %     dt = dtiLoadDt6(sprintf(dt6File,subject));
 % %     t1 = niftiRead(sprintf(t1File,subject));
 % %     
 %     j=1;
