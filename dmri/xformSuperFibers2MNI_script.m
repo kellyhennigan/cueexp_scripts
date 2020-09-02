@@ -25,8 +25,7 @@ fgMDir = fullfile(dataDir,'fgMeasures',method);
 %     'DAR_caudateR_autoclean';
 %     'DAL_putamenL_autoclean';
 %     'DAR_putamenR_autoclean'};
-fgMNames = {'PVTL_naccL_autoclean23';
-    'PVTR_naccR_autoclean23'};
+fgMNames = {'asginsL_naccL_autoclean'};
 
     
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
