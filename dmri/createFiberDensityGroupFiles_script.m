@@ -31,10 +31,12 @@ inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
 gspace='mni'; % tlrc or mni
 
 % script will loop over these 
+% inNiiFileStrs = {
+%     ['mpfc8mmL_naccL_autoclean23_' gspace];
+%     ['mpfc8mmR_naccR_autoclean23_' gspace];
+%     ['mpfc8mm_nacc_autoclean23_' gspace]};
 inNiiFileStrs = {
-    ['mpfc8mmL_naccL_autoclean23_' gspace];
-    ['mpfc8mmR_naccR_autoclean23_' gspace];
-    ['mpfc8mmLR_naccLR_autoclean23_' gspace]};
+    ['mpfc8mm_nacc_autoclean23_' gspace]};
 
 
 % script will independently loop over these CoM files
