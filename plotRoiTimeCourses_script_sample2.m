@@ -16,8 +16,8 @@ dataDir = p.data;
 figDir = p.figures;
 
 
-tcDir = ['timecourses_' task '_afni_woOutliers' ];
-% tcDir = ['timecourses_' task '_afni' ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
 
 
 tcPath = fullfile(dataDir,tcDir);
@@ -37,7 +37,7 @@ useSpline = 0; % if 1, time series will be upsampled by TR*10
 % omitSubs = {'zl150930','ps151001','aa151010','al151016','jv151030',...
 %     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
 %     'gm161101'};
-omitSubs = {'tv181019'}; % any subjects to omit?
+omitSubs = {''}; % any subjects to omit?
 % omitSubs={'tb171209','tv181019'};
 
 plotStats = 1; % 1 to note statistical signficance on figures
@@ -106,7 +106,7 @@ plotGroups = {'controls';
     'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls';
     'relapsers_6months_sample2 nonrelapsers_6months_sample2 controls'
     };
-%
+
 
 plotStims = {'food drugs neutral';
     'food drugs neutral';
@@ -168,6 +168,8 @@ plotStimStrs={'type';
     'drugs';
     'neutral';
     'neutral'};
+
+
 
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -326,9 +328,9 @@ for r = 1:numel(roiNames)
         if strcmpi(roiName,'mpfc')
             YL=[-.2 .25]; % YL is ylim for MPFC
         elseif strcmpi(roiName,'nacc_desai')
-            YL=[-.1 .2]; % YL is ylim
+            YL=[-.16 .16]; % YL is ylim
         elseif strcmpi(roiName,'VTA')
-            YL=[-.17 .27]; % for VTA
+            YL=[-.17 .22]; % for VTA
         elseif strcmpi(roiName,'ins_desai')
             YL=[-.15 .25]; % YL is ylim for  Ains
         end

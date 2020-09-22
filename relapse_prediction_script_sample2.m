@@ -12,24 +12,27 @@ figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 % dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200710.csv');
+dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200916_woOutliers.csv');
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
 
 % load data
 T = readtable(dataPath); 
 
+% remove controls
 T(T.gi==0,:)=[];
 
 % omit subs? 
-T(strcmp(T.subjid,'tv181019'),:)=[];
-T(strcmp(T.subjid,'tb171209'),:)=[];
+% T(strcmp(T.subjid,'tv181019'),:)=[];
+% T(strcmp(T.subjid,'tb171209'),:)=[];
 
 
 % remove subjects from 1st sample
-idx=find(strcmp(T.subjid,'er171009'));
-T1=T(1:idx,:);
-T2=T(idx+1:end,:);
-% T(1:idx,:)=[];
+% T1=T(T.samplenum==1,:); 
+% T2=T(T.samplenum==2,:); 
+% T(T.samplenum==1,:)=[];
+
+% T(T.gi==2,:)=[];
+% T(T.gi==1,:)=[];
 
 % define outcome variable
 Y = 'relIn3Mos';
@@ -39,6 +42,12 @@ Y = 'relIn3Mos';
 
 eval(['T(isnan(T.' Y '),:)=[];']);
 Yy = eval(['T.' Y]);
+
+eval(['T1(isnan(T1.' Y '),:)=[];']);
+Yy1 = eval(['T1.' Y]);
+
+eval(['T2(isnan(T2.' Y '),:)=[];']);
+Yy2 = eval(['T2.' Y]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% check everything by itself
@@ -97,8 +106,7 @@ modelspec = [Y ' ~ age'];
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
-fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+fprintf('Rsquared and AIC:\n%.2f\n%.2f\n',res.Rsquared.Ordinary,res.ModelCriterion.AIC);
 
 % standardized coefficients: 
 X=[T.age]; X=(X-nanmean(X))./nanstd(X);
@@ -106,7 +114,7 @@ res_standard = fitglm(X,Yy,'Distribution','binomial');
 
 for ii=1:numel(res_standard.Coefficients.Estimate)
     fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
+    fprintf('%.2f (%.2f), Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
@@ -122,8 +130,7 @@ end
 modelspec = [Y '~ pref_drug + craving + bam_upset'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
-fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+fprintf('Rsquared and AIC:\n%.2f\n%.2f\n',res.Rsquared.Ordinary,res.ModelCriterion.AIC);
 
 
 % standardized coefficients: 
@@ -131,7 +138,7 @@ X=[T.pref_drug T.craving T.bam_upset]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
 for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
+    fprintf('%.2f (%.2f), Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
@@ -149,8 +156,7 @@ modelspec = [Y ' ~ nacc_drugs_beta + mpfc_drugs_beta + vta_drugs_beta'];
 
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
-fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+fprintf('Rsquared and AIC:\n%.2f\n%.2f\n',res.Rsquared.Ordinary,res.ModelCriterion.AIC);
 
 
 % standardized coefficients: 
@@ -159,7 +165,7 @@ X=[T.nacc_drugs_beta T.mpfc_drugs_beta T.vta_drugs_beta]; X=(X-nanmean(X))./nans
 res_standard = fitglm(X,Yy,'Distribution','binomial');
 for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
+    fprintf('%.2f (%.2f), Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...
@@ -174,8 +180,7 @@ end
 modelspec = [Y ' ~ age + nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
-fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
+fprintf('Rsquared and AIC:\n%.2f\n%.2f\n',res.Rsquared.Ordinary,res.ModelCriterion.AIC);
 
 % standardized coefficients: 
 X=[T.age T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
@@ -196,7 +201,7 @@ end
 modelspec = [Y ' ~ nacc_drugs_beta'];
 res=fitglm(T,modelspec,'Distribution','binomial')
 
-fprintf('Rsquared: %.3f\n',res.Rsquared.Ordinary);
+fprintf('Rsquared: %.2f\n',res.Rsquared.Ordinary);
 fprintf('AIC: %.2f\n',res.ModelCriterion.AIC);
 
 % standardized coefficients: 
@@ -204,7 +209,7 @@ X=[T.nacc_drugs_beta]; X=(X-nanmean(X))./nanstd(X);
 res_standard = fitglm(X,Yy,'Distribution','binomial');
 for ii=1:numel(res_standard.Coefficients.Estimate)
    fprintf('\n\nstandard estimate, SE, Z, and p value for reg %d:\n',ii-1);
-    fprintf('%.2f (%.2f) , Z=%.2f, p=%.2f\n',...
+    fprintf('%.2f (%.2f), Z=%.2f, p=%.2f\n',...
         res_standard.Coefficients.Estimate(ii),...
         res_standard.Coefficients.SE(ii),...
         res_standard.Coefficients.Estimate(ii)./res_standard.Coefficients.SE(ii),...

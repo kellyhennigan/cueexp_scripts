@@ -4,8 +4,7 @@
 
 % assumes createFiberDensityFiles_script has already been run. It takes the
 % single subject output files from that script, combines the maps into a 4d
-% nifti (along with a mean) and the center of mass coordinates into a 2D matrix and saves them
-% out.
+% nifti (along with a mean) and saves it out. 
 
 
 
@@ -20,37 +19,15 @@ dataDir = p.data;
 
 % list of subjects to include
 subjects=getCueSubjects('dti');
-% subjects = {'tm160117','jh160702'};
+% e.g., subjects={'sub001','sub002',etc};
 
 % directory (relative to subject dir) that has fiber density files
+inDir = fullfile(dataDir,'%s','fg_densities','mrtrix_fa');  %s is subject id
 
-method = 'mrtrix_fa';
-
-inDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
-
-gspace='mni'; % tlrc or mni
-
-% script will loop over these 
-% inNiiFileStrs = {
-%     ['mpfc8mmL_naccL_autoclean23_' gspace];
-%     ['mpfc8mmR_naccR_autoclean23_' gspace];
-%     ['mpfc8mm_nacc_autoclean23_' gspace]};
-inNiiFileStrs = {
-    ['mpfc8mm_nacc_autoclean23_' gspace]};
-
-
-% script will independently loop over these CoM files
-inCoMFiles={};
-
-% inCoMFiles = {
-%     'DAL_caudateL_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_caudateR_autoclean_DAendpts_CoM_tlrc';
-%     'DAL_putamenL_autoclean_DAendpts_CoM_tlrc';
-%     'DAR_putamenR_autoclean_DAendpts_CoM_tlrc'};
-
+inNiiFileStrs = {'DAL_naccL_belowAC_autoclean_mni'};
 
 % directory to save out group files
-outDir = fullfile(dataDir,'fg_densities',method);
+outDir = fullfile(dataDir,'fg_densities','mrtrix_fa');
 
 
 
@@ -85,23 +62,4 @@ for j=1:numel(inNiiFileStrs)
     system(cmd);
     
 end % for fd densities nifti files
-
-
-
-%% center of mass files
-%
-for j=1:numel(inCoMFiles)
-
-    CoMfile = inCoMFiles{j};
-
-    % load subjects' CoM files & concatenate the coords with subjects in rows
-    CoMs=cellfun(@(x) dlmread(fullfile(sprintf(inDir,x),CoMfile)), subjects,'uniformoutput',0)
-    CoMs=cell2mat(CoMs);
-
-    % save out concatenated data w/subject ids
-    T = table([subjects],CoMs);
-    writetable(T,fullfile(outDir,[CoMfile '_ALL']),'WriteVariableNames',0);
-
-
-end
 

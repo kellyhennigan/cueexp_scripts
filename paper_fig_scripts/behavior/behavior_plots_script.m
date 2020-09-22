@@ -4,7 +4,7 @@ clear all
 close all
 
 inDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/data';
-outDir = '/Users/kelly/cueexp/paper_figs_tables_stats/behavior/figs';
+outDir = '/Users/kelly/cueexp/figures/behavior';
 
 % 
 % measures = {'want','familiar','PA','NA',...

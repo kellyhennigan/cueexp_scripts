@@ -29,20 +29,21 @@ stim = 'drugs'; % stim to plot
 
 stimStr = stim; % stim name 
 
-roiName = 'VTA'; % roi to process
+roiName = 'nacc_desai'; % roi to process
 
-% tcDir = ['timecourses_' task '_afni' ];
-tcDir = ['timecourses_' task '_afni_woOutliers' ];
+tcDir = ['timecourses_' task '_afni' ];
+% tcDir = ['timecourses_' task '_afni_woOutliers' ];
 
 outDir_suffix = '_sample2';
 
 % color scheme for plotting: 'rand' for random or 'relapse' for relapse color scheme
 % colorScheme = 'mean'; 
-colorScheme = 'relapse'; 
+% colorScheme = 'relapse'; 
 % colorScheme = 'rand'; 
+colorScheme = 'gi';
 
-omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
-% omitSubs = {''}; % any subjects to omit?
+% omitSubs = {'tb171209','tv181019'}; % any subjects to omit?
+omitSubs = {''}; % any subjects to omit?
 
 plotLegend=1; % 1 to include plot legend, otherwise 0
 
@@ -127,7 +128,16 @@ elseif strcmp(colorScheme,'relapse') % to do colors by relapse
     cols = repmat(nancolor,numel(subjects),1); % nan vals are green
     cols(ri==1,:)=repmat(relcolor,numel(ri(ri==1)),1); %relapse vals is red
     cols(ri==0,:)=repmat(norelcolor,numel(ri(ri==0)),1); % non-relapse is blue
-       
+ 
+elseif strcmp(colorScheme,'gi') % to do colors by group index
+    controlcolor = [42 160 120]./255;  % green
+    forpatientcolor = [2 117 180]./255;     % blue
+    epiphanypatientcolor = [ 253 44 20]./255;      % red
+  
+    cols(gi==0,:)=repmat(controlcolor,numel(gi(gi==0)),1); 
+    cols(gi==1,:)=repmat(forpatientcolor,numel(gi(gi==1)),1); 
+    cols(gi==2,:)=repmat(epiphanypatientcolor,numel(gi(gi==2)),1); 
+    
     
 elseif strcmp(colorScheme,'mean') % each line is gray and mean is blue
     cols=repmat([.6 .6 .6],n,1);

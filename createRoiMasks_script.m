@@ -121,15 +121,14 @@ segFilePath = fullfile(dataDir,'%s','t1','aparc+a2009s+seg.nii.gz');  % subject'
 outDir = fullfile(dataDir,'%s','ROIs');
 
 % roiNames & corresponding labels
-roiNames = {'nacc';
-    'caudate';
-    'putamen'};
+% roiNames = {'nacc';
+%     'caudate';
+%     'putamen'};
 
 % corresponding labels for left and right hemispheres
-labels = {26,58;
-    11,50;
-    12,51}; 
-
+% labels = {26,58;
+%     11,50;
+%     12,51}; 
 
 % roiNames & corresponding labels
 % roiNames = {'ains';
@@ -144,6 +143,9 @@ labels = {26,58;
 %           18,54}; 
 % 
 
+
+ roiNames = {'vlpfc'};
+ labels = {11113,12113};     %vlpfc
 
 %% Get to it
 

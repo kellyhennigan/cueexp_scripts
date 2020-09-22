@@ -1,21 +1,13 @@
 %% Make fiber density maps
 
-% assumes all fiberfiles have fibers oriented to start in the DA ROI and
-% end in the target ROI
-
 % saves out niftis with values that represent whether fibers go through
 % that voxel and if so, how many. Scaled to have a max value of 1.
 
-% if only_seed_endpts or ony_target_endpts is set to true, then center of
-% mass coordinates are also saved out. 
-
 %
-% NOTE: this script first saves out the L and R fiber density maps, then
-% xforms them to group space and normalizes them so that they each have a
-% max value of 1, then combines L and R sides. 
+% NOTE: if mergeLR=1, this script first saves out the L and R fiber density
+% maps, then xforms them to group space and normalizes them so that they
+% each have a max value of 1, then combines L and R sides.
 
-% Also saves out center of mass coords in group space if only_seed_endpts
-% or only_target_endpts is set to true. 
 
 
 
@@ -27,22 +19,18 @@ close all
 
 p=getCuePaths();
 dataDir = p.data;
+% e.g., dataDir='/Users/span/lvta/cueexp/data'
 
-[subjects,gi]=getCueSubjects('dti');
-% subjects=subjects(48:end);
-% subjects = {'ph161104'};
-
-
-method = 'mrtrix_fa';
-% method = 'conTrack';
+subjects=getCueSubjects('dti');
+% e.g., subjects={'sub001','sub002',etc};
 
 
-seeds = {'mpfc8mm'};
+seeds = {'DA'};
 
 targets = {'nacc'}; 
 
 % string to identify fiber files 
-fgFileStrs = {'%s%s_%s%s_autoclean23'}; 
+fgFileStrs = {'%s%s_%s%s_autoclean'}; 
 
 
 % string to include on outfile?
@@ -53,12 +41,8 @@ outNameStr = '';
 t1File = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject id
 
 
-% define fg_densities directory
-fdDir = fullfile(dataDir,'%s','fg_densities',method);  %s is subject id
-
-
-% % dt6.mat file
-% dt6File = fullfile(dataDir,'%s','dti96trilin','dt6.mat');
+% define fg_densities directory (directory to save out file to)
+fdDir = fullfile(dataDir,'%s','fg_densities','mrtrix_fa');  %s is subject id
 
 
 % subject-specific xforms for native > mni space
@@ -67,8 +51,6 @@ xform_warp=fullfile(dataDir,'%s','t1','t12mni_xform_Warp.nii.gz');
 
 
 % options
-only_seed_endpts = 0; % create density maps of only seed endpoints?
-only_target_endpts = 0; % create density maps of only seed/target endpoints?
 smooth = 0; % 0 or empty to not smooth, otherwise this defines the smoothing kernel
 
 LorR = ['L','R']; % if ['L','R'], script shold loop over l/r sides;
@@ -96,7 +78,6 @@ for i=1:numel(subjects)
 
 
     % load t1 volume
-%     dt = dtiLoadDt6(sprintf(dt6File,subject));
     t1 = niftiRead(sprintf(t1File,subject));
 
     j=1;
@@ -118,25 +99,14 @@ for i=1:numel(subjects)
             roi2 = roiNiftiToMat(fullfile(dataDir,subject,['ROIs/' target lr '.nii.gz']));
 
             % load fiber group
-            fg = fgRead(fullfile(dataDir,subject,'fibers',method,[thisFgStr '.pdb']));
+            fg = fgRead(fullfile(dataDir,subject,'fibers','mrtrix_fa',[thisFgStr '.pdb']));
 
             % reorient to make sure all fibers start in roi1 and end in roi2
             [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
 
             % define out name for fiber density file
             outName = [thisFgStr outNameStr];
-            
-            % to use just seed endpoints of fibers:
-            if only_seed_endpts
-                fg.fibers = cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0);
-                outName = [outName '_' seed 'endpts'];
-                
-            % to use just target endpoints of fibers:
-            elseif only_target_endpts
-                fg.fibers = cellfun(@(x) x(:,end), fg.fibers,'UniformOutput',0);
-                outName = [outName '_' target 'endpts'];
-            end
-
+        
             % make fiber density maps
             %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
             fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,0);
@@ -146,13 +116,6 @@ for i=1:numel(subjects)
             nii=createNewNii(t1,fd,outPath,'fiber density');
             writeFileNifti(nii);
 
-            % save out center of mass coords if doing just endpts 
-            if (only_seed_endpts || only_target_endpts)
-                imgCoM = centerofmass(nii.data);
-                CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
-                dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
-            end
-          
             % xform to standard space?
             inFile=[outPath '.nii.gz'];
             outFile=[outPath '_mni.nii.gz'];
@@ -168,13 +131,6 @@ for i=1:numel(subjects)
 
             % save out fiber density file in group space
             writeFileNifti(outNii);
-
-            % save out center of mass coords for group space
-            if (only_seed_endpts || only_target_endpts)
-                imgCoM = centerofmass(outNii.data);
-                CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
-                dlmwrite(fullfile(thisFdDir,[outName '_CoM_mni']),CoM);
-            end
 
             if mergeLR
                 lrFileNames{end+1}=outNii.fname;
@@ -196,128 +152,6 @@ for i=1:numel(subjects)
 
 
 end % subjects
-
-
-%% do this without re-doing the native space ones: 
-
-
-% 
-% 
-% cd(dataDir);
-% 
-% i=1;
-% for i=1:numel(subjects)
-%     
-%     subject = subjects{i};
-%     
-%     fprintf(['\n\n Working on subject ',subject,'...\n\n']);
-%     
-%     
-%     % define fg_densities directory; create if necessary
-%     thisFdDir = sprintf(fdDir,subject);
-%     if (~exist(thisFdDir, 'dir'))
-%         mkdir(thisFdDir)
-%     end
-%     
-%     
-% %     % load dt6.mat and t1 images
-% % %     dt = dtiLoadDt6(sprintf(dt6File,subject));
-% %     t1 = niftiRead(sprintf(t1File,subject));
-% %     
-%     j=1;
-%     for j=1:numel(targets)
-%         
-%         target = targets{j};
-%         fgFileStr=fgFileStrs{j};
-%         
-%         lrFileNames = {};
-%         
-%         for lr=LorR
-%             
-% %             roi1 = roiNiftiToMat(fullfile(dataDir,subject,['ROIs/' seed lr '.nii.gz']));
-% %             
-% %             roi2 = roiNiftiToMat(fullfile(dataDir,subject,['ROIs/' target lr '.nii.gz']));
-% %             
-% %             % load fiber group
-% %             fg = fgRead(fullfile(dataDir,subject,'fibers',method,[seed lr '_' target lr '_' fgFileStr '.pdb']));
-% %             
-% %             % reorient to make sure all fibers start in roi1 and end in roi2
-% %             [fg,flipped] = AFQ_ReorientFibers(fg,roi1,roi2);
-%             
-%             % define out name for fiber density file
-% %             outName = fg.name;
-%             outName=[seed lr '_' target lr '_' fgFileStr];
-%             
-%             % to use just seed endpoints of fibers:
-%             if only_seed_endpts
-% %                 fg.fibers = cellfun(@(x) x(:,1), fg.fibers,'UniformOutput',0);
-%                 outName = [outName, '_' seed 'endpts'];
-%             end
-%             
-%             % make fiber density maps
-%             %fdImg = dtiComputeFiberDensityNoGUI(fgs,xform,imSize,normalize,fgNum, endptFlag, fgCountFlag, weightVec, weightBins)
-% %             fd = dtiComputeFiberDensityNoGUI(fg, t1.qto_xyz,size(t1.data),1,1,only_seed_endpts);
-%             
-%             % save new fiber density file
-%             outName = [outName outNameStr];
-%             outPath = fullfile(thisFdDir,outName);
-% %             nii=createNewNii(t1,fd,outPath,'fiber density');
-% %             writeFileNifti(nii);
-%      
-%             
-% %             %             % save out center of mass coords
-% %             if only_seed_endpts
-% %                 imgCoM = centerofmass(nii.data);
-% %                 CoM = mrAnatXformCoords(nii.qto_xyz,imgCoM);
-% %                 dlmwrite(fullfile(thisFdDir,[outName '_CoM']),CoM);
-% %             end
-%             
-%             % xform to standard space?
-% %             inFile=[outPath '.nii.gz'];
-%             outFileTLRC=[outPath '_tlrc.nii.gz'];
-% %             outNiiTLRC=xformANTs(inFile,outFileTLRC,sprintf(xform_aff,subject),sprintf(xform_warp,subject));
-%             
-%             outFile=[outPath '_mni.nii.gz'];
-%             outNii=xformANTs(outFileTLRC,outFile,xform_aff2,xform_warp2);
-%             outNii.data=outNii.data./max(outNii.data(:));
-%             
-%             
-%             % Smooth the image?
-%             if smooth
-%                 outNii.data = smooth3(outNii.data, 'gaussian', smooth);
-%             end
-%             
-%             writeFileNifti(outNii);
-%             
-%             % save out center of mass coords for tlrc space
-%             if only_seed_endpts
-%                 imgCoM = centerofmass(outNii.data);
-%                 CoM = mrAnatXformCoords(outNii.qto_xyz,imgCoM);
-%                 dlmwrite(fullfile(thisFdDir,[outName '_CoM_mni']),CoM);
-%             end
-%             
-%             if mergeLR
-%                 lrFileNames{end+1}=outNii.fname;
-%             end
-%             
-%             clear imgCoM CoM nii fd fg
-%             
-%         end % lr
-%         
-%         if mergeLR
-%             outPathLR = fullfile(thisFdDir,[strrep(strrep(outName,'R',''),'L','') '_mni.nii.gz']);
-%             niiLR=mergeNiis({lrFileNames{1},lrFileNames{2}},outPathLR);
-%             writeFileNifti(niiLR);
-%         end
-%         
-%     end % targets
-%     
-%     fprintf(['done with subject ' subjects{i} '.\n\n']);
-%     
-%     
-% end % subjects
-% 
-% 
 
 
 

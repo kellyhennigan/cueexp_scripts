@@ -19,11 +19,11 @@ conds = {'alcohol','drugs','food','neutral'};
 
 
 %%%%%%%%%%%%%%% define groups to plot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% groups = {'controls','patients'};
+groups = {'controls','patients_for','patients_epiphany'};
 % groupStr = '';
 
-groups = {'controls'};
-groupStr = '';
+% groups = {'controls'};
+% groupStr = '';
 
 % % uncomment to use plot relapse and nonrelapse groups: 
 % groups = {'controls','relapsers_6months','nonrelapsers_6months'};
@@ -39,10 +39,12 @@ cols = getCueExpColors(groups);
 %     cols=[   0.1294    0.4118    0.8157
 %     0.9922    0.1725    0.0784];
 % end
-if numel(groups)==2
-   cols=[150 150 150; 40 40 40]./255
-end
-
+% if numel(groups)==2
+%    cols=[150 150 150; 40 40 40]./255
+% end
+% if numel(groups)==2
+%    cols=[150 150 150; 40 40 40]./255
+% end
 
 
 % # of total subjects, and # of controls and patients

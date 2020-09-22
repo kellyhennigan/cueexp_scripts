@@ -241,8 +241,8 @@ bdNames = {};  % brain data predictor names
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI TRs  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
-% % tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
+% tcPath = fullfile(dataDir,['timecourses_' task '_afni'],'%s','%s.csv'); %s is roiNames, stims
+tcPath = fullfile(dataDir,['timecourses_' task '_afni_woOutliers'],'%s','%s.csv'); %s is roiNames, stims
 % 
 TRs = [3:7];
 aveTRs = []; % ***this is an index of var TRs**, so the mean will be taken of TRs(aveTRs)
@@ -302,8 +302,15 @@ end % roiNames
 % 
 % brain data
 Tbrain = array2table(bd,'VariableNames',bdNames);
-% 
-% 
+
+
+%%  add a variable to indicate whether subject was a part of the original
+% (published sample) or the replication sample 
+
+idx=find(strcmp(subjects,'er171009')); 
+samplenum=[ones(idx,1); ones(numel(subjects)-idx,1).*2];
+Tsamplenum=table(samplenum);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% concatenate relapse, demographic, behavioral, & brain data into 1 table
@@ -313,10 +320,11 @@ subjid = cell2mat(subjects);
 Tsubj = table(subjid);
 Tgi=table(gi);
 
+
 % concatenate all data into 1 table
 T=table();
 % T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
-T = [Tsubj Tgi Trelapse Tdem Tbeh Tbrain];
+T = [Tsubj Tgi Tsamplenum Trelapse Tdem Tbeh Tbrain];
 
 % save out
 writetable(T,outPath); 

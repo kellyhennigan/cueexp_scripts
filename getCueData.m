@@ -51,8 +51,8 @@ switch measure
     case 'gender'
         
         data = getGender(subjects);
-        
-        
+      
+         
     case 'bdi'
         
         data = getBDIScores(subjects);
@@ -151,7 +151,7 @@ switch measure
     case 'relapse_3months'
         
         daythresh=100;
-        lost_daythresh=50; % patients not followed up for this much time will be set to nan
+        lost_daythresh=60; % patients not followed up for this much time will be set to nan
         
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
@@ -215,7 +215,7 @@ switch measure
         
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         data = censored;
-        
+   
     case {'3monthfollowupdays','finalfollowupdays'}
         
         data = getFollowupDays(subjects,measure);
@@ -246,7 +246,8 @@ switch measure
         end
         data=cellfun(@(x) ~isempty(strfind(x,stim)), primary_stim);
         
-        
+     
+   
     case 'first_use_age'
         
         fud=getCueData(subjects,'first_use_date');

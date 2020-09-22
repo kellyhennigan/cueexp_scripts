@@ -30,58 +30,42 @@ templatefile = ['template_mid_sag.qst']; % example quench state file to use as a
 volPaths = {'../data/%s/t1/t1_fs.nii.gz'}; % *relative* path to t1 volume
 
 % % FGs
-fgPaths = {
-    '../data/%s/fibers/mrtrix_fa/DAL_putamenL_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAL_caudateL_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAL_naccL_aboveAC_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAL_naccL_belowAC_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAR_putamenR_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAR_caudateR_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAR_naccR_aboveAC_autoclean.pdb',...
-    '../data/%s/fibers/mrtrix_fa/DAR_naccR_belowAC_autoclean.pdb'};
-% 
-
-fgColors=[0.1725    0.5059    0.6353
-    0.9804    0.0941    0.1137
-    0.9569    0.3961    0.0275
-    0.9333    0.6980    0.1373
-    0.1725    0.5059    0.6353
-    0.9804    0.0941    0.1137
-    0.9569    0.3961    0.0275
-    0.9333    0.6980    0.1373];
-
-
-% FGs
 % fgPaths = {
+%     '../data/%s/fibers/mrtrix_fa/DAL_putamenL_autoclean.pdb',...
+%     '../data/%s/fibers/mrtrix_fa/DAL_caudateL_autoclean.pdb',...
 %     '../data/%s/fibers/mrtrix_fa/DAL_naccL_aboveAC_autoclean.pdb',...
 %     '../data/%s/fibers/mrtrix_fa/DAL_naccL_belowAC_autoclean.pdb',...
+%     '../data/%s/fibers/mrtrix_fa/DAR_putamenR_autoclean.pdb',...
+%     '../data/%s/fibers/mrtrix_fa/DAR_caudateR_autoclean.pdb',...
 %     '../data/%s/fibers/mrtrix_fa/DAR_naccR_aboveAC_autoclean.pdb',...
-%     '../data/%s/fibers/mrtrix_fa/DAR_naccR_belowAC_autoclean.pdb',...
-%     '../data/%s/fibers/mrtrix_fa/DAL_naccL_aboveAC_dil2_autoclean.pdb',...
-%     '../data/%s/fibers/mrtrix_fa/DAL_naccL_belowAC_dil2_autoclean.pdb',...
-%     '../data/%s/fibers/mrtrix_fa/DAR_naccR_aboveAC_dil2_autoclean.pdb',...
-%     '../data/%s/fibers/mrtrix_fa/DAR_naccR_belowAC_dil2_autoclean.pdb'};
-
+%     '../data/%s/fibers/mrtrix_fa/DAR_naccR_belowAC_autoclean.pdb'};
+% % 
 % 
-% fgColors=[ 0.9569    0.3961    0.0275
-%     0.9333    0.6980    0.1373
+% fgColors=[0.1725    0.5059    0.6353
+%     0.9804    0.0941    0.1137
 %     0.9569    0.3961    0.0275
 %     0.9333    0.6980    0.1373
-%     0    1    0.6353
-%     0.9804    0    1
-%     0    1    0.6353
-%    0.9804    0    1];
-% 
+%     0.1725    0.5059    0.6353
+%     0.9804    0.0941    0.1137
+%     0.9569    0.3961    0.0275
+%     0.9333    0.6980    0.1373];
 
-% fgPaths = {'../%s/fibers/conTrack/naccR_autoclean.pdb',...
-%     '../%s/fibers/mrtrix/naccR_autoclean.pdb'};
-% 
-% fgPaths = {'../%s/fibers/conTrack/nacc_autoclean_100.pdb',...
-%     '../%s/fibers/mrtrix/nacc_autoclean_100.pdb'};
+fgPaths = {
+    '../data/%s/fibers/mrtrix_fa/mpfc8mmL_naccL_autoclean23.pdb',...
+    '../data/%s/fibers/mrtrix_fa/mpfc8mmR_naccR_autoclean23.pdb',...
+    '../data/%s/fibers/mrtrix_fa/asginsL_naccL_autoclean.pdb',...
+    '../data/%s/fibers/mrtrix_fa/asginsR_naccR_autoclean.pdb',...
+    '../data/%s/fibers/mrtrix_fa/amygdalaL_naccL_autoclean.pdb',...
+    '../data/%s/fibers/mrtrix_fa/amygdalaR_naccR_autoclean.pdb'};
 
 
-% fgColors = [ 1    0.0941    0.1137
-%     0.1294    0.4431    0.7098];
+fgColors=[0.0588    0.8196    0.8588
+    0.0588    0.8196    0.8588
+   0.8863    0.0941    0.0078
+   0.8863    0.0941    0.0078
+   0.9922    0.6275         0
+   0.9922    0.6275         0];
+
 
 
 vis_idx = ones(numel(fgPaths),1);

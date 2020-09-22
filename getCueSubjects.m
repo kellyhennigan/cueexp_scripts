@@ -62,6 +62,12 @@ if ~isempty(task)
         
         subjects(table2array(T(:,taskindex))==0)=[];
         gi(table2array(T(:,taskindex))==0)=[];
+        
+        if strcmp(task,'cue')
+            cue_samplenum=T.cue_samplenum;
+            cue_samplenum(table2array(T(:,taskindex))==0)=[];
+        end
+        
     end
     
 end
@@ -172,6 +178,72 @@ if ~isempty(group)
     elseif strcmpi(group,'patients_epiphany')
         subjects = subjects(gi==2);
         gi = gi(gi==2);
+        
+        
+        %% these are only valid if for the 'cue' task
+        
+        
+    elseif strcmpi(group,'patients_sample1')
+        idx=find(gi>0 & cue_samplenum==1);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif strcmpi(group,'patients_sample2')
+        idx=find(gi>0 & cue_samplenum==2);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'nonrelapsers_3months_sample1','nonrelapse_3months_sample1'}))
+        ri=getCueData(subjects,'relapse_3months');
+        idx=find(ri==0 & cue_samplenum==1);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'relapsers_3months_sample1','relapse_3months_sample1'}))
+        ri=getCueData(subjects,'relapse_3months');
+        idx=find(ri==1 & cue_samplenum==1);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'nonrelapsers_3months_sample2','nonrelapse_3months_sample2'}))
+        ri=getCueData(subjects,'relapse_3months');
+        idx=find(ri==0 & cue_samplenum==2);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'relapsers_3months_sample2','relapse_3months_sample2'}))
+        ri=getCueData(subjects,'relapse_3months');
+        idx=find(ri==1 & cue_samplenum==2);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+        
+        % these are only valid if for the 'cue' task
+    elseif any(strcmpi(group,{'nonrelapsers_6months_sample1','nonrelapse_6months_sample1'}))
+        ri=getCueData(subjects,'relapse_6months');
+        idx=find(ri==0 & cue_samplenum==1);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'relapsers_6months_sample1','relapse_6months_sample1'}))
+        ri=getCueData(subjects,'relapse_6months');
+        idx=find(ri==1 & cue_samplenum==1);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+        % these are only valid if for the 'cue' task
+    elseif any(strcmpi(group,{'nonrelapsers_6months_sample2','nonrelapse_6months_sample2'}))
+        ri=getCueData(subjects,'relapse_6months');
+        idx=find(ri==0 & cue_samplenum==2);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
+    elseif any(strcmpi(group,{'relapsers_6months_sample2','relapse_6months_sample2'}))
+        ri=getCueData(subjects,'relapse_6months');
+        idx=find(ri==1 & cue_samplenum==2);
+        subjects = subjects(idx);
+        gi = gi(idx);
+        
         
         
     end  % group
