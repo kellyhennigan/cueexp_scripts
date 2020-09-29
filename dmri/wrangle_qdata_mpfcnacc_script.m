@@ -18,7 +18,7 @@ group='';
 
 % filepath for saving out table of variables
 outDir=fullfile(dataDir,'q_demo_data');
-outPath = fullfile(outDir,['data_mpfcnacc_' group '_' datestr(now,'yymmdd') '.csv']);
+outPath = fullfile(outDir,['data_mpfcpvtnacc_' group '_' datestr(now,'yymmdd') '.csv']);
 
 omit_subs={};
 
@@ -200,11 +200,21 @@ method = 'mrtrix_fa';
 
 fgMatStrs = {'mpfc8mmL_naccL_autoclean23',...
     'mpfc8mmR_naccR_autoclean23',...
-    'mpfc8mmLR_naccLR_autoclean23'};
+    'mpfc8mmLR_naccLR_autoclean23',...
+    'PVTL_naccL_autoclean23',...
+    'PVTR_naccR_autoclean23',...
+    'PVTLR_naccLR_autoclean23',...
+    'asginsL_naccL_autoclean',...
+    'asginsR_naccR_autoclean'};
 
 fgOutStrs={'mpfcL_naccL',...
     'mpfcR_naccR',...
-    'mpfc_nacc'};
+    'mpfc_nacc',...
+    'pvtL_naccL',...
+    'pvtR_naccR',...
+    'pvt_nacc',...
+    'asginsL_naccL',...
+    'asginsR_naccR'};
 
 
 
@@ -236,6 +246,17 @@ fgOutStrs={'mpfcL_naccL',...
        rdq4 = mean(fgMeasures{3}(:,76:100),2);
        adq4 = mean(fgMeasures{4}(:,76:100),2);
     
+       % also 1st and 2nd half 
+       fah1 = mean(fgMeasures{1}(:,1:50),2);
+       mdh1 = mean(fgMeasures{2}(:,1:50),2);
+       rdh1 = mean(fgMeasures{3}(:,1:50),2);
+       adh1 = mean(fgMeasures{4}(:,1:50),2);
+    
+       fah2 = mean(fgMeasures{1}(:,51:100),2);
+       mdh2 = mean(fgMeasures{2}(:,51:100),2);
+       rdh2 = mean(fgMeasures{3}(:,51:100),2);
+       adh2 = mean(fgMeasures{4}(:,51:100),2);
+    
         % controlling for age
        fa_controllingage=glm_fmri_fit(fa,[ones(numel(subjects),1) Tvars.age],[],'err_ts');
        md_controllingage=glm_fmri_fit(md,[ones(numel(subjects),1) Tvars.age],[],'err_ts');
@@ -248,7 +269,7 @@ fgOutStrs={'mpfcL_naccL',...
        rd_controllingagemotion=glm_fmri_fit(rd,[ones(numel(subjects),1) Tvars.age Tvars.dwimotion],[],'err_ts');
        ad_controllingagemotion=glm_fmri_fit(ad,[ones(numel(subjects),1) Tvars.age Tvars.dwimotion],[],'err_ts');
      
-       fgms=[fgms fa md rd ad faq1 mdq1 rdq1 adq1 faq4 mdq4 rdq4 adq4 fa_controllingage md_controllingage rd_controllingage ad_controllingage fa_controllingagemotion md_controllingagemotion rd_controllingagemotion ad_controllingagemotion];
+       fgms=[fgms fa md rd ad faq1 mdq1 rdq1 adq1 faq4 mdq4 rdq4 adq4 fah1 mdh1 rdh1 adh1 fah2 mdh2 rdh2 adh2 fa_controllingage md_controllingage rd_controllingage ad_controllingage fa_controllingagemotion md_controllingagemotion rd_controllingagemotion ad_controllingagemotion];
       
        fgNames{end+1} = [fgOutStrs{f} '_fa'];
        fgNames{end+1} = [fgOutStrs{f} '_md'];
@@ -265,6 +286,16 @@ fgOutStrs={'mpfcL_naccL',...
        fgNames{end+1} = [fgOutStrs{f} '_rdq4'];
        fgNames{end+1} = [fgOutStrs{f} '_adq4'];
      
+       fgNames{end+1} = [fgOutStrs{f} '_fah1'];
+       fgNames{end+1} = [fgOutStrs{f} '_mdh1'];
+       fgNames{end+1} = [fgOutStrs{f} '_rdh1'];
+       fgNames{end+1} = [fgOutStrs{f} '_adh1'];
+    
+       fgNames{end+1} = [fgOutStrs{f} '_fah2'];
+       fgNames{end+1} = [fgOutStrs{f} '_mdh2'];
+       fgNames{end+1} = [fgOutStrs{f} '_rdh2'];
+       fgNames{end+1} = [fgOutStrs{f} '_adh2'];
+    
        fgNames{end+1} = [fgOutStrs{f} '_fa_controllingage'];
        fgNames{end+1} = [fgOutStrs{f} '_md_controllingage'];
        fgNames{end+1} = [fgOutStrs{f} '_rd_controllingage'];

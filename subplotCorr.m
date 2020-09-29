@@ -117,7 +117,7 @@ titleStr
 for i=1:nP
     
     axH=subplot(nRow,nCol,i);
-    [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i},[],[],14);
+    [axH,rpStr] = plotCorr(axH,x{i},y{i},xlab{i},ylab{i},titleStr{i},col{i});
 % 
 % FA xlim
 % if i==1
