@@ -88,8 +88,8 @@ for s=1:numel(subjects)
     
     %% contrast functional connectivity between gain5 vs gain0 trials
     
-%     varnames = {}; % variable names
-%     fcvals = []; % matrix that will hold FC correlation values
+    %     varnames = {}; % variable names
+    %     fcvals = []; % matrix that will hold FC correlation values
     
     for j=1:numel(conds)
         
@@ -116,36 +116,37 @@ for s=1:numel(subjects)
             
         end
         
-%          % update var names
-%         for ti = 1:numel(fcTRs)
-%             varnames{end+1} = ['FC_' conds{j} '_TR' num2str(TRs(ti))];
-%         end
+        %          % update var names
+        %         for ti = 1:numel(fcTRs)
+        %             varnames{end+1} = ['FC_' conds{j} '_TR' num2str(TRs(ti))];
+        %         end
         
     end % cond loop
     
     cd(dataDir);
     
-    
-    %% save everything out into a table
-    
-    %%%%% NOTE THIS PART IS HARDCODED FOR MID GAIN % VS GAIN 0 
-    %%%%% this should be fixed at some point!!!!
-    
-    varnames = {};
-    for j=1:numel(conds)
-        for ti = 1:numel(fcTRs)
-            varnames{end+1} = ['FCcorr_' conds{j} '_TR' num2str(fcTRs(ti))];
-        end
-        for ti = 1:numel(fcTRs)
-            varnames{end+1} = ['FCpartialcorr_' conds{j} '_TR' num2str(fcTRs(ti))];
-        end
-    end
-    
-    Ttask = array2table([r_cond{1} r_cond_partial{1} r_cond{2} r_cond_partial{2}],'VariableNames',varnames);
+end % subject loop
 
-    Trestingstate= array2table([r_restingstate r_restingstate_partial]); 
-    
-    subjid = cell2mat(subjects);
+%% save everything out into a table
+
+%%%%% NOTE THIS PART IS HARDCODED FOR MID GAIN % VS GAIN 0
+%%%%% this should be fixed at some point!!!!
+
+varnames = {};
+for j=1:numel(conds)
+    for ti = 1:numel(fcTRs)
+        varnames{end+1} = ['FCcorr_' conds{j} '_TR' num2str(fcTRs(ti))];
+    end
+    for ti = 1:numel(fcTRs)
+        varnames{end+1} = ['FCpartialcorr_' conds{j} '_TR' num2str(fcTRs(ti))];
+    end
+end
+
+Ttask = array2table([r_cond{1} r_cond_partial{1} r_cond{2} r_cond_partial{2}],'VariableNames',varnames);
+
+Trestingstate= array2table([r_restingstate r_restingstate_partial]);
+
+subjid = cell2mat(subjects);
 Tsubj = table(subjid);
 Tgroupindex=table(gi);
 
@@ -157,11 +158,9 @@ T = [Tsubj Tgroupindex Ttask Trestingstate];
 % T = [Tsubj Tgroupindex Tvars Tdti Tcontrollingagemotion];
 
 % save out
-writetable(T,outPath); 
+writetable(T,outPath);
 
 
-    T = [subjects Ttask
 
-end % subject loop
 
 
