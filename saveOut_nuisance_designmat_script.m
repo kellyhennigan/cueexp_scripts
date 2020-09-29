@@ -30,7 +30,7 @@ nuisanceRegNames = {'dx','dy','dz','roll','pitch','yaw','csf','wm'};
 nDPolyRegs=2; %
 
 
-outFilePath = fullfile(dataDir,'%s','func_proc',['pp_' task '_tlrc' afniStr '_nuisance_designmat.csv']);
+outFilePath = fullfile(dataDir,'%s','func_proc',['pp_' task '_tlrc' afniStr '_nuisance_designmat.txt']);
 
 
 %% do it
