@@ -144,7 +144,7 @@ end
 
 Ttask = array2table([r_cond{1} r_cond_partial{1} r_cond{2} r_cond_partial{2}],'VariableNames',varnames);
 
-Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'r_restingstate','r_restingstate_partial'});
+Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'FCcorr_restingstate','FCpartialcorr_restingstate'});
 
 subjid = cell2mat(subjects);
 Tsubj = table(subjid);
