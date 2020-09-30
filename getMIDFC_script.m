@@ -23,13 +23,13 @@ task='mid';
 
 Xbasefname=['pp_' task '_tlrc_afni_nuisance_designmat.txt'];
 
-seed = 'VTA';
+seed = 'mpfc';
 seedtsfname=[task '_' seed '_afni.1D']; % seed ROI time series
 
 target = 'nacc';
 targettsfname=[task '_' target '_afni.1D']; % time series for target ROI
 
-conds = {'gain5','gain0'}; % conditions to contrast
+conds = {'gain5','gain0','gainwin','gainmiss'}; % conditions to contrast
 % conds = {'gainwin','gainmiss'}; % conditions to contrast
 
 regfileStr=fullfile(dataDir,'%s','regs',['%s_trial_mid.1D']); %s is subject, conds
@@ -41,6 +41,7 @@ censorFilePath = fullfile(dataDir, '%s','func_proc',[task '_censor.1D']);
 TR=2;
 
 fcTRs=[1:8]; % which TRs to use for func connectivity calculation?
+
 % This should be relative to trial onset, e.g., TRs=[3 4]
 
 % filepath for saving out table of variables
@@ -139,9 +140,7 @@ end % subject loop
 
 %% save everything out into a table
 
-%%%%% NOTE THIS PART IS HARDCODED FOR 2 CONDITIONS!!
-%%%%% this should be fixed at some point!!!!
-
+% first get variable names
 varnames = {};
 for j=1:numel(conds)
     for ti = 1:numel(fcTRs)
@@ -155,9 +154,11 @@ for j=1:numel(conds)
     end
 end
 
-Ttask = array2table([r_cond{1} r_cond{2} r_cond_partial{1} r_cond_partial{2}],'VariableNames',varnames);
+% now put condition func conn data into a table
+Ttask = array2table([r_cond{:} r_cond_partial{:}],'VariableNames',varnames);
 
-Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'FCcorr_restingstate','FCpartialcorr_restingstate'});
+% resting state func conn in a table
+Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'FC_restingstate','FCpartial_restingstate'});
 
 subjid = cell2mat(subjects);
 Tsubj = table(subjid);
@@ -165,8 +166,6 @@ Tgroupindex=table(gi);
 
 % concatenate all data into 1 table
 T=table();
-% T = [Tsubj Tgroupindex Tvars Tbrain Tdti Tnvox];
-
 T = [Tsubj Tgroupindex Ttask Trestingstate];
 % T = [Tsubj Tgroupindex Tvars Tdti Tcontrollingagemotion];
 

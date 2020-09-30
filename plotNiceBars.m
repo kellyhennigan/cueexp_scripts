@@ -58,6 +58,7 @@ end
 
 if notDefined('cols')
     cols = solarizedColors(nGroups);
+    cols=[0.1490    0.5451    0.8235];
 end
 
 if notDefined('plotSig')
@@ -150,12 +151,13 @@ set(gca,'box','off');
 
 colormap(cols)
 
+set(gca,'XTick',[1:numel(condNames)])
 % try to rotate the xlabels by 30 degrees, but if that doesnt work, no prob
 % try
 %     set(gca,'XTickLabel',condNames,'fontName',fontName,'FontSize',fontSize)
 %         ylabel(ylab,'fontName','Helvetica','FontSize',fsize)
 %)
-%     xtickangle(30)
+    xtickangle(30)
 % catch ME
 %     try
 %         xticklabel_rotate(1:numel(condNames),30,condNames)
