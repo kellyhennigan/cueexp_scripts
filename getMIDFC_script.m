@@ -34,7 +34,7 @@ conds = {'gainwin','gainmiss'}; % conditions to contrast
 
 regfileStr=fullfile(dataDir,'%s','regs',['%s_trial_mid.1D']); %s is subject, conds
 
-censorTRs=0; % 1 to censor out bad motion TRs, otherwise 0
+censorTRs=1; % 1 to censor out bad motion TRs, otherwise 0
 
 censorFilePath = fullfile(dataDir, '%s','func_proc',[task '_censor.1D']);
 
