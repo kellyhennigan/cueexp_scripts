@@ -23,7 +23,7 @@ task='mid';
 
 Xbasefname=['pp_' task '_tlrc_afni_nuisance_designmat.txt'];
 
-seed = 'mpfc';
+seed = 'VTA';
 seedtsfname=[task '_' seed '_afni.1D']; % seed ROI time series
 
 target = 'nacc';
