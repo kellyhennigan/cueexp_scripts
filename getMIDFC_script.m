@@ -32,7 +32,6 @@ targettsfname=[task '_' target '_afni.1D']; % time series for target ROI
 % conds = {'gain5','gain0'}; % conditions to contrast
 conds = {'gainwin','gainmiss'}; % conditions to contrast
 
-
 regfileStr=fullfile(dataDir,'%s','regs',['%s_trial_mid.1D']); %s is subject, conds
 
 censorTRs=0; % 1 to censor out bad motion TRs, otherwise 0
@@ -41,13 +40,17 @@ censorFilePath = fullfile(dataDir, '%s','func_proc',[task '_censor.1D']);
 
 TR=2;
 
-fcTRs=[1:7]; % which TRs to use for func connectivity calculation?
+fcTRs=[1:8]; % which TRs to use for func connectivity calculation?
 % This should be relative to trial onset, e.g., TRs=[3 4]
 
 % filepath for saving out table of variables
 outDir=fullfile(dataDir,'funcconn_measures');
-outPath = fullfile(outDir,[task '_' seed '_' target '_funcconn.csv']);
 
+if ~censorTRs
+    outPath = fullfile(outDir,[task '_' seed '_' target '_funcconn.csv']);
+else
+    outPath = fullfile(outDir,[task '_' seed '_' target '_censoredTRs_funcconn.csv']);
+end
 
 %% do it
 
@@ -90,15 +93,9 @@ for s=1:numel(subjects)
     
     %% contrast functional connectivity between gain5 vs gain0 trials
     
-    %     varnames = {}; % variable names
-    %     fcvals = []; % matrix that will hold FC correlation values
-    
     for j=1:numel(conds)
         
         onsetTRs=find(dlmread(sprintf(regfileStr,subject,conds{j})));
-        
-        % keep track of the number of trials per cond for each subj
-        ntrials(s,j)=numel(onsetTRs);
         
         TRs=repmat(onsetTRs,1,fcTRs(end))+repmat(0:fcTRs(end)-1,size(onsetTRs,1),1);
         TRs=TRs(:,fcTRs);
@@ -119,18 +116,26 @@ for s=1:numel(subjects)
                 r_cond_partial{j}(s,k)=nancorr(seed_errts(TRs(:,k)),target_errts(TRs(:,k)));
             end
             
-        end
+            %% QA checks 
+            
+            % keep track of the number of trials per cond for each subj
+        ntrials(s,j)=numel(onsetTRs);
+      
+        % keep track of mean timecourses for each condition for subjects;
+        % this can be used as a QA check to make sure the main effect data
+        % looks as predicted
+        d_cond_seed{j}(s,:)=nanmean(seedts(TRs));
+        d_cond_target{j}(s,:)=nanmean(targetts(TRs));
         
-        %          % update var names
-        %         for ti = 1:numel(fcTRs)
-        %             varnames{end+1} = ['FC_' conds{j} '_TR' num2str(TRs(ti))];
-        %         end
+        
+        end % if censor TRs
         
     end % cond loop
     
     cd(dataDir);
     
 end % subject loop
+
 
 %% save everything out into a table
 
