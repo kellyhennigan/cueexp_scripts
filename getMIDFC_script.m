@@ -23,14 +23,14 @@ task='mid';
 
 Xbasefname=['pp_' task '_tlrc_afni_nuisance_designmat.txt'];
 
-seed = 'mpfc';
+seed = 'VTA';
 seedtsfname=[task '_' seed '_afni.1D']; % seed ROI time series
 
 target = 'nacc';
 targettsfname=[task '_' target '_afni.1D']; % time series for target ROI
 
-% conds = {'gain5','gain0'}; % conditions to contrast
-conds = {'gainwin','gainmiss'}; % conditions to contrast
+conds = {'gain5','gain0'}; % conditions to contrast
+% conds = {'gainwin','gainmiss'}; % conditions to contrast
 
 regfileStr=fullfile(dataDir,'%s','regs',['%s_trial_mid.1D']); %s is subject, conds
 
