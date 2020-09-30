@@ -117,20 +117,19 @@ for s=1:numel(subjects)
                 r_cond_partial{j}(s,k)=nancorr(seed_errts(TRs(:,k)),target_errts(TRs(:,k)));
             end
             
-            %% QA checks 
-            
-            % keep track of the number of trials per cond for each subj
+        end % if censor TRs
+        
+        %% QA checks
+        
+        % keep track of the number of trials per cond for each subj
         ntrials(s,j)=numel(onsetTRs);
-      
+        
         % keep track of mean timecourses for each condition for subjects;
         % this can be used as a QA check to make sure the main effect data
         % looks as predicted
         d_cond_seed{j}(s,:)=nanmean(seedts(TRs));
         d_cond_target{j}(s,:)=nanmean(targetts(TRs));
-        
-        
-        end % if censor TRs
-        
+            
     end % cond loop
     
     cd(dataDir);
