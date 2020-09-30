@@ -144,13 +144,13 @@ end % subject loop
 varnames = {};
 for j=1:numel(conds)
     for ti = 1:numel(fcTRs)
-        varnames{end+1} = ['FC_' conds{j} '_TR' num2str(fcTRs(ti))];
+        varnames{end+1} = [conds{j} '_TR' num2str(fcTRs(ti))];
     end
 end
 
 for j=1:numel(conds)
     for ti = 1:numel(fcTRs)
-        varnames{end+1} = ['FCpartial_' conds{j} '_TR' num2str(fcTRs(ti))];
+        varnames{end+1} = ['partial_' conds{j} '_TR' num2str(fcTRs(ti))];
     end
 end
 
@@ -158,7 +158,7 @@ end
 Ttask = array2table([r_cond{:} r_cond_partial{:}],'VariableNames',varnames);
 
 % resting state func conn in a table
-Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'FC_restingstate','FCpartial_restingstate'});
+Trestingstate= array2table([r_restingstate r_restingstate_partial],'VariableNames',{'wholescan','partial_wholescan'});
 
 subjid = cell2mat(subjects);
 Tsubj = table(subjid);
