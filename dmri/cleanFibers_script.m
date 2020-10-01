@@ -24,11 +24,11 @@ dataDir = p.data;
 mainfigDir=p.figures_dti;
 
 % seed = 'DA';  % define seed roi
-seed = 'PVT';
+seed = 'sgins';
 
 % targets=input('target name(s): ','s');
 % targets=splitstring(targets);
-targets = {'nacc'};
+targets = {'vlpfc'};
 
 
  % LorR = ['L'];
