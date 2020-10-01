@@ -40,8 +40,8 @@ combineLR = 1; % 1 to combine L and R, otherwise, 0
 
 
 % 
-seeds = {'PVT'};
-targets = {'nacc'};
+seeds = {'sgins'};
+targets = {'vlpfc'};
 versionStrs = {'autoclean23'};
 
 % fiber group file strings
