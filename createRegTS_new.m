@@ -48,7 +48,7 @@ end
 
 % if dt isnt defined, default is .1 (tenth of a second)
 if notDefined('dt')
-    dt = .1;
+    dt = .01;
 end
 
 % if TR isnt defined, set it to equal dt
@@ -56,7 +56,7 @@ if notDefined('TR')
     TR=dt;
 end
 
-% % if nt isn't provided, throw an error
+% % if number of TRs isn't provided, throw an error
 if notDefined('nTRs')
     error('nTRs must be defined')
 end
@@ -71,10 +71,11 @@ end
 nt=ceil(TR*nTRs/dt);  % number of time steps for upsampled regressor time series
 
 % define regressor vector
-reg = zeros(nt,1); % start with 
+reg = zeros(nt,1); % start with a vector of zeros
 
 
-% get event onsets in dt units (upsampled units)
+% get event onsets in dt units (e.g., if dt is millisec, an event onset of
+% 2 s becomes 2000 msec
 onsetsDT = round(onsets/dt)+1; % +1 because reg(1) is t=0
 
 

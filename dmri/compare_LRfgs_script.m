@@ -1,6 +1,5 @@
 % compare diffusivity measurements for left and right fiber groups
 
-% plot roi time courses by subject
 
 % this will produce a figure with a timecourse line for each subject
 
@@ -15,15 +14,12 @@ dataDir = p.data;
 % directory & filename of fg measures
 method = 'mrtrix_fa';
 
-targets={'nacc';
-    'nacc'};
+targets={'vlpfc'};
 
-fgMatStrsL = {'mpfc8mmL_%sL_autoclean23';
-    'PVTL_%sL_autoclean23'};
+fgMatStrsL = {'sginsL_%sL_autoclean23'};
 
-fgMatStrsR = {'mpfc8mmR_%sR_autoclean23';
-    'PVTR_%sR_autoclean23'};
-
+fgMatStrsR = {'sginsR_%sR_autoclean23'};
+    
 
 % group = {'controls'};
 group = {'all'}; 

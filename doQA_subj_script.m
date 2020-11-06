@@ -25,8 +25,8 @@ figDir = fullfile(p.figures,'QA',task);
 
 savePlots = 1; % 1 to save plots, otherwise 0
 
-% motion_metric = 'euclideannorm'; 
-motion_metric = 'displacement'; 
+motion_metric = 'euclideannorm'; 
+% motion_metric = 'displacement'; 
 % motion_metric = 'fwdisplacement'; 
 
 %%
@@ -55,8 +55,8 @@ switch task
         
         mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task
         
-        thresh = 1;
-        percent_bad_thresh = 1;
+        thresh = .5;
+        percent_bad_thresh = 2;
         
         roi_str = 'nacc_afni';
         roits_file = [dataDir '/%s/func_proc/' task '_' roi_str '.1D']; % roi time series file to plot where %s is task

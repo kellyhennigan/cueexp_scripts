@@ -1,4 +1,4 @@
-function [pa,na,cueNames]=getCueRatings(filepath)
+function [pa,na,valence,arousal,cueNames]=getCueRatings(filepath)
 % -------------------------------------------------------------------------
 % usage: return PA and NA ratings for cues for cue reactivity study
 % 
@@ -21,6 +21,8 @@ if ~exist(filepath,'file')
     cueNames = {};
     pa = [];
     na = [];
+    valence=[];
+    arousal=[];
 else 
 
 % load cue ratings
@@ -32,5 +34,6 @@ valence = T.valence;
 arousal = T.arousal;
 
 [pa,na]=va2pana(valence,arousal);
+
 
 end

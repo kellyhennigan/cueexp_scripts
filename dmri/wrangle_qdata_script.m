@@ -7,11 +7,11 @@ close all
 
 p = getCuePaths(); dataDir = p.data; % cue exp paths
 
-task='dti_mfb';
+task='dti';
 % group = 'controls';
 % group = 'patients_complete';
-% group='patients';
-group='';
+group='patients';
+% group='';
 
 [subjects,gi] = getCueSubjects(task,group); 
 

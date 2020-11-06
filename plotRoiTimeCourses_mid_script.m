@@ -76,11 +76,11 @@ plotToScreen=1;
 
 % [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 
-plotGroups = {'controls'; 'controls'};
-plotStims={'gain0 gain5'};
+plotGroups = {'controls'};
+plotStims={'gain0 gain1 gain5'};
 
 % plotStims = {'drugs'};
-plotStimStrs = plotStims;
+plotStimStrs = {'gain trials'};
 %
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -179,8 +179,8 @@ for r = 1:numel(roiNames)
         % line colors & line specs
         cols = reshape(getCueExpColors_old(numel(tc),'cell'),size(tc,1),[]);
 %         lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
-        cols{1}=[1 0 0];
-        cols{end}=[0.1490    0.5451    0.8235];
+%         cols{1}=[1 0 0];
+%         cols{end}=[0.1490    0.5451    0.8235];
         
 
         
@@ -229,14 +229,14 @@ for r = 1:numel(roiNames)
         
     
     %%%%%%%%%% change font sizes
-    fsize = 26;
+    fsize = 16;
     set(gca,'fontName','Helvetica','fontSize',fsize)
     print(gcf,'-dpng','-r300',savePath);
     
              % title and legend off
-    legend(gca,'off')
-    title('')
-   print(gcf,'-dpng','-r300',[savePath '_noleg']);
+%     legend(gca,'off')
+%     title('')
+%    print(gcf,'-dpng','-r300',[savePath '_noleg']);
         
    fprintf('done.\n\n');
         

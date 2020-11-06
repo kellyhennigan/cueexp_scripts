@@ -73,10 +73,10 @@ plotToScreen=1;
 % would be for making 2 figures: the 1st would plot alc, drugs, etc. for
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
-[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
+% [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 
 plotGroups = {'controls'};
-plotStims={'gain0 gain1 gain5'};
+plotStims={'gain0 gain5'};
 
 % plotStims = {'drugs'};
 plotStimStrs = plotStims;
@@ -95,6 +95,7 @@ inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
 
 %% define time courses to plot
 
+f=1;
 for f=1
 % for f=[1 3 6]
 %     for f = 1:nFigs
@@ -229,6 +230,9 @@ for f=1
     
     fprintf(['\n\n plotting figure: ' figtitle '...\n\n']);
     
+    cols{1}=[.6 .6 .6];
+cols{2}=[0 0 0]; 
+
     switch plotErr
         case 'bar'
             [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,[],plotToScreen,lspec);
@@ -236,7 +240,8 @@ for f=1
             [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,[],plotToScreen,lspec);
     end
     
-    
+    YL=[-.1 .27]
+YT=[-.1:.1:.3]
     
     %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -303,7 +308,8 @@ for f=1
     %%%%%%% grayed out rectangles
     yl = ylim;
     
-    gxs = [5 13]; % x-axis limits for graying out
+%     gxs = [5 13]; % x-axis limits for graying out
+    gxs = [3 11]; 
     
     % vertices
     v = [t(1) yl(1);
@@ -343,7 +349,7 @@ for f=1
     title('')
     
     %%%%%%%%%% change font sizes
-    fsize = 26;
+    fsize = 30;
     set(gca,'fontName','Helvetica','fontSize',fsize)
     %         title('NAc response to drugs-neutral trials','fontName','Helvetica','fontSize',fsize)
     
@@ -357,8 +363,8 @@ for f=1
     
     
     % re-save fig
-%     print(gcf,'-dpng','-r300',savePath);
-saveas(gcf,savePath,'pdf');
+    print(gcf,'-dpng','-r300',savePath);
+% saveas(gcf,savePath,'pdf');
 %       print(gcf,'-depsc','-r300',savePath);
     
     fprintf('done.\n\n')

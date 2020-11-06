@@ -33,13 +33,11 @@ method = 'mrtrix_fa';
 
 % targets={'nacc'};
 % 
-fgMatStrs = {'PVTLR_%sLR_autoclean23';
-    'PVTL_%sL_autoclean23';
-    'PVTR_%sR_autoclean23';
-    'mpfc8mmL_%sL_autoclean23';
-    'mpfc8mmR_%sR_autoclean23'};
+fgMatStrs = {'sginsLR_%sLR_autoclean23';
+    'sginsL_%sL_autoclean23';
+    'sginsR_%sR_autoclean23'};
 
-targets={'nacc';'nacc';'nacc';'nacc';'nacc'};
+targets={'vlpfc';'vlpfc';'vlpfc'};
 
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
