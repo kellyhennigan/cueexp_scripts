@@ -6,16 +6,19 @@ close all
 p = getCuePaths(); % structural array of experiment file paths
 
 dataDir = p.data; % main data directory
-
+    
 % subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
 task = 'midi';
 
-% groups = {'controls','patients'}; % group names
+groups = {'controls','patients'}; % group names
 % groups = {'controls','relapsers','nonrelapsers'}; % group names
-groups = {'relapsers','nonrelapsers'}; % group names
+% groups = {'relapsers','nonrelapsers'}; % group names
 
 [subjects,gi] = getCueSubjects(task);
+
+
 gi(gi>0)=1; % recode all patients as gi=1
+
 
 %% if groups are relapsers/nonrelapsers
 
@@ -114,9 +117,42 @@ for i=1:N
         mean_rt(i,j) = mean(rt(trialtype==j & rt>0));
         
     end % trialtype
-    
-    
+   
 end % subject loop
+
+
+%% signal detection values
+
+
+% calculate dprime and criterion parameters for: 
+% +0 trials 
+% +5 trials
+% all 0 trials 
+% all 5 trials 
+hit_rate_g0 = p_win(:,1);
+false_alarm_g0 = 1-p_win(:,2);
+hit_rate_g5 = p_win(:,5);
+false_alarm_g5 = 1-p_win(:,6);
+hit_rate_0 = (p_win(:,1)+p_win(:,3))./2;
+false_alarm_0 = (1-p_win(:,2)+1-p_win(:,4))./2;
+hit_rate_5 = (p_win(:,5)+p_win(:,7))./2;
+false_alarm_5 = (1-p_win(:,6)+1-p_win(:,8))./2;
+
+% 
+    % signal detection successful hits and false hits
+    for i=1:N
+    [dpg0(i,1),cg0(i,1)] = dprime_simple(hit_rate_g0(i,1),false_alarm_g0(i,1));
+    [dpg5(i,1),cg5(i,1)] = dprime_simple(hit_rate_g5(i,1),false_alarm_g5(i,1));
+    [dp0(i,1),c0(i,1)] = dprime_simple(hit_rate_0(i,1),false_alarm_0(i,1));
+    [dp5(i,1),c5(i,1)] = dprime_simple(hit_rate_5(i,1),false_alarm_5(i,1));
+
+    % signal detection successful hits and false hits
+    [dpg02(i,1),cg02(i,1)] = dprime(hit_rate_g0(i,1),false_alarm_g0(i,1));
+    [dpg52(i,1),cg52(i,1)] = dprime(hit_rate_g5(i,1),false_alarm_g5(i,1));
+    [dp02(i,1),c02(i,1)] = dprime(hit_rate_0(i,1),false_alarm_0(i,1));
+    [dp52(i,1),c52(i,1)] = dprime(hit_rate_5(i,1),false_alarm_5(i,1));
+
+    end
 
 
 % load cue ratings
@@ -414,4 +450,51 @@ end
 fig = plotNiceBars(d,dName,cueNames,groups,cols,[1 1],titleStr,1,savePath);
 
 
+%% 
 
+a=dp5;
+a(abs(a)>10)
+a(abs(a)>10)=nan
+[h,p,~,stats]=ttest2(a(gi==0),a(gi==1))
+[h,p,~,stats]=ttest2(a(rel==0),a(rel==1))
+
+
+a=cg0;
+a(abs(a)>10)
+a(abs(a)>10)=nan
+[h,p,~,stats]=ttest2(a(gi==0),a(gi==1))
+
+% difference between patients and controls for d prime but not criterion
+% for high rewards (but not 0 rewards)
+
+%% figure: dprime and criterion
+
+% Since the RT threshold for winning is dynamically changed based on
+% performance to maintain performance of ~66% correct, performance isn't
+% expected to deviate by trial type (by design)
+
+% % percent win (by trial type) for 1) controls, 2) patients, 3) both
+% dName = 'dprime_gain5';
+% 
+% clear d
+% for g=1:numel(groups)
+%     
+%     d{g} = dpg5(gi==gi_list(g),:);
+%     
+%     titleStr = sprintf('%s (n=%d) d prime for high gains',groups{g},size(d{g},1));
+%     if savePlots
+%         savePath = fullfile(outDir,[dName '_' groups{g} '.png']);
+%     else
+%         savePath = [];
+%     end
+%     fig = plotNiceBars(d{g},dName,[],groups(g),cols(g,:),[1 1],titleStr,1,savePath);
+% end
+% 
+% titleStr = 'accuracy by trial type by group';
+% if savePlots
+%     savePath = fullfile(outDir,[dName '_bygroup.png']);
+% else
+%     savePath = [];
+% end
+% fig = plotNiceBars(d,dName,ttypeNames,groups,cols,[1 1],titleStr,1,savePath);
+% 

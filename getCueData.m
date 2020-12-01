@@ -42,6 +42,10 @@ data = [];
 
 switch measure
     
+     case 'groupindex'
+        
+        data = getGI(subjects);
+   
     
     case 'age'
         
@@ -536,6 +540,15 @@ end % getCueData
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% internal functions to get the measures:
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
+function gi = getGI(subjects)
+
+[allsubs,allgi]=getCueSubjects('');
+idx=getStrIndices(subjects,allsubs);
+gi = allgi(idx);
+
+end % getGI()
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age

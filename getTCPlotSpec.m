@@ -160,7 +160,9 @@ switch task
         
         
     case 'midi'  % mid fmri task
-        
+%         
+
+   
         % corresponding groups:
         groups =  {'controls';
             'controls';
@@ -168,42 +170,172 @@ switch task
             'controls';
             'controls';
             'controls';
+            'controls';
+            'controls';
+            'controls';
+            'controls';
+            'controls';
+            'controls';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
+            'patients';
             'patients';
             'patients';
             'controls patients';
-            'controls relapsers nonrelapsers';};
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';  
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers';
+            'relapsers nonrelapsers'};
         
         
         
         % corresponding stims:
-        stims =  {'gain5GO gain0GO gain5NOGO gain0NOGO';
-            'gain5GO-gain0GO gain5NOGO-gain0NOGO';
-            'loss5GO loss0GO loss5NOGO loss0NOGO';
-            'loss5GO-loss0GO loss5NOGO-loss0NOGO';
-            'gain5GO gain5NOGO loss5GO loss5NOGO';
-            'gain5GO-gain0GO gain5NOGO-gain0NOGO loss5GO-loss0GO loss5NOGO-loss0NOGO';
-            'gain5GO gain0GO gain5NOGO gain0NOGO';
-            'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+        stims =  {'gain5GO gain0GO';
+            'gain5NOGO gain0NOGO';
+            'gain5GO gain5NOGO';
+            'gain0GO gain0NOGO';
+            'loss5GO loss0GO';
+            'loss5NOGO loss0NOGO';
+            'loss5GO loss5NOGO';
+            'loss0GO loss0NOGO';
+            'gain5GO loss5GO';
+            'gain0GO loss0GO';
+            'gain5NOGO loss5NOGO';
+            'gain0NOGO loss0NOGO';
+            'gain5GO gain0GO';
+            'gain5NOGO gain0NOGO';
+            'gain5GO gain5NOGO';
+            'gain0GO gain0NOGO';
+            'loss5GO loss0GO';
+            'loss5NOGO loss0NOGO';
+            'loss5GO loss5NOGO';
+            'loss0GO loss0NOGO';
+            'gain5GO loss5GO';
+            'gain0GO loss0GO';
+            'gain5NOGO loss5NOGO';
+            'gain0NOGO loss0NOGO';
+            'gain5GO';
+            'gain0GO';
             'gain5NOGO';
-            'gain5NOGO'};
+            'gain0NOGO';
+            'loss5GO';
+            'loss0GO';
+            'loss5NOGO';
+            'loss0NOGO';
+            'gain5GO';
+            'gain0GO';
+            'gain5NOGO';
+            'gain0NOGO';
+            'loss5GO';
+            'loss0GO';
+            'loss5NOGO';
+            'loss0NOGO'};
         
         
         
         % corresponding stim strings to use in figure and file name
-        stimStrs =  {'gain trials';
-            'Incentivized GO vs NOGO';
-            'loss trials';
-            'incentivized GO vs NOGO LOSS';
-            'high incentive trials';
-            'incentivized go,nogo,gain, loss';
-            'gain trials';
-            'Incentivized GO vs NOGO';
-            'high incentive NOGO trials';
-            'high incentive NOGO trials';
-            };
-        
-        
-        
+        stimStrs =  {'gain GO 5 vs 0';
+            'gain NOGO 5 vs 0';
+            'gain 5 GO vs NO';
+            'gain 0 GO vs NO';
+            'loss GO 5 vs 0';
+            'loss NOGO 5 vs 0';
+            'loss 5 GO vs NO';
+            'loss 0 GO vs NO';
+            'GO 5 gain vs loss';
+            'GO 0 gain vs loss';
+            'NOGO 5 gain vs loss';
+            'NOGO 0 gain vs loss';
+            'gain GO 5 vs 0';
+            'gain NOGO 5 vs 0';
+            'gain 5 GO vs NO';
+            'gain 0 GO vs NO';
+            'loss GO 5 vs 0';
+            'loss NOGO 5 vs 0';
+            'loss 5 GO vs NO';
+            'loss 0 GO vs NO';
+            'GO 5 gain vs loss';
+            'GO 0 gain vs loss';
+            'NOGO 5 gain vs loss';
+            'NOGO 0 gain vs loss';
+            'gain5GO';
+            'gain0GO';
+            'gain5NOGO';
+            'gain0NOGO';
+            'loss5GO';
+            'loss0GO';
+            'loss5NOGO';
+            'loss0NOGO';
+            'gain5GO';
+            'gain0GO';
+            'gain5NOGO';
+            'gain0NOGO';
+            'loss5GO';
+            'loss0GO';
+            'loss5NOGO';
+            'loss0NOGO'};
+       
+%         % corresponding groups:
+%         groups =  {'controls';
+%             'controls';
+%             'controls';
+%             'controls';
+%             'controls';
+%             'controls';
+%             'patients';
+%             'patients';
+%             'controls patients';
+%             'controls relapsers nonrelapsers';};
+%         
+%         
+%         
+%         % corresponding stims:
+%         stims =  {'gain5GO gain0GO gain5NOGO gain0NOGO';
+%             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+%             'loss5GO loss0GO loss5NOGO loss0NOGO';
+%             'loss5GO-loss0GO loss5NOGO-loss0NOGO';
+%             'gain5GO gain5NOGO loss5GO loss5NOGO';
+%             'gain5GO-gain0GO gain5NOGO-gain0NOGO loss5GO-loss0GO loss5NOGO-loss0NOGO';
+%             'gain5GO gain0GO gain5NOGO gain0NOGO';
+%             'gain5GO-gain0GO gain5NOGO-gain0NOGO';
+%             'gain5NOGO';
+%             'gain5NOGO'};
+%         
+%         
+%         
+%         % corresponding stim strings to use in figure and file name
+%         stimStrs =  {'gain trials';
+%             'Incentivized GO vs NOGO';
+%             'loss trials';
+%             'incentivized GO vs NOGO LOSS';
+%             'high incentive trials';
+%             'incentivized go,nogo,gain, loss';
+%             'gain trials';
+%             'Incentivized GO vs NOGO';
+%             'high incentive NOGO trials';
+%             'high incentive NOGO trials';
+%             };
+%         
+%         
+%         
 end
 
 

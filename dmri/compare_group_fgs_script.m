@@ -33,17 +33,30 @@ method = 'mrtrix_fa';
 
 % targets={'nacc'};
 % 
-fgMatStrs = {'sginsLR_%sLR_autoclean23';
-    'sginsL_%sL_autoclean23';
-    'sginsR_%sR_autoclean23'};
+% fgMatStrs = {'sginsLR_%sLR_autoclean23';
+%     'sginsL_%sL_autoclean23';
+%     'sginsR_%sR_autoclean23'};
+% 
+% targets={'vlpfc';'vlpfc';'vlpfc'};
 
-targets={'vlpfc';'vlpfc';'vlpfc'};
+% 
+% fgMatStrs = {'mpfc8mmL_%sL_autoclean23';
+%     'mpfc8mmR_%sR_autoclean23'};
+fgMatStrs = {'PVTL_%sL_autoclean23';
+    'PVTR_%sR_autoclean23'};
+
+% 
+% targets={'nacc';'nacc';'nacc'};
+% fgMatStrs = {'mpfc8mmL_%sL_autoclean23'};
+
+targets={'nacc','nacc'};
+
 
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
- covars={'age','dwimotion','gender'};
-% covars={'age','dwimotion','bis'};
+covars={'age','gender','dwimotion'};
+% covars={'age','dwimotion'};
 % covars={};
 
 % corresponding labels for saving out
@@ -62,18 +75,18 @@ lspec = {'-','--'};
 % groupStr = '_byrelapse';
 % lspec = {'-','--'};
 
-% group = {'relapsers','nonrelapsers'};
+% group = {'relapse_6months','nonrelapse_6months'};
 % groupStr = '_byrelapse';
 % lspec = {'-','--'};
-
-cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgMatStrs, 'uniformoutput',0); % plotting colors for groups
+% 
+% cols=cellfun(@(x) getDTIColors(x),fgMatStrs, 'uniformoutput',0); % plotting colors for groups
 
 omit_subs = {''};
 
-fgMPlots = {'FA','MD'}; % fg measure to plot as values along pathway node
+fgMPlots = {'FA','invMD','invRD','AD'}; % fg measure to plot as values along pathway node
 % fgMPlots={'AD'};
 
-doStats=1;
+doStats=0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -98,6 +111,7 @@ for j=1:numel(fgMatStrs)
     %%%%%%%%%%%% hack so that epiphany patients are in the same
     %%%%%%%%%%%% patient group as VA patients
     gi(gi>0)=1;
+   
     % ADD LINES HERE TO UPDATE GI IF STRCMP(GROUP)=='relapsers' or
     % 'nonrelapsers'; e.g.,
     % if strcmp(group, 'relapsers')
@@ -135,7 +149,14 @@ for j=1:numel(fgMatStrs)
         fgMPlot=fgMPlots{k};
         
         % get desired diff measure to plot
-        thisfgm=fgMeasures{strcmp(fgMPlot,fgMLabels)};
+        if strcmp(fgMPlot,'invMD')
+              thisfgm=1-fgMeasures{strcmp('MD',fgMLabels)};
+        elseif strcmp(fgMPlot,'invRD')
+            thisfgm=1-fgMeasures{strcmp('RD',fgMLabels)};
+        else
+            thisfgm=fgMeasures{strcmp(fgMPlot,fgMLabels)};
+        end
+        
         
         % average across mid 50% of the pathway and test for group diffs
         p=nan(1,nNodes);
@@ -176,11 +197,12 @@ for j=1:numel(fgMatStrs)
         
         
         %%%%%%%%%% plotting params
-                xlab = 'tract node location';
+        xlab = 'tract node location';
         
         ylab = fgMPlot;
 
-        cols=repmat({getDTIColors(targets{j},fgMatStr)},size(group)); % plot groups as same color
+
+        cols=repmat({getDTIColors(fgMatStr)},size(group)); % plot groups as same color
         if doStats
             figtitle = [strrep(fgMatLabel,'_',' ') ' ' strrep(groupStr,'_',' ') '; ' strrep(cvStr,'_',' ') test_res];
         else
@@ -199,13 +221,13 @@ for j=1:numel(fgMatStrs)
         [fig,leg]=plotNiceLines(1:nNodes,mean_fg,se_fg,cols,p,lineLabels,...
             xlab,ylab,figtitle,[],plotToScreen,lspec);
         hold on
-        pos=get(fig,'Position')
-  
+        
+%         pos=get(fig,'Position')
 %         newpos=[pos(1), pos(2), pos(3)./2, pos(4)./2]; % reduce the figure size to be more in line with publication size
 %         set(fig,'Position',newpos)
 % 
-% %         set(gca,'FontSize',30)
-%         set(gca,'XTick',[])
+        set(gca,'FontSize',24)
+        set(gca,'XTick',[])
 %         set(gca,'YTick',[0:.05:.6])
 %         
 %         

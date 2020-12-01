@@ -1,4 +1,4 @@
-function colors = getDTIColors(targets,fgFileStrs)
+function colors = getDTIColors(fgFileStrs)
 % -------------------------------------------------------------------------
 % usage: returns rgb color values for plotting cue experiment results. The
 % idea of having this is to keep plot colors for each stimulus consistent.
@@ -7,6 +7,7 @@ function colors = getDTIColors(targets,fgFileStrs)
 
 
 % INPUT:
+%   fgFileStrs - filename of fiber group, e.g., 'mpfcL_naccL_autoclean'
 
 % OUTPUT:
 %   colors - rgb values in rows for colors
@@ -15,12 +16,9 @@ function colors = getDTIColors(targets,fgFileStrs)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-if ~iscell(targets)
-    targets = {targets};
-end
 
 if notDefined('fgFileStrs')
-    fgFileStrs=cell(size(targets));
+    fgFileStrs={''};
 end
 if ~iscell(fgFileStrs)
     fgFileStrs={fgFileStrs};
@@ -48,46 +46,51 @@ white= [1 1 1];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 colors = [];
-for i=1:numel(targets)
+for i=1:numel(fgFileStrs)
     
-    switch lower(targets{i})
+    fgStr=fgFileStrs{i};
+    
+    if contains(fgStr,'mpfc','IgnoreCase',1)
         
-        case 'nacc'
-            
-            if strfind(lower(fgFileStrs{i}),'aboveac')
-                colors(i,:)=orange;
-            else
-                colors(i,:) = yellow;
-            end
-            
-        case 'caudate'
-            colors(i,:) = red;
-            
-        case 'putamen'
-            colors(i,:) = blue;
-            
-        case 'da'
-            colors(i,:) = white;
-            
-        otherwise
-            colors(i,:)=green;
-            
+        colors(i,:)=[15   209   219]./255; % cyan
+        
+    elseif  contains(fgStr,'amyg','IgnoreCase',1)
+        
+        colors(i,:)=[193    70   242]./255; % yellowish-orange
+        
+    elseif  contains(fgStr,'vlpfc','IgnoreCase',1)
+        
+        colors(i,:)= [102 166 30]./255; % green
+        
+    elseif  contains(fgStr,'pvt','IgnoreCase',1)
+        
+        colors(i,:)= [1 0 0]; % red
+        
+    elseif  contains(fgStr,'asgins','IgnoreCase',1)
+        
+        colors(i,:)= [ 226    24     2]./255; % red
+        
+    elseif  contains(fgStr,'caudate','IgnoreCase',1)
+        
+        colors(i,:)= [250 24 29]./255; % red
+        
+    elseif  contains(fgStr,'putamen','IgnoreCase',1)
+        
+        colors(i,:)= [44, 129, 162]./255; % blue
+        
+    elseif  contains(fgStr,'aboveAC','IgnoreCase',1) % superior VTA-NAcc tract
+        
+        colors(i,:)= [244 101 7]./255; % orange
+        
+    elseif  contains(fgStr,'belowAC','IgnoreCase',1) % inferior VTA-NAcc tract
+        
+        colors(i,:)= [238,178,35]./255; % yellow
+        
+    else
+        colors(i,:)=[231 41 138]./255; % pink
+        
     end
     
 end
 
-
-% 
-% nacc = [250 24 29]./255;    % red
-% caudate = [238,178,35]./255;      % yellow
-% putamen = [33, 113, 181]./255;  % blue
-% dTier = [244 101 7]./255;       % orange
-% vTier = [44, 129, 162]./255;    % blue (different from putamen blue)
-% daRoi = [28 178 5]./255;       % green
-% 
-% 
-% % colors for fiber density maps: 
-% fd_caudate = [linspace(252,221,64)',linspace(244,151,64)',linspace(200,28,64)']./255; % yellow
-% fd_nacc = [linspace(255,200,64)',linspace(224,15,64)',linspace(210,21,64)']./255;
-% fd_putamen = [linspace(158,0,64)',linspace(202,0,64)',linspace(225,181,64)']./255;
 
