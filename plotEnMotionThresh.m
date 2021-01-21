@@ -80,17 +80,17 @@ hold on
 plot(en,'color',[.15 .55 .82],'linewidth',1.5)
 set(gca,'box','off');
 plot(ones(numel(en),1).*en_thresh,'color',[.86 .2 .18]);
-ylabel('head motion (in ~mm units)','FontSize',12)
+ylabel('head motion (in ~mm units)','FontSize',8)
 
-title(sprintf('number of bad motion volumes: %d; percent of data: %.1f',nBad,100.*(nBad./numel(en))),'FontSize',14)
+title(sprintf('# of bad motion vols: %d; %% of data: %.1f',nBad,100.*(nBad./numel(en))),'FontSize',10)
 
 if ~isempty(ts)
     subplot(3,1,2)
     plot(ts,'color',[.16 .63 .6],'linewidth',1.5)
     set(gca,'box','off');
-    ylabel('MR signal','FontSize',12)
-    xlabel('TRs','FontSize',12)
-    title([ts_str ' time series'],'FontSize',14)
+    ylabel('MR signal','FontSize',8)
+    xlabel('TRs','FontSize',8)
+    title([ts_str ' time series'],'FontSize',10)
     
     tscensored=ts;
     tscensored(badidx)=0;
@@ -98,9 +98,9 @@ if ~isempty(ts)
     subplot(3,1,3)
     plot(tscensored,'color',[.16 .63 .6],'linewidth',1.5)
     set(gca,'box','off');
-    ylabel('MR signal','FontSize',12)
-    xlabel('TRs','FontSize',12)
-    title([ts_str ' time series (with bad motion vols censored)'],'FontSize',14)
+    ylabel('MR signal','FontSize',8)
+    xlabel('TRs','FontSize',8)
+    title([ts_str ' time series (with bad motion vols censored)'],'FontSize',10)
     
     
 end
