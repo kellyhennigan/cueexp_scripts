@@ -24,7 +24,7 @@ t1Path = fullfile(dataDir,'%s','t1.nii.gz'); %s is subject ID
 
 outDir = fullfile(figDir,'ROIs_subject','%s'); %s is roiName
 
-plane=2; % 1 for sagittal, 2 for coronal, 3 for axial view
+plane=3; % 1 for sagittal, 2 for coronal, 3 for axial view
 
 % col = [1 1 0]; % color for ROI mask
 col=[238,178,35]./255;
