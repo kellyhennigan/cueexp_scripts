@@ -512,6 +512,51 @@ switch measure
         
         data = getDWIMotion(subjects);
         
+    
+    case 'midi_nogo_g5_success'
+        
+        T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
+        idx=getStrIndices(subjects,T.subjid);
+        data=nan(numel(subjects),1);
+        for i=1:numel(subjects)
+            if ~isnan(idx(i))
+                data(i,1)=T.pwin_nogo_g5(idx(i));
+            end
+        end
+         
+     
+         case 'midi_nogo_gl5_success'
+             
+             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
+             idx=getStrIndices(subjects,T.subjid);
+             data=nan(numel(subjects),1);
+             for i=1:numel(subjects)
+                 if ~isnan(idx(i))
+                     data(i,1)=T.pwin_nogo_gl5(idx(i));
+                 end
+             end
+    
+    case 'midi_dprime5'
+             
+             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
+             idx=getStrIndices(subjects,T.subjid);
+             data=nan(numel(subjects),1);
+             for i=1:numel(subjects)
+                 if ~isnan(idx(i))
+                     data(i,1)=T.dprime5(idx(i));
+                 end
+             end
+             
+              case 'midi_criterion5'
+             
+             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
+             idx=getStrIndices(subjects,T.subjid);
+             data=nan(numel(subjects),1);
+             for i=1:numel(subjects)
+                 if ~isnan(idx(i))
+                     data(i,1)=T.criterion5(idx(i));
+                 end
+             end
         
     otherwise
         

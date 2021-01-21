@@ -10,9 +10,10 @@ dataDir = p.data; % main data directory
 % subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
 task = 'midi';
 
-% groups = {'controls','patients'}; % group names
+groups = {'controls','patients'}; % group names
 % groups = {'controls','relapsers','nonrelapsers'}; % group names
-groups = {'relapsers','nonrelapsers'}; % group names
+% groups = {'relapsers','nonrelapsers'}; % group names
+% groups={'patients'};
 
 [subjects,gi] = getCueSubjects(task);
 
@@ -498,3 +499,64 @@ a(abs(a)>10)=nan
 % end
 % fig = plotNiceBars(d,dName,ttypeNames,groups,cols,[1 1],titleStr,1,savePath);
 % 
+%% save out data 
+% 
+% idx=ismember(subjects,subs2)
+% 
+% % subject ids
+% subjects=subjects(idx);
+% subjid = cell2mat(subjects);
+% Tsubj = table(subjid);
+% gi=gi(idx);
+% Tgi=table(gi);
+% 
+% 
+% dprime5=dp52(idx);
+% dprime0=dp02(idx);
+% criterion0=c02(idx);
+% criterion5=c52(idx);
+% 
+% pwin_go_g0=p_win(idx,1);
+% pwin_go_g5=p_win(idx,5);
+% pwin_nogo_g0=p_win(idx,2);
+% pwin_nogo_g5=p_win(idx,6);
+% pwin_nogo_gl5=(p_win(idx,6)+p_win(idx,8))./2;
+% pwin_go_gl5=(p_win(idx,5)+p_win(idx,7))./2;
+% 
+% outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121.csv');
+% % concatenate all data into 1 table
+% T=table();
+% % T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
+% T = [Tsubj Tgi table(dprime5,criterion5,dprime0,criterion0,pwin_go_g0,pwin_go_g5,pwin_nogo_g0,pwin_nogo_g5,pwin_nogo_gl5)];
+% 
+% % save out
+% writetable(T,outPath); 
+
+
+
+% subject ids
+subjid = cell2mat(subjects);
+Tsubj = table(subjid);
+Tgi=table(gi);
+
+
+dprime5=dp52;
+dprime0=dp02;
+criterion0=c02;
+criterion5=c52;
+
+pwin_go_g0=p_win(:,1);
+pwin_go_g5=p_win(:,5);
+pwin_nogo_g0=p_win(:,2);
+pwin_nogo_g5=p_win(:,6);
+pwin_nogo_gl5=(p_win(:,6)+p_win(:,8))./2;
+pwin_go_gl5=(p_win(:,5)+p_win(:,7))./2;
+
+outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121_v2.csv');
+% concatenate all data into 1 table
+T=table();
+% T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
+T = [Tsubj Tgi table(dprime5,criterion5,dprime0,criterion0,pwin_go_g0,pwin_go_g5,pwin_nogo_g0,pwin_nogo_g5,pwin_nogo_gl5)];
+
+% save out
+writetable(T,outPath); 
