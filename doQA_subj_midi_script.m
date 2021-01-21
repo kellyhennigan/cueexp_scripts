@@ -7,7 +7,7 @@ close all
 p=getCuePaths();
 task='midi';
 
-task_subjects = getCueSubjects(task);
+task_subjects = getCueSubjects('');
 fprintf('\n');
 subj_list=cellfun(@(x) [x ' '], task_subjects, 'UniformOutput',0)';
 disp([subj_list{:}]);
@@ -21,7 +21,7 @@ end
 
 dataDir = p.data;
 
-figDir = fullfile(p.figures,'QA',task);
+figDir = fullfile(p.figures,'QA',task,'w_censoredvols');
 
 savePlots = 1; % 1 to save plots, otherwise 0
 
@@ -29,40 +29,19 @@ motion_metric = 'euclideannorm';
 % motion_metric = 'displacement'; 
 % motion_metric = 'fwdisplacement'; 
 
+run2vol1idx=293; % first vol of the 2nd run; set motion metric to 0 for this
+
 %%
 
-% define file with task motion params based on task
-switch task
-    
-    case 'dti'
+mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task
         
-        mp_file = [dataDir '/%s/dti96trilin/dwi_aligned_trilin_ecXform.mat']; % func data dir, %s is subject id
+thresh = .5; % threshold for calling a TR "bad"
         
-        vox_mm = 2; % dti voxel dimensions are 2mm isotropic
-        
-        thresh = 3; % threshold for calling a TR "bad"
-        
-        % what percentage of bad volumes should lead to excluding a subject for
-        % motion? 
-%         1% threshold means excluding for 2 bad volumes or more (there are
-%         105 vols)
-        percent_bad_thresh = 1;
-        
-        roi_str = 'wmMask';
-        roits_file = [dataDir '/%s/dti96trilin/' roi_str '_ts'];
-      
-    otherwise % for fmri tasks
-        
-        mp_file = [dataDir '/%s/func_proc/' task '_vr.1D']; % motion param file where %s is task
-        
-        thresh = .5; % threshold for calling a TR "bad"
-        percent_bad_thresh = 3;
-        
-        roi_str = 'nacc_afni';
-        roits_file = [dataDir '/%s/func_proc/' task '_' roi_str '.1D']; % roi time series file to plot where %s is task
-        
-end
+roi_str = 'nacc_afni';
 
+roits_file = [dataDir '/%s/func_proc/' task '_' roi_str '.1D']; % roi time series file to plot where %s is task
+        
+percent_bad_thresh=3; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% do it
@@ -81,54 +60,31 @@ for s = 1:numel(subjects)
     
     mp = []; % this subject's motion params
     
-    % get task motion params
-    switch task
-        
-        case 'dti'
-            
-            try
-                load(sprintf(mp_file,subject)); % loads a structural array, "xform"
-                mp=vertcat(xform(:).ecParams);
-                mp = mp(:,[1:3 5 4 6]); % rearrange to be in order dx,dy,dz,roll,pitch,yaw
-                mp(:,1:3) = mp(:,1:3).*vox_mm; % change displacement to be in units of mm
-                mp(:,4:6) = mp(:,4:6)/(2*pi)*360; % convert rotations to units of degrees
-            catch
-                warning(['couldnt get motion params for subject ' subject ', so skipping...'])
-            end
-            
-        otherwise  % for fmri tasks
-            
-            try
-                mp = dlmread(sprintf(mp_file,subject));
-                mp = mp(:,[6 7 5 2:4]); % rearrange to be in order dx,dy,dz,roll,pitch,yaw
-            catch
-                warning(['couldnt get motion params for subject ' subject ', so skipping...'])
-            end
+    
+    try
+        mp = dlmread(sprintf(mp_file,subject));
+        mp = mp(:,[6 7 5 2:4]); % rearrange to be in order dx,dy,dz,roll,pitch,yaw
+    catch
+        warning(['couldnt get motion params for subject ' subject ', so skipping...'])
     end
     
+    
     if isempty(mp)
-        max_motion(s,1)=nan; max_TR(s,1)=nan; nBad(s,1)=nan; omit_idx(s,1)=nan;
+        nBad(s,1)=nan; omit_idx(s,1)=nan;
     else
         
-        % plot motion params & save if desired
-       fig = plotMotionParams(mp);
-        if savePlots
-            outName = [subject '_mp'];
-            print(gcf,'-dpng','-r300',fullfile(figDir,outName));
-        end
-        
-         switch motion_metric        
+        switch motion_metric
             case 'euclideannorm'
-                m = computeAfniEuclideanNorm(mp); 
+                m = computeAfniEuclideanNorm(mp);
             case 'displacement'
-                m = computeHeadDisplacement(mp(:,1:3)); 
+                m = computeHeadDisplacement(mp(:,1:3));
             case 'fwdisplacement'
                 m = computeFrameWiseDisplacement(mp);
         end
-               
-        % determine this subject's max movement
-        [max_motion(s,1),max_TR(s,1)]=max(m);
         
+        if exist('run2vol1idx','var')
+            m(run2vol1idx)=0; % there's no "motion" in the 1st vol of the 2nd run; correctly assign motion to 0
+        end
         
         % calculate # of bad images based on thresh
         nBad(s,1) = numel(find(m>thresh));

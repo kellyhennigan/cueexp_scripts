@@ -61,7 +61,20 @@ switch task
         roi_str = 'nacc_afni';
         roits_file = [dataDir '/%s/func_proc/' task '_' roi_str '.1D']; % roi time series file to plot where %s is task
         
-end
+        % mid and midi have 2 runs that are concatenated;
+        % use this variable to index which volume # is the first
+        % vol of the 2nd run so that it's motion can be assigned to 0
+        if strcmp(task,'mid')
+            run2vol1idx=257;
+        elseif strcmp(task,'midi')
+            run2vol1idx=293;
+        end
+    
+        
+end % task
+            
+        
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -111,12 +124,12 @@ for s = 1:numel(subjects)
     else
         
         % plot motion params & save if desired
-       fig = plotMotionParams(mp);
-        if savePlots
-            outName = [subject '_mp'];
-            print(gcf,'-dpng','-r300',fullfile(figDir,outName));
-        end
-        
+%        fig = plotMotionParams(mp);
+%         if savePlots
+%             outName = [subject '_mp'];
+%             print(gcf,'-dpng','-r300',fullfile(figDir,outName));
+%         end
+%         
          switch motion_metric        
             case 'euclideannorm'
                 m = computeAfniEuclideanNorm(mp); 
@@ -124,8 +137,12 @@ for s = 1:numel(subjects)
                 m = computeHeadDisplacement(mp(:,1:3)); 
             case 'fwdisplacement'
                 m = computeFrameWiseDisplacement(mp);
-        end
-               
+         end
+              
+         if exist('run2vol1idx','var')
+             m(run2vol1idx)=0; % there's no "motion" in the 1st vol of the 2nd run; correctly assign motion to 0
+         end
+         
         % determine this subject's max movement
         [max_motion(s,1),max_TR(s,1)]=max(m);
         
@@ -149,8 +166,7 @@ for s = 1:numel(subjects)
             ts = dlmread(sprintf(roits_file,subject));
         else
             ts = zeros(numel(m),1); roi_str = '';
-        end
-        
+        end     
        fig = plotEnMotionThresh(m,thresh,ts,roi_str);
         
         % if a time series is plotted for diffusion data, ignore the b0 volumes

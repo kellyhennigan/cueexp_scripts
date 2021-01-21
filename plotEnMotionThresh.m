@@ -1,16 +1,21 @@
-function figH = plotEnMotionThresh(en,en_thresh,ts,ts_str)
+function figH = plotEnMotionThresh(en,en_thresh,ts,ts_str,censorprevTR)
 % -------------------------------------------------------------------------
 % usage: say a little about the function's purpose and use here
 %
 % INPUT:
-%   en - euclidean norm
+%   en - euclidean norm of motion
 %   en_thresh - threshold for determining "bad" movement
 %   ts (optional) - time series from the scan. Plotting this along with the
 %      euclideam norm can help determine how movement effects the MR signal
 %   ts_str (optional) - string identifying time series ts (e.g., 'nacc')
+%   censorprevTR (optional) - 1 to censor the previous TR for bad motion
+%   volumes, otherwise, 0
 
 % OUTPUT:
 %   figH - figure handle
+%   if ts is given, then 3 plots will be made: 1) motion plot showing motion
+%   threshold, 2) time series, 3) time series with "bad motion" volumes
+%   censored.
 
 % NOTES:
 
@@ -45,11 +50,20 @@ if ~exist('ts','var')
     ts ='';
 end
 if notDefined('ts_str')
-    ts_str ='MR';
+    ts_str ='time series';
+end
+if notDefined('censorprevTR')
+    censorprevTR = 0; 
 end
 
 
-[max_en,max_TR]=max(en);
+% find the number of volumes that have bad motion
+badidx=find(abs(en)>thresh); 
+nBad=numel(badidx);
+
+if censorprevTR=1
+    badidx=unique([badidx;badidx-1]);
+end
 
 
 % plot
@@ -57,9 +71,9 @@ figH = figure('Visible','off');
 % figH = figure
 set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
-% make 2 plots if ts is given, otherwise plot just the euclidean norm
+% make 3 plots if ts is given, otherwise plot just the euclidean norm
 if ~isempty(ts)
-    subplot(2,1,1)
+    subplot(3,1,1)
 end
 
 hold on
@@ -68,14 +82,26 @@ set(gca,'box','off');
 plot(ones(numel(en),1).*en_thresh,'color',[.86 .2 .18]);
 ylabel('head motion (in ~mm units)','FontSize',12)
 
-title(sprintf('max movement: ~%.2f mm, at TR=%d',max_en,max_TR),'FontSize',14);
+title(sprintf('number of bad motion volumes: %d; percent of data: %.1f',nBad,100.*(nBad./numel(en)),'FontSize',14)
 
 if ~isempty(ts)
-    subplot(2,1,2)
+    subplot(3,1,2)
     plot(ts,'color',[.16 .63 .6],'linewidth',1.5)
     set(gca,'box','off');
     ylabel('MR signal','FontSize',12)
     xlabel('TRs','FontSize',12)
     title([ts_str ' time series'],'FontSize',14)
+    
+    tscensored=ts;
+    tscensored(badidx)=0;
+    
+    subplot(3,1,3)
+    plot(tscensored,'color',[.16 .63 .6],'linewidth',1.5)
+    set(gca,'box','off');
+    ylabel('MR signal','FontSize',12)
+    xlabel('TRs','FontSize',12)
+    title([ts_str ' time series (with bad motion vols censored)'],'FontSize',14)
+    
+    
 end
 
