@@ -82,7 +82,7 @@ set(gca,'box','off');
 plot(ones(numel(en),1).*en_thresh,'color',[.86 .2 .18]);
 ylabel('head motion (in ~mm units)','FontSize',12)
 
-title(sprintf('number of bad motion volumes: %d; percent of data: %.1f',nBad,100.*(nBad./numel(en)),'FontSize',14)
+title(sprintf('number of bad motion volumes: %d; percent of data: %.1f',nBad,100.*(nBad./numel(en))),'FontSize',14)
 
 if ~isempty(ts)
     subplot(3,1,2)
