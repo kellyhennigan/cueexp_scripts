@@ -61,7 +61,7 @@ end
 badidx=find(abs(en)>thresh); 
 nBad=numel(badidx);
 
-if censorprevTR=1
+if censorprevTR==1
     badidx=unique([badidx;badidx-1]);
 end
 

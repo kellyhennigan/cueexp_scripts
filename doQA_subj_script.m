@@ -167,7 +167,7 @@ for s = 1:numel(subjects)
         else
             ts = zeros(numel(m),1); roi_str = '';
         end     
-       fig = plotEnMotionThresh(m,thresh,ts,roi_str);
+       fig = plotEnMotionThresh(m,thresh,ts,strrep(roi_str,'_',' '),1);
         
         % if a time series is plotted for diffusion data, ignore the b0 volumes
         % (it messes up the plot scale)
