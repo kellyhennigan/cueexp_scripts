@@ -77,6 +77,8 @@ if notDefined('lspec')
     lspec = repmat({'-'},size(y));
 end
 
+% linewidth=2; % this determines width of main line traces 
+linewidth=3; % this determines width of main line traces 
 
 %%
 
@@ -95,7 +97,8 @@ set(gcf,'Color','w','InvertHardCopy','off','PaperPositionMode','auto');
 
 
 % plot lines
-cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',2),y,lspec,cols)
+cellfun(@(a,b,c) plot(x,a,b,'color',c,'linewidth',linewidth),y,lspec,cols)
+
 
 % legend
 leg=[];
@@ -118,7 +121,7 @@ if ~isempty(se)
     cellfun(@(a) set(a.edge(1), 'Visible','off'), h)
     cellfun(@(a) set(a.edge(2), 'Visible','off'), h)
     hc = get(gca,'Children');
-    set(hc,'Linewidth',2);
+    set(hc,'Linewidth',linewidth);
 end
 
 % title

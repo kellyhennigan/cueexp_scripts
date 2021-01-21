@@ -182,9 +182,18 @@ if __name__ == '__main__':
 				doCommand(cmd)
 				
 		
+
 		print '\nFINISHED SUBJECT '+subject+'\n'
 			
 
+# e.g.: 
+# tckgen -algorithm iFOD2 -grad dti96trilin/mrtrix_fa/b_file \
+# -mask dti96trilin/mrtrix_fa/wm_mask_dil4.nii.gz \
+# -seed_image ROIs/sginsR.nii.gz \
+# -include ROIs/vlpfcR.nii.gz \
+# -select 1000 -seeds 10000000 -maxlength 50 \
+# -stop -nthreads 8 -force -info \
+# dti96trilin/mrtrix_fa/CSD8.mif fibers/mrtrix_fa/sginsR_vlpfcR.tck
 
 
 

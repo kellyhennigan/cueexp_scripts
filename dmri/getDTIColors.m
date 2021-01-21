@@ -56,7 +56,7 @@ for i=1:numel(fgFileStrs)
         
     elseif  contains(fgStr,'amyg','IgnoreCase',1)
         
-        colors(i,:)=[193    70   242]./255; % yellowish-orange
+        colors(i,:)=[253   160     0]./255; % yellowish-orange
         
     elseif  contains(fgStr,'vlpfc','IgnoreCase',1)
         

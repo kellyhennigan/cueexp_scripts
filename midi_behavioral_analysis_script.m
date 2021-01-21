@@ -10,9 +10,9 @@ dataDir = p.data; % main data directory
 % subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
 task = 'midi';
 
-groups = {'controls','patients'}; % group names
+% groups = {'controls','patients'}; % group names
 % groups = {'controls','relapsers','nonrelapsers'}; % group names
-% groups = {'relapsers','nonrelapsers'}; % group names
+groups = {'relapsers','nonrelapsers'}; % group names
 
 [subjects,gi] = getCueSubjects(task);
 
@@ -139,20 +139,20 @@ hit_rate_5 = (p_win(:,5)+p_win(:,7))./2;
 false_alarm_5 = (1-p_win(:,6)+1-p_win(:,8))./2;
 
 % 
-    % signal detection successful hits and false hits
-    for i=1:N
+% signal detection successful hits and false hits
+for i=1:N
     [dpg0(i,1),cg0(i,1)] = dprime_simple(hit_rate_g0(i,1),false_alarm_g0(i,1));
     [dpg5(i,1),cg5(i,1)] = dprime_simple(hit_rate_g5(i,1),false_alarm_g5(i,1));
     [dp0(i,1),c0(i,1)] = dprime_simple(hit_rate_0(i,1),false_alarm_0(i,1));
     [dp5(i,1),c5(i,1)] = dprime_simple(hit_rate_5(i,1),false_alarm_5(i,1));
-
+    
     % signal detection successful hits and false hits
     [dpg02(i,1),cg02(i,1)] = dprime(hit_rate_g0(i,1),false_alarm_g0(i,1));
     [dpg52(i,1),cg52(i,1)] = dprime(hit_rate_g5(i,1),false_alarm_g5(i,1));
     [dp02(i,1),c02(i,1)] = dprime(hit_rate_0(i,1),false_alarm_0(i,1));
     [dp52(i,1),c52(i,1)] = dprime(hit_rate_5(i,1),false_alarm_5(i,1));
-
-    end
+    
+end
 
 
 % load cue ratings

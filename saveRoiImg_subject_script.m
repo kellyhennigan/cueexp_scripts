@@ -14,8 +14,8 @@ dataDir = p.data;
 roiFilePath = fullfile(dataDir,'%s','ROIs','%s.nii.gz'); % filepath to ROI file(s); %s is roi name
 
 % list of ROIs to plot (script will loop over these)
-roiNames = {'nacc','caudate','putamen'};
-% roiNames = {'asgins','amygdala','nacc'};
+% roiNames = {'nacc','caudate','putamen'};
+roiNames = {'sgins','vlpfc'};
 % roiNames = {'mpfc8mmL'};
 
 figDir = p.figures_dti;

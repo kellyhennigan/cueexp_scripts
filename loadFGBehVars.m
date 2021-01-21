@@ -68,9 +68,11 @@ keep_idx = ones(numel(subjects),1);
 
 % if a specific group is desired: 
 if strcmpi(group,'controls') || isequal(group,0)
+    gi=getCueData(subjects,'groupindex');
     keep_idx=gi==0;
     
 elseif strcmpi(group,'patients') || isequal(group,1)
+   gi=getCueData(subjects,'groupindex');
     keep_idx=gi>0;
     
 elseif strcmpi(group,'relapsers') || strcmpi(group,'relapse') 
