@@ -58,7 +58,7 @@ end
 
 
 % find the number of volumes that have bad motion
-badidx=find(abs(en)>thresh); 
+badidx=find(abs(en)>en_thresh); 
 nBad=numel(badidx);
 
 if censorprevTR==1
