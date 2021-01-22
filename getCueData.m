@@ -42,11 +42,11 @@ data = [];
 
 switch measure
     
-     case 'groupindex'
+    case 'groupindex'
         
         data = getGI(subjects);
-   
-    
+        
+        
     case 'age'
         
         data = getAge(subjects);
@@ -55,8 +55,8 @@ switch measure
     case 'gender'
         
         data = getGender(subjects);
-      
-         
+        
+        
     case 'bdi'
         
         data = getBDIScores(subjects);
@@ -100,7 +100,7 @@ switch measure
         data = getSmokers(subjects);
         data = data{1}; % 1 for yes, 0 for no
         
-        % 
+        %
         
     case 'smokeperday'
         
@@ -163,8 +163,8 @@ switch measure
         ri(days2relapse > daythresh) = 0; % set relapse to 0 if it occurred >90 days after participation
         ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 80 days & didnt relapse, set this to nan
         data = ri;
-    
-%         data = get3MonthRelapseTemp(subjects)
+        
+        %         data = get3MonthRelapseTemp(subjects)
         
     case 'relapse_4months'
         
@@ -219,7 +219,7 @@ switch measure
         
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         data = censored;
-   
+        
     case {'3monthfollowupdays','finalfollowupdays'}
         
         data = getFollowupDays(subjects,measure);
@@ -250,8 +250,8 @@ switch measure
         end
         data=cellfun(@(x) ~isempty(strfind(x,stim)), primary_stim);
         
-     
-   
+        
+        
     case 'first_use_age'
         
         fud=getCueData(subjects,'first_use_date');
@@ -512,10 +512,11 @@ switch measure
         
         data = getDWIMotion(subjects);
         
-    
+        
     case 'midi_nogo_g5_success'
         
-        T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
+        a=dir('/Users/kelly/cueexp/data/midi_behavior/mididata*');
+        T=readtable(fullfile('/Users/kelly/cueexp/data/midi_behavior',a(end).name));
         idx=getStrIndices(subjects,T.subjid);
         data=nan(numel(subjects),1);
         for i=1:numel(subjects)
@@ -523,40 +524,42 @@ switch measure
                 data(i,1)=T.pwin_nogo_g5(idx(i));
             end
         end
-         
-     
-         case 'midi_nogo_gl5_success'
-             
-             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
-             idx=getStrIndices(subjects,T.subjid);
-             data=nan(numel(subjects),1);
-             for i=1:numel(subjects)
-                 if ~isnan(idx(i))
-                     data(i,1)=T.pwin_nogo_gl5(idx(i));
-                 end
-             end
-    
+        
+        
+    case 'midi_nogo_gl5_success'
+        
+        a=dir('/Users/kelly/cueexp/data/midi_behavior/mididata*');
+        T=readtable(fullfile('/Users/kelly/cueexp/data/midi_behavior',a(end).name));
+        idx=getStrIndices(subjects,T.subjid);
+        data=nan(numel(subjects),1);
+        for i=1:numel(subjects)
+            if ~isnan(idx(i))
+                data(i,1)=T.pwin_nogo_gl5(idx(i));
+            end
+        end
+        
     case 'midi_dprime5'
-             
-             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
-             idx=getStrIndices(subjects,T.subjid);
-             data=nan(numel(subjects),1);
-             for i=1:numel(subjects)
-                 if ~isnan(idx(i))
-                     data(i,1)=T.dprime5(idx(i));
-                 end
-             end
-             
-              case 'midi_criterion5'
-             
-             T=readtable('/Users/kelly/cueexp/data/midi_behavior/midi_patients_012121_v2.csv');
-             idx=getStrIndices(subjects,T.subjid);
-             data=nan(numel(subjects),1);
-             for i=1:numel(subjects)
-                 if ~isnan(idx(i))
-                     data(i,1)=T.criterion5(idx(i));
-                 end
-             end
+        
+        a=dir('/Users/kelly/cueexp/data/midi_behavior/mididata*');
+        T=readtable(fullfile('/Users/kelly/cueexp/data/midi_behavior',a(end).name));
+        idx=getStrIndices(subjects,T.subjid);
+        data=nan(numel(subjects),1);
+        for i=1:numel(subjects)
+            if ~isnan(idx(i))
+                data(i,1)=T.dprime5(idx(i));
+            end
+        end
+        
+    case 'midi_criterion5'
+        
+        a=dir('/Users/kelly/cueexp/data/midi_behavior/mididata*');
+        T=readtable(fullfile('/Users/kelly/cueexp/data/midi_behavior',a(end).name));
+        data=nan(numel(subjects),1);
+        for i=1:numel(subjects)
+            if ~isnan(idx(i))
+                data(i,1)=T.criterion5(idx(i));
+            end
+        end
         
     otherwise
         
@@ -607,27 +610,27 @@ docid = '1wcYTCKhouZ8Cf8omTFQMkekxcJn0lVBKi9ApPHTR3ak'; % doc id for google shee
 % try to load spreadsheet; if it can't be loaded, return age var as empty
 try
     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-
+    
 catch
     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
         'returning age var as empty...']);
     return
-
+    
 end
 
 % assuming spreadsheet is loaded, get desired data
 cj = find(strncmp(d(1,:),'age',3)); % column with age data
 
 for i=1:numel(subjects)
-
+    
     ri=find(strncmp(d(:,1),subjects{i},8)); % row w/this subject's data
-
+    
     if isempty(ri)
         age(i,1) = nan;
     else
         age(i,1) = str2double(d{ri,cj});
     end
-
+    
 end
 
 end % getAge()
@@ -721,87 +724,87 @@ docid = '1gFcxI_1luO2TtOwwQRvm9F45qzHPThnKDBTaZm3esoo'; % doc id for google shee
 
 try
     d = GetGoogleSpreadsheet(docid); % load google sheet as cell array
-
+    
     % if the google sheet couldn't be accessed, use these values (update as
     % often as possible):
 catch
     warning(['\ngoogle sheet couldnt be accessed, probably bc your offline.' ...
         'Using offline values that may not be the most updated...'])
-
+    
     % NOTE: ADD A WAY TO LOAD GSHEET WHEN OFFLINE HERE...
     %     d=...
-
+    
     d={};
-
+    
 end
 
 % if data is loaded, compute bis scores
 if isempty(d)
-
+    
     scores = [];
-
+    
 else
-
-
+    
+    
     % which items are reverse scored
     reverseArr = [1 7 8 9 10 12 13 15 20 29 30];
-
+    
     attnArr = [5 6 9 11 20 24 26 28];
     motorArr = [2 3 4 16 17 19 21 22 23 25 30];
     nonplanArr = [1 7 8 10 12 13 14 15 18 27 29];
-
-
+    
+    
     for i=1:numel(subjects)
-
+        
         idx=find(strncmp(d(:,1),subjects{i},8));
-
+        
         if ~isempty(idx)
-
+            
             item_scores = str2double(d(idx,4:end));
             item_scores(reverseArr) = 5-item_scores(reverseArr); % reverse score for certain items
-
+            
             % occasionally, a subject will leave 1 question blank. If
             % that's the case, fill in that response with the median response from all the other questions
             if ~isempty(find(isnan(item_scores)))
                 item_scores(isnan(item_scores))=nanmedian(item_scores);
             end
-
+            
             bis_score(i,1) = sum(item_scores);
             attn_score(i,1) = sum(item_scores(attnArr));
             motor_score(i,1) = sum(item_scores(motorArr));
             nonplan_score(i,1) = sum(item_scores(nonplanArr));
-
+            
         else
-
+            
             bis_score(i,1) = nan;
             attn_score(i,1) = nan;
             motor_score(i,1) = nan;
             nonplan_score(i,1) = nan;
-
+            
         end
-
+        
     end
-
+    
     switch measure
-
+        
         case 'bis'
-
+            
             scores=bis_score;
-
+            
         case 'bis_attn'
-
+            
             scores=attn_score;
-
+            
         case 'bis_motor'
-
+            
             scores=motor_score;
-
+            
         case 'bis_nonplan'
-
+            
             scores=nonplan_score;
-
+            
     end
-
+    
 end
 
 end % getBISScores()
@@ -845,7 +848,7 @@ else
                 
                 SS = [30 40 67 34 15 32 83 21 48 40 25 65 24 30 53 47 40 50 45 27 16]';
                 LL = [85 55 85 35 35 55 85 30 55 65 35 75 55 35 55 60 70 80 70 30 30]';
-               delay=[14 25 35 43 10 20 35 75 45 70 25 50 10 20 55 50 20 70 35 35 35]';
+                delay=[14 25 35 43 10 20 35 75 45 70 25 50 10 20 55 50 20 70 35 35 35]';
                 
                 % estimate discounting param k using either Kirby or MLE method
                 if strcmp(fitk_method,'Kirby')
@@ -931,7 +934,7 @@ education{2} = d.education2;
 %     7= Professional degree
 %     8=other; 2 people that responded this wrote in associates degree
 
-% recode to reflect years completed: 
+% recode to reflect years completed:
 
 %     1= Grammar school > 6
 %     2= High school or equivalent > 12
@@ -1385,96 +1388,96 @@ end % getScores
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get BIS scores
 % function scores = getBISScores(subjects,measure)
-% 
+%
 % dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
 % % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
-% 
-% % load data
-% d = readtable(dataPath);
-% vars = d.Properties.VariableNames; 
-% 
-% si=getStrIndices(subjects,table2array(d(:,1)));
-% 
-% switch lower(measure)
-%     
-%     case 'bis'
-%         ci = find(strcmpi('BIS',vars));
-%         
-%     case 'bis_attn'
-%         ci = find(strcmpi('BIS_attn',vars));
-%         
-%     case 'bis_motor'
-%         ci = find(strcmpi('BIS_motor',vars));
-%         
-%     case 'bis_nonplan'
-%         ci = find(strcmpi('BIS_nonplan',vars));
-%         
-% end
-% 
-% scores=nan(numel(subjects),1);
-% scores(~isnan(si))=table2array(d(si(~isnan(si)),ci));
-% 
-% 
-% end % getBISScores()
-% 
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
-% function age = getAge(subjects)
-% 
-% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
-% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
-% 
+%
 % % load data
 % d = readtable(dataPath);
 % vars = d.Properties.VariableNames;
-% 
+%
 % si=getStrIndices(subjects,table2array(d(:,1)));
-% 
+%
+% switch lower(measure)
+%
+%     case 'bis'
+%         ci = find(strcmpi('BIS',vars));
+%
+%     case 'bis_attn'
+%         ci = find(strcmpi('BIS_attn',vars));
+%
+%     case 'bis_motor'
+%         ci = find(strcmpi('BIS_motor',vars));
+%
+%     case 'bis_nonplan'
+%         ci = find(strcmpi('BIS_nonplan',vars));
+%
+% end
+%
+% scores=nan(numel(subjects),1);
+% scores(~isnan(si))=table2array(d(si(~isnan(si)),ci));
+%
+%
+% end % getBISScores()
+%
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject age
+% function age = getAge(subjects)
+%
+% dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
+% % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
+%
+% % load data
+% d = readtable(dataPath);
+% vars = d.Properties.VariableNames;
+%
+% si=getStrIndices(subjects,table2array(d(:,1)));
+%
 % ci = find(strcmpi('age',vars));
-% 
+%
 % age=nan(numel(subjects),1);
 % age(~isnan(si))=table2array(d(si(~isnan(si)),ci));
-% 
-% 
+%
+%
 % end % getAge()
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
 % function dwimotion = getDWIMotion(subjects)
-% 
+%
 % dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
 % % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
-% 
+%
 % % load data
 % d = readtable(dataPath);
 % vars = d.Properties.VariableNames;
-% 
+%
 % si=getStrIndices(subjects,table2array(d(:,1)));
-% 
+%
 % ci = find(strcmpi('dwimotion',vars));
-% 
+%
 % dwimotion=nan(numel(subjects),1);
 % dwimotion(~isnan(si))=table2array(d(si(~isnan(si)),ci));
-% 
+%
 % end % dwimotion
 
-% 
+%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% get subject dwi motion
 % function ri = get3MonthRelapseTemp(subjects)
-% 
+%
 % dataPath ='/Users/kelly/cueexp/data/q_demo_data/data__191104.csv';
 % % dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
-% 
+%
 % % load data
 % d = readtable(dataPath);
 % vars = d.Properties.VariableNames;
-% 
+%
 % si=getStrIndices(subjects,table2array(d(:,1)));
-% 
+%
 % ci = find(strcmpi('relapse_3months',vars));
-% 
+%
 % ri=nan(numel(subjects),1);
 % ri(~isnan(si))=table2array(d(si(~isnan(si)),ci));
-% 
+%
 % end % dwimotion
 
 

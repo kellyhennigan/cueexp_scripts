@@ -7,7 +7,7 @@ close all
 p=getCuePaths();
 task=whichCueTask(); 
 
-task_subjects = getCueSubjects(task);
+task_subjects = getCueSubjects('');
 fprintf('\n');
 subj_list=cellfun(@(x) [x ' '], task_subjects, 'UniformOutput',0)';
 disp([subj_list{:}]);

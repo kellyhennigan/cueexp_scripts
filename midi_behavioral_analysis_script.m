@@ -546,7 +546,11 @@ rt_nogo_g5=mean_rt(:,6);
 rt_go_l5=mean_rt(:,7);
 rt_nogo_l5=mean_rt(:,8);
 
-outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121_v3.csv');
+% filepath for saving out table of variables
+outDir=fullfile(dataDir,'midi_behavior');
+outName=['mididata_' [groups{:}] '_' datestr(now,'yymmdd') '.csv'];
+outPath = fullfile(outDir,outName);
+
 % concatenate all data into 1 table
 T=table();
 % T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
