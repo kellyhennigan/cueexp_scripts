@@ -107,6 +107,7 @@ for i=1:N
     [trial,TR,trialonset,trialtype,target_ms,rt,cue_value,win,trial_gain,...
         total,iti,drift,total_winpercent,binned_winpercent]=loadMidBehData(sprintf(filepath,subjects{i}),'short');
     
+    total_earned(i,1)=str2num(strrep(total{48},'$',''))+str2num(strrep(total{96},'$',''));
     
     nogofalsehits(i,1)=numel(find(win(ismember(trialtype,nogottype))==0));
    nogo5falsehits(i,1)=numel(find(win(ismember(trialtype,nogo5ttype))==0));
@@ -500,39 +501,6 @@ a(abs(a)>10)=nan
 % fig = plotNiceBars(d,dName,ttypeNames,groups,cols,[1 1],titleStr,1,savePath);
 % 
 %% save out data 
-% 
-% idx=ismember(subjects,subs2)
-% 
-% % subject ids
-% subjects=subjects(idx);
-% subjid = cell2mat(subjects);
-% Tsubj = table(subjid);
-% gi=gi(idx);
-% Tgi=table(gi);
-% 
-% 
-% dprime5=dp52(idx);
-% dprime0=dp02(idx);
-% criterion0=c02(idx);
-% criterion5=c52(idx);
-% 
-% pwin_go_g0=p_win(idx,1);
-% pwin_go_g5=p_win(idx,5);
-% pwin_nogo_g0=p_win(idx,2);
-% pwin_nogo_g5=p_win(idx,6);
-% pwin_nogo_gl5=(p_win(idx,6)+p_win(idx,8))./2;
-% pwin_go_gl5=(p_win(idx,5)+p_win(idx,7))./2;
-% 
-% outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121.csv');
-% % concatenate all data into 1 table
-% T=table();
-% % T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
-% T = [Tsubj Tgi table(dprime5,criterion5,dprime0,criterion0,pwin_go_g0,pwin_go_g5,pwin_nogo_g0,pwin_nogo_g5,pwin_nogo_gl5)];
-% 
-% % save out
-% writetable(T,outPath); 
-
-
 
 % subject ids
 subjid = cell2mat(subjects);
@@ -545,18 +513,50 @@ dprime0=dp02;
 criterion0=c02;
 criterion5=c52;
 
-pwin_go_g0=p_win(:,1);
-pwin_go_g5=p_win(:,5);
-pwin_nogo_g0=p_win(:,2);
-pwin_nogo_g5=p_win(:,6);
-pwin_nogo_gl5=(p_win(:,6)+p_win(:,8))./2;
-pwin_go_gl5=(p_win(:,5)+p_win(:,7))./2;
+% trial type codes:
+%   1 = +$0 GO
+%   2 = +$0 NOGO
+%   3 = -$0 GO
+%   4 = -$0 NOGO
+%   5 = +$5 GO
+%   6 = +$5 NOGO
+%   7 = -$5 GO
+%   8 = -$5 NOGO
 
-outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121_v2.csv');
+pwin_go_g0=p_win(:,1);
+pwin_nogo_g0=p_win(:,2);
+pwin_go_l0=p_win(:,3);
+pwin_nogo_l0=p_win(:,4);
+pwin_go_g5=p_win(:,5);
+pwin_nogo_g5=p_win(:,6);
+pwin_go_l5=p_win(:,7);
+pwin_nogo_l5=p_win(:,8);
+
+pwin_go_gl0=(p_win(:,1)+p_win(:,3))./2;
+pwin_nogo_gl0=(p_win(:,2)+p_win(:,4))./2;
+pwin_go_gl5=(p_win(:,5)+p_win(:,7))./2;
+pwin_nogo_gl5=(p_win(:,6)+p_win(:,8))./2;
+
+rt_go_g0=mean_rt(:,1);
+rt_nogo_g0=mean_rt(:,2);
+rt_go_l0=mean_rt(:,3);
+rt_nogo_l0=mean_rt(:,4);
+rt_go_g5=mean_rt(:,5);
+rt_nogo_g5=mean_rt(:,6);
+rt_go_l5=mean_rt(:,7);
+rt_nogo_l5=mean_rt(:,8);
+
+outPath = fullfile(dataDir,'midi_behavior','midi_patients_012121_v3.csv');
 % concatenate all data into 1 table
 T=table();
 % T = [Tsubj Trelapse Tdem Tbeh Tbrain Totherdruguse];
-T = [Tsubj Tgi table(dprime5,criterion5,dprime0,criterion0,pwin_go_g0,pwin_go_g5,pwin_nogo_g0,pwin_nogo_g5,pwin_nogo_gl5)];
+T = [Tsubj Tgi table(dprime5,criterion5,dprime0,criterion0,...
+    pwin_go_g0,pwin_nogo_g0,pwin_go_l0,pwin_nogo_l0,...
+    pwin_go_g5,pwin_nogo_g5,pwin_go_l5,pwin_nogo_l5,...
+    pwin_go_gl0,pwin_nogo_gl0,pwin_go_gl5,pwin_nogo_gl5,...
+    rt_go_g0,rt_nogo_g0,rt_go_l0,rt_nogo_l0,rt_go_g5,rt_nogo_g5,rt_go_l5,rt_nogo_l5,...
+    total_earned)];
 
 % save out
 writetable(T,outPath); 
+

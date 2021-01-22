@@ -111,6 +111,16 @@ for s = 1:numel(subjects)
             catch
                 warning(['couldnt get motion params for subject ' subject ', so skipping...'])
             end
+            
+              % mid and midi have 2 runs that are concatenated;
+        % use this variable to index which volume # is the first
+        % vol of the 2nd run so that it's motion can be assigned to 0
+        if strcmp(task,'mid')
+            run2vol1idx=257;
+        elseif strcmp(task,'midi')
+            run2vol1idx=293;
+        end
+        
     end
     
     if ~isempty(mp)
@@ -131,7 +141,10 @@ for s = 1:numel(subjects)
                 
         end
         
-        
+         if exist('run2vol1idx','var')
+             m(run2vol1idx)=0; % there's no "motion" in the 1st vol of the 2nd run; correctly assign motion to 0
+         end
+         
         % determine this subject's max movement
         [max_motion(s,1),max_TR(s,1)]=max(m);
         mean_motion(s,1)=mean(m);
