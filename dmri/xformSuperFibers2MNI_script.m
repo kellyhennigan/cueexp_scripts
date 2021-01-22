@@ -25,7 +25,8 @@ fgMDir = fullfile(dataDir,'fgMeasures',method);
 %     'DAR_caudateR_autoclean';
 %     'DAL_putamenL_autoclean';
 %     'DAR_putamenR_autoclean'};
-fgMNames = {'PVTR_naccR_autoclean23'};
+fgMNames = {'sginsL_vlpfcL_autoclean23';
+    'sginsR_vlpfcR_autoclean23'};
 
     
 t1Path = fullfile(dataDir,'templates','mni_icbm152_t1_tal_nlin_asym_09a_brain.nii');
@@ -64,7 +65,7 @@ for i=1:size(subjects)
     fprintf('\nworking on subject %s...\n',subject)
     
     % % get subject's node coords in group space  
-fgcoords_mni{i,1} = xformCoordsANTsMovingToFixed(SuperFibers(i).fibers{1},...
+    fgcoords_mni{i,1} = xformCoordsANTsMovingToFixed(SuperFibers(i).fibers{1},...
         sprintf(xform_aff,subject),...
         sprintf(xform_invWarp,subject))';
     
