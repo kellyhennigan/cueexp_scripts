@@ -47,6 +47,7 @@ res_dir = os.path.join(data_dir,'results_midi_afni')  # directory containing glm
 
 in_str = '_glm_B+tlrc'  # identify file string
 
+out_str = '_REL'  # suffix to add to the end of enach out file
 
 # labels of sub-bricks to test
 sub_labels = ['ant#0',
@@ -67,21 +68,21 @@ sub_labels = ['ant#0',
 
 			
 # labels for out files 
-out_labels =  ['Zant',
-'Zout',
-'Ztarget',
-'Zgvng_tar',
-'ZgvngXwin_out',
-'Zgvn_ant',
-'Zlvn_ant',
-'ZgvnXgvng_tar',
-'ZlvnXgvng_tar',
-'Zgvn_out',
-'Znvl_out',
-'ZgvnXgvngXwin_tar',
-'ZlvnXgvngXwin_tar',
-'Zcsf',
-'Zwm']
+out_labels =  ['Zant'+out_str,
+'Zout'+out_str,
+'Ztarget'+out_str,
+'Zgvng_tar'+out_str,
+'ZgvngXwin_out'+out_str,
+'Zgvn_ant'+out_str,
+'Zlvn_ant'+out_str,
+'ZgvnXgvng_tar'+out_str,
+'ZlvnXgvng_tar'+out_str,
+'Zgvn_out'+out_str,
+'Znvl_out'+out_str,
+'ZgvnXgvngXwin_tar'+out_str,
+'ZlvnXgvngXwin_tar'+out_str,
+'Zcsf'+out_str,
+'Zwm'+out_str]
 
 # glt contrasts, arent in coeff bucket so get them from glm bucket: 
 in_str2 = '_glm+tlrc'
@@ -90,8 +91,8 @@ sub_labels2 = ['Full_R^2',
 'Full_Fstat']
 
 # labels for out files 
-out_labels2 =  ['ZFull_R^2',
-'ZFull_Fstat'] 
+out_labels2 =  ['ZFull_R^2'+out_str,
+'ZFull_Fstat'+out_str] 
 
 # concatenate lists 
 in_str = np.append(np.tile(in_str,len(sub_labels)),np.tile(in_str2,len(sub_labels2)))
