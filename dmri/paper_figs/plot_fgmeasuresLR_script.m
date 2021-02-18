@@ -14,48 +14,50 @@ outDir = [p.figures_dti '/fgm_trajectories'];
 
 % directory & filename of fg measures
 method = 'mrtrix_fa';
-
-targets={'nacc';
-    'nacc';
-    'caudate';
-    'putamen'};
-
-fgStrs = {'_belowAC';
-    '_aboveAC';
-    '';
-    ''};
-
-fgMatStrs = {'DA%s_%s%s%s_dil2_autoclean';
-    'DA%s_%s%s%s_dil2_autoclean';
-    'DA%s_%s%s%s_dil2_autoclean';
-    'DA%s_%s%s%s_dil2_autoclean'};
-
-titleStrs = {'Inferior NAcc tract';...
-    'Superior NAcc tract';...
-    'Caudate tract';...
-    'Putamen tract'};
+% 
+% targets={'nacc';
+%     'nacc';
+%     'caudate';
+%     'putamen'};
+% 
+% fgStrs = {'_belowAC';
+%     '_aboveAC';
+%     '';
+%     ''};
+% 
+% fgMatStrs = {'sgins%s_%s%s%s_dil2_autoclean';
+%     'DA%s_%s%s%s_dil2_autoclean';
+%     'DA%s_%s%s%s_dil2_autoclean';
+%     'DA%s_%s%s%s_dil2_autoclean'};
+% 
+% titleStrs = {'Inferior NAcc tract';...
+%     'Superior NAcc tract';...
+%     'Caudate tract';...
+%     'Putamen tract'};
 
 % fgMatStrs = {'DALR_caudateLR_dil2_autoclean'};
 
 % corresponding labels for saving out
-fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
+% fgMatLabels = strrep(fgMatStrs,'_dil2_autoclean','');
 
 % plot groups
 % group = {'controls','patients'};
 % groupStr = '_bygroup';
 % lspec = {'-','--'};
 
+
+
 group = {'controls'};
 groupStr = 'controlsLR';
 lspec = {'-','--'};
 
-
+cols=
 % group = {'controls','relapsers','nonrelapsers'};
 % groupStr = '_byrelapse';
 
 
-cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgStrs, 'uniformoutput',0); % plotting colors for groups
-cols(:,2)=cols; % plot L and R as the same color
+% cols=cellfun(@(x,y) getDTIColors(x,y), targets,fgStrs, 'uniformoutput',0); % plotting colors for groups
+% cols(:,2)=cols; % plot L and R as the same color
 
 omit_subs = {}; % as170730 is too old for this sample
 

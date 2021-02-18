@@ -20,14 +20,14 @@ group = {'controls','patients'};
 method = 'mrtrix_fa';
 
 
-fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'asginsR_naccR_autoclean'; %'.mat' will be added to end
 
-titleStr = 'NAcc pathway (inferior)';
+titleStr = 'right ins-nacc';
 
 
 % which scale to correlate with fiber group measures?
-scale = 'BIS';
-
+% scale = 'midi_nogo_g5_success';
+scale = 'midi_dprime5';
 % include control variables? 
 %  covars = {'age','dwimotion'};
 covars = {};

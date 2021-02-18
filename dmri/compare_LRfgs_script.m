@@ -21,8 +21,8 @@ fgMatStrsL = {'sginsL_%sL_autoclean23'};
 fgMatStrsR = {'sginsR_%sR_autoclean23'};
     
 
-% group = {'controls'};
-group = {'all'}; 
+group = {'controls'};
+% group = {'all'}; 
 
 omit_subs={};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -10,9 +10,9 @@ dataDir = p.data; % main data directory
 % subjects is cell array of subj ids & gi indexes group membership (0=controls, 1=patients)
 task = 'midi';
 
-groups = {'controls','patients'}; % group names
+% groups = {'controls','patients'}; % group names
 % groups = {'controls','relapsers','nonrelapsers'}; % group names
-% groups = {'relapsers','nonrelapsers'}; % group names
+groups = {'relapsers','nonrelapsers'}; % group names
 % groups={'patients'};
 
 [subjects,gi] = getCueSubjects(task);

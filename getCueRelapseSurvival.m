@@ -79,10 +79,10 @@ for i=1:numel(subjects)
         
         % if days2relapse is negative, set it to 1 (this means that if a
         % subj relapsed before DOP, act as if they relapsed the day after)
-        if days2relapse<0
-            days2relapse = 1;
-        end
-        
+%         if days2relapse<0
+%             days2relapse = 1;
+%         end
+%         
         
         % if days2relapse = nan, that means we don't have a relapse event
         % recorded for them. Set obstime to date of last followup and set

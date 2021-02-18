@@ -51,6 +51,7 @@ def getsubs(task='',group='all'):
 	cue_sample1_idx = []
 	cue_sample2_idx = []
 	dti_mfb_idx = []
+	relapse6mo_idx = []
 
 	with open(subjFile) as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
@@ -70,6 +71,10 @@ def getsubs(task='',group='all'):
 				cue_sample1_idx.append(bool(int(line[6])))
 				cue_sample2_idx.append(bool(int(line[7])))
 				dti_mfb_idx.append(bool(int(line[8])))
+
+				# # deal with relapse NaN values
+				# if (line[10][-3:]=='NaN')
+				# relapse6mo_idx.append(bool(int(line[10])))
 
 	# if a task string is given, return subset of subjects for that task
 	if task=='cue': 
@@ -106,6 +111,15 @@ def getsubs(task='',group='all'):
 		subjects=list(compress(subjects,dti_mfb_idx))
 		gi=list(compress(gi,dti_mfb_idx))
 
+	# elif task=='relapse_6months':
+	
+	# 	subjects=list(compress(subjects,relapse6mo_idx))
+	# 	gi=list(compress(gi,relapse6mo_idx))
+
+	# elif task=='nonrelapse_6months':
+	
+	# 	subjects=list(compress(subjects,relapse6mo_idx))
+	# 	gi=list(compress(gi,relapse6mo_idx))
 
 	# if desired, return only controls or patients ids
 	if str(group)=='controls' or str(group)=='0':
@@ -166,6 +180,9 @@ def getsubs(task='',group='all'):
 
 
 
+if __name__ == "__main__":
+	subjects,gi = getsubs(sys.argv[1])
+	print ' '.join(subjects)
 
 #if __name__ == "__main__":
 #	subjects,gi = getsubs(sys.argv[1])

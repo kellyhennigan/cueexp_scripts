@@ -60,7 +60,7 @@ for i=1:numel(fgFileStrs)
         
     elseif  contains(fgStr,'vlpfc','IgnoreCase',1)
         
-        colors(i,:)= [102 166 30]./255; % green
+        colors(i,:)= [138 86 165]./255; % purple
         
     elseif  contains(fgStr,'pvt','IgnoreCase',1)
         

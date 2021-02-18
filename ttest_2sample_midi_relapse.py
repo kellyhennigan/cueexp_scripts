@@ -21,9 +21,15 @@ main_dir=os.getcwd()
 data_dir=main_dir+'/data'
 os.chdir(scripts_dir)
 
-from getMIDSubjects import getsubs
-subjsA,_ = getsubs('mid',1)		# patients
-subjsB,_ = getsubs('mid',0)   	# controls
+from getCueSubjects import getsubs
+# subjsA,_ = getsubs('midi',1)	# patients
+# subjsB,_ = getsubs('midi',0)    # controls
+
+# relapsers @ 6months 
+subjsA = ['si151120','wr151127','rv160413','rc161007','al170316','jd170330','jw170330','tg170423','jc170501','as170730','rt170816','cd171130','rm180316','sh180518','rm180525','jj180618','lh180622','tv181019','wa181217','sp190209','pf190214','rc190221','mm190226','jm191125']
+
+# non-relapsers @ 6 months 
+subjsB = ['ag151024','ja160416','cm160510','zm160627','jf160703','cg160715','nc160905','mr161024','rl170603','mr170621','ds170728','ds170915','ts170927','kk180117','jc180212','ct180224','cm180506','td181116','kd181119','zg181207','jj190821']
 
 
 # data_dir = os.path.join(os.path.expanduser('~'),'cueexp_claudia','data')
@@ -36,8 +42,8 @@ subjsB,_ = getsubs('mid',0)   	# controls
 print subjsA
 print subjsB
 
-#res_dir = os.path.join(data_dir,'results_mid')  # directory containing glm stat files
-res_dir = os.path.join(data_dir,'results_mid_afni')  # directory containing glm stat files
+#res_dir = os.path.join(data_dir,'results_midi')  # directory containing glm stat files
+res_dir = os.path.join(data_dir,'results_midi_afni')  # directory containing glm stat files
 
 in_str = '_glm_B+tlrc'  # identify file string
 
@@ -45,20 +51,35 @@ in_str = '_glm_B+tlrc'  # identify file string
 # labels of sub-bricks to test
 sub_labels = ['ant#0',
 'out#0',
-'gvnant#0',
-'lvnant#0',
-'gvnout#0',
-'nvlout#0',
+'target#0',
+'gvng_tar#0',
+'gvngXwin_out#0',
+'gvn_ant#0',
+'lvn_ant#0',
+'gvnXgvng_tar#0',
+'lvnXgvng_tar#0',
+'gvn_out#0',
+'nvl_out#0',
+'gvnXgvngXwin_tar#0',
+'lvnXgvngXwin_tar#0',
 'csf#0',
 'wm#0']
 
+			
 # labels for out files 
 out_labels =  ['Zant',
 'Zout',
-'Zgvnant',
-'Zlvnant',
-'Zgvnout',
-'Znvlout',
+'Ztarget',
+'Zgvng_tar',
+'ZgvngXwin_out',
+'Zgvn_ant',
+'Zlvn_ant',
+'ZgvnXgvng_tar',
+'ZlvnXgvng_tar',
+'Zgvn_out',
+'Znvl_out',
+'ZgvnXgvngXwin_tar',
+'ZlvnXgvngXwin_tar',
 'Zcsf',
 'Zwm']
 
@@ -80,7 +101,6 @@ out_labels = out_labels+out_labels2
 # define mask file if masking is desired; otherwise leave blank
 mask_file = os.path.join(data_dir,'templates','bmask.nii')  # directory containing glm stat files
 #mask_file = ''
-
 
 ##########################################################################################
 
@@ -113,7 +133,6 @@ for i, sub_label in enumerate(sub_labels):
 			subjB_cmd+="'"+subj+in_str[i]+'['+str(vol_idx)+']'+"' " 
 
 
-
 	# define mask command, if desired
 	if mask_file:
 		mask_cmd = ' -mask '+mask_file
@@ -125,8 +144,6 @@ for i, sub_label in enumerate(sub_labels):
 	print cmd
 	os.system(cmd)
 
-
-	# 3dttest++ -prefix '+z_cue -toz -setA 'aa151010_glm+tlrc[2]' 'nd150921_glm+tlrc[2]' -setB 'ag151024_glm+tlrc[2]' 'si151120_glm+tlrc[2]' 
 
 	
 

@@ -187,8 +187,8 @@ switch measure
         [ri,days2relapse,notes]=getCueRelapseData(subjects);
         [obstime,censored,notes]=getCueRelapseSurvival(subjects);
         
-        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >200 days after participation
-        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than 90 days & didnt relapse, set this to nan
+        ri(days2relapse>daythresh) = 0; % set relapse to 0 if it occurred >daythresh days after participation
+        ri(ri==0 & obstime < lost_daythresh)=nan; % if a patient was observed for less than lost_daythresh days & didnt relapse, set this to nan
         data = ri;
         
     case 'relapse_8months'
@@ -554,6 +554,7 @@ switch measure
         
         a=dir('/Users/kelly/cueexp/data/midi_behavior/mididata*');
         T=readtable(fullfile('/Users/kelly/cueexp/data/midi_behavior',a(end).name));
+        idx=getStrIndices(subjects,T.subjid);
         data=nan(numel(subjects),1);
         for i=1:numel(subjects)
             if ~isnan(idx(i))

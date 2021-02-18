@@ -14,10 +14,10 @@ figDir = p.figures;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%% EDIT AS DESIRED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-task = 'cue';
+task = 'midi';
 
 % group = 'relapsers_3months';
-group = 'patients_sample2';
+group = 'patients';
 
 
 [subjects,gi]=getCueSubjects(task,group);
