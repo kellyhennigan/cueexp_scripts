@@ -26,8 +26,8 @@ titleStr = 'right ins-nacc';
 
 
 % which scale to correlate with fiber group measures?
-% scale = 'midi_nogo_g5_success';
-scale = 'midi_dprime5';
+scale = 'midi_nogo_g5_success';
+% scale = 'midi_dprime5';
 % include control variables? 
 %  covars = {'age','dwimotion'};
 covars = {};
@@ -116,7 +116,7 @@ for i=1:nP
     axH=subplot(nRow,nCol,i);
     hold on
     for j=1:numel(group)
-        [axH,rpStr] = plotCorr(axH,mean(fgMeasures{j}{i}(:,node),2),scores{j},fgMLabels(i),scale,'',cols(j,:));
+        [axH,rpStr] = plotCorr(axH,mean(fgMeasures{j}{i}(:,node),2),scores{j},fgMLabels(i),strrep(scale,'_',' '),'',cols(j,:));
         tStr{j} = ['\fontsize{10}{\color[rgb]{' num2str(cols(j,:)) '}' rpStr '} ']; % title strings
     end
     

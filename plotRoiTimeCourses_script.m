@@ -40,9 +40,9 @@ useSpline = 0; % if 1, time series will be upsampled by TR*10
 %     'kl160122','ss160205','bp160213','cs160214','yl160507','li160927',...
 %     'gm161101'};
 % omitSubs = {'rl170603'}; % any subjects to omit?
-% omitSubs={''};
+omitSubs={''};
 
-omitSubs={'wr151127','cm160510','jb161004','as170730','rt170816','mm190226'};
+% omitSubs={'wr151127','cm160510','jb161004','as170730','rt170816','mm190226'};
 
 plotStats = 1; % 1 to note statistical signficance on figures
 
@@ -196,7 +196,8 @@ for r = 1:numel(roiNames)
         % line colors & line specs
         cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
         lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
-        
+%         cols{1}=[0 0 1];
+%         cols{2}=[1 0 0];
         % get stats, if plotting
         p=[];
         if plotStats
