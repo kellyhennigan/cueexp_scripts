@@ -23,8 +23,8 @@ p=getCuePaths();
 dataDir = p.data;
 mainfigDir=p.figures_dti;
 
-% seed = 'DA';  % define seed roi
-seed = 'PauliAtlasDA';  % define seed roi
+seed = 'DA';  % define seed roi
+% seed = 'PauliAtlasDA';  % define seed roi
 
 target = 'nacc'; % stri  ng for roi
 
