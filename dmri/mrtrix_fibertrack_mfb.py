@@ -33,8 +33,8 @@ maskfile = 'wm_mask_dil2.nii.gz' 		# this should be included
 
 # define ROIs 
 roiDir = 'ROIs' 					# directory w/ROI files
-#seedStr = 'DA'						# if false, will use the mask as seed ROI by default
-seedStr = 'PauliAtlasDA'						# if false, will use the mask as seed ROI by default
+seedStr = 'DA'						# if false, will use the mask as seed ROI by default
+#seedStr = 'PauliAtlasDA'						# if false, will use the mask as seed ROI by default
 
 
 targetStrs = ['nacc']		

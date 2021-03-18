@@ -1,4 +1,4 @@
-function hh = plotNiceNHist(d,cols,titleStr,legStr,savePath)
+function hh = plotNiceNHist(d,cols,titleStr,legStr,savePath,nbins)
 % -------------------------------------------------------------------------
 % hh = plotNiceNHist(d,cols,titleStr,legStr,savePath)
 % usage: function to nicely plot overlapping (semi-transparent) histograms 
@@ -44,6 +44,10 @@ for i=1:numel(d)
 %     hh(i).Normalization = 'probability';
     hh(i).EdgeColor = [1 1 1];
     hh(i).FaceColor = cols(i,:);
+    
+    if ~notDefined('nbins')
+        set(hh(i),'NumBins',nbins)
+    end
     
 end
 
