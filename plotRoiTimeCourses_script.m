@@ -8,7 +8,8 @@ clear all
 close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
-task = whichCueTask();
+% task = whichCueTask();
+task='mid';
 
 p = getCuePaths();
 
@@ -26,10 +27,11 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which rois to process?
-roiNames = whichRois(tcPath);
+% roiNames = whichRois(tcPath);
+roiNames={'caudate'};
 
 
-nTRs = 10; % # of TRs to plot
+nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 xt = t; %  xticks on the plotted x axis
@@ -69,16 +71,22 @@ plotToScreen=0;
 % string that describes the stim in a given plot. Each row of the cell
 % array should have info for a single figure, e.g.:
 
-% % % plotGroups = {'controls';
-% % %     'controls patients'};
-% % %
-% % % plotStims = {'alcohol drugs food neutral';
-% % %     'drugs'};
+plotGroups = {'controls';
+    'controls patients';
+    'controls patients'};
+
+plotStims = {'gain0 gain1 gain5';
+    'gain5';
+    'gain5 gain0'};
+
+plotStimStrs={'gain trials';
+    'high gains';
+    'high vs no gains'};
 
 % would be for making 2 figures: the 1st would plot alc, drugs, etc. for
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
-[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
+% [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 %
 
 % plotStims = {'healthyfood unhealthyfood';
@@ -114,7 +122,7 @@ for r = 1:numel(roiNames)
         for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
-        groups = splitstring(plotGroups{f});
+        groups = splitstring(plotGroups{f})';
         stims = splitstring(plotStims{f});
         stimStr = plotStimStrs{f};
         
@@ -188,21 +196,26 @@ for r = 1:numel(roiNames)
         end
         if numel(groups)>1
             for g=1:numel(groups)
-                lineLabels(g,:) = cellfun(@(x) [x strrep(groups{g},'_',' ') ], lineLabels(g,:), 'uniformoutput',0);
+                lineLabels(g,:) = cellfun(@(x) [x ' ' strrep(groups{g},'_',' ') ], lineLabels(g,:), 'uniformoutput',0);
             end
         end
         
         
         % line colors & line specs
-        cols = reshape(getCueExpColors(lineLabels,'cell',plotColorSet),size(tc,1),[]);
-        lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
-%         cols{1}=[0 0 1];
-%         cols{2}=[1 0 0];
+        cols = cellfun(@(x) getCueExpColors(x), repmat(stims,numel(groups),1), 'uniformoutput',0);
+        lspec = cellfun(@(x) getCueLineSpec(x), repmat(groups,1,numel(stims)), 'uniformoutput',0);
+
         % get stats, if plotting
         p=[];
         if plotStats
-            if numel(groups)>1
+            % don't plot stats if there are multiple groups AND multiple
+            % stims (too confusing)
+            if numel(groups)>1 && numel(stims)>1
+                disp('not plotting stats for this figure; it would be too confusing...\n')
+            % if there's multiple groups, do between-groups (one-way) subjects anova
+            elseif numel(groups)>1
                 p = getPValsGroup(tc); % one-way ANOVA
+           % if there's multiple stims, do a repeated measures anova
             else
                 p = getPValsRepMeas(tc); % repeated measures ANOVA
             end
