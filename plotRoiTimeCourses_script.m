@@ -112,6 +112,9 @@ nFigs = numel(plotStimStrs); % number of figures to be made
 r=1;
 for r = 1:numel(roiNames)
     
+    % close out figures in case this is a big loop 
+    close all 
+    
     roiName = roiNames{r};
     
     inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
