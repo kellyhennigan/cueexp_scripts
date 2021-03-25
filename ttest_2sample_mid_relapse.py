@@ -21,9 +21,9 @@ main_dir=os.getcwd()
 data_dir=main_dir+'/data'
 os.chdir(scripts_dir)
 
-from getMIDSubjects import getsubs
-subjsA,_ = getsubs('mid',1)		# patients
-subjsB,_ = getsubs('mid',0)   	# controls
+# from getMIDSubjects import getsubs
+# subjsA,_ = getsubs('mid',1)		# patients
+# subjsB,_ = getsubs('mid',0)   	# controls
 
 # relapsers @ 6months 
 subjsA = ['si151120','wr151127','ja151218','rv160413','rc161007','al170316','jd170330','jw170330','tg170423','jc170501','hp170601','as170730','rc170730','cs170816','rt170816','cd171130','rm180316','sh180518','rm180525','dl180602','ap180613','jj180618','lh180622','tv181019','wa181217','sp190209','pf190214','rc190221','kc190225','mm190226','rc191015','jm191125']
