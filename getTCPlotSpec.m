@@ -105,59 +105,155 @@ switch task
         
     case 'mid'  % midi fmri task
         
-        % corresponding groups:
+%         % corresponding groups:
+%         groups =  {'controls';
+%             'controls';
+%             'controls';
+%             'patients';
+%             'patients';
+%             'patients';
+%             'controls patients';
+%             'controls patients';
+%             'controls patients';
+%             'controls patients';
+%             'controls relapsers_6months nonrelapsers_6months';
+%             'controls relapsers_6months nonrelapsers_6months';
+%             'controls relapsers_6months nonrelapsers_6months';
+%             'controls relapsers_6months nonrelapsers_6months'
+%             'relapsers_6months nonrelapsers_6months'};
+%       
+%         
+%         % corresponding stims:
+%         stims =  {'gain0 gain5 loss0 loss5';
+%             'gainwin gainmiss';
+%             'losswin lossmiss';
+%             'gain0 gain5 loss0 loss5';
+%             'gainwin gainmiss';
+%             'losswin lossmiss';
+%             'gain5-gain0';
+%             'loss5-loss0'
+%             'gainwin-gainmiss';
+%             'losswin-lossmiss';
+%             'gain5-gain0';
+%             'loss5-loss0'
+%             'gainwin-gainmiss';
+%             'losswin-lossmiss'
+%             'loss5-loss0'};
+%         
+%         
+%         % corresponding stim strings to use in figure and file name
+%         stimStrs =  {'trial type';
+%             'gain trial outcome';
+%             'loss trial outcome';
+%             'trial type';
+%             'gain trial outcome';
+%             'loss trial outcome';
+%             'gain5-0 anticipation';
+%             'loss5-0 anticipation';
+%             'gain win-miss outcome';
+%             'loss win-miss outcome';
+%             'gain5-0 anticipation';
+%             'loss5-0 anticipation';
+%             'gain win-miss outcome';
+%             'loss win-miss outcome'
+%             'loss5-0 anticipation';};
+%         
+
+    % corresponding groups:
         groups =  {'controls';
             'controls';
             'controls';
+            'controls';
             'patients';
             'patients';
             'patients';
+            'patients';
             'controls patients';
             'controls patients';
             'controls patients';
             'controls patients';
-            'controls relapsers_3months nonrelapsers_3months';
-            'controls relapsers_3months nonrelapsers_3months';
-            'controls relapsers_3months nonrelapsers_3months';
-            'controls relapsers_3months nonrelapsers_3months'
-            'relapsers_3months nonrelapsers_3months'};
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'controls patients';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months';
+            'relapsers_6months nonrelapsers_6months'};
       
         
         % corresponding stims:
-        stims =  {'gain0 gain5 loss0 loss5';
+        stims =  {'gain0 gain1 gain5';
+            'loss0 loss1 loss5';
             'gainwin gainmiss';
             'losswin lossmiss';
-            'gain0 gain5 loss0 loss5';
+            'gain0 gain1 gain5';
+            'loss0 loss1 loss5';
             'gainwin gainmiss';
             'losswin lossmiss';
-            'gain5-gain0';
-            'loss5-loss0'
-            'gainwin-gainmiss';
-            'losswin-lossmiss';
-            'gain5-gain0';
-            'loss5-loss0'
-            'gainwin-gainmiss';
-            'losswin-lossmiss'
-            'loss5-loss0'};
+            'gain5';
+            'gain1';
+            'gain0';
+            'loss5';
+            'loss1';
+            'loss0';
+            'gainwin';
+            'gainmiss';
+            'losswin';
+            'lossmiss';
+             'gain5';
+            'gain1';
+            'gain0';
+            'loss5';
+            'loss1';
+            'loss0';
+            'gainwin';
+            'gainmiss';
+            'losswin';
+            'lossmiss'};
         
         
         % corresponding stim strings to use in figure and file name
-        stimStrs =  {'trial type';
-            'gain trial outcome';
-            'loss trial outcome';
-            'trial type';
-            'gain trial outcome';
-            'loss trial outcome';
-            'gain5-0 anticipation';
-            'loss5-0 anticipation';
-            'gain win-miss outcome';
-            'loss win-miss outcome';
-            'gain5-0 anticipation';
-            'loss5-0 anticipation';
-            'gain win-miss outcome';
-            'loss win-miss outcome'
-            'loss5-0 anticipation';};
-        
+        stimStrs =  {'gain trials';
+            'loss trials';
+            'gain trials by outcome';
+            'loss trials by outcome';
+            'gain trials';
+            'loss trials';
+            'gain trials by outcome';
+            'loss trials by outcome';
+            'gain5';
+            'gain1';
+            'gain0';
+            'loss5';
+            'loss1';
+            'loss0';
+            'gainwin';
+            'gainmiss';
+            'losswin';
+            'lossmiss';
+             'gain5';
+            'gain1';
+            'gain0';
+            'loss5';
+            'loss1';
+            'loss0';
+            'gainwin';
+            'gainmiss';
+            'losswin';
+            'lossmiss'};
+    
+
+
+
         
     case 'midi'  % mid fmri task
 %         

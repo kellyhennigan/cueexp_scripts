@@ -25,8 +25,8 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which rois to process?
-roiNames = whichRois(tcPath);
-
+% roiNames = whichRois(tcPath);
+roiNames={'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','insL_desai','insR_desai','caudate','amyg','amygR','amygL','motorcortexL'};
 
 nTRs = 8; % # of TRs to plot
 TR = 2; % 2 sec TR
@@ -74,13 +74,13 @@ plotToScreen=1;
 % would be for making 2 figures: the 1st would plot alc, drugs, etc. for
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
-% [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
+[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 
-plotGroups = {'controls'};
-plotStims={'gain0 gain1 gain5'};
+% plotGroups = {'controls'};
+% plotStims={'gain0 gain1 gain5'};
 
 % plotStims = {'drugs'};
-plotStimStrs = {'gain trials'};
+% plotStimStrs = {'gain trials'};
 %
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -178,7 +178,7 @@ for r = 1:numel(roiNames)
         
         % line colors & line specs
         cols = reshape(getCueExpColors_old(numel(tc),'cell'),size(tc,1),[]);
-%         lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
+        lspec = reshape(getCueLineSpec(lineLabels),size(tc,1),[]);
 %         cols{1}=[1 0 0];
 %         cols{end}=[0.1490    0.5451    0.8235];
         
