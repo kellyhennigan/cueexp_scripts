@@ -8,8 +8,8 @@ clear all
 close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
-% task = whichCueTask();
-task='mid';
+task = whichCueTask();
+
 
 p = getCuePaths();
 
@@ -27,8 +27,8 @@ tcPath = fullfile(dataDir,tcDir);
 
 
 % which rois to process?
-% roiNames = whichRois(tcPath);
-roiNames={'caudate'};
+roiNames = whichRois(tcPath);
+% roiNames={'caudate'};
 
 
 nTRs = 8; % # of TRs to plot
@@ -71,39 +71,39 @@ plotToScreen=0;
 % string that describes the stim in a given plot. Each row of the cell
 % array should have info for a single figure, e.g.:
 
-plotGroups = {'controls';
-    'controls patients';
-    'controls patients'};
-
-plotStims = {'gain0 gain1 gain5';
-    'gain5';
-    'gain5 gain0'};
-
-plotStimStrs={'gain trials';
-    'high gains';
-    'high vs no gains'};
+% plotGroups = {'controls';
+%     'controls patients';
+%     'controls patients'};
+%
+% plotStims = {'gain0 gain1 gain5';
+%     'gain5';
+%     'gain5 gain0'};
+%
+% plotStimStrs={'gain trials';
+%     'high gains';
+%     'high vs no gains'};
 
 % would be for making 2 figures: the 1st would plot alc, drugs, etc. for
 % just the controls and the 2nd would plot drugs for controls vs patients.
 
-% [plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
+[plotGroups,plotStims,plotStimStrs]=getTCPlotSpec(task);
 %
 
 % plotStims = {'healthyfood unhealthyfood';
 %     'healthyfood unhealthyfood';
 %     'healthyfood';
 %     'unhealthyfood'};
-% 
+%
 % plotGroups = {'controls';
 %     'patients';
 %     'controls patients';
 %     'controls patients'};
-% 
+%
 % plotStimStrs={'foodbyhealth';
 %     'foodbyhealth';
 %     'healthyfood'
 %     'unhealthyfood'};
-    
+
 
 nFigs = numel(plotStimStrs); % number of figures to be made
 
@@ -116,10 +116,10 @@ for r = 1:numel(roiNames)
     
     inDir = fullfile(dataDir,tcDir,roiName); % time courses dir for this ROI
     
-%     f=1
+    %     f=1
     %% define time courses to plot
-% for f=1:6
-        for f = 1:nFigs
+    % for f=1:6
+    for f = 1:nFigs
         
         % get the plot name and stims & groups to plot for this figure
         groups = splitstring(plotGroups{f})';
@@ -128,7 +128,7 @@ for r = 1:numel(roiNames)
         
         tc = {}; % time course cell array
         
-       g=1
+        g=1
         for g=1:numel(groups)
             
             % get subject IDs for this group
@@ -161,7 +161,7 @@ for r = 1:numel(roiNames)
             tc
             error('\hold up - time courses for at least one stim/group weren''t loaded.')
         end
-              
+        
         mean_tc = cellfun(@nanmean, tc,'uniformoutput',0);
         se_tc = cellfun(@(x) nanstd(x)./sqrt(size(x,1)), tc,'uniformoutput',0);
         
@@ -204,7 +204,7 @@ for r = 1:numel(roiNames)
         % line colors & line specs
         cols = cellfun(@(x) getCueExpColors(x), repmat(stims,numel(groups),1), 'uniformoutput',0);
         lspec = cellfun(@(x) getCueLineSpec(x), repmat(groups,1,numel(stims)), 'uniformoutput',0);
-
+        
         % get stats, if plotting
         p=[];
         if plotStats
@@ -212,10 +212,10 @@ for r = 1:numel(roiNames)
             % stims (too confusing)
             if numel(groups)>1 && numel(stims)>1
                 disp('not plotting stats for this figure; it would be too confusing...\n')
-            % if there's multiple groups, do between-groups (one-way) subjects anova
+                % if there's multiple groups, do between-groups (one-way) subjects anova
             elseif numel(groups)>1
                 p = getPValsGroup(tc); % one-way ANOVA
-           % if there's multiple stims, do a repeated measures anova
+                % if there's multiple stims, do a repeated measures anova
             else
                 p = getPValsRepMeas(tc); % repeated measures ANOVA
             end
@@ -248,7 +248,7 @@ for r = 1:numel(roiNames)
         
         switch plotErr
             case 'bar'
-                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);   
+                [fig,leg]=plotNiceLinesEBar(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
             case 'shaded'
                 [fig,leg]=plotNiceLines(t,mean_tc,se_tc,cols,p,lineLabels,xlab,ylab,figtitle,savePath,plotToScreen,lspec);
         end
