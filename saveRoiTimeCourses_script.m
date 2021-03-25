@@ -64,7 +64,7 @@ if omitOTs
     outDir = [outDir '_woOutliers'];
 end
 
-nTRs = 10; % # of TRs to extract
+nTRs = 9; % # of TRs to extract
 TR = 2; % 2 sec TR
 t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
