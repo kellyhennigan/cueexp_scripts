@@ -209,8 +209,8 @@ end
 % roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','PVT','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
 % roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','pvt','dlpfc','dlpfcL','dlpfcR','ifgL','ifgR','vlpfcL','vlpfcR'};
 
-roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','insL_desai','insR_desai','dlpfc','dlpfcL','dlpfcR','caudate','amygdalaL','amygdalaR'};
-roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','ainsL','ainsR','dlpfc','dlpfcL','dlpfcR','caudate','amygdalaL','amygdalaR'};
+roiNames = {'nacc_desai','naccL_desai','naccR_desai','mpfc','VTA','acing','ins_desai','insL_desai','insR_desai','dlpfc','dlpfcL','dlpfcR','caudate','amygL','amygR'};
+roiVarNames = {'nacc','naccL','naccR','mpfc','vta','acc','ains','ainsL','ainsR','dlpfc','dlpfcL','dlpfcR','caudate','amygL','amygR'};
 
 bd = [];  % array of brain data values
 bdNames = {};  % brain data predictor names
@@ -401,14 +401,14 @@ aveNodes=[26 75;
     26 75;
     26 75];
 
-aveNodeStrs=['mid50';
+aveNodeStrs={'mid50';
     'mid50';
     'mid50';
     'mid50';
     'nodes11_41';
     'nodes11_41';
     'mid50';
-    'mid50';];
+    'mid50'};
 
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
@@ -431,7 +431,7 @@ for f=1:numel(fgMatStrs)
     ad = mean(fgMeasures{4}(:,theseNodes(1):theseNodes(2)),2);
     
      
-    fgms=[fgms fa imd ird ad]
+    fgms=[fgms fa imd ird ad];
     
     fgNames{end+1} = [fgOutStrs{f} '_fa_' aveNodeStrs{f}];
     fgNames{end+1} = [fgOutStrs{f} '_imd_' aveNodeStrs{f}];

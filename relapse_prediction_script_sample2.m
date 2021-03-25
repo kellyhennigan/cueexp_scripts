@@ -27,9 +27,9 @@ T(T.gi==0,:)=[];
 
 
 % remove subjects from 1st sample
-% T1=T(T.samplenum==1,:); 
-% T2=T(T.samplenum==2,:); 
-% T(T.samplenum==1,:)=[];
+T1=T(T.samplenum==1,:); 
+T2=T(T.samplenum==2,:); 
+T(T.samplenum==1,:)=[];
 
 % T(T.gi==2,:)=[];
 % T(T.gi==1,:)=[];
