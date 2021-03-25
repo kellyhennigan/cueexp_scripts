@@ -57,7 +57,7 @@ switch lower(group)
             'relapsers_epiphany','relapsers epiphany',...
             }
         
-        lspec = '--o';
+        lspec = ':';
         
     case {'nonrelapsers_3months','nonrelapsers 3months',...
             'nonrelapsers_4months','nonrelapsers 4months',...
@@ -86,7 +86,7 @@ switch lower(group)
             'nonrelapsers_epiphany','nonrelapsers epiphany',...
             }
         
-        lspec = '-.*';
+        lspec = '--o';
         
     otherwise
         
