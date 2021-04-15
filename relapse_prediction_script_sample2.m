@@ -12,14 +12,13 @@ figDir = p.figures;
 
 % dataPath = fullfile(dataDir,'relapse_data','relapse_data_171116.csv');
 % dataPath =fullfile(dataDir,'relapse_data','relapse_data_190321.csv');
-dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200916_woOutliers.csv');
-% dataPath = fullfile(dataDir,'relapse_data','relapse_data_180723.csv');
-
+% dataPath =fullfile(dataDir,'relapse_data','relapse_data_cue_200916_woOutliers.csv');
+dataPath = fullfile(dataDir,'relapse_data','data_210406.csv');
 % load data
 T = readtable(dataPath); 
 
 % remove controls
-T(T.gi==0,:)=[];
+T(T.groupindex==0,:)=[];
 
 % omit subs? 
 % T(strcmp(T.subjid,'tv181019'),:)=[];
@@ -27,9 +26,18 @@ T(T.gi==0,:)=[];
 
 
 % remove subjects from 1st sample
-T1=T(T.samplenum==1,:); 
-T2=T(T.samplenum==2,:); 
-T(T.samplenum==1,:)=[];
+idx=find(strcmp(T.subjid,'er171009'))
+T1=T(1:idx,:);
+T2=T(idx+1:end,:);
+% T(T.samplenum==1,:)=[];
+
+% create VA and epiphany only samples
+Tva=T(T.groupindex==1,:);
+Tepi=T(T.groupindex==2,:);
+
+
+
+
 
 % T(T.gi==2,:)=[];
 % T(T.gi==1,:)=[];

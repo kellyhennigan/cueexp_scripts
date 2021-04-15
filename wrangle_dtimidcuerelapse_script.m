@@ -10,11 +10,11 @@ p = getCuePaths(); dataDir = p.data; % cue exp paths
 group=''; % all subjects 
 
 % get list of subjects with dwi data
-[subjects,groupindex]=getCueSubjects('dti');
+[subjects,groupindex]=getCueSubjects('');
 
 
 % filepath for saving out table of variables
-outDir=fullfile(dataDir,'dti_data');
+outDir=fullfile(dataDir,'relapse_data');
 outPath = fullfile(outDir,['data_' datestr(now,'yymmdd') '.csv']);
 
 omit_subs={};
@@ -91,7 +91,8 @@ demVars = {'years_of_use',...
     'basdrive',...
     'basfunseek',...
     'basrewardresp',...
-    'bisbas_bis'};
+    'bisbas_bis',...
+    'dwimotion'};
 
 
 Tdem = table(); % table of demographic data
@@ -267,7 +268,7 @@ end % rois
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%  ROI BETAS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-betastims = {'gvnant','gvnout','ant','out'};
+betastims = {'gvnant','gvnout','lvnant','lvnout'};
 
 betaPath = fullfile(dataDir,['results_mid_afni'],'roi_betas','%s','%s.csv'); %s is roiName, stim
 
@@ -358,11 +359,11 @@ for j=1:numel(roiNames)
 end % roiNames
 
 
-
-% brain data
+% 
+% % brain data
 Tbrain = array2table(bd,'VariableNames',bdNames);
-
-
+% 
+% 
 %%
 %% dwi data
 
@@ -373,43 +374,56 @@ method = 'mrtrix_fa';
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
 fgMatStrs = {'DAL_naccL_belowAC_autoclean';...
     'DAR_naccR_belowAC_autoclean';...
+    'DALR_naccLR_belowAC_autoclean';...
     'DAL_naccL_aboveAC_autoclean';...
     'DAR_naccR_aboveAC_autoclean';...
     'asginsL_naccL_autoclean';...
     'asginsR_naccR_autoclean';...
     'mpfc8mmL_naccL_autoclean23';...
-    'mpfc8mmR_naccR_autoclean23'};
-
+    'mpfc8mmR_naccR_autoclean23';...
+    'amygdalaL_naccL_autoclean_max5';...
+    'amygdalaR_naccR_autoclean_max5'};
 
 fgOutStrs={'inf_NAccL';...
     'inf_NAccR';...
+    'inf_NAccLR';...
     'sup_NAccL';...
     'sup_NAccR';...
     'asginsL_naccL';...
     'asginsR_naccR';...
     'mpfcL_naccL';...
-    'mpfcR_naccR'};
+    'mpfcR_naccR';...
+    'amygL_naccL';...
+    'amygR_naccR'};
 
 % which nodes to average over? 2 entries for each fiber group: 1 node -
 % last node to average over (e.g., [26 75] will average over nodes 26:75)
 aveNodes=[26 75;
     26 75;
+    1 95;
     26 75;
     26 75;
-    11 41;
-    11 41;
+    11 43;
+    11 43;
     26 75;
-    26 75];
+    26 75;
+    54 73;
+    54 73];
 
 aveNodeStrs={'mid50';
     'mid50';
+    'nodes1_95';
     'mid50';
     'mid50';
-    'nodes11_41';
-    'nodes11_41';
+    'nodes11_43';
+    'nodes11_43';
     'mid50';
-    'mid50'};
+    'mid50';
+    'nodes54_73';
+    'nodes54_73'};
 
+% use these for loadFGMeasures() function to pull out desired measures
+fgMNames = {'fa','imd','ird','ad'}; 
 
 %%%%%%%%%%%% get fiber group measures & behavior scores
 
@@ -419,31 +433,29 @@ f=1
 for f=1:numel(fgMatStrs)
     
     fgMFile=fullfile(dataDir,'fgMeasures',method,[fgMatStrs{f} '.mat']);
-    [fgMeasures,fgMLabels,scores,dwisubs,~]=loadFGBehVars(fgMFile,'',group,omit_subs);
-    if ~isequal(dwisubs,subjects)
-        error('hold up - subjects dont match up.');
-    end
     
     theseNodes=aveNodes(f,:);
-    fa = mean(fgMeasures{1}(:,theseNodes(1):theseNodes(2)),2);
-    imd = 1-mean(fgMeasures{2}(:,theseNodes(1):theseNodes(2)),2);
-    ird = 1-mean(fgMeasures{3}(:,theseNodes(1):theseNodes(2)),2);
-    ad = mean(fgMeasures{4}(:,theseNodes(1):theseNodes(2)),2);
+    thisAveNodeStr=aveNodeStrs{f};
     
-     
-    fgms=[fgms fa imd ird ad];
-    
-    fgNames{end+1} = [fgOutStrs{f} '_fa_' aveNodeStrs{f}];
-    fgNames{end+1} = [fgOutStrs{f} '_imd_' aveNodeStrs{f}];
-    fgNames{end+1} = [fgOutStrs{f} '_ird_' aveNodeStrs{f}];
-    fgNames{end+1} = [fgOutStrs{f} '_ad_' aveNodeStrs{f}];
-    
-end
+    for fi=1:numel(fgMNames)
+       
+        fgMName=fgMNames{fi}; % e.g., fa, md, etc.
+        
+        % load fg measures (subject in rows, measures by node in columns)
+        thisFgMeasure = loadFGMeasures(fgMFile,fgMName,subjects);
+        thisAveFgMeasure=mean(thisFgMeasure(:,theseNodes(1):theseNodes(2)),2);
+        
+        % concatenate to bigger dataset
+        fgms = [fgms thisAveFgMeasure];
+        fgNames{end+1} =  [fgOutStrs{f} '_' fgMName '_' thisAveNodeStr];
+        
+    end % fgMNames
+       
+end % fgMatStrs
+  
 
 % dti data
 Tdti = array2table(fgms,'VariableNames',fgNames);
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -453,8 +465,6 @@ Tdti = array2table(fgms,'VariableNames',fgNames);
 subjid = cell2mat(subjects);
 Tsubj = table(subjid);
 Tgroupindex=table(groupindex);
-% Tcontrollingagemotion=table(bis_controllingagemotion,dx_controllingagemotion);
-% Tcontrollingagemotion=table(bis_controllingagemotion);
 
 % concatenate all data into 1 table
 T=table();

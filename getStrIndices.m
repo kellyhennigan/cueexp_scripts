@@ -10,7 +10,7 @@ function ind=getStrIndices(c1,c2)
 % c1= {'this','is','a','test'};
 % 
 % c2={'It','is','only','a','test'};
-
+% 
 % getStrIndices(c1,c2)
 
 % = [nan 2 4 5];

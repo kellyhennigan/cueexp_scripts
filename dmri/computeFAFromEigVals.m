@@ -13,6 +13,9 @@ function [fa,md]=computeFAFromEigVals(ev1,ev2,ev3)
 % 
 % author: Kelly, kelhennigan@gmail.com, 11-May-2019
 
+% FA equation found in Jellison et al (2004)
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 md = (ev1 + ev2 + ev3)./3;

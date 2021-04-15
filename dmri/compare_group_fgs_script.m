@@ -16,8 +16,9 @@ outDir = [p.figures_dti '/fgm_trajectories/bygroup'];
 method = 'mrtrix_fa';
 
 
-% targets={'nacc'};
-% 
+targets={'nacc'};
+fgMatStrs = {'DAR_%sR_belowAC_autoclean'};
+
 % fgMatStrs = {'mpfc8mmL_%sL_autoclean'};
 % 
 
@@ -42,20 +43,20 @@ method = 'mrtrix_fa';
 % 
 % fgMatStrs = {'mpfc8mmL_%sL_autoclean23';
 %     'mpfc8mmR_%sR_autoclean23'};
-fgMatStrs = {'PVTL_%sL_autoclean23';
-    'PVTR_%sR_autoclean23'};
+% fgMatStrs = {'PVTL_%sL_autoclean23';
+%     'PVTR_%sR_autoclean23'};
 
 % 
 % targets={'nacc';'nacc';'nacc'};
 % fgMatStrs = {'mpfc8mmL_%sL_autoclean23'};
 
-targets={'nacc','nacc'};
+% targets={'nacc','nacc'};
 
 
 % fgMatStrs = {'PauliAtlasDALR_%sLR_belowAC_autoclean'};
 
 
-covars={'age','gender','dwimotion'};
+% covars={'age','gender','dwimotion'};
 % covars={'age','dwimotion'};
 % covars={};
 

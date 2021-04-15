@@ -8,9 +8,11 @@ close all
 p = getCuePaths;
 dataDir = p.data;
 
-task = 'mid';
+task = 'cue';
 
 [subjects,gi]=getCueSubjects(task);
+subjects(1:70)=[];
+gi(1:70)=[];
 % subjects = {'jh160702'};
 
  afniStr = '_afni'; % '_afni' to use afni xform version, '' to use ants version
