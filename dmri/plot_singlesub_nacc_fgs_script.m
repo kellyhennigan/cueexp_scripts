@@ -175,8 +175,7 @@ for i = 1:numel(subjects)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AXIAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    
-    
+     
     vwA = [0,90]; % axial view
     
     h=AFQ_AddImageTo3dPlot(t1,[0, 0, -1],'gray');
@@ -187,37 +186,31 @@ for i = 1:numel(subjects)
     
     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_axial']));
     
-
-    fprintf('done.\n\n');
-    
     
     %
     %      camlight(sh.l,'left');
     %   print(gcf,'-dpdf','-r600','naccR_corr_light')
    
     
-    %% all slices, "connactome" angle
-    
-    
-    hx= AFQ_AddImageTo3dPlot(t1,[-2, 0, 0],'gray'); % sag
-    hy= AFQ_AddImageTo3dPlot(t1,[0, -18, 0],'gray'); % coronal
-    hz= AFQ_AddImageTo3dPlot(t1,[0, 0, -6],'gray'); % axial 
-    
-    %%% get a nice 3d view
-    v=[ -0.8536    0.5210    0.0000    0.1663
-   -0.2136   -0.3499    0.9121   -0.1743
-   -0.4752   -0.7785   -0.4099    9.4921
-         0         0         0    1.0000]; 
-     view(v);
-      
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_3dview']));
-    
-%     % change axis on y and zlims to close-up
-%     zlim(gca,[-50,50])
-%     ylim(gca,[-50,50])
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalR']));
+%% all slices, "connacctome" angle
+%          
+%     hx= AFQ_AddImageTo3dPlot(t1,[-2, 0, 0],'gray'); % sag
+%     hy= AFQ_AddImageTo3dPlot(t1,[0, -18, 0],'gray'); % coronal
+%     hz= AFQ_AddImageTo3dPlot(t1,[0, 0, -6],'gray'); % axial 
 %     
-    delete(h) % delete that slice
+%     %%% get a nice 3d view
+%     v=[ -0.8536    0.5210    0.0000    0.1663
+%    -0.2136   -0.3499    0.9121   -0.1743
+%    -0.4752   -0.7785   -0.4099    9.4921
+%          0         0         0    1.0000]; 
+%      view(v);
+%       
+%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_3dview']));
+    
+%     
+%     delete(h) % delete that slice
    
+   fprintf('done.\n\n');
+ 
     
 end % subjects
