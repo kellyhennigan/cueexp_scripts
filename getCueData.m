@@ -562,6 +562,18 @@ switch measure
             end
         end
         
+    case 'mid_nacc_mssd'
+        
+        T=readtable('/Users/kelly/cueexp/data/mid_mssd_measures/mid_nacc_mssd.csv');
+        idx=getStrIndices(subjects,T.subjects);
+        data=nan(numel(subjects),1);
+        for i=1:numel(subjects)
+            if ~isnan(idx(i))
+                data(i,1)=T.mssd(idx(i));
+            end
+        end
+    
+        
     otherwise
         
         % print out a list of all possible measure options

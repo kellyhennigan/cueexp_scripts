@@ -11,7 +11,7 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 % which group(s) to plot?
 
-group = {'controls'};
+group = {'patients'};
 % group = {'nonrelapsers'};
 % group = {'all'};
 %  group = {'patients'};
@@ -21,7 +21,7 @@ group = {'controls'};
 method = 'mrtrix_fa';
 
 % fgMatStr = 'naccLR_PVTLR_autoclean'; %'.mat' will be added to end
-fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
+fgMatStr = 'DALR_naccLR_belowAC_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'DAL_naccL_belowAC_autoclean'; %'.mat' will be added to end
 % fgMatStr = 'PauliAtlasDAR_naccR_belowAC_autoclean'; %'.mat' will be added to end
 
@@ -31,7 +31,7 @@ titleStr = 'MFB tract';
 
 % which scale to correlate with fiber group measures?
 % scale = 'discount_rate'
-scale = 'bis';
+scale = 'mid_nacc_mssd';
 % scale = 'nacc_nvlout_betas';
 % scale = 'age';
 
@@ -118,6 +118,9 @@ title([fgMCorr '-' strrep(scale,'_',' ') ' correlation strength in color']);
 % 
 % 
 
+% [~,bestnode]=max(abs(r));
+
+
 %% fig 2: plot correlations with fg measures
 
 %%%%%%%%%%%%%%% params for figure 1
@@ -186,35 +189,35 @@ end
 % md=mean(fgMeasures{2}(:,26:75),2)
 
 %% 
-%% peak node analysis 
-
-startnode=25;
-[~,peaknode]=max(fgMeasures{1}(:,startnode:75)');
-peaknode=peaknode+startnode-1;
-for i=1:numel(subjects)
-    peakfa(i,1)=fgMeasures{1}(i,peaknode(i));
-    peakmd(i,1)=fgMeasures{2}(i,peaknode(i));
-    peakrd(i,1)=fgMeasures{3}(i,peaknode(i));
-    peakad(i,1)=fgMeasures{4}(i,peaknode(i));
-end
-
-[rfa,pfa]=corr(peakfa,scores);
-[rmd,pmd]=corr(1-peakmd,scores);
-[rrd,prd]=corr(peakrd,scores);
-[rad,pad]=corr(peakad,scores);
-    
-
-% strings of corr coefficients and p values for plots
-corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
-corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
-corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
-corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
-
-% plot it
-fig = subplotCorr([],scores,{peakfa,1-peakmd,peakrd,peakad},'BIS',{'FA','1-MD','RD','AD'},corrStr);
-ti=suptitle('left inferior NAcc tract PEAK FA NODE');
-set(ti,'FontSize',18)
-
+% %% peak node analysis 
+% 
+% startnode=25;
+% [~,peaknode]=max(fgMeasures{1}(:,startnode:75)');
+% peaknode=peaknode+startnode-1;
+% for i=1:numel(subjects)
+%     peakfa(i,1)=fgMeasures{1}(i,peaknode(i));
+%     peakmd(i,1)=fgMeasures{2}(i,peaknode(i));
+%     peakrd(i,1)=fgMeasures{3}(i,peaknode(i));
+%     peakad(i,1)=fgMeasures{4}(i,peaknode(i));
+% end
+% 
+% [rfa,pfa]=corr(peakfa,scores);
+% [rmd,pmd]=corr(1-peakmd,scores);
+% [rrd,prd]=corr(peakrd,scores);
+% [rad,pad]=corr(peakad,scores);
+%     
+% 
+% % strings of corr coefficients and p values for plots
+% corrStr{1} = sprintf('r=%.2f, p=%.3f',rfa,pfa);
+% corrStr{2} = sprintf('r=%.2f, p=%.3f',rmd,pmd);
+% corrStr{3} = sprintf('r=%.2f, p=%.3f',rrd,prd);
+% corrStr{4} = sprintf('r=%.2f, p=%.3f',rad,pad);
+% 
+% % plot it
+% fig = subplotCorr([],scores,{peakfa,1-peakmd,peakrd,peakad},scale,{'FA','1-MD','RD','AD'},corrStr);
+% ti=suptitle('left inferior NAcc tract PEAK FA NODE');
+% set(ti,'FontSize',18)
+% 
 
 
 
