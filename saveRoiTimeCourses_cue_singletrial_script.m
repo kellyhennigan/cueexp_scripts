@@ -25,54 +25,49 @@ close all
 
 dataDir = p.data;
 
-[subjects,gi]=getCueSubjects(task);
+% [subjects,gi]=getCueSubjects(task);
 
  afniStr = '_afni';
 % afniStr = ''; % to use ants version
 
 % filepath to pre-processed functional data where %s is subject then task
-funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_' task '_tlrc' afniStr '.nii.gz']);
+funcFilePath = fullfile(dataDir, ['%s/func_proc/pp_cue_tlrc' afniStr '.nii.gz']);
 
 
 % file path to file that says which volumes to censor due to head movement
-censorFilePath = fullfile(dataDir, ['%s/func_proc/' task '_censor.1D']);
+censorFilePath = fullfile(dataDir, ['%s/func_proc/cue_censor.1D']);
 
 
 rel_6months = getCueData(subjects,'relapse_6months');
 
 
 % behavioral stim file
-if strcmp(task,'cue')
-    stimFilePath=fullfile(dataDir,'%s','behavior','cue_matrix.csv');
-else
-     stimFilePath=fullfile(dataDir,'%s','behavior',[task '_matrix_wEnd.csv']);
-end
+stimFilePath=fullfile(dataDir,'%s','behavior','cue_matrix.csv');
     
- 
-% names for trial types
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% ROI masks %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 % roi directory
-roiDir = fullfile(mainDir,'ROIs_mni');
+roiDir = fullfile(dataDir,'ROIs');
 
 % get list of rois to potentially process
-roiNames = {'anteriorinsula','anteriorinsulaL','anteriorinsulaR',...
+% roiNames = whichRois(roiDir,'_func.nii','_func.nii');
+roiNames={'nacc_desai','naccL_desai','naccR_desai',...
+    'ins_desai','insL_desai','insR_desai',...
     'mpfc','mpfcL','mpfcR',...
-    'nacc','naccL','naccR'};
-
-% roiNames = {'anteriorinsula','nacc','mpfc'};
-
+    'VTA','VTAL','VTAR'};
 
 % name of main dir to save out to
-mainOutDir = fullfile(dataDir,['timecourses_mid_singletrial']);
+mainOutDir = fullfile(dataDir,['timecourses_cue_singletrial']);
 
-%% this hasn't been implemented yet 
-% omitOTs=0; % 1 to omit outliers, otherwise 0
-% if omitOTs
-%     outDir = [outDir '_woOutliers'];
-% end
+
+%%%% omit outliers? if 1, this will set any value with abs(zscore())>4 of the
+%%%% roi time series to nan
+omitOTs=1; % 1 to omit outliers, otherwise 0
+if omitOTs
+    mainOutDir = [mainOutDir '_woOutliers'];
+end
 
 
 nTRs = 8; % # of TRs to extract
@@ -83,20 +78,25 @@ t = 0:TR:TR*(nTRs-1); % time points (in seconds) to plot
 
 %% do it
 
+
+if ~exist(mainOutDir,'dir')
+    mkdir(mainOutDir);
+end
+
 % list out the variables to include in the big file
 subjid = {}; % column of subject ids
 group_idx = []; % group index where 0=control, 1=VA patient, 2=epiphany patient
 relapse_6months = [];
 trial = []; % trial number
 trial_onsetTR=[]; % onset TR for that trial
-trialtype = []; %  1=-0, 2=-1, 3=-5, 4=+0, 5=+1, 6=+5
+trialtype = []; %  1=alc, 2=drugs, 3=food, 4=neutral
 TR=[]; % TR # relative to trial onset
-outcome=[]; %0=miss, 1=hit
+pref=[]; % 
 roi_tc = []; % this will be a (nTrial.*nTR) x nROI matrix of timecourse values
 
 
 % get roi masks
-roiFiles = cellfun(@(x) [x '_func.nii.gz'], roiNames,'UniformOutput',0);
+roiFiles = cellfun(@(x) [x '_func.nii'], roiNames,'UniformOutput',0);
 rois = cellfun(@(x) niftiRead(fullfile(roiDir,x)), roiFiles,'uniformoutput',0);
 
 
@@ -120,25 +120,25 @@ for i=1:numel(subjects) % subject loop
         roi_ts(:,j)=roi_mean_ts(func.data,rois{j}.data);
     end
     
+    
+    %%%%% this isnt functional yet
+    % if omitting outliers is desired, set any TR with an abs(zscore)>4 to
+    % nan; first set any bad-motion vols to 0 (these will later be set to
+    % nan but the zscore function can't handle nan values)
+    if omitOTs
+        roi_ts(censorVols,:)=0;
+        oidx=find(abs(zscore(roi_ts))>4);
+        roi_ts(oidx)=nan;
+    end
+   
+    
     % censor out any bad motion volumes
     roi_ts(censorVols,:)=nan;
-    
-    %%%%%% this isn't functional yet
-    %     % set vols with abs(zscore > 4) to nan (assume this is due to
-    %     % some non-bio noise)
-    %     if omitOTs
-    %         find(abs(zscore(temp(~isnan(temp))))>4)];
-    %     end
+  
     
     % load stimfile
-    if strcmp(task,'cue')
-           [thistrial,thisTR,thisStartTime,thisClock,thistrialonset,thistrialtype,thisCue_RT,thisChoice,thisChoice_Num,...
-    thisChoice_Type,Choice_RT,ITI,Drift,Image_Names]=getCueTaskBehData(filepath,format)
-
-    else
-    [thistrial,thisTR,thistrialonset,thistrialtype,thistarget_ms,thisrt,thiscue_value,thishit,thistrial_gain,...
-        thistotal,thisiti,thisdrift,thistotal_winpercentthis,binned_winpercent]=loadMidBehData(sprintf(stimFilePath,subject),'long');
-    end
+              [thistrial,thisTR,thisStartTime,thisClock,thistrialonset,thistrialtype,thisCue_RT,thisChoice,thisChoice_Num,...
+    thisChoice_Type,thisChoice_RT,thisITI,thisDrift,thisImage_Names]=getCueTaskBehData(sprintf(stimFilePath,subject),'long');
     
     % get trial onset TRs
     onsetTRs=find(thisTR==1);
@@ -158,7 +158,7 @@ for i=1:numel(subjects) % subject loop
         TR=[TR;(1:nTRs)']; % TR # relative to trial onset
         trial_onsetTR=[trial_onsetTR;repmat(thisonsetTR,nTRs,1)]; % onset TR for that trial
         trialtype = [trialtype;repmat(thistrialtype(thisonsetTR),nTRs,1)]; %  1=-0, 2=-1, 3=-5, 4=+0, 5=+1, 6=+5
-        outcome=[outcome;repmat(thishit(thisonsetTR),nTRs,1)]; %0=miss, 1=hit
+        pref=[pref;repmat(thisChoice_Num(thisonsetTR),nTRs,1)]; %0=miss, 1=hit
         roi_tc = [roi_tc;thisroi_tc];
         
     end % onset TRs
@@ -169,7 +169,7 @@ end % subjects
 %% % save out big csv file if desired
 
 
-T1=table(subjid,group_idx,relapse_6months,trial,TR,trial_onsetTR,trialtype,outcome);
+T1=table(subjid,group_idx,relapse_6months,trial,TR,trial_onsetTR,trialtype,pref);
 
 roiVarNames=cellfun(@(x) [x '_tc'], roiNames,'uniformoutput',0);
 Troi_tc = array2table(roi_tc,'VariableNames',roiVarNames);

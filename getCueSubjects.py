@@ -181,7 +181,16 @@ def getsubs(task='',group='all'):
 
 
 if __name__ == "__main__":
-	subjects,gi = getsubs(sys.argv[1])
+	
+	n = len(sys.argv)
+
+	if n==1:
+		subjects,gi = getsubs()
+	elif n==2:
+		subjects,gi = getsubs(sys.argv[1])
+	elif n==3:
+		subjects,gi = getsubs(sys.argv[1],sys.argv[2])
+	
 	print ' '.join(subjects)
 
 #if __name__ == "__main__":

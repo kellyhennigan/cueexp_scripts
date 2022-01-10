@@ -8,28 +8,28 @@ dataDir = p.data;
 
 task = 'dti'; 
 
- group = 'relapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
-% group = 'patients';
+%  group = 'nonrelapsers_6months';  % can be controls, patients, relapsers, or nonrelapsers
+group = 'patients';
 % group = 'controls';
 % group = 'relapsers_6months';
    
-% [subjects,gi] = getCueSubjects(task,group);
+[subjects,gi] = getCueSubjects(task,group);
+
+%%%%% dti patients lost prior to 6 month followup
+% subjects = { 'tf151127'
+%     'wh160130'
+%     'at160601'
+%     'lm160914'
+%     'se161021'
+%     'ms170424'
+%     'er171009'
+%     'lh181030'
+%     'sd190315'
+%     'hh190412'};
+% gi=ones(10,1);
 
 
- subjects={   'tf151127'
-    'wh160130'
-    'at160601'
-    'lm160914'
-    'se161021'
-    'ms170424'
-    'er171009'
-    'lh181030'
-    'sd190315'
-    'hh190412'
-    'ds190510'
-    'tc190628'};
-    
-gi=ones(12,1);
+
 % subjects(22:end)=[]; gi(22:end)=[];
 % 
 % omit_subs = {'at160601','lm160914'};

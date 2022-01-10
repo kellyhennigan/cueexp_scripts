@@ -11,10 +11,10 @@ dataDir = pa.data; figDir = pa.figures_dti;
 
 % which group(s) to plot?
 
-group = {'patients'};
+% group = {'controls'};
 % group = {'nonrelapsers'};
 % group = {'all'};
-%  group = {'patients'};
+ group = {'patients'};
 
 % directory & filename of fg measures
 % method = 'conTrack';
@@ -96,7 +96,7 @@ end
 % measures
 % 
 %%%%%%%%%%%%%% params for figure 1
-fgMCorr = 'FA'; % fg measure to correlate with behavior & plot as color map
+fgMCorr = 'RD'; % fg measure to correlate with behavior & plot as color map
 fgMPlot = 'FA'; % fg measure to plot as values along pathway node
 %%%%%%%%%%%%%%
 

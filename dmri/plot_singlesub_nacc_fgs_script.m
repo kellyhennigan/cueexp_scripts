@@ -4,11 +4,12 @@ close all
 
 %%%%%%%%%%%%%%% ask user for info about which subjects, roi, etc. to plot
 p=getCuePaths();
-dataDir = p.data; 
+dataDir = p.data;
 
 % subjects={'al151016','hw161104','jh160702','jw160316','ph161104','pk160319','rp160205'};
-subjects=getCueSubjects('dti',1);
-% subjects={'jh160702'}; 
+% subjects=getCueSubjects('dti',1);
+% subjects={'mr170621','lh180622','kk180117','cm180506','zm160627','se161021','rv160413'};
+subjects={'mr170621'};
 
 % paths and directories are relative to subject specific dir
 t1Path = fullfile(dataDir,'%s','t1','t1_ns.nii.gz'); % %s is subject id
@@ -31,18 +32,19 @@ outDir = fullfile(p.figures_dti,'fgs_single_subs','connacctome');
 % get some useful plot params
 scsz=get(0,'Screensize');
 plotTubes = 1;  % plot fiber pathways as tubes or lines?
-fg_rad = .2;   % radius of fiber pathway tubes (only matters if plotTubes=1)
-nfibers=100;
+fg_rad = .3;   % radius of fiber pathway tubes (only matters if plotTubes=1)
+nfibers=300;
 
 cols={[0.0588    0.8196    0.8588];
     [0.0588    0.8196    0.8588];
     [0.8863    0.0941    0.0078];
-     [0.8863    0.0941    0.0078];
-     [0 0 0.5451];
-     [0 0 0.5451];};
-     
+    [0.8863    0.0941    0.0078];
+    [0 0 0.5451];
+    [0 0 0.5451];};
 
-plotToScreen=0; % 1 to plot to screen, otherwise 0
+
+plotToScreen=1; % 1 to plot to screen, otherwise 0
+
 
 
 %% do it
@@ -69,6 +71,7 @@ for i = 1:numel(subjects)
     t1.data=img;
     
     
+    
     % load pathways
     for j=1:numel(fgNames)
         fg{j} = fgRead([sprintf(fgDir,subject) '/' fgNames{j}]);
@@ -76,141 +79,153 @@ for i = 1:numel(subjects)
     
     
     
-    %%   PLOTS
+    %% plots
     
-    
-    sh=AFQ_RenderFibers(fg{1},'color',cols{1},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'plottoscreen',plotToScreen);
-    delete(sh); % delete light object (for some reason this needs to be deleted from the first FG plotted to look good...
-    
-    for j=2:numel(fg)
-        sh=AFQ_RenderFibers(fg{j},'color',cols{j},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'newfig',0);
-    end
-    
-    fig = gcf;
-    pos=get(fig,'position');
-    set(fig,'Position',[scsz(3)-610 scsz(4)-610 600 600])
-    %   llh = lightangle(vw(1),vw(2));
+    %%%%%%%% set up the figure window
+    scsz=get(0,'Screensize');
+    figh=figure; hold on
+    pos=get(figh,'position');
+    set(figh,'Position',[scsz(3)-610 scsz(4)-610 600 600])
+    cameratoolbar('Show');
+    cameratoolbar('SetMode','orbit');
+    fprintf('\nmesh can be rotated with arrow keys\n')
+    axis equal
+    set(gca,'fontName','Helvetica','fontSize',12)
     
     % this command makes the image fill the entire figure window:
     %    set(gca,'Position',[0,0,1,1]);
     
-    set(gca,'fontName','Helvetica','fontSize',12)
+    %%%%%%%%%% render fiber groups
+    for j=1:numel(fg)
+        sh=AFQ_RenderFibers(fg{j},'color',cols{j},'numfibers',nfibers,'tubes',plotTubes,'radius',fg_rad,'newfig',0);
+    end
+    
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%% SAGITTAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    
-    %%%%%%%% left
-    
-    % view for left fibers
-    vwL = [270,0];
-    
+     h=AFQ_AddImageTo3dPlot(t1,[2, 0, 0],'gray',[],[],[0 .9]);
+     h = AFQ_AddImageTo3dPlot(nifti, slice, cmap, rescale, alpha, imgClipRange
+    %     %%%%%%%%%%% sagittal t1 slice
+    %
     h=AFQ_AddImageTo3dPlot(t1,[2, 0, 0],'gray');
     
-    % get whole brain axes limits
-    zl=zlim;
-    yl=ylim;
+    % get whole brain axes limits (for ref, in case you want to zoom in and
+    % then zoom back out)
+    xl=xlim; yl=ylim; zl=zlim;
     
-    view(vwL);
+    % view for left fibers
+    view(270,0)
+    
+    % set up light object
+    lh = camlight('right'); lighting gouraud
+    
     
     % save out left fibers whole-brain figure
     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_sagittalL']));
     
-%     % change axis on y and zlims to close-up
-%     zlim(gca,[-50,50])
-%     ylim(gca,[-50,50])
-%     
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalL']));
-%     
-    delete(h) % delete that slice
+    % change axis on y and zlims to close-up
+    zlim(gca,[-50,50])
+    ylim(gca,[-30,70])
     
-    %%%%%%%% right
-    vwR = [90,0];
+    % save out left fibers whole-brain figure
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject  '_sagittalL']));
     
-    h= AFQ_AddImageTo3dPlot(t1,[-2, 0, 0],'gray');
+    % delete slice and light object
+    delete(h); delete(lh);
     
-    %%% save out right side
-    view(vwR)
-    print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_sagittalR']));
-    
-%     % change axis on y and zlims to close-up
-%     zlim(gca,[-50,50])
-%     ylim(gca,[-50,50])
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_sagittalR']));
-%     
-    delete(h) % delete that slice
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%% CORONAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORONAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-%     vwC = [0,0]; % coronal view
-%     
-%     h=AFQ_AddImageTo3dPlot(t1,[0, 18, 0],'gray');
-%     view(vwC);
-%     %   llh = lightangle(vwC(1),vwC(2));
-%     
-%     set(gca,'fontName','Helvetica','fontSize',12)
-%     
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_coronal']));
-%     
-% %     % change axis on x and zlims
-% %     xlim(gca,[-40,40])
-% %     zlim(gca,[-40,40])
-% %     
-% %     print(gcf,'-dpng','-r300',fullfile(outDir,[subject outStr '_coronal']));
-% %     
-% 
-%    delete(h) % delete that slice
-%  
+    % coronal t1 slice
+    h=AFQ_AddImageTo3dPlot(t1,[0, -5, 0],'gray');
     
-    %
-    %      camlight(sh.l,'left');
-    %   print(gcf,'-dpdf','-r600','naccR_corr_light')
+    
+    % coronal view
+    view(180,0)
+    
+    % set up light object
+    lh = camlight('right');   lighting gouraud
+    
+    
+    % save out left fibers whole-brain figure
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_coronal']));
+    
+    % change axis on y and zlims to close-up
+    xlim(gca,[-40,40])
+    zlim(gca,[-30,30])
+    
+    % save out left fibers whole-brain figure
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject  '_coronal']));
+    
+    % delete slice and light object
+    delete(h); delete(lh);
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AXIAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%% AXIAL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-     
-    vwA = [0,90]; % axial view
+    % axial t1 slice
+    h=AFQ_AddImageTo3dPlot(t1,[0, 0, -6],'gray');
     
-    h=AFQ_AddImageTo3dPlot(t1,[0, 0, -1],'gray');
-    view(vwA);
-    %   llh = lightangle(vwC(1),vwC(2));
     
-    set(gca,'fontName','Helvetica','fontSize',12)
+    % axial view
+    view(0,90)
     
+    % set up light object
+    lh = camlight('right');   lighting gouraud
+    
+    
+    % save out left fibers whole-brain figure
     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_axial']));
     
+    % change axis on y and zlims to close-up
+    xlim(gca,[-50,50])
+    ylim(gca,[-30,70])
     
-    %
-    %      camlight(sh.l,'left');
-    %   print(gcf,'-dpdf','-r600','naccR_corr_light')
-   
     
-%% all slices, "connacctome" angle
-%          
-%     hx= AFQ_AddImageTo3dPlot(t1,[-2, 0, 0],'gray'); % sag
-%     hy= AFQ_AddImageTo3dPlot(t1,[0, -18, 0],'gray'); % coronal
-%     hz= AFQ_AddImageTo3dPlot(t1,[0, 0, -6],'gray'); % axial 
-%     
-%     %%% get a nice 3d view
-%     v=[ -0.8536    0.5210    0.0000    0.1663
-%    -0.2136   -0.3499    0.9121   -0.1743
-%    -0.4752   -0.7785   -0.4099    9.4921
-%          0         0         0    1.0000]; 
-%      view(v);
-%       
-%     print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_wb_3dview']));
+    % save out left fibers whole-brain figure
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject  '_axial']));
     
-%     
-%     delete(h) % delete that slice
-   
-   fprintf('done.\n\n');
- 
+    % delete slice and light object
+    delete(h); delete(lh);
+    
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3d %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % coronal & axial t1 slices
+    h=AFQ_AddImageTo3dPlot(t1,[0, -6, 0],'gray');
+    h2=AFQ_AddImageTo3dPlot(t1,[0, 0, -8],'gray');
+    h3=AFQ_AddImageTo3dPlot(t1,[2, 0, 0],'gray');
+    
+    set(gca,'Position',[0,0,1,1])
+    
+    % 3d view
+    view(135,45)
+    
+    % set up light object
+    lh = camlight('right');   lighting gouraud
+    
+    
+    % save out left fibers whole-brain figure
+    print(gcf,'-dpng','-r300',fullfile(outDir,[subject '_3d_w_midsag']));
+    
+    
+    %     % delete slice and light object
+    %     delete(h); delete(lh);
+    
+    
+    
+    fprintf('done.\n\n');
+    
     
 end % subjects
+

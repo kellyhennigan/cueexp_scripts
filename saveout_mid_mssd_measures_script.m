@@ -88,19 +88,19 @@ end
 %     
 %     %% " " for patients v controls? Yes! though when controlling for age, this effect becomes marginal
 %     
-%     gi(gi>0)=1; % set epiphany patients with gi=2 to be gi=1 (so gi is 1 for all patients)
-%     
-%     [h,p,~,stats]=ttest2(mssd(gi==0),mssd(gi==1));
+    gi(gi>0)=1; % set epiphany patients with gi=2 to be gi=1 (so gi is 1 for all patients)
+    
+    [h,p,~,stats]=ttest2(mssd(gi==0),mssd(gi==1));
 %     stats
 %     
 %     % controlling for age 
-%     fitglm([age mssd],gi,'Distribution','binomial')
+    fitglm([age mssd],gi,'Distribution','binomial')
 %     
 %   
 %     %% what about relapse? nope...
 %     
-%     rel=getCueData(subjects,'relapse_6months');
-%       [h,p,~,stats]=ttest2(mssd(rel==0),mssd(rel==1));
+    rel=getCueData(subjects,'relapse_6months');
+      [h,p,~,stats]=ttest2(mssd(rel==0),mssd(rel==1));
 %       
 %       
 %       %% save it out as a table

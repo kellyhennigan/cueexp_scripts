@@ -11,8 +11,8 @@ dataDir = p.data; % main data directory
 task = 'mid';
 [subjects,gi] = getCueSubjects(task); 
 
-% groups = {'controls','patients'}; % group names
-groups = {'controls'}; % group names
+groups = {'controls','patients'}; % group names
+% groups = {'controls'}; % group names
 
 cols = getCueExpColors(numel(groups));
 
