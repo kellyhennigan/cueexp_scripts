@@ -56,7 +56,7 @@ mainOutDir = fullfile(dataDir,['cue_roi_ts']);
 
 
 % set to 1 to censor TRs with bad motion, otherwise set to 0
-censorTRs=0; 
+censorTRs=1; 
 
 
 %% do it
